@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Learner" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>InductiveMiner</name>
+    
+    <shortDescription>
+        use the inductive miner to do process discovery
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Accept the Event Log to generate the Petri Net directly, although Process Tree can be generated, too.</intro>
+        
+        
+        <option name="Inductive Miner Type">TO choose which Inductive Miner methods is used </option>
+        <option name="Threshold for the Noise">If we choose one method with noise filter, 
+        				this options shows up and to set the noise filter threshold. </option>
+        <!-- possibly more options that can also be grouped by tabs -->
+        <!--
+        <tab name="Standard Options">
+            <option name="short name of first option (like in the dialog)">description of first option</option>
+            <option name="short name of second option (like in the dialog)">description of second option</option>
+        </tab>
+        <tab name="Advanced Options">
+            <option name="short name of first advanced option (like in the dialog)">description of first advanced option</option>
+        </tab>
+        -->
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Event Log">Import the Event Log</inPort>
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="Petri net">Generated Petri　Net Model</outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+    
+</knimeNode>

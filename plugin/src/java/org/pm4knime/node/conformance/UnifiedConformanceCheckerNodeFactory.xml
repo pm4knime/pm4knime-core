@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>UnifiedConformanceChecker</name>
+    
+    <shortDescription>
+        This node is set for the unified conformance cheking without  configuration from event log and Petri net. It's proper to use in a loop. It includes the unified options: the unified cost for moves, the replayer, the classifier. 
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Insert long description here...</intro>
+        
+        
+        <option name="Move Cost">Unified move cost for three types of moves. First is the model move cost, then the log move cost,
+        at end, it is the syn move cost.</option>
+        <option name="Replayer Strategy">Different replayer to align the model and event log</option>
+       <option name="Event Classifer">The classifier chosen to create map with event log and Petri net</option>
+       
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Event Log">Event Log</inPort>
+        <inPort index="1" name="Petri net object">Petri net port object</inPort>
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="Statics Info">Statics information about the conformance checking</outPort>
+        <outPort index="1" name="Alignment Port Object">Show alignment for one trace variance</outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+    
+    <views>
+        <view index="0" name="Projection View">Show the alignment information as projection</view>
+    </views>
+</knimeNode>

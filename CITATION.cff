@@ -1,0 +1,14 @@
+# YAML 1.2
+# Metadata for citation of this software according to the CFF format (https://citation-file-format.github.io/)
+cff-version: 1.0.3
+message: If you use this software, please cite it as below.
+title: pm4knime-maven
+authors: Kefang Ding
+## Uncomment and replace `<changeme>` with actual author names
+#- given-names: <changeme>
+#  family-names: <changeme>
+#  affiliation: <changeme>
+#  orcid: https://orcid.org/<changeme>
+repository-code: https://github.com/KFDing/pm4knime-maven
+license: Apache-2.0
+version: 0.0.1-SNAPSHOT

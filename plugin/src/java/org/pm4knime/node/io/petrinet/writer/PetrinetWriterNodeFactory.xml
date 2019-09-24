@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Sink" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>PetrinetWriter</name>
+    
+    <shortDescription>
+        Read a model from Petrinet.class and Write this Petri net into pnml file
+    </shortDescription>
+    
+    <fullDescription>
+        
+        <intro>
+        This nodes writes a PMML model from a petri net model port into a pnml 
+file or to a remote location denoted by an URL.  <br />
+        Note that if the destination location is a remote URL not all options are available because in general it's
+not possible to determine whether the remote location exists. In this case it will always be overwritten. </intro>
+        
+        
+        <option name="Output Location">Enter a valid name or URL</option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Model">Petri net model to write to PNML file</inPort>
+        
+    </ports>      
+</knimeNode>

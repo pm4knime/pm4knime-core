@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+	<feature id="pm4knime.feature" version="0.0.1.qualifier">
+		<category name="Kefang Ding" />
+	</feature>
+	<category-def name="Kefang Ding" label="KNIME Kefang Ding Contributions">
+	</category-def>
+</site>

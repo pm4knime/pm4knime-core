@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Source" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>Import Event Log (XES)</name>
+    
+    <shortDescription>
+        This node imports an event log
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>This node imports an event log</intro>
+        
+        
+        <option name="Import File Name">File name to import event log</option>
+        
+    </fullDescription>
+    
+    <ports>
+        <!-- inPort index="0" name="In-Port name">Description of first input port...</inPort-->
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="Event Log">The Event Log</outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+    <views>
+        <view index="0" name="Log Trace View">View trace variant in log</view>
+        <view index="1" name="Dotted Chart View">Dotted Chart for Log View</view>
+        <!--view index="1" name="name of second view">Description of second view...</view-->
+    </views>
+</knimeNode>
