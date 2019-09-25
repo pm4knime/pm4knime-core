@@ -103,3 +103,6 @@ This can be skipped by running maven offline using `mvn -o`.
   2. Correct license
 9. Make nodes available to 3D-e-Chem KNIME feature by following steps at https://github.com/3D-e-Chem/knime-node-collection#new-release
 10. Update `CITATION.cff` file with new DOI, version, release date
+
+# Attributes
+The https://github.com/3D-e-Chem/tycho-knime-node-archetype was used as as archetype for this repository.
