@@ -31,7 +31,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho.scmUrl>scm:git:https://github.com/KFDing/pm4knime-maven.git</tycho.scmUrl>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.organization>kfding</sonar.organization>
+		<sonar.organization>pm4knime</sonar.organization>
 		<target.file>KNIME-AP-4.0</target.file>
 	</properties>
 	<build>

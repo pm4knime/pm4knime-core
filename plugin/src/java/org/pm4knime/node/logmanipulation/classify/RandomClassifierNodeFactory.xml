@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>RandomClassifier</name>
+    
+    <shortDescription>
+        RandomClassifier classifies the event log randomly, and assigns labels to the trace
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Insert long description here...</intro>
+        
+        
+        <option name="LogPosRate">Event Log Positive Rate</option>
+        <option name="TraceVariantPosRate">Trace Variant Positive Rate</option>
+       
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="LogToClassify">Event Log to classify by randomly</inPort>
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="LogWithLabel">Event log with labels after classification</outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+   
+</knimeNode>

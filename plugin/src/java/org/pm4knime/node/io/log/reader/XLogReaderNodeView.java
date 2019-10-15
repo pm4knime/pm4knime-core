@@ -41,7 +41,7 @@ public class XLogReaderNodeView extends NodeView<XLogReaderNodeModel> {
 			// now set the dottedChart to show
 			
 			try {
-				DottedChartInspector dottedView = new DottedChartInspector(new LogView(xlog, context.getProgress()), context);
+				JPanel dottedView = new DottedChartInspector(new LogView(xlog, context.getProgress()), context);
 				setComponent(dottedView);
 			} catch (DottedChartException e) {
 				// TODO Auto-generated catch block

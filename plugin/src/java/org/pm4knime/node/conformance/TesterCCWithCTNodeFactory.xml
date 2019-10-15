@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Predictor"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Conformance Checker With Cost Tables</name>
+
+	<shortDescription>
+		This node checks the conformance of an event log and a Petri net. Give the
+		result in number
+	</shortDescription>
+
+	<fullDescription>
+		<intro>Insert long description here...</intro>
+
+
+		<option name="Strategy Type">The strategy to replay the event log. It includes
+			ILP and non-ILP relyare currently.</option>
+		<option name="Event Classifer">The classifier chosen to create map with event log
+			and Petri net</option>
+		<!-- possibly more options that can also be grouped by tabs -->
+		<!-- <tab name="Standard Options"> <option name="short name of first option 
+			(like in the dialog)">description of first option</option> <option name="short 
+			name of second option (like in the dialog)">description of second option</option> 
+			</tab> <tab name="Advanced Options"> <option name="short name of first advanced 
+			option (like in the dialog)">description of first advanced option</option> 
+			</tab> -->
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Event Log">Event Log</inPort>
+		<inPort index="1" name="Petri net object">Petri net port object</inPort>
+		<!-- possibly more input ports here -->
+		<outPort index="0" name="Statics Info">Statics information about the
+			conformance checking</outPort>
+		<outPort index="1" name="Alignment Port Object">Show alignment for one trace variance
+		</outPort>
+		<!-- possibly more output ports here -->
+	</ports>
+
+	<views>
+		<view index="0" name="Projection View">Show the alignment information as projection
+		</view>
+
+	</views>
+</knimeNode>

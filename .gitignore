@@ -9,6 +9,6 @@ hs_err_pid*
 
 # Eclipse project
 .settings/
-.project
 target
-.classpath
+lib/
+

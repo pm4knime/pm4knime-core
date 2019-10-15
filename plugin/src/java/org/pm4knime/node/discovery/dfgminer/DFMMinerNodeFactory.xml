@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Learner" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>DFMMiner</name>
+    
+    <shortDescription>
+        This series nodes is created for discovering DirectlyFollowsModel. It accepts an event log as input and generates DirectlyFollowsModel as output. * nIn this package without note, DirectlyFollowsModel  is abbrevaited as DFM.
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Insert long description here...</intro>
+        
+        
+        <option name="noiseeThreshold">noise threshold to filter dfm</option>
+        <option name="classifier tyep">Classifier type</option>
+        <option name="lifecycle classifier tyep">LifeCycle Classifier type</option>
+        
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="XLogPortObject">Event log as an input</inPort>
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="DFM PortObject">generate a directly-follows model as output</outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+</knimeNode>

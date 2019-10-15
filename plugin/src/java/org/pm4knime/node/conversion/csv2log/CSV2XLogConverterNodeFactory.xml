@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>CVS2XLogConverter</name>
+    
+    <shortDescription>
+        This node converts a cvs file read from KNIME platform into an event log of XLogPortObject. For the converstion, we code without using plugin from ProM. 
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Insert long description here...</intro>
+        
+        
+        <option name="Case ID">Choose one column as caseID for the event log</option>
+        <option name="Event ID">Choose one column as eventID for the event log</option>
+        <option name="Complete Time">Choose one column as complete time for event in the event log</option>
+        <option name="Complete Time Data Format">Set the format to parse String into Date</option>
+        <option name="With Start Time">Choose if we use start time; If start time column exists, we can set it.
+        When it is not checked, the options below is disabled. </option>
+        <option name="Start Time">Choose one column as start time for event in the event log</option>
+        <option name="Start Time Data Format">Set the format to parse String into Date</option>
+        
+        <!-- possibly more options that can also be grouped by tabs -->
+        <!--
+        <tab name="Standard Options">
+            <option name="short name of first option (like in the dialog)">description of first option</option>
+            <option name="short name of second option (like in the dialog)">description of second option</option>
+        </tab>
+        <tab name="Advanced Options">
+            <option name="short name of first advanced option (like in the dialog)">description of first advanced option</option>
+        </tab>
+        -->
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="CSV File">A file read from CSV Reader</inPort>
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="XLog PortObject">Output an XLog PortObject </outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+    <views>
+        <view index="0" name="Log Trace View">View trace variant in log</view>
+        <view index="1" name="Dotted Chart View">Dotted Chart for Log View</view>
+        <!--view index="1" name="name of second view">Description of second view...</view-->
+    </views>
+</knimeNode>

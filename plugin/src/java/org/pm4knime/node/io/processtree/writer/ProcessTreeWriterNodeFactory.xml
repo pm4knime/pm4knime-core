@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Sink" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>ProcessTreeWriter</name>
+    
+    <shortDescription>
+        Export process tree into file
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Simple Export Operation for Process Tree</intro>
+        
+        
+        <option name="Output Location">choose the loaction file to output</option>
+      
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Process Tree">Input Object is Process tree</inPort>
+       
+    </ports>    
+</knimeNode>
