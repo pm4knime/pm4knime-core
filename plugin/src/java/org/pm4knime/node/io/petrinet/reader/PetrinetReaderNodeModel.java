@@ -54,7 +54,7 @@ public class PetrinetReaderNodeModel extends NodeModel {
     public PetrinetReaderNodeModel() {
     
         // TODO as one of those tests
-        super(new PortType[] {PetriNetPortObject.TYPE_OPTIONAL}, new PortType[] {PetriNetPortObject.TYPE});
+        super(null, new PortType[] {PetriNetPortObject.TYPE});
     }
 
     /**
