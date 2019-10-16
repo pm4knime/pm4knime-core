@@ -11,4 +11,4 @@ authors: Kefang Ding
 #  orcid: https://orcid.org/<changeme>
 repository-code: https://github.com/KFDing/pm4knime-maven
 license: Apache-2.0
-version: 0.0.1-SNAPSHOT
+version: 0.0.2-SNAPSHOT
