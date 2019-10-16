@@ -4,7 +4,7 @@
     <parent>
         <artifactId>pm4knime</artifactId>
         <groupId>de.rwth-aachen.pads</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>pm4knime.p2</artifactId>
     <packaging>eclipse-repository</packaging>
