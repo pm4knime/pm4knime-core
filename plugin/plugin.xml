@@ -15,8 +15,11 @@
      
      <!-- nodes in io-->
 	<node category-path="/processmining/io" factory-class="org.pm4knime.node.io.log.reader.XLogReaderNodeFactory"/>
+        <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory" id="org.pm4kinme.node.io.log.writer.XLogWriterNodeFactory"/>
+       
        <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>  
       <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory" id="org.pm4knime.ding.io.PetrinetWriterNodeFactory"/>  
+     
       <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory" id="org.pm4knime.ding.io.processtree.reader.ProcessTreeReaderNodeFactory"/>
        <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory" id="org.pm4knime.ding.io.processtree.writer.ProcessTreeWriterNodeFactory"/>
        

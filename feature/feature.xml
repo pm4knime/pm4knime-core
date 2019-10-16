@@ -2,7 +2,7 @@
 <feature
       id="pm4knime.feature"
       label="pm4knime Feature"
-      version="0.0.1.qualifier"
+      version="0.0.2.qualifier"
       provider-name="Kefang Ding">
 
    <description url="https://github.com/KFDing/pm4knime-maven">
