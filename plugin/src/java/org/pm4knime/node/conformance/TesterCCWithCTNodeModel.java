@@ -30,6 +30,7 @@ public class TesterCCWithCTNodeModel extends TesterCCNodeModel {
 	@Override
 	protected void initializeParameter() {
     	m_parameter = new SMAlignmentReplayParameterWithCT("Parameter in Tester with CT");
+    	
     }
 	
 	@Override
@@ -66,12 +67,17 @@ public class TesterCCWithCTNodeModel extends TesterCCNodeModel {
 			// find its cost and add them into 
 			XEventClass eClass = XLogUtil.findEventClass(eventName, eventClasses);
 			// meet dummy 
-			if(eClass == null){
-				eClass = super.evClassDummy;
-			}
+//			if(eClass == null){
+//				eClass = super.evClassDummy;
+//			}
 			int lmCost = Integer.parseInt( (String) tModel.getValueAt(i, 1));
 			mapEvClass2Cost.put(eClass, lmCost);
 		}
+		
+		// need to add dummy event class here for compensate the use. The cost is 0 or not??
+		// It can't happen, the shown model has event names we can't find it...
+		//TODO : the cost for dummy event class
+		mapEvClass2Cost.put(evClassDummy, 0);
 		return mapEvClass2Cost;
 	}
 

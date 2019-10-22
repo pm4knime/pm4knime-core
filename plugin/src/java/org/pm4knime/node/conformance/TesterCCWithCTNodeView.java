@@ -4,6 +4,7 @@ import javax.swing.JComponent;
 
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.NodeView;
+import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.connections.ConnectionCannotBeObtained;
@@ -27,7 +28,9 @@ public class TesterCCWithCTNodeView extends NodeView<TesterCCWithCTNodeModel>  {
         AcceptingPetriNet anet = nodeModel.getNetPO().getANet();
         XLog log = nodeModel.getLogPO().getLog();
         
-        TransEvClassMapping map = nodeModel.getMapping();
+        // TransEvClassMapping map = nodeModel.getMapping();
+        TransEvClassMapping map = PetriNetUtil.constructMapping(log, anet.getNet(), nodeModel.getXEventClassifier(), nodeModel.evClassDummy);
+        
         PNRepResult result = nodeModel.getRepResultPO().getRepResult();
         JComponent projectView;
 		try {

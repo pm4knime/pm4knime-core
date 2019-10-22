@@ -21,6 +21,9 @@ import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
 import org.processmining.acceptingpetrinet.plugins.VisualizeAcceptingPetriNetPlugin;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.connections.GraphLayoutConnection;
+import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
+import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetImpl;
 import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
 import org.processmining.plugins.pnml.base.Pnml;
 import org.processmining.plugins.pnml.base.Pnml.PnmlType;
@@ -93,6 +96,16 @@ public class PetriNetPortObject  implements PortObject{
 		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet();
 		anet.importFromStream(context, in);
 		return anet;
+	}
+	
+	// this doesn't work due to the strategy left from ProM, it reads the file pnml and creates a new net
+	// we can't change it yet.
+	public static AcceptingPetriNet importANet(InputStream in) throws Exception {
+		Petrinet net = PetrinetFactory.newPetrinet("new Petri net");
+		net.addTransition("no way to continue");
+		
+		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet(net);
+		return null;
 	}
 	
 	@Override

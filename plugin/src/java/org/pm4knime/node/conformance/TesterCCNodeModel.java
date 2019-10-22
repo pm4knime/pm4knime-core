@@ -29,6 +29,7 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.PetriNetPortObject;
@@ -58,7 +59,7 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
  *
  * @author 
  */
-public class TesterCCNodeModel extends NodeModel {
+public class TesterCCNodeModel extends NodeModel implements PortObjectHolder{
 	protected static final int INPORT_LOG = 0;
 	protected static final int INPORT_PETRINET = 1;
 	
@@ -70,7 +71,8 @@ public class TesterCCNodeModel extends NodeModel {
 	
 	// assign one parameter the same values here 
 	SMAlignmentReplayParameter m_parameter;
-	static XEventClass evClassDummy = new XEventClass("dummy", 1);
+	// it can't belong to this class
+	XEventClass evClassDummy;
 	
 	XLogPortObject logPO;
 	PetriNetPortObject netPO ;
@@ -83,11 +85,13 @@ public class TesterCCNodeModel extends NodeModel {
     
         // TODO: Specify the amount of input and output ports needed.
     	super(new PortType[] { XLogPortObject.TYPE, PetriNetPortObject.TYPE }, new PortType[] {BufferedDataTable.TYPE, RepResultPortObject.TYPE });
+    	evClassDummy = new XEventClass("dummy", 1);
     	initializeParameter();
     }
 
     protected void initializeParameter() {
     	m_parameter = new SMAlignmentReplayParameter("Parameter in Tester");
+    	
     }
      
     /**
@@ -114,6 +118,7 @@ public class TesterCCNodeModel extends NodeModel {
     	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(PNLogReplayer.class);
+    	// mapping are in need with dummy event class
 		PNRepResult result = replayEngine.replayLog(pluginContext, anet.getNet(), log, mapping, parameters);
 		System.out.println("Replay result size : " + result.size());
 		BufferedDataTable bt = createInfoTable(result.getInfo(), exec);
@@ -148,7 +153,7 @@ public class TesterCCNodeModel extends NodeModel {
     	return bt;
     }
 
-    private XEventClassifier getXEventClassifier() {
+    XEventClassifier getXEventClassifier() {
 		// TODO Auto-generated method stub
     	for(XEventClassifier clf : classifierList) {
  			if(clf.name().equals(m_parameter.getMClassifierName().getStringValue()))
@@ -165,9 +170,7 @@ public class TesterCCNodeModel extends NodeModel {
 		return logPO;
 	}
     
-    public TransEvClassMapping getMapping() {
-		return mapping;
-	}
+    
     
     public RepResultPortObject getRepResultPO() {
 		return repResultPO;
@@ -195,6 +198,8 @@ public class TesterCCNodeModel extends NodeModel {
 			defaultCosts[i] = m_parameter.getMDefaultCosts()[i].getIntValue();
 		}
 		
+		// here we also need dummy event class for the cost, but we don't need to share it in another
+		// version. 
 		IPNReplayParameter parameters = new CostBasedCompleteParam(eventClasses,
 				evClassDummy, anet.getNet().getTransitions(), defaultCosts[0], defaultCosts[1]);
 		
@@ -283,6 +288,25 @@ public class TesterCCNodeModel extends NodeModel {
             CanceledExecutionException {
         // TODO: generated method stub
     }
+
+	@Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return new PortObject[] { logPO, netPO, repResultPO};
+	}
+
+	/*
+	 * It defines methods to restore port objects. It is called after execution. 
+	 * because the view is based on the input and output port objects, so an internal view is in need.
+	 * Serialization is controlled by KNIME platform.
+	 */
+	@Override
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		// TODO Auto-generated method stub
+		logPO = (XLogPortObject) portObjects[0];
+		netPO = (PetriNetPortObject ) portObjects[1];
+		repResultPO = (RepResultPortObject) portObjects[2];
+	}
 
 }
 

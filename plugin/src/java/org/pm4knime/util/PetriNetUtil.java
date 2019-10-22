@@ -90,18 +90,24 @@ public class PetriNetUtil {
 		return nameList;
 	}
 	
+	// @refer more details : nl.tue.alignment.test.AlignmentTest
 	public static TransEvClassMapping constructMapping(XLog log, Petrinet net,  XEventClassifier eventClassifier, XEventClass dummyEvent) {
 		TransEvClassMapping mapping = new TransEvClassMapping(eventClassifier, dummyEvent);
-
+		// here we need dummy event to map invisible transition. Even if there is no corresponding event classes, we also need to map them
 		XLogInfo summary = XLogInfoFactory.createLogInfo(log, eventClassifier);
 		for (Transition t : net.getTransitions()) {
+			boolean mapped = false;
 			for (XEventClass evClass : summary.getEventClasses().getClasses()) {
 				String id = evClass.getId();
 
 				if (t.getLabel().trim().equals(id.trim())) {
+					mapped = true;
 					mapping.put(t, evClass);
 					break;
 				}
+			}
+			if (!mapped) {
+				mapping.put(t, dummyEvent);
 			}
 		}
 		return mapping;

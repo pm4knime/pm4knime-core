@@ -26,57 +26,56 @@ import org.pm4knime.util.XLogUtil;
 /**
  * <code>NodeDialog</code> for the "TesterCC" node.
  * 
- * @author 
+ * @author
  */
 public class TesterCCNodeDialog extends NodeDialogPane {
 	JPanel m_compositePanel;
 	SMAlignmentReplayParameter m_parameter;
 	final String[] strategyList = TesterCCNodeModel.strategyList;
-    /**
-     * New pane for configuring the TesterCC node.
-     */
-    protected TesterCCNodeDialog() {
-    	
-    	m_compositePanel = new JPanel();
-        m_compositePanel.setLayout(new BoxLayout(m_compositePanel,
-                BoxLayout.Y_AXIS));
-    	
-    	// we are going to use the customized SettingsModel for the node
-    	// how to import and output the fields from the model?? 
-    	// how to create the related dialog component? 
-    	m_parameter  = new SMAlignmentReplayParameter("Parameter in Tester");
-    	// we need to assign the classifier names tehre 
-    	List<String> classifierNames  =  getECNames(TesterCCNodeModel.classifierList);
-    	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
-    			m_parameter.getMClassifierName(), "Select Classifier Name", classifierNames );
-    	addDialogComponent(m_classifierComp);
-    	
-    	DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(
-    			m_parameter.getMStrategy(), "Select Replay Strategy", strategyList);
-    	addDialogComponent(m_strategyComp);
-    	
-    	
-    	Box box = new Box(BoxLayout.X_AXIS);
-    	DialogComponentNumberEdit[] defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
-    	for( int i=0; i< SMAlignmentReplayParameter.CFG_COST_TYPE_NUM ; i++) {
-    		defaultCostComps[i] = new DialogComponentNumberEdit(m_parameter.getMDefaultCosts()[i], 
-    				SMAlignmentReplayParameter.CFG_MCOST_KEY[i] ,5);
-    		box.add(defaultCostComps[i].getComponentPanel());
-    	}
-    	m_compositePanel.add(box);
-    	super.addTab("Options", m_compositePanel);
-    }
-    
-    private void addDialogComponent(final DialogComponent diaC) {
-		// TODO Auto-generated method stub
-    	m_compositePanel.add(diaC.getComponentPanel());
+
+	/**
+	 * New pane for configuring the TesterCC node.
+	 */
+	protected TesterCCNodeDialog() {
+
+		m_compositePanel = new JPanel();
+		m_compositePanel.setLayout(new BoxLayout(m_compositePanel, BoxLayout.Y_AXIS));
+
+		// we are going to use the customized SettingsModel for the node
+		// how to import and output the fields from the model??
+		// how to create the related dialog component?
+		m_parameter = new SMAlignmentReplayParameter("Parameter in Tester");
+		// we need to assign the classifier names tehre
+		List<String> classifierNames = getECNames(TesterCCNodeModel.classifierList);
+		DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
+				m_parameter.getMClassifierName(), "Select Classifier Name", classifierNames);
+		addDialogComponent(m_classifierComp);
+
+		DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(m_parameter.getMStrategy(),
+				"Select Replay Strategy", strategyList);
+		addDialogComponent(m_strategyComp);
+
+		Box box = new Box(BoxLayout.X_AXIS);
+		DialogComponentNumberEdit[] defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
+		for (int i = 0; i < SMAlignmentReplayParameter.CFG_COST_TYPE_NUM; i++) {
+			defaultCostComps[i] = new DialogComponentNumberEdit(m_parameter.getMDefaultCosts()[i],
+					SMAlignmentReplayParameter.CFG_MCOST_KEY[i], 5);
+			box.add(defaultCostComps[i].getComponentPanel());
+		}
+		m_compositePanel.add(box);
+		super.addTab("Options", m_compositePanel);
 	}
 
-	// this function can be included into the event classifier 
-    static List<String> getECNames(List<XEventClassifier> classifierList) {
+	private void addDialogComponent(final DialogComponent diaC) {
+		// TODO Auto-generated method stub
+		m_compositePanel.add(diaC.getComponentPanel());
+	}
+
+	// this function can be included into the event classifier
+	static List<String> getECNames(List<XEventClassifier> classifierList) {
 		// TODO Auto-generated method stub
 		List<String> classifierNames = new ArrayList();
-		for(XEventClassifier clf: classifierList) {
+		for (XEventClassifier clf : classifierList) {
 			classifierNames.add(clf.name());
 		}
 		return classifierNames;
@@ -88,8 +87,8 @@ public class TesterCCNodeDialog extends NodeDialogPane {
 		m_parameter.saveSettingsTo(settings);
 	}
 
-	protected void loadSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+			throws NotConfigurableException {
 		try {
 			m_parameter.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
@@ -97,7 +96,5 @@ public class TesterCCNodeDialog extends NodeDialogPane {
 			e.printStackTrace();
 		}
 	}
-	
-    
-}
 
+}

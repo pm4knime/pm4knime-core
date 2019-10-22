@@ -1,12 +1,7 @@
 package org.pm4knime.node.conformance;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -14,13 +9,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
@@ -36,8 +29,6 @@ import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
-import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 
 /**
  * <code>NodeDialog</code> for the "TesterCCWithCT" node.
@@ -126,20 +117,19 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 				// TODO: different classifier available
 				XEventClassifier eventClassifier = new XEventNameClassifier();
 				
-				XEventClass evClassDummy = TesterCCWithCTNodeModel.evClassDummy;
+				// here, no need to show the dummy event class name here
+//				XEventClass evClassDummy = TesterCCWithCTNodeModel.getDummyEC();
 				List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
-				ecNames.add(evClassDummy.getId());
+//				ecNames.add(evClassDummy.getId());
 				m_parameter.setCostTM(ecNames, 0);
 				
 				AcceptingPetriNet anet = netPO.getANet();
 				List<String> tNames = PetriNetUtil.extractTransitionNames(anet.getNet());
 				m_parameter.setCostTM(tNames, 1);
-				TransEvClassMapping mapping = PetriNetUtil.constructMapping(log, anet.getNet(), eventClassifier, evClassDummy);
-				SortedSet<String> sNames = new TreeSet();
-				for(Transition t: mapping.keySet()) {
-					sNames.add(t.getLabel() +" : "  + mapping.get(t).getId());
-				}
-				m_parameter.setCostTM(sNames, 2);	
+				
+				// if only names from transition side are in need, show the transitions names for dialog
+				// no need to refer dummy event classes
+				m_parameter.setCostTM(tNames, 2);	
 				m_parameter.setMWithTM(true);
 			}
 		}finally {
