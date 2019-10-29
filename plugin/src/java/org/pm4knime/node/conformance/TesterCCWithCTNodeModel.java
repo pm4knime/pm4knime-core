@@ -39,7 +39,7 @@ public class TesterCCWithCTNodeModel extends TesterCCNodeModel {
 		Collection<XEventClass> eventClasses =  logInfo.getEventClasses().getClasses();
 		SMAlignmentReplayParameterWithCT m_tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
 		
-		Map<XEventClass, Integer> mapEvClass2Cost = buildECCostMap(eventClasses, m_tmp.getMCostTMs()[0]);
+		Map<XEventClass, Integer> mapEvClass2Cost = buildECCostMap(eventClasses, m_tmp.getMCostTMs()[0], evClassDummy);
 		Map<Transition, Integer> mapTrans2Cost = buildTCostMap(anet.getNet().getTransitions(), m_tmp.getMCostTMs()[1]);
 		Map<Transition, Integer> mapSync2Cost = buildTCostMap(anet.getNet().getTransitions(), m_tmp.getMCostTMs()[2]);
 		
@@ -58,7 +58,7 @@ public class TesterCCWithCTNodeModel extends TesterCCNodeModel {
     	return parameters;
 	}
 	
-	private Map<XEventClass, Integer> buildECCostMap(Collection<XEventClass> eventClasses, TableModel tModel) {
+	private Map<XEventClass, Integer> buildECCostMap(Collection<XEventClass> eventClasses, TableModel tModel, XEventClass dummyEC) {
 		
 		Map<XEventClass, Integer> mapEvClass2Cost = new HashMap();
 		// get the cost parameters from the m_costTMs[0] for event classes
@@ -77,7 +77,7 @@ public class TesterCCWithCTNodeModel extends TesterCCNodeModel {
 		// need to add dummy event class here for compensate the use. The cost is 0 or not??
 		// It can't happen, the shown model has event names we can't find it...
 		//TODO : the cost for dummy event class
-		mapEvClass2Cost.put(evClassDummy, 0);
+		mapEvClass2Cost.put(dummyEC, 0);
 		return mapEvClass2Cost;
 	}
 

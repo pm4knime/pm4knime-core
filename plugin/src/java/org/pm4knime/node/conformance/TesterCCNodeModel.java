@@ -78,6 +78,7 @@ public class TesterCCNodeModel extends NodeModel implements PortObjectHolder{
 	PetriNetPortObject netPO ;
 	TransEvClassMapping mapping;
 	RepResultPortObject repResultPO;
+	private DataTableSpec m_tSpec;
 	/**
      * Constructor for the node model.
      */
@@ -129,14 +130,14 @@ public class TesterCCNodeModel extends NodeModel implements PortObjectHolder{
     }
 
     protected BufferedDataTable createInfoTable(Map<String, Object> info, final ExecutionContext exec) {
-    	
-    	DataColumnSpec[] cSpec = new DataColumnSpec[2];
-    	cSpec[0] = new DataColumnSpecCreator("Type", StringCell.TYPE).createSpec();
-    	cSpec[1] = new DataColumnSpecCreator("Value", DoubleCell.TYPE).createSpec();
-    	
-    	DataTableSpec tSpec = new DataTableSpec(cSpec);
+    	// we are sure about the spec and create it here
+//    	DataColumnSpec[] cSpec = new DataColumnSpec[2];
+//    	cSpec[0] = new DataColumnSpecCreator("Type", StringCell.TYPE).createSpec();
+//    	cSpec[1] = new DataColumnSpecCreator("Value", DoubleCell.TYPE).createSpec();
+//    	
+//    	DataTableSpec tSpec = new DataTableSpec(cSpec);
     	// can not define the name for this table 
-    	BufferedDataContainer buf = exec.createDataContainer(tSpec);
+    	BufferedDataContainer buf = exec.createDataContainer(m_tSpec);
     	int i=0;
     	for(String key : info.keySet()) {
     		Double value = (Double) info.get(key);
@@ -237,8 +238,15 @@ public class TesterCCNodeModel extends NodeModel implements PortObjectHolder{
 		if (!inSpecs[INPORT_PETRINET].getClass().equals(PetriNetPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid Petri net!");
 
+		// here we should give its spec for statistics info
+		DataColumnSpec[] cSpec = new DataColumnSpec[2];
+    	cSpec[0] = new DataColumnSpecCreator("Type", StringCell.TYPE).createSpec();
+    	cSpec[1] = new DataColumnSpecCreator("Value", DoubleCell.TYPE).createSpec();
+    	
+    	m_tSpec = new DataTableSpec(cSpec);
+		
 		RepResultPortObjectSpec aSpec = new RepResultPortObjectSpec();
-        return new PortObjectSpec[]{null ,aSpec};
+        return new PortObjectSpec[]{m_tSpec ,aSpec};
     }
 
     /**

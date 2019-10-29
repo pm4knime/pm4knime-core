@@ -12,10 +12,8 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.PetriNetUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
-import org.processmining.framework.plugin.PluginContext;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -68,10 +66,7 @@ public class PetrinetReaderNodeModel extends NodeModel {
             logger.info("Read Naive Petri net !");
             
             // read the file and create fileInputStream
-            
-            PluginContext context =  PM4KNIMEGlobalContext.instance().getPM4KNIMEPluginContext();
-            AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet();
-			anet.importFromStream(context, new FileInputStream(m_fileName.getStringValue()));
+            AcceptingPetriNet anet = PetriNetUtil.importFromStream(new FileInputStream(m_fileName.getStringValue()));
 			
         	m_netPort = new PetriNetPortObject(anet);
         }

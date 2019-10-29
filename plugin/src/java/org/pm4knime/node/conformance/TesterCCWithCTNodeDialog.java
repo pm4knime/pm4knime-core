@@ -32,14 +32,14 @@ import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 
 /**
  * <code>NodeDialog</code> for the "TesterCCWithCT" node.
- * 
+ *  reorganize the codes to have more structure for extension
  * @author Kefang Ding
  */
 public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 	
-	JPanel m_compositePanel;
-	SMAlignmentReplayParameterWithCT m_parameter;
-	final String[] strategyList = TesterCCNodeModel.strategyList;
+	protected JPanel m_compositePanel;
+	protected SMAlignmentReplayParameter m_parameter;
+	protected String[] strategyList = TesterCCNodeModel.strategyList;
     /**
      * New pane for configuring the TesterCC node.
      */
@@ -49,11 +49,27 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
         m_compositePanel.setLayout(new BoxLayout(m_compositePanel,
                 BoxLayout.Y_AXIS));
     	
-    	// we are going to use the customized SettingsModel for the node
-    	// how to import and output the fields from the model?? 
-    	// how to create the related dialog component? 
+        specialInit();
+        
+    	super.addTab("Options", m_compositePanel);
+    }
+    
+    protected void specialInit() {
+		// TODO Auto-generated method stub
     	m_parameter  = new SMAlignmentReplayParameterWithCT("Parameter in Tester with CT");
-    	// we need to assign the classifier names tehre 
+    	
+		commonInitPanel(m_parameter);
+		
+		// here to add special codes from the additional items
+    	Box tbox = new Box(BoxLayout.Y_AXIS);
+    	for( int i=0; i< SMAlignmentReplayParameterWithCT.CFG_COST_TYPE_NUM ; i++) {
+    		tbox.add(createTable(i));
+		}
+    	
+    	m_compositePanel.add(tbox);
+	}
+    
+    protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
     	List<String> classifierNames  =  TesterCCNodeDialog.getECNames(TesterCCNodeModel.classifierList);
     	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
     			m_parameter.getMClassifierName(), "Select Classifier Name", classifierNames );
@@ -72,18 +88,10 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
     		cbox.add(defaultCostComps[i].getComponentPanel());
     	}
     	m_compositePanel.add(cbox);
-    	// here we need to change the direction and make it vertically
-    	Box tbox = new Box(BoxLayout.Y_AXIS);
-    	for( int i=0; i< SMAlignmentReplayParameterWithCT.CFG_COST_TYPE_NUM ; i++) {
-    		tbox.add(createTable(i));
-		}
     	
-    	m_compositePanel.add(tbox);
-    	
-    	super.addTab("Options", m_compositePanel);
     }
     
-    private void addDialogComponent(final DialogComponent diaC) {
+    protected void addDialogComponent(final DialogComponent diaC) {
 		// TODO Auto-generated method stub
     	m_compositePanel.add(diaC.getComponentPanel());
 	}
@@ -103,7 +111,9 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 			
 		} catch (InvalidSettingsException e) {
 			// TODO if there is not with TM, we set it from the input PortObject
-			if(!m_parameter.isMWithTM()) {
+			SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+			
+			if(!tmp.isMWithTM()) {
 				if (!(input[TesterCCWithCTNodeModel.INPORT_LOG] instanceof XLogPortObject))
 					throw new NotConfigurableException("Input is not a valid event log!");
 
@@ -121,16 +131,16 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 //				XEventClass evClassDummy = TesterCCWithCTNodeModel.getDummyEC();
 				List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
 //				ecNames.add(evClassDummy.getId());
-				m_parameter.setCostTM(ecNames, 0);
+				tmp.setCostTM(ecNames, 0);
 				
 				AcceptingPetriNet anet = netPO.getANet();
 				List<String> tNames = PetriNetUtil.extractTransitionNames(anet.getNet());
-				m_parameter.setCostTM(tNames, 1);
+				tmp.setCostTM(tNames, 1);
 				
 				// if only names from transition side are in need, show the transitions names for dialog
 				// no need to refer dummy event classes
-				m_parameter.setCostTM(tNames, 2);	
-				m_parameter.setMWithTM(true);
+				tmp.setCostTM(tNames, 2);	
+				tmp.setMWithTM(true);
 			}
 		}finally {
 			m_compositePanel.repaint();
@@ -162,7 +172,8 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 	 * names -- costTable passed through the NodeModel and JTable
 	 */
 	private JScrollPane createTable(int idx) {
-		DefaultTableModel costTM = m_parameter.getMCostTMs()[idx];
+		SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+		DefaultTableModel costTM = tmp.getMCostTMs()[idx];
 		
 		JTable table = new JTable(costTM) {
 			@Override
@@ -171,7 +182,7 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 			}
 		};
 
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		JScrollPane tPane = new JScrollPane(table);
 		if (idx < 1)

@@ -3,6 +3,8 @@ package org.pm4knime.portobject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
@@ -15,15 +17,18 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
+import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.acceptingpetrinet.plugins.VisualizeAcceptingPetriNetPlugin;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.connections.GraphLayoutConnection;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
 import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetImpl;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
 import org.processmining.plugins.pnml.base.Pnml;
 import org.processmining.plugins.pnml.base.Pnml.PnmlType;
@@ -91,12 +96,6 @@ public class PetriNetPortObject  implements PortObject{
 		return text;
 	}
 	
-	public static AcceptingPetriNet convert2ANet(InputStream in) throws Exception {
-		PluginContext context =  PM4KNIMEGlobalContext.instance().getPM4KNIMEPluginContext();
-		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet();
-		anet.importFromStream(context, in);
-		return anet;
-	}
 	
 	// this doesn't work due to the strategy left from ProM, it reads the file pnml and creates a new net
 	// we can't change it yet.
@@ -164,7 +163,7 @@ public class PetriNetPortObject  implements PortObject{
 				// they put layout information into context, if we want to show the them, 
 				// we need to keep the context the same in load and save program. But how to do this??
 				// that's why there is context in portObject. If we also save the context, what can be done??
-				AcceptingPetriNet anet = convert2ANet(in);
+				AcceptingPetriNet anet =PetriNetUtil.importFromStream(in);
 				result = new PetriNetPortObject(anet);
 				
 			} catch (Exception e) {

@@ -1,5 +1,7 @@
 package org.pm4knime.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,13 +16,23 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
+import org.processmining.models.connections.GraphLayoutConnection;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
+import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
+import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
+import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
+import org.processmining.plugins.pnml.base.Pnml;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 public class PetriNetUtil {
 
@@ -111,5 +123,75 @@ public class PetriNetUtil {
 			}
 		}
 		return mapping;
+	}
+	
+	// import the Petri net from a pnml file with the same transition id.
+	public static Pnml importPnmlFromStream(InputStream input) throws XmlPullParserException, IOException {
+		FullPnmlElementFactory pnmlFactory = new FullPnmlElementFactory();
+		
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		factory.setNamespaceAware(true);
+		XmlPullParser xpp = factory.newPullParser();
+		xpp.setInput(input, null);
+		int eventType = xpp.getEventType();
+		
+		Pnml pnml = new Pnml();
+		synchronized (pnmlFactory) {
+			pnml.setFactory(pnmlFactory);
+
+			/*
+			 * Skip whatever we find until we've found a start tag.
+			 */
+			while (eventType != XmlPullParser.START_TAG) {
+				eventType = xpp.next();
+			}
+			/*
+			 * Check whether start tag corresponds to PNML start tag.
+			 */
+			if (xpp.getName().equals(Pnml.TAG)) {
+				/*
+				 * Yes it does. Import the PNML element.
+				 */
+				pnml.importElement(xpp, pnml);
+			} else {
+				/*
+				 * No it does not. Return null to signal failure.
+				 */
+				pnml.log(Pnml.TAG, xpp.getLineNumber(), "Expected pnml");
+			}
+			if (pnml.hasErrors()) {
+				return null;
+			}
+			return pnml;
+		}
+	}
+	
+	public static AcceptingPetriNet connectNet(Pnml pnml, PetrinetGraph net) {
+		/*
+		 * Return the net and the marking.
+		 */
+		Marking marking = new Marking();
+		Set<Marking> finalMarkings = new HashSet<Marking>();
+		GraphLayoutConnection layout = new GraphLayoutConnection(net);
+		
+		pnml.convertToNet(net, marking, finalMarkings, layout);
+		
+		AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) net, marking, finalMarkings);
+		
+		return anet;
+	}
+	
+	public static AcceptingPetriNet importFromStream(InputStream input ) throws XmlPullParserException, IOException {
+		Pnml pnml = importPnmlFromStream(input);
+		
+		if (pnml == null) {
+			/*
+			 * No PNML found in file. Fail.
+			 */
+			return null;
+		}
+		
+		Petrinet net = PetrinetFactory.newPetrinet(pnml.getLabel());
+		return connectNet(pnml, net);
 	}
 }
