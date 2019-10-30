@@ -184,16 +184,16 @@ public class PerformanceCheckerNodeModel extends NodeModel {
     	// create one for transition, one for place there
     	DataTableSpec tSpec = createElemenentStatsTableSpec("Transition");
     	BufferedDataContainer tBuf = exec.createDataContainer(tSpec);
-    	infoAssistant.fillTransitionData(tBuf, mResult, anet.getNet().getTransitions());
+    	infoAssistant.fillTransitionData(tBuf, anet.getNet().getTransitions());
     	
     	DataTableSpec pSpec = createElemenentStatsTableSpec("Place");
     	BufferedDataContainer pBuf = exec.createDataContainer(pSpec);
-    	infoAssistant.fillPlaceData(pBuf, mResult, anet.getNet().getPlaces());
+    	infoAssistant.fillPlaceData(pBuf, anet.getNet().getPlaces());
     	
     	gBuf.close();
     	tBuf.close();
     	pBuf.close();
-    	logger.info("End: ManifestReplayer Conformance Checking");
+    	logger.info("End: ManifestReplayer Performance Evaluation");
         return new PortObject[]{repResultPO, gBuf.getTable(), tBuf.getTable(), pBuf.getTable()};
     }
 
@@ -214,8 +214,9 @@ public class PerformanceCheckerNodeModel extends NodeModel {
      * @return
      */
     private DataTableSpec createElemenentStatsTableSpec(String itemColName) {
+    	// here we need to change the table spec according to the places 
     	String[] columnNames = {itemColName, "Property", "Min.", "Max.", "Avg.", "Std. Dev", "Freq."};
-    	DataType[] columnTypes ={StringCell.TYPE, StringCell.TYPE, DoubleCell.TYPE,DoubleCell.TYPE, DoubleCell.TYPE, DoubleCell.TYPE, DoubleCell.TYPE};
+    	DataType[] columnTypes ={StringCell.TYPE, StringCell.TYPE, StringCell.TYPE,StringCell.TYPE, StringCell.TYPE, StringCell.TYPE, StringCell.TYPE};
     	DataTableSpec tSpec = new DataTableSpec(itemColName + " Table", columnNames, columnTypes);
     	return tSpec;
     }
@@ -224,7 +225,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
      */
     private DataTableSpec createGlobalStatsTableSpec() {
     	String[] columnNames = { "Case Property", "Value"};
-    	DataType[] columnTypes ={StringCell.TYPE, DoubleCell.TYPE};
+    	DataType[] columnTypes ={StringCell.TYPE, StringCell.TYPE};
     	DataTableSpec tSpec = new DataTableSpec( "Global Performance Statistics Table", columnNames, columnTypes);
     	return tSpec;
     }
@@ -326,10 +327,6 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		}
     	return pattern;
     }
-	
-	public RepResultPortObject getRepResultPO() {
-		return repResultPO;
-	}
     
     /**
      * {@inheritDoc}
@@ -358,10 +355,6 @@ public class PerformanceCheckerNodeModel extends NodeModel {
     	
     }
 
-    public XLogPortObject getLogPO() {
-		return logPO;
-	}
-    
     public PerfCounter getCounter() {
     	return counter;
     }
@@ -404,7 +397,6 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// TODO Auto-generated method stub
 		
 	}
-	
 	
 
 }

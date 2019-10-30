@@ -27,11 +27,13 @@ import org.processmining.plugins.petrinet.manifestreplayresult.ManifestEvClassPa
 public class PerfCheckerInfoAssistant {
 	PerfCounter infoProvider;
 	SMPerformanceParameter m_parameter;
-	Manifest  mResult;
+	ManifestEvClassPattern  mResult;
+	NumberFormat nfDouble ;
+	NumberFormat nfInteger;
 	// init it with the counter information
 	public PerfCheckerInfoAssistant(SMPerformanceParameter parameter, Manifest  manifest, PerfCounter counter) {
 		m_parameter = parameter;
-		mResult = manifest;
+		mResult = (ManifestEvClassPattern) manifest;
 		
 		infoProvider = counter;
 		buildInfoParameter();
@@ -51,7 +53,17 @@ public class PerfCheckerInfoAssistant {
 			}
 		}
 		
-		infoProvider.init((ManifestEvClassPattern) mResult, timeAttr, XLogUtil.getAttrClass(mResult.getLog(), timeAttr), caseFilter);
+		infoProvider.init( mResult, timeAttr, XLogUtil.getAttrClass(mResult.getLog(), timeAttr), caseFilter);
+		
+		// format 
+		nfDouble = NumberFormat.getInstance();
+		nfDouble.setMinimumFractionDigits(2);
+		nfDouble.setMaximumFractionDigits(2);
+	
+		nfInteger = NumberFormat.getInstance();
+		nfInteger.setMinimumFractionDigits(0);
+		nfInteger.setMaximumFractionDigits(0);
+
 	}
 	
 	public void fillGlobalData(BufferedDataContainer gBuf) {
@@ -61,10 +73,6 @@ public class PerfCheckerInfoAssistant {
 //		currentRow[1] = new DoubleCell(0.5);
 //		gBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
 		
-		// format 
-		NumberFormat nfDouble = NumberFormat.getInstance();
-		nfDouble.setMinimumFractionDigits(2);
-		nfDouble.setMaximumFractionDigits(2);
 		
 		
 		int propCounter = 0;
@@ -74,6 +82,7 @@ public class PerfCheckerInfoAssistant {
 		currentRow[0] = new StringCell("#Cases");
 		currentRow[1] = new StringCell((infoProvider.getCaseTotalFreq() > 0 ? infoProvider.getCaseTotalFreq() : "-") + "");
 		gBuf.addRowToTable(new DefaultRow(propCounter +"", currentRow));
+		propCounter++;
 		
 		// info[propCounter++] = new Object[] { "#Perfectly-fitting cases", infoProvider.getCaseTotalFreq() > 0 ? infoProvider.getCaseTotalFreq() - infoProvider.getCaseNonFittingFreq() : "-"};
 		currentRow = new DataCell[2];
@@ -136,24 +145,97 @@ public class PerfCheckerInfoAssistant {
 	}
 	
 	
-	public void fillPlaceData(BufferedDataContainer pBuf, Manifest mResult, Collection<Place> places) {
+	public void fillPlaceData(BufferedDataContainer pBuf, Collection<Place> places) {
 		// TODO Auto-generated method stub
-		DataCell[] currentRow = new DataCell[pBuf.getTableSpec().getNumColumns()];
-		currentRow[0] = new StringCell("Test Place");
-		currentRow[1] = new StringCell("Test Place Pro");
-		for(int i=2; i< pBuf.getTableSpec().getNumColumns() ; i++)
-			currentRow[i] = new DoubleCell(0.5);
-		pBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
+//		DataCell[] currentRow = new DataCell[pBuf.getTableSpec().getNumColumns()];
+//		currentRow[0] = new StringCell("Test Place");
+//		currentRow[1] = new StringCell("Test Place Pro");
+//		for(int i=2; i< pBuf.getTableSpec().getNumColumns() ; i++)
+//			currentRow[i] = new DoubleCell(0.5);
+//		pBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
+		
+		String[] properties = { "Waiting time", "Synchronization time", "Sojourn time"};
+		
+		for(Place place : places) {
+			int encodedPlaceID = infoProvider.getEncOfPlace(place);
+			double[] infoNumber = infoProvider.getPlaceStats(encodedPlaceID);
+			
+			int counterInfoNumber = 0;
+			
+			if (counterInfoNumber < infoNumber.length) {
+				
+				for(int pIdx = 0; pIdx < properties.length; pIdx++) {
+					
+					int i=0;
+					DataCell[] currentRow = new DataCell[7];
+					currentRow[i++] = new StringCell(place.getLabel());
+					currentRow[i++] = new StringCell(properties[pIdx]);
+					
+					while(i< currentRow.length - 1) {
+						currentRow[i] = new StringCell(TimeFormatter.formatTime(infoNumber[counterInfoNumber++], nfDouble));
+						i++;
+					}
+					
+					currentRow[i] = new StringCell(nfInteger.format(infoNumber[counterInfoNumber++]));
+					pBuf.addRowToTable(new DefaultRow(encodedPlaceID +"-"+pIdx, currentRow));
+					
+				}
+				
+			}
+			
+		}
+		
 	}
 
-	public void fillTransitionData(BufferedDataContainer tBuf, Manifest mResult, Collection<Transition> transitions) {
+	// add all transitions performance info to the tBuf
+	public void fillTransitionData(BufferedDataContainer tBuf, Collection<Transition> transitions) {
 		// TODO Auto-generated method stub
-		DataCell[] currentRow = new DataCell[tBuf.getTableSpec().getNumColumns()];
-		currentRow[0] = new StringCell("Test Transition");
-		currentRow[1] = new StringCell("Test Transition Pro");
-		for(int i=2; i< tBuf.getTableSpec().getNumColumns() ; i++)
-			currentRow[i] = new DoubleCell(0.5);
-		tBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
+//		DataCell[] currentRow = new DataCell[tBuf.getTableSpec().getNumColumns()];
+//		currentRow[0] = new StringCell("Test Transition");
+//		currentRow[1] = new StringCell("Test Transition Pro");
+//		for(int i=2; i< tBuf.getTableSpec().getNumColumns() ; i++)
+//			currentRow[i] = new DoubleCell(0.5);
+//		tBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
+//		
+		String[] properties = {"Throughput time", "Waiting time", "Sojourn time"};
+		// to fit the existing methods, get the transitions number
+		for(Transition trans : transitions) {
+			int encodedTransID = infoProvider.getEncOfTrans(trans);
+			double[] infoNumber = infoProvider.getTransStats(mResult, encodedTransID);
+			
+			if (infoNumber != null) {
+				int counterInfoNumber = PerfCounter.MULTIPLIER;
+				if (counterInfoNumber < infoNumber.length) {
+					
+					String patternName = "Pattern : "
+							+ infoProvider.getPatternString(mResult, (short) infoNumber[counterInfoNumber++]);
+					
+					// TODO : represent number of length with one specific variable 
+					for(int pIdx = 0; pIdx < properties.length; pIdx++) {
+						
+						int i=0;
+						DataCell[] currentRow = new DataCell[7];
+						currentRow[i++] = new StringCell(patternName);
+						currentRow[i++] = new StringCell(properties[pIdx]);
+						
+						while(i< currentRow.length - 1) {
+							currentRow[i] = new StringCell(TimeFormatter.formatTime(infoNumber[counterInfoNumber++], nfDouble));
+							i++;
+						}
+						int temp = 8 - 3*pIdx;
+						currentRow[i] = new StringCell(nfInteger.format(infoNumber[counterInfoNumber + temp]));
+						
+						// change the row name for it
+						tBuf.addRowToTable(new DefaultRow(encodedTransID +"-"+pIdx, currentRow));
+						
+					}
+					
+					// TODO: missing this value, but will go for it later unique cases througput, 
+					
+				}
+			}
+			
+		}
 	}
 
 	

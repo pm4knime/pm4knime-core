@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./default.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>CVS2XLogConverter</name>
+    <name>CVS2XLog Converter</name>
     
     <shortDescription>
         This node converts a cvs file read from KNIME platform into an event log of XLogPortObject. For the converstion, we code without using plugin from ProM. 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./default.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Conformance Checker</name>
+    <name>Conformance Checker(Default)</name>
     
      <shortDescription>
         This node is set for the unified conformance cheking without  configuration from event log and Petri net. It's proper to use in a loop. It includes the unified options: the unified cost for moves, the replayer, the classifier. 
