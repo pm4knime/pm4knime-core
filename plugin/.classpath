@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< HEAD
 	<classpathentry exported="true" kind="lib" path="lib/ETConformance-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/PNAnalysis-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Alignment-latest.jar"/>
@@ -231,25 +232,32 @@
 	<classpathentry kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
 	<classpathentry kind="lib" path="lib/InteractiveVisualization-latest.jar"/>
 	<classpathentry kind="lib" path="lib/Spex-1.1.jar"/>
+=======
+	<classpathentry kind="lib" path="lib/AcceptingPetriNet-latest.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="lib" path="lib/Alignment-latest.jar"/>
+>>>>>>> c76a3cce009234299a24be10c6b56e30b56cec14
 	<classpathentry kind="lib" path="lib/BasicUtils-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InductiveMinerDeprecated-latest.jar"/>
-	<classpathentry kind="lib" path="lib/Widgets-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LogAbstractions-latest.jar"/>
 	<classpathentry kind="lib" path="lib/EfficientStorage-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LogDialog-latest.jar"/>
+	<classpathentry kind="lib" path="lib/InductiveMiner-latest.jar"/>
+	<classpathentry kind="lib" path="lib/InductiveMinerDeprecated-latest.jar"/>
 	<classpathentry kind="lib" path="lib/Log-latest.jar"/>
+	<classpathentry kind="lib" path="lib/LogAbstractions-latest.jar"/>
+	<classpathentry kind="lib" path="lib/LogDialog-latest.jar"/>
+	<classpathentry kind="lib" path="lib/LogEnhancement-latest.jar"/>
+	<classpathentry kind="lib" path="lib/LogProjection-latest.jar"/>
 	<classpathentry kind="lib" path="lib/LpSolve-latest.jar"/>
 	<classpathentry kind="lib" path="lib/OpenXES-20181205.jar"/>
-	<classpathentry kind="lib" path="lib/PNetReplayer-latest.jar"/>
-	<classpathentry kind="lib" path="lib/AcceptingPetriNet-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InductiveMiner-latest.jar"/>
 	<classpathentry kind="lib" path="lib/PetriNets-latest.jar"/>
+	<classpathentry kind="lib" path="lib/PNetAlignmentAnalysis-latest.jar"/>
+	<classpathentry kind="lib" path="lib/PNetReplayer-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ProM-Contexts-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ProM-Framework-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ProM-Models-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ProM-Plugins-latest.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="lib" path="lib/Widgets-latest.jar"/>
+	<classpathentry kind="lib" path="lib/XESLite-latest.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

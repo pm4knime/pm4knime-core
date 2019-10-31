@@ -18,7 +18,7 @@ public class PM4KNIMEPackageDescriptor extends PackageDescriptor {
 
 	private static final String NAME = "pm4knime";
 	// TODO: read this from some properties file
-	private static final String VERSION = "0.0.1";
+	private static final String VERSION = "0.0.2";
 	// TODO: use a util function that returns the appropriate value here
 	private static final OS OS_VAR = OS.ALL;
 	private static final String DESCRIPTION = "Placeholder package for pm4knime";
