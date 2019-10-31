@@ -125,7 +125,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
             final ExecutionContext exec) throws Exception {
 
         // TODO: Return a BufferedDataTable for each output port 
-    	logger.info("Start: ManifestReplayer Conformance Checking");
+    	logger.info("Start: ManifestReplayer Performance Checking");
     	logPO = (XLogPortObject) inData[INPORT_LOG];
 		netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
     	
@@ -163,7 +163,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// based on the result, we get other information listed here
 		PNRepResult pnRepResult = Manifest2PNRepResult.convert(mResult);
 		
-		repResultPO = new RepResultPortObject(pnRepResult, logPO);
+		repResultPO = new RepResultPortObject(pnRepResult, logPO, netPO);
 		
 		
 		// global statistics information. It includes all the performance info, the whole process

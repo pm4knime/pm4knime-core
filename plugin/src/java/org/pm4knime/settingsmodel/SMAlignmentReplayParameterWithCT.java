@@ -8,6 +8,7 @@ import javax.swing.table.TableModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.pm4knime.util.PetriNetUtil;
 
 /**
  * this class will have a specified cost table for the parameter
@@ -102,9 +103,13 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 		
 		// if this DataTable is new created, add column  names to it
 		if(m_costTMs[idx].getDataVector().size() < 1) {
-			
+			// TODO : to distinguish the invisible transitions and set its cost to 0 
+			// we have two parts from this.
    			for(String name : nameList ) {
- 				m_costTMs[idx].addRow(new Object[] {name, CFG_DEFAULT_MCOST[idx]});
+   				if(PetriNetUtil.isTauName(name))
+   					m_costTMs[idx].addRow(new Object[] {name, 0});
+   				else
+   					m_costTMs[idx].addRow(new Object[] {name, CFG_DEFAULT_MCOST[idx]});
 			}
 			
 		}else {
@@ -112,7 +117,11 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 			int i=0;
 			for(String name : nameList ) {
 				m_costTMs[idx].setValueAt(name, i, 0);
-				m_costTMs[idx].setValueAt(CFG_DEFAULT_MCOST[idx], i, 1);
+				if(PetriNetUtil.isTauName(name)) {
+					m_costTMs[idx].setValueAt(0, i, 1);
+				}else {
+   					m_costTMs[idx].setValueAt(CFG_DEFAULT_MCOST[idx], i, 1);
+   				}
 				i++;
 			}
 		}

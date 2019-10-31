@@ -257,7 +257,9 @@ Bundle-ClassPath: .,
  lib/Visualisation3D-latest.jar,
  lib/weka-stable-3.8.0.jar,
  lib/xercesImpl-2.11.0.jar,
- lib/xstream-1.4.9.jar
+ lib/xstream-1.4.9.jar,
+ lib/ETConformance-latest.jar,
+ lib/PNAnalysis-latest.jar
 Export-Package: org.pm4knime.node.conformance,
  org.pm4knime.node.discovery.inductiveminer,
  org.pm4knime.node.io.log.reader,

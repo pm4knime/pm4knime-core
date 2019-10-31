@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/ETConformance-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PNAnalysis-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Alignment-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-1.9.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/antlr4-runtime-4.5.jar"/>

@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
-<plugin>
- <extension
-         point="org.knime.workbench.repository.categories">
-      <category path="/" name="Process Mining" level-id="processmining"/>
-	<category level-id="io" path="/processmining" name="IO" />
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?><plugin>
+ <extension point="org.knime.workbench.repository.categories">
+      <category level-id="processmining" name="Process Mining" path="/"/>
+	<category level-id="io" name="IO" path="/processmining"/>
 	<category level-id="manipulation" name="Manipulation" path="/processmining"/>
 	<category level-id="conversion" name="Conversion" path="/processmining"/>
 	
-	<category level-id="discovery" path="/processmining" name="Discovery" />
-	<category level-id="conformance" path="/processmining" name="Conformance" />
+	<category level-id="discovery" name="Discovery" path="/processmining"/>
+	<category level-id="conformance" name="Conformance" path="/processmining"/>
 	<category level-id="performance" name="Performance" path="/processmining"/>
+	<category level-id="precision" name="Precision" path="/processmining"/>
 	
 	
 	
@@ -52,7 +51,9 @@
    <!-- nodes in performance-->
   	<node category-path="/processmining/performance" factory-class="org.pm4knime.node.performance.PerformanceCheckerNodeFactory" id="org.pm4knime.node.performance.PerformanceCheckerNodeFactory"/>
   
-  </extension>
+     <node category-path="/processmining/precision" factory-class="org.pm4knime.node.precision.PrecisionCheckerNodeFactory" id="org.pm4knime.node.precision.PrecisionCheckerNodeFactory"/>
+<node category-path="/" factory-class="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory" id="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory"/>
+</extension>
 
 	<extension point="org.knime.core.PortType">
 		<portType hidden="false" name="Event Log" objectClass="org.pm4knime.portobject.XLogPortObject" objectSerializer="org.pm4knime.portobject.XLogPortObject$XLogPortObjectSerializer" specClass="org.pm4knime.portobject.XLogPortObjectSpec" specSerializer="org.pm4knime.portobject.XLogPortObjectSpec$XLogPortObjectSpecSerializer"> </portType>

@@ -58,13 +58,14 @@ public class RepResultPortObject implements PortObject {
 	
 	// it points to the related Petrinet object and xlog port object
 	// no need to serialize the pnPO, but needs the reference there??? Difficulty here
-	// PetriNetPortObject pnPO;
+	PetriNetPortObject pnPO;
 	XLogPortObject xlogPO;
 	
-	public RepResultPortObject(PNRepResult repResult, XLogPortObject xlogPO) { // PetriNetPortObject pnPO,
+	public RepResultPortObject(PNRepResult repResult, XLogPortObject xlogPO, PetriNetPortObject pnPO) { // PetriNetPortObject pnPO,
 		this.repResult = repResult;
 		// this.pnPO = pnPO;
 		this.xlogPO = xlogPO;
+		this.pnPO = pnPO;
 	}
 	
 	public RepResultPortObject() {}
@@ -79,6 +80,10 @@ public class RepResultPortObject implements PortObject {
 	
 	public XLogPortObject getLogPO() {
 		return xlogPO;
+	}
+	
+	public PetriNetPortObject getPNPO() {
+		return pnPO;
 	}
 	@Override
 	public String getSummary() {

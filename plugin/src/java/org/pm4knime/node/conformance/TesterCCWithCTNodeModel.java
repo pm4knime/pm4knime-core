@@ -90,7 +90,7 @@ public class TesterCCWithCTNodeModel extends TesterCCNodeModel {
 			String[] splitStr = eventNames.split("[^a-zA-Z0-9\\s]");
 			// find its cost and add them into 
 			Transition t = PetriNetUtil.findTransition(splitStr[0], transitions);
-			
+			// TODO: if the transition is invisible, the cost is zero there 
 			int mCost = Integer.parseInt( (String) tModel.getValueAt(i, 1));
 			mapTrans2Cost.put(t, mCost);
 		}
