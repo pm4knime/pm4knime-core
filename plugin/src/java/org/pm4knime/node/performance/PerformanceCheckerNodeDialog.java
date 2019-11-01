@@ -70,8 +70,8 @@ public class PerformanceCheckerNodeDialog extends TesterCCWithCTNodeDialog {
 				tmp.CKF_KEY_TIMESTAMP, new String[]{""} ) ;
 		addDialogComponent(m_timestampComp);
 		
-		DialogComponentBoolean m_withUnResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(), tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
-    	addDialogComponent(m_withUnResultComp);
+		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(), tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
+    	addDialogComponent(m_withUnreliableResultComp);
     }
     
     /**

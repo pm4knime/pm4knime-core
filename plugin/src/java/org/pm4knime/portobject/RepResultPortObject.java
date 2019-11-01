@@ -1,6 +1,5 @@
 package org.pm4knime.portobject;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,13 +12,15 @@ import java.util.zip.ZipEntry;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
-import org.knime.core.node.port.PortObject.PortObjectSerializer;
+import org.pm4knime.util.PetriNetUtil;
+import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
@@ -49,6 +50,9 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 public class RepResultPortObject implements PortObject {
 
 	private static final String ZIP_ENTRY_NAME = "RepResultPortObject";
+	private static final String ZIP_ENTRY_LOG = "XLog";
+	private static final String ZIP_ENTRY_NET = "Accepting Petri net";
+	private static final String ZIP_ENTRY_REP_RESULT = "Replay Result";
 	// alignment result but only for one trace variance
 	// SyncReplayResult alignment;
 	
@@ -58,14 +62,20 @@ public class RepResultPortObject implements PortObject {
 	
 	// it points to the related Petrinet object and xlog port object
 	// no need to serialize the pnPO, but needs the reference there??? Difficulty here
-	PetriNetPortObject pnPO;
-	XLogPortObject xlogPO;
+	// here one thing is, do we need to use the PortObject, or just Log and Petri net?? 
+	// with using of PortObject, one thing is the writing. We can not change the methods, to say if we keep the 
+	// input and output strean, close, or open. If there is one, then we need to keep it open
+	// so change the saved object without Port Object
+	// PetriNetPortObject pnPO;
+	// XLogPortObject xlogPO;
+	XLog log;
+	AcceptingPetriNet anet;
 	
-	public RepResultPortObject(PNRepResult repResult, XLogPortObject xlogPO, PetriNetPortObject pnPO) { // PetriNetPortObject pnPO,
+	public RepResultPortObject(PNRepResult repResult, XLog xlog, AcceptingPetriNet anet) { // PetriNetPortObject pnPO,
 		this.repResult = repResult;
 		// this.pnPO = pnPO;
-		this.xlogPO = xlogPO;
-		this.pnPO = pnPO;
+		this.log = xlog;
+		this.anet = anet;
 	}
 	
 	public RepResultPortObject() {}
@@ -78,13 +88,21 @@ public class RepResultPortObject implements PortObject {
 		return repResult;
 	}
 	
-	public XLogPortObject getLogPO() {
-		return xlogPO;
+	public XLog getLog() {
+		return log;
+	}
+	public void setLog(XLog log) {
+		// TODO Auto-generated method stub
+		this.log = log;
+	}
+	public AcceptingPetriNet getNet() {
+		return anet;
 	}
 	
-	public PetriNetPortObject getPNPO() {
-		return pnPO;
+	public void setNet(AcceptingPetriNet anet) {
+		this.anet = anet;
 	}
+	
 	@Override
 	public String getSummary() {
 		// TODO Auto-generated method stub
@@ -104,7 +122,7 @@ public class RepResultPortObject implements PortObject {
 		// if we need to the log information, how to serialize it?? 
 		// reopening this workflow, we need to load event log such that we can show the portobject;
 		// but one step is here, not know how to do this..
-		PNLogReplayResultVisPanel resultPanel = new PNLogReplayResultVisPanel(xlogPO.getLog(), repResult, context.getProgress());
+		PNLogReplayResultVisPanel resultPanel = new PNLogReplayResultVisPanel(log, repResult, context.getProgress());
 		// resutPanel.setBackground(Color.BLACK);
 		resultPanel.setName("Alignment Projection");
 		return new JComponent[] {resultPanel};
@@ -120,10 +138,10 @@ public class RepResultPortObject implements PortObject {
 				throws IOException, CanceledExecutionException {
 			// TODO get item of alignment one item for another item to serialze them
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NAME));
-			
 			System.out.println("Enter the save PO in serializer");
-			
 			ObjectOutputStream objOut = new ObjectOutputStream(out);
+			
+			out.putNextEntry(new ZipEntry(ZIP_ENTRY_REP_RESULT));
 			PNRepResult repResult = portObject.getRepResult();
 			// to mark the end of the elements
 			objOut.writeInt(repResult.size());
@@ -153,17 +171,6 @@ public class RepResultPortObject implements PortObject {
 						objOut.writeUTF(t.getClass().getName());
 						objOut.writeUTF(t.getLabel());
 						objOut.writeObject(t.getId());
-						// objOut.writeObject(t.getLocalID());
-						// here how to serialize a graph??
-						// we can't serializa for each transition like this way, 
-						// one object but multiple references, t.getGraph only has the Petri net,
-						// do we need to store all of those information here, if not what we can do??
-						// we just have the basic information of transitions, but not the net;;
-						// if we recover the process, what to do?? We will check it when we use it!!
-						// because for event log, we need to save it there, for the transition it should work in this way, too
-//						AcceptingPetriNet anet = (AcceptingPetriNet) t.getGraph();
-//						// should we follow the same procedure like Petrinet, but it has the convert let me see
-//						objOut.writeObject(PetriNetPortObject.convert2String(anet).getBytes());
 						
 					}
 				}
@@ -174,10 +181,18 @@ public class RepResultPortObject implements PortObject {
 				objOut.writeBoolean(alignment.isReliable());
 				objOut.writeObject(alignment.getInfo());
 			}
-			// can not save the portObject there
-			portObject.getLogPO().save(out, exec);
+			out.closeEntry();
+			// save Petri net without PortObject 
+			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NET));
+			AcceptingPetriNet anet = portObject.getNet();
+			PetriNetUtil.exportToStream(anet, out);
+			out.closeEntry();
 			
-			objOut.close();
+			// without the help of port Object
+			out.putNextEntry(new ZipEntry(ZIP_ENTRY_LOG));
+			// create another OutputStream for log
+			XLogUtil.saveLog(portObject.getLog(), out);
+			out.closeEntry();
 			
 			// out.close();
 			System.out.println("Exit the save PO in serializer");
@@ -195,9 +210,14 @@ public class RepResultPortObject implements PortObject {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
 			}
 			// sth with PortObjectSpec here to guide the verification
-			
-			RepResultPortObject repResultPO = new RepResultPortObject();
 			ObjectInputStream inObj = new ObjectInputStream(in);
+			// firstly to get the entry name for replay result
+			nextEntry = in.getNextEntry();
+			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_REP_RESULT)) {
+				throw new IOException("Expected zip entry '" + ZIP_ENTRY_REP_RESULT + "' not present");
+			}
+			RepResultPortObject repResultPO = new RepResultPortObject();
+			
 			int aSize = inObj.readInt();
 			// begin to read alignment one by one, but how to distinguish the reading for each alignment??
 			List<SyncReplayResult> col = new ArrayList<SyncReplayResult>();
@@ -259,15 +279,30 @@ public class RepResultPortObject implements PortObject {
 					}
 					
 				}
-			XLogPortObject logPO = new XLogPortObject();
-			logPO.load(in, null, exec);
+			// Since XLogUtil.loadLog(inObj), close the InputStream, so we put the Petri net reading at first 
+			nextEntry = in.getNextEntry();
+			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NET)) {
+				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NET + "' not present");
+			}
+			// AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
+			AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
 			
-			inObj.close();
+			// firstly to get the entry name for replay result
+			nextEntry = in.getNextEntry();
+			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_LOG)) {
+				throw new IOException("Expected zip entry '" + ZIP_ENTRY_LOG + "' not present");
+			}
+			
+			// this method closes the InputStream, why it can't read the data there?
+			XLog log = XLogUtil.loadLog(in);
 			
 			
+			// use this alignment object, we need to reload it here
 			repResultPO.setRepResult(new PNRepResultImpl(col));
-			// repResultPO.setLogPO(logPO);
-			in.close();
+			repResultPO.setLog(log);
+			repResultPO.setNet(anet);
+			
+			// in.close();
 			System.out.println("Exit the load PO in serializer");
 			return repResultPO;
 		}
@@ -275,9 +310,6 @@ public class RepResultPortObject implements PortObject {
 		// end of the serializaer
 	}
 
-	public void setLogPO(XLogPortObject logPO) {
-		// TODO Auto-generated method stub
-		xlogPO = logPO;
-	}
+	
 
 }

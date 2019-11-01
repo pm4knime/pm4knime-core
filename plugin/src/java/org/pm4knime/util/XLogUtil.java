@@ -1,5 +1,10 @@
 package org.pm4knime.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +15,9 @@ import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventLifeTransClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
+import org.deckfour.xes.factory.XFactoryRegistry;
+import org.deckfour.xes.in.XParser;
+import org.deckfour.xes.in.XesXmlParser;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XAttribute;
@@ -19,12 +27,41 @@ import org.deckfour.xes.model.XAttributeTimestamp;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.out.XSerializer;
+import org.deckfour.xes.out.XesXmlSerializer;
 
 /*
  * this class is created  to include the utility used to deal with event log in XLog format
  */
 public class XLogUtil {
 
+	public static void saveLog(XLog log, OutputStream objOut) {
+		XSerializer serializer = new XesXmlSerializer();
+		try {
+			serializer.serialize(log, objOut);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static XLog loadLog(InputStream objIn) {
+		XParser parser = new XesXmlParser(XFactoryRegistry.instance().currentDefault());
+		List<XLog> log = new ArrayList<>();
+		try {
+			// if we give it a new InputStream, to avoid its implicit close
+			// any stream based on the current stream will be closed. 
+			// So there is no real solution for this.
+			log = parser.parse(objIn);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return log.get(0);
+		
+	}
+	
 	public static XEventClass findEventClass(String eventName, Collection<XEventClass> eventClasses) {
 		// TODO Auto-generated method stub
 		for(XEventClass eClass : eventClasses) {

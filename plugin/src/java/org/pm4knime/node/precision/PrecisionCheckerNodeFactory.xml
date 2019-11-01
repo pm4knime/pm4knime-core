@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./default.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>PrecisionChecker</name>
+    <name>Precision Checker</name>
     
     <shortDescription>
         This node checks the precision of a Petri net w.r,t. an event log.
@@ -25,7 +25,7 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Replay Result">Description of first input port...</inPort>
         <!-- possibly more input ports here-->
         <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
         <!-- possibly more output ports here-->

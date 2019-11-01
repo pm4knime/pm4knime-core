@@ -2,8 +2,10 @@ package org.pm4knime.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
@@ -109,19 +111,22 @@ public class ReplayerUtil {
 	 * @return
 	 */
 	public static Object[] checkMultiETC(ReflectedLog refLog, AcceptingPetriNet anet, MultiETCSettings sett) {
-		
+		// forward check precision
+		sett.setWindow(MultiETCSettings.Window.BACKWARDS);
 		Object[] forwards = checkETCPrecision(refLog, anet.getNet(), anet.getInitialMarking() , null, sett);
 		MultiETCResult resFor = (MultiETCResult) forwards[0];
-		Automaton autoFor = (Automaton) forwards[1];
+		//Automaton autoFor = (Automaton) forwards[1];
 		
-		Object[] backwards = checkETCPrecision(refLog, anet.getNet(), null, (Marking) anet.getFinalMarkings().iterator(), sett);
+		// backwards check precision
+		sett.setWindow(MultiETCSettings.Window.FORWARDS);
+		Object[] backwards = checkETCPrecision(refLog, anet.getNet(), null, anet.getFinalMarkings().iterator().next(), sett);
 		MultiETCResult resBack = (MultiETCResult) backwards[0];
-		Automaton autoBack = (Automaton) backwards[1];
+		//Automaton autoBack = (Automaton) backwards[1];
 		
 		//Merge the results of the backwards conformance checking with the forwards ones
 		mergeForwardsBackwardsResults(resFor, resBack);
 		
-		return new Object[] {resFor, autoFor, autoBack};
+		return new Object[] {resFor};
 	} 
 	
 	// this methods rewrites checkMultiETC (PluginContext context, ReflectedLog log, Petrinet net, Marking iniM, Marking endM, MultiETCSettings etcSett)
@@ -169,10 +174,21 @@ public class ReplayerUtil {
 		
 	}
 	
+	// convert the reflected log with the same transitions in anet to compare
+	public static ReflectedLog convertRefLog(ReflectedLog log, AcceptingPetriNet anet) {
+		// to save the time, we can convert it while generating it..
+		ReflectedLog refLog = new ReflectedLog();
+		
+		return refLog;
+	}
+	
 	
 	// extract reflected log from PNMatchInstancesRepResult
-	public static ReflectedLog extractRefLog(PNMatchInstancesRepResult matchResult) {
+	public static ReflectedLog extractRefLog(PNMatchInstancesRepResult matchResult, AcceptingPetriNet anet) {
 		ReflectedLog refLog = new ReflectedLog();
+		
+		// create a map between the transitions in matchResult and the one in anet!! 
+		Map<Transition, Transition> tMap = new HashMap();
 		
 		for(AllSyncReplayResult caseAlignments : matchResult){
 			
@@ -218,7 +234,13 @@ public class ReplayerUtil {
 					
 					else{ //It is a PetriNet Transition
 						Transition trans = ((Transition) itTask.next());
-						t.add(trans);
+						// tMap not includes this transition, then we add it here
+						if(!tMap.containsKey(trans)) {
+							Transition tInNet = PetriNetUtil.findTransition(trans.getLabel(), anet.getNet().getTransitions());
+							tMap.put(trans, tInNet);
+						}
+							
+						t.add(tMap.get(trans));
 					}
 				}
 				

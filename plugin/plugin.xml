@@ -7,6 +7,7 @@
 	<category level-id="conversion" name="Conversion" path="/processmining"/>
 	
 	<category level-id="discovery" name="Discovery" path="/processmining"/>
+	<category level-id="replay" name="Replay" path="/processmining"/>
 	<category level-id="conformance" name="Conformance" path="/processmining"/>
 	<category level-id="performance" name="Performance" path="/processmining"/>
 	<category level-id="precision" name="Precision" path="/processmining"/>
@@ -52,7 +53,7 @@
   	<node category-path="/processmining/performance" factory-class="org.pm4knime.node.performance.PerformanceCheckerNodeFactory" id="org.pm4knime.node.performance.PerformanceCheckerNodeFactory"/>
   
      <node category-path="/processmining/precision" factory-class="org.pm4knime.node.precision.PrecisionCheckerNodeFactory" id="org.pm4knime.node.precision.PrecisionCheckerNodeFactory"/>
-<node category-path="/" factory-class="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory" id="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory"/>
+<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory" id="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory"/>
 </extension>
 
 	<extension point="org.knime.core.PortType">

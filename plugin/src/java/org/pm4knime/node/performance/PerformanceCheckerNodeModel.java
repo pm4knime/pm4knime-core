@@ -163,7 +163,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// based on the result, we get other information listed here
 		PNRepResult pnRepResult = Manifest2PNRepResult.convert(mResult);
 		
-		repResultPO = new RepResultPortObject(pnRepResult, logPO, netPO);
+		repResultPO = new RepResultPortObject(pnRepResult, log, anet);
 		
 		
 		// global statistics information. It includes all the performance info, the whole process

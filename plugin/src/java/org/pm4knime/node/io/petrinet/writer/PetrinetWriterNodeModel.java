@@ -14,6 +14,7 @@ import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
+import org.pm4knime.util.PetriNetUtil;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -72,7 +73,7 @@ public class PetrinetWriterNodeModel extends NodeModel {
         	
 			// we should also write the marking into disk
         	FileOutputStream out = new FileOutputStream(f);
-        	out.write(PetriNetPortObject.convert2String(pnObj.getANet()).getBytes());
+        	PetriNetUtil.exportToStream(pnObj.getANet(), out);
     		out.close();
         }
         

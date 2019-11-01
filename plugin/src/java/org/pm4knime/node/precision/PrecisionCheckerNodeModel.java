@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
+import org.knime.core.data.DataCell;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataType;
+import org.knime.core.data.def.DefaultRow;
+import org.knime.core.data.def.DoubleCell;
+import org.knime.core.data.def.StringCell;
+import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -16,6 +22,8 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -28,6 +36,7 @@ import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.multietc.plugins.MultiETCPlugin;
 import org.processmining.plugins.multietc.reflected.ReflectedLog;
+import org.processmining.plugins.multietc.res.MultiETCResult;
 import org.processmining.plugins.multietc.sett.MultiETCSettings;
 import org.processmining.plugins.multietc.sett.MultiETCSettingsUI;
 import org.processmining.plugins.petrinet.replayresult.PNMatchInstancesRepResult;
@@ -86,10 +95,16 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  */
 public class PrecisionCheckerNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(PrecisionCheckerNodeModel.class);
-	private final static String ALIGN_1 = "1-Align Precision";
-	private final static String ALIGN_ALL = "All-Align Precision";
-	private final static String ALIGN_REPRE = "Representative-Align Precision";
-	private final static String ETC = "ETC Precision (no invisible/duplicates allowed)";
+	
+	final static String ALIGN_1 = "1-Align Precision";
+	final static String ALIGN_ALL = "All-Align Precision";
+	final static String ALIGN_REPRE = "Representative-Align Precision";
+	final static String ETC = "ETC Precision (no invisible/duplicates allowed)";
+	
+	private final SettingsModelBoolean m_isOrdered =  new SettingsModelBoolean(
+			MultiETCSettings.REPRESENTATION, true);
+	private final SettingsModelString m_algorithm =  new SettingsModelString(
+			MultiETCSettings.ALGORITHM, ALIGN_1);
 	
 	
 	private RepResultPortObject repResultPO;
@@ -109,29 +124,41 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-    	logger.info("Start: ManifestReplayer Performance Checking");
+    	logger.info("Start: ETC Precision Checking");
     	
     	repResultPO = (RepResultPortObject) inData[0];
     	
     	PNRepResult repResult = repResultPO.getRepResult();
-    	XLog log = repResultPO.getLogPO().getLog();
-		AcceptingPetriNet anet = repResultPO.getPNPO().getANet();
+    	XLog log = repResultPO.getLog();
+		AcceptingPetriNet anet = repResultPO.getNet();
     	
 		PNMatchInstancesRepResult matchResult = ReplayerUtil.convert2MatchInstances(repResult);
 		
-		// create reflected log
-		ReflectedLog refLog = ReplayerUtil.extractRefLog(matchResult);
+		// create reflected log. Due to loading Petri net will change its transition id, 
+		// so the new loaded version differs from the transitions from anet
+		ReflectedLog refLog = ReplayerUtil.extractRefLog(matchResult, anet);
+		// make refLog with the corresponding version in anet
+		
 		
 		MultiETCSettings sett = getParameter();
 		
 		// based on match result, get the precision indication
 		Object[] result = ReplayerUtil.checkMultiETC(refLog, anet, sett);
+		MultiETCResult res = (MultiETCResult) result[0];
 		
 		// convert result into a table 
-		
-        return new PortObject[]{};
+		String tableName = "Precision Table with " + sett.getAlgorithm() +"-" + sett.getRepresentation(); 
+		DataTableSpec tSpec = PrecCheckerInfoAssistant.createGlobalStatsTableSpec(tableName);
+    	BufferedDataContainer tBuf = exec.createDataContainer(tSpec);
+    	PrecCheckerInfoAssistant.buildInfoTable(tBuf, res);
+    	
+    	tBuf.close();
+    	
+    	logger.info("End: ETC Precision Checking");
+    
+        return new PortObject[]{tBuf.getTable()};
     }
-
+        
     /**
      * {@inheritDoc}
      */
@@ -142,14 +169,14 @@ public class PrecisionCheckerNodeModel extends NodeModel {
 
     private MultiETCSettings getParameter() {
     	MultiETCSettings sett = new MultiETCSettings();
-    	boolean isOrdered = true;
+    	boolean isOrdered = m_isOrdered.getBooleanValue();
     	if(isOrdered) 
     		sett.put(MultiETCSettings.REPRESENTATION, MultiETCSettings.Representation.ORDERED);
 		else 
 			sett.put(MultiETCSettings.REPRESENTATION, MultiETCSettings.Representation.UNORDERED);
 		
 		//Get the Algorithm 
-    	String algName = null;
+    	String algName = m_algorithm.getStringValue();
 		if( algName == ETC) 
 			sett.put(MultiETCSettings.ALGORITHM, MultiETCSettings.Algorithm.ETC);
 		else if( algName == ALIGN_1) 
@@ -179,6 +206,8 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
          // TODO: generated method stub
+    	m_isOrdered.saveSettingsTo(settings);
+    	m_algorithm.saveSettingsTo(settings);
     }
 
     /**
@@ -188,6 +217,8 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
+    	m_isOrdered.loadSettingsFrom(settings);
+    	m_algorithm.loadSettingsFrom(settings);
     }
 
     /**

@@ -26,14 +26,14 @@
     
     <ports>
         <inPort index="0" name="Event Log">Input port for an event log</inPort>
-        <inPort index="0" name="Petri Net">Input port for a Petri net</inPort>
+        <inPort index="1" name="Petri Net">Input port for a Petri net</inPort>
         <!-- possibly more input ports here-->
         <outPort index="0" name="Alignment">Output alignment result after replaying</outPort>
         <outPort index="1" name="Global Performance Statistics">Output the global statistical information for performance. 
         		It includes the global fitness information and throughput time. </outPort>
-        <outPort index="1" name="Transitions Performance Statistics">Output the transitions statistical information for performance. 
+        <outPort index="2" name="Transitions Performance Statistics">Output the transitions statistical information for performance. 
         		It lists the throughput, waiting and sojourn time for  all transitions. </outPort>
-        <outPort index="1" name="Places Performance Statistics">Output the places statistical information for performance. 
+        <outPort index="3" name="Places Performance Statistics">Output the places statistical information for performance. 
         		It lists the waiting, synchronization and sojourn time for  all places. </outPort>
         <!-- possibly more output ports here-->
     </ports>    

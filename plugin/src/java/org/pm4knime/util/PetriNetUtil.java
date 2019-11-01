@@ -2,8 +2,11 @@ package org.pm4knime.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +19,7 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
+import org.pm4knime.portobject.PetriNetPortObject;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.models.connections.GraphLayoutConnection;
@@ -30,6 +34,8 @@ import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
 import org.processmining.plugins.pnml.base.Pnml;
+import org.processmining.plugins.pnml.base.PnmlElementFactory;
+import org.processmining.plugins.pnml.base.Pnml.PnmlType;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -127,6 +133,34 @@ public class PetriNetUtil {
 		return mapping;
 	}
 	
+	public static void exportToStream(AcceptingPetriNet anet, OutputStream out) {
+		
+		GraphLayoutConnection  layout = new GraphLayoutConnection(anet.getNet());
+		HashMap<PetrinetGraph, Marking> markedNets = new HashMap<PetrinetGraph, Marking>();
+		HashMap<PetrinetGraph, Collection<Marking>> finalMarkedNets = new HashMap<PetrinetGraph, Collection<Marking>>();
+		markedNets.put(anet.getNet(), anet.getInitialMarking());
+		finalMarkedNets.put(anet.getNet(), anet.getFinalMarkings());
+		
+		PnmlElementFactory factory = new FullPnmlElementFactory();
+		Pnml pnml = new Pnml();
+		synchronized (factory) {
+			pnml.setFactory(factory);
+			pnml.setType(PnmlType.PNML);
+			pnml = new Pnml().convertFromNet(anet.getNet(), anet.getInitialMarking(), anet.getFinalMarkings(), layout);
+			
+		}
+		
+		String text = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" + pnml.exportElement(pnml);
+		
+		try {
+			// the reason not read well is the type of reading
+			out.write(text.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	// import the Petri net from a pnml file with the same transition id.
 	public static Pnml importPnmlFromStream(InputStream input) throws XmlPullParserException, IOException {
 		FullPnmlElementFactory pnmlFactory = new FullPnmlElementFactory();
@@ -183,8 +217,17 @@ public class PetriNetUtil {
 		return anet;
 	}
 	
-	public static AcceptingPetriNet importFromStream(InputStream input ) throws XmlPullParserException, IOException {
-		Pnml pnml = importPnmlFromStream(input);
+	public static AcceptingPetriNet importFromStream(InputStream input )  {
+		Pnml pnml = null;
+		try {
+			pnml = importPnmlFromStream(input);
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if (pnml == null) {
 			/*

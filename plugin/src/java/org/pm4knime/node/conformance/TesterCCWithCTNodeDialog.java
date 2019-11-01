@@ -1,12 +1,23 @@
 package org.pm4knime.node.conformance;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.deckfour.xes.classification.XEventClassifier;
@@ -40,6 +51,8 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 	protected JPanel m_compositePanel;
 	protected SMAlignmentReplayParameter m_parameter;
 	protected String[] strategyList = TesterCCNodeModel.strategyList;
+	
+	DialogComponentNumberEdit[] defaultCostComps; 
     /**
      * New pane for configuring the TesterCC node.
      */
@@ -58,6 +71,7 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 		// TODO Auto-generated method stub
     	m_parameter  = new SMAlignmentReplayParameterWithCT("Parameter in Tester with CT");
     	
+    	SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
 		commonInitPanel(m_parameter);
 		
 		// here to add special codes from the additional items
@@ -67,6 +81,33 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 		}
     	
     	m_compositePanel.add(tbox);
+    	
+    	// add action listener. If the value of defaultCost changes, the table values should changes, too. 
+    	// to deal with log move at first. 
+    	for(int i=0; i< SMAlignmentReplayParameter.CFG_COST_TYPE_NUM ; i++) {
+    		DefaultTableModel tTable = tmp.getMCostTMs()[i];
+    		// int oldValue = tmp.getMDefaultCosts()[i].getIntValue();
+    		final int idx = i;
+    		// the mistake made is to refer the oldValue before the changeListener 
+    		tmp.getMDefaultCosts()[i].addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					// TODO change the CostTable values
+					// System.out.println("Old value is "+ oldValue);
+					int newValue = tmp.getMDefaultCosts()[idx].getIntValue();
+					// System.out.println("Current value is "+ newValue);
+					for(int rIdx =0 ; rIdx< tTable.getRowCount(); rIdx++)
+                		tTable.setValueAt(newValue, rIdx, 1);
+                	
+                	tTable.fireTableDataChanged();
+				}
+    			
+    		});
+    		
+    			
+    	}
+    	
 	}
     
     protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
@@ -81,7 +122,7 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
     	
     	
     	Box cbox = new Box(BoxLayout.X_AXIS);
-    	DialogComponentNumberEdit[] defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
+    	defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
     	for( int i=0; i< SMAlignmentReplayParameter.CFG_COST_TYPE_NUM ; i++) {
     		defaultCostComps[i] = new DialogComponentNumberEdit(m_parameter.getMDefaultCosts()[i], 
     				SMAlignmentReplayParameter.CFG_MCOST_KEY[i] ,5);

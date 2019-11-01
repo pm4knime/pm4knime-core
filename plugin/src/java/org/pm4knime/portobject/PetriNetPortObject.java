@@ -80,32 +80,6 @@ public class PetriNetPortObject  implements PortObject{
 		return m_anet.equals(o);
 	}
 	
-	public static String convert2String(AcceptingPetriNet anet) {
-		PnmlElementFactory factory = new FullPnmlElementFactory();
-		Pnml pnml = new Pnml();
-		synchronized (factory) {
-			pnml.setFactory(factory);
-			
-			GraphLayoutConnection  layout = new GraphLayoutConnection(anet.getNet());
-			
-			pnml = new Pnml().convertFromNet(anet.getNet(), anet.getInitialMarking(), anet.getFinalMarkings(), layout);
-			pnml.setType(PnmlType.PNML);
-		}
-		
-		String text = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" + pnml.exportElement(pnml);
-		return text;
-	}
-	
-	
-	// this doesn't work due to the strategy left from ProM, it reads the file pnml and creates a new net
-	// we can't change it yet.
-	public static AcceptingPetriNet importANet(InputStream in) throws Exception {
-		Petrinet net = PetrinetFactory.newPetrinet("new Petri net");
-		net.addTransition("no way to continue");
-		
-		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet(net);
-		return null;
-	}
 	
 	@Override
 	public PetriNetPortObjectSpec getSpec() {
@@ -114,7 +88,6 @@ public class PetriNetPortObject  implements PortObject{
 		return spec;
 	}
 
-	
 	/**
 	 * If we show the Petri net as the AcceptingPetriNet, better to use AcceptingPetrinet as model.
 	 * If there are no finalMarking, we can assign them. That's all the important stuff here.
@@ -143,9 +116,9 @@ public class PetriNetPortObject  implements PortObject{
 			// do we need the layout to import or export the AccepingPetrinet??
 			// we can't use the ObjectOutputStream, because AcceptingPetrinet not serialized..
 			// recode it from AcceptingPetriNetImpl.exportToFile()
-			out.write(convert2String(portObject.getANet()).getBytes());
+			PetriNetUtil.exportToStream(portObject.getANet(), out);
 			out.closeEntry();
-			out.close();
+			// out.close();
 			
 		}
 
@@ -170,7 +143,7 @@ public class PetriNetPortObject  implements PortObject{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			in.close();
+			// in.close();
 			
 			return result;
 		}

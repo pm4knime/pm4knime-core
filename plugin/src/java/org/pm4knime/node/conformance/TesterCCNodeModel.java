@@ -124,7 +124,7 @@ public class TesterCCNodeModel extends NodeModel implements PortObjectHolder{
 		System.out.println("Replay result size : " + result.size());
 		BufferedDataTable bt = createInfoTable(result.getInfo(), exec);
 		
-		repResultPO = new RepResultPortObject(result, logPO, netPO);
+		repResultPO = new RepResultPortObject(result, log, anet);
 		logger.info("End: Unified PNReplayer Conformance Checking");
         return new PortObject[]{bt, repResultPO};
     }
