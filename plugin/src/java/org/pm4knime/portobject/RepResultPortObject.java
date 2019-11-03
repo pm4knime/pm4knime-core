@@ -59,7 +59,7 @@ public class RepResultPortObject implements PortObject {
 	// serialize the whole result here. but by the way, if we want to store the Subset, just make sure 
 	// that the element is serializable. It's ok.
 	PNRepResult repResult;
-	
+	RepResultPortObjectSpec m_rSpec ;
 	// it points to the related Petrinet object and xlog port object
 	// no need to serialize the pnPO, but needs the reference there??? Difficulty here
 	// here one thing is, do we need to use the PortObject, or just Log and Petri net?? 
@@ -111,8 +111,8 @@ public class RepResultPortObject implements PortObject {
 
 	@Override
 	public PortObjectSpec getSpec() {
-		// TODO Auto-generated method stub
-		return new RepResultPortObjectSpec();
+		// TODO if it access the null one??
+		return m_rSpec ;
 	}
 
 	@Override
@@ -126,8 +126,6 @@ public class RepResultPortObject implements PortObject {
 		// resutPanel.setBackground(Color.BLACK);
 		resultPanel.setName("Alignment Projection");
 		return new JComponent[] {resultPanel};
-		
-		
 	}
 	
 	// here we serialise the PortObject by using the prom plugin
@@ -310,6 +308,8 @@ public class RepResultPortObject implements PortObject {
 		// end of the serializaer
 	}
 
-	
+	public void setSpec(RepResultPortObjectSpec rSpec) {
+		m_rSpec = rSpec;
+	}
 
 }

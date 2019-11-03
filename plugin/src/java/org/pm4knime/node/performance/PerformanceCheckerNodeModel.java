@@ -41,6 +41,7 @@ import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
@@ -96,24 +97,22 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
  */
 public class PerformanceCheckerNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(PerformanceCheckerNodeModel.class);
-	protected static final int INPORT_LOG = 0;
-	protected static final int INPORT_PETRINET = 1;
 	
 	static String[] strategyList = {"A*-ILP Based manifest replay"};
 	static List<XEventClassifier> classifierList = XLogUtil.getECList();
 	// we create a similar nodeSetting like Conformance Checking?
 	SMPerformanceParameter m_parameter;
-	private XLogPortObject logPO ;
+	
 	private RepResultPortObject repResultPO;
-	private PetriNetPortObject netPO ;
+	RepResultPortObjectSpec m_rSpec ;
 	private Manifest  mResult;
 	private PerfCounter counter;
 	
     protected PerformanceCheckerNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
-    	super(new PortType[] { XLogPortObject.TYPE, PetriNetPortObject.TYPE }, new PortType[] {
-    			RepResultPortObject.TYPE, BufferedDataTable.TYPE, BufferedDataTable.TYPE, BufferedDataTable.TYPE});
+    	super(new PortType[] { RepResultPortObject.TYPE }, new PortType[] {
+    			BufferedDataTable.TYPE, BufferedDataTable.TYPE, BufferedDataTable.TYPE});
     	m_parameter = new SMPerformanceParameter("Performance Parameter");
     }
 
@@ -126,46 +125,27 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 
         // TODO: Return a BufferedDataTable for each output port 
     	logger.info("Start: ManifestReplayer Performance Checking");
-    	logPO = (XLogPortObject) inData[INPORT_LOG];
-		netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
+    	RepResultPortObject repResultPO = (RepResultPortObject) inData[0];
     	
-		XLog log = logPO.getLog();
-		AcceptingPetriNet anet = netPO.getANet();
+		XLog log = repResultPO.getLog();
+		AcceptingPetriNet anet = repResultPO.getNet();
     	
-		XEventClassifier eventClassifier = getXEventClassifier();
+		PNRepResult repResult = repResultPO.getRepResult();
 		
-		PNManifestReplayerParameter manifestParameters = getParameters(log, anet, eventClassifier);
+		// remove flatter parameters, we need reproduce the values here
+		// else, there is no replay result available here
+		// or we can pass the settings parameters to this node model By InputObject with settings m_parameter..
+		SMAlignmentReplayParameter specParameter =m_rSpec.getMParameter();
 		
+		XEventClassifier eventClassifier = XLogUtil.getXEventClassifier(specParameter.getMClassifierName().getStringValue(), classifierList);
+    	
+		PNManifestReplayerParameter manifestParameters = specParameter.getPerfParameter(log, anet, eventClassifier);
 		PNManifestFlattener flattener = new PNManifestFlattener(anet.getNet(), manifestParameters);
 		
-		CostBasedCompleteManifestParam parameter = new CostBasedCompleteManifestParam(flattener.getMapEvClass2Cost(),
-				flattener.getMapTrans2Cost(), flattener.getMapSync2Cost(),
-				flattener.getInitMarking(), flattener.getFinalMarkings(), manifestParameters.getMaxNumOfStates(),
-				flattener.getFragmentTrans());
-				
-		parameter.setGUIMode(false);
-		parameter.setCreateConn(false);
-		
-		// we can choose the values here; if it is restricited here
-		// get the replayer for this algorithm
-		PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
-				.getFutureResultAwarePluginContext(PNLogReplayer.class);
-		PNLogReplayer replayer = new PNLogReplayer();
-		PetrinetReplayerNoILPRestrictedMoveModel replayAlgorithm = new PetrinetReplayerNoILPRestrictedMoveModel();
-		
-		
-		PNRepResult alignment = replayer.replayLog(pluginContext, flattener.getNet(), log, flattener.getMap(),
-				replayAlgorithm, parameter);
-		mResult = ManifestFactory.construct(anet.getNet(), manifestParameters.getInitMarking(),
-				manifestParameters.getFinalMarkings(), log, flattener, alignment,
+		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
+				flattener.getFinalMarkings(), log, flattener, repResult,
 				manifestParameters.getMapping());
 
-		// based on the result, we get other information listed here
-		PNRepResult pnRepResult = Manifest2PNRepResult.convert(mResult);
-		
-		repResultPO = new RepResultPortObject(pnRepResult, log, anet);
-		
-		
 		// global statistics information. It includes all the performance info, the whole process
 		// we need one view to show the result here
 		if(m_parameter.isMWithSynMove().getBooleanValue()) {
@@ -194,7 +174,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
     	tBuf.close();
     	pBuf.close();
     	logger.info("End: ManifestReplayer Performance Evaluation");
-        return new PortObject[]{repResultPO, gBuf.getTable(), tBuf.getTable(), pBuf.getTable()};
+        return new PortObject[]{ gBuf.getTable(), tBuf.getTable(), pBuf.getTable()};
     }
 
 	public Manifest getMainfestResult() {
@@ -239,94 +219,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
  		return null;
 	}
     
-    private PNManifestReplayerParameter getParameters(XLog log, AcceptingPetriNet anet, XEventClassifier eventClassifier ) {
-    	// how to create a table to assign such values here?? 
-		// if many event classes are available here?? 
-    	
-		XLogInfo logInfo = XLogInfoFactory.createLogInfo(log, eventClassifier);
-		Collection<XEventClass> eventClasses =  logInfo.getEventClasses().getClasses();
-		
-		// here we need to add cost values here, if we have default values htere
-//		IPNReplayParameter parameters = new CostBasedCompleteParam(eventClasses,
-//				evClassDummy, anet.getNet().getTransitions(), 2, 5);
-//		
-
-		PNManifestReplayerParameter parameters = new PNManifestReplayerParameter();
-		//TODO : assign a better value here
-		parameters.setMaxNumOfStates(1000);
-		
-		// get the pattern map for transition & event classes 
-		TransClasses tc = new TransClasses(anet.getNet());
-		Map<TransClass, Set<EvClassPattern>> pattern = buildPattern(tc, eventClasses);
-		TransClass2PatternMap mapping = new TransClass2PatternMap(log, anet.getNet(), eventClassifier, tc, pattern);
-		parameters.setMapping(mapping);
-		
-		// set the move cost
-		int lmCost = m_parameter.getMDefaultCosts()[0].getIntValue();
-		Map<XEventClass, Integer> mapLMCost = buildLMCostMap(eventClasses, lmCost);
-		int mmCost = m_parameter.getMDefaultCosts()[1].getIntValue();
-		Map<TransClass, Integer> mapTMCost = buildTMCostMap(tc, mmCost);
-		int smCost = m_parameter.getMDefaultCosts()[2].getIntValue();
-		Map<TransClass, Integer> mapSMCost = buildTMCostMap(tc, smCost);
-		
-		parameters.setMapEvClass2Cost(mapLMCost);
-		parameters.setTrans2Cost(mapTMCost);
-		parameters.setTransSync2Cost(mapSMCost);
-		
-		
-		parameters.setInitMarking(anet.getInitialMarking());
-		Marking[] fmList = new Marking[anet.getFinalMarkings().size()];
-		int i = 0;
-		for(Marking m : anet.getFinalMarkings())
-			fmList[i++] = m;
-		
-		parameters.setFinalMarkings(fmList);
-		
-		parameters.setGUIMode(false);
-		
-    	return parameters;
-    } 
     
-    private Map<TransClass, Integer> buildTMCostMap(TransClasses tc, int cost) {
-		// TODO Auto-generated method stub
-    	Map<TransClass, Integer> map= new HashMap<TransClass, Integer>();
-		
-		for (TransClass c : tc.getTransClasses()) {
-			map.put(c, cost);
-		}
-		return map;
-	}
-
-	private Map<XEventClass, Integer> buildLMCostMap(Collection<XEventClass> eventClasses, int cost) {
-		// TODO Auto-generated method stub
-		Map<XEventClass, Integer> map= new HashMap<XEventClass, Integer>();
-		for (XEventClass c : eventClasses) {
-			map.put(c, cost);
-		}
-		
-		// TODO : set dummy event class here and assign it value
-		return map;
-	}
-
-	private Map<TransClass, Set<EvClassPattern>> buildPattern(TransClasses tc, Collection<XEventClass> eventClasses) {
-    	
-    	Map<TransClass, Set<EvClassPattern>> pattern = new HashMap<TransClass, Set<EvClassPattern>>();
-    	
-    	for (TransClass t : tc.getTransClasses()) {
-			Set<EvClassPattern> p = new HashSet<EvClassPattern>();
-			line: for (XEventClass clazz : eventClasses)
-				// look for exact matches on the id
-				if (clazz.getId().equals(t.getId())) {
-					EvClassPattern pat = new EvClassPattern();
-					pat.add(clazz);
-					p.add(pat);
-					pattern.put(t, p);
-					break line;
-				}
-
-		}
-    	return pattern;
-    }
     
     /**
      * {@inheritDoc}
@@ -343,15 +236,12 @@ public class PerformanceCheckerNodeModel extends NodeModel {
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
 
-    	if (!inSpecs[INPORT_LOG].getClass().equals(XLogPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid event log!");
-
-		if (!inSpecs[INPORT_PETRINET].getClass().equals(PetriNetPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Petri net!");
+    	if (!inSpecs[0].getClass().equals(RepResultPortObject.class))
+			throw new InvalidSettingsException("Input is not a valid replay result!");
 		
-		// because we are not sure about the tableSpec, so we set it null
-		RepResultPortObjectSpec aSpec = new RepResultPortObjectSpec();
-        return new PortObjectSpec[]{aSpec, null, null, null };
+		// TODO : assign the table spec here
+		
+        return new PortObjectSpec[]{null, null, null };
     	
     }
 

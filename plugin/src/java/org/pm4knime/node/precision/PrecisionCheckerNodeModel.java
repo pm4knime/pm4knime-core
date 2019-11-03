@@ -195,8 +195,9 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
+    	if (!inSpecs[0].getClass().equals(RepResultPortObject.class))
+			throw new InvalidSettingsException("Input is not a valid replay result!");
 
-        // TODO: generated method stub
         return new PortObjectSpec[]{null};
     }
 

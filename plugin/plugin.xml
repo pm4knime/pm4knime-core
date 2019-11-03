@@ -54,6 +54,9 @@
   
      <node category-path="/processmining/precision" factory-class="org.pm4knime.node.precision.PrecisionCheckerNodeFactory" id="org.pm4knime.node.precision.PrecisionCheckerNodeFactory"/>
 <node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory" id="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory"/>
+<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.DefaultPNReplayerNodeFactory" id="org.pm4knime.node.replayer.PNReplayerNodeFactory"/>
+<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.PNReplayerNodeFactory" id="org.pm4knime.node.replayer.PNReplayerNodeFactory"/>
+<node category-path="/" factory-class="org.pm4knime.node.conformance.ConformanceCheckerNodeFactory" id="org.pm4knime.node.conformance.ConformanceCheckerNodeFactory"/>
 </extension>
 
 	<extension point="org.knime.core.PortType">

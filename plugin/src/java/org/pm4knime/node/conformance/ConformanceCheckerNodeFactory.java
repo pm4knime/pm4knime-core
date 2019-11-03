@@ -6,20 +6,20 @@ import org.knime.core.node.NodeView;
 
 /**
  * This is an example implementation of the node factory of the
- * "TesterCC" node.
+ * "ConformanceChecker" node.
  *
  * @author 
  */
-public class TesterCCNodeFactory 
-        extends NodeFactory<TesterCCNodeModel> {
+public class ConformanceCheckerNodeFactory 
+        extends NodeFactory<ConformanceCheckerNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TesterCCNodeModel createNodeModel() {
+    public ConformanceCheckerNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new TesterCCNodeModel();
+        return new ConformanceCheckerNodeModel();
     }
 
     /**
@@ -28,17 +28,17 @@ public class TesterCCNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 1;
+        return 0;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public NodeView<TesterCCNodeModel> createNodeView(final int viewIndex,
-            final TesterCCNodeModel nodeModel) {
+    public NodeView<ConformanceCheckerNodeModel> createNodeView(final int viewIndex,
+            final ConformanceCheckerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-		return new TesterCCNodeView(nodeModel);
+		return null;
     }
 
     /**
@@ -56,7 +56,7 @@ public class TesterCCNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new TesterCCNodeDialog();
+        return new ConformanceCheckerNodeDialog();
     }
 
 }

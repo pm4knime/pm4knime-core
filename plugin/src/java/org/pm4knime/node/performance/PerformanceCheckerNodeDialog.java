@@ -2,16 +2,19 @@ package org.pm4knime.node.performance;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import org.deckfour.xes.model.XLog;
+import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObject;
-import org.pm4knime.node.conformance.TesterCCWithCTNodeDialog;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.XLogPortObject;
+import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogUtil;
 
@@ -42,23 +45,16 @@ import org.pm4knime.util.XLogUtil;
  * how to make sure that they are different storage??
  * @author Kefang Ding
  */
-public class PerformanceCheckerNodeDialog extends TesterCCWithCTNodeDialog {
-
+public class PerformanceCheckerNodeDialog extends DataAwareNodeDialogPane {
+	protected JPanel m_compositePanel;
+	SMPerformanceParameter m_parameter;
 	DialogComponentStringSelection m_timestampComp ;
     /**
      * New pane for configuring the PerformanceChecker node.
      */
     protected PerformanceCheckerNodeDialog() {
     	super();
-    }
-    
-    @Override
-    protected void specialInit() {
     	m_parameter = new SMPerformanceParameter("Performance Parameter");
-    	
-    	strategyList = PerformanceCheckerNodeModel.strategyList ;
-    	
-    	commonInitPanel(m_parameter);
     	
     	// add additional items to m_compositePanel panel
     	SMPerformanceParameter tmp = (SMPerformanceParameter) m_parameter;
@@ -72,7 +68,14 @@ public class PerformanceCheckerNodeDialog extends TesterCCWithCTNodeDialog {
 		
 		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(), tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
     	addDialogComponent(m_withUnreliableResultComp);
+    	
     }
+    
+    protected void addDialogComponent(final DialogComponent diaC) {
+		// TODO Auto-generated method stub
+		m_compositePanel.add(diaC.getComponentPanel());
+	}
+
     
     /**
      * to get the attributes from event log, especially the time stamp information. we need PortObject.
@@ -82,16 +85,13 @@ public class PerformanceCheckerNodeDialog extends TesterCCWithCTNodeDialog {
     protected void loadSettingsFrom(final NodeSettingsRO settings,
 			final PortObject[] input) throws NotConfigurableException {
     	
-			if (!(input[PerformanceCheckerNodeModel.INPORT_LOG] instanceof XLogPortObject))
-				throw new NotConfigurableException("Input is not a valid event log!");
-
-			if (!(input[PerformanceCheckerNodeModel.INPORT_PETRINET] instanceof PetriNetPortObject))
-				throw new NotConfigurableException("Input is not a valid Petri net!");
+			if (!(input[0] instanceof RepResultPortObject))
+				throw new NotConfigurableException("Input is not a valid replayer log!");
 			
-			XLogPortObject logPO = (XLogPortObject) input[PerformanceCheckerNodeModel.INPORT_LOG];
-			// PetriNetPortObject netPO = (PetriNetPortObject) input[PerformanceCheckerNodeModel.INPORT_PETRINET];
+			// TODO : check the type if it is mainfest replayer result
+			RepResultPortObject repResultPO = (RepResultPortObject) input[0];
 			
-			XLog log = logPO.getLog();
+			XLog log = repResultPO.getLog();
 			
 			// get the attributes available for the time stamp from event log
 			List<String> tsAttrNameList = XLogUtil.getTSAttrNames(log);
@@ -110,6 +110,12 @@ public class PerformanceCheckerNodeDialog extends TesterCCWithCTNodeDialog {
 			m_compositePanel.repaint();
 		
     }
+
+	@Override
+	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
+		// TODO Auto-generated method stub
+		m_parameter.saveSettingsTo(settings);
+	}
 
 
 }

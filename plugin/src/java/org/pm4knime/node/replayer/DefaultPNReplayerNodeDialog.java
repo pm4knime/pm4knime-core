@@ -1,51 +1,39 @@
-package org.pm4knime.node.conformance;
+package org.pm4knime.node.replayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventLifeTransClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
+import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.XLogUtil;
 
 /**
- * <code>NodeDialog</code> for the "TesterCC" node.
- *  extract the common elements and specify the different ones. 
- *  Common: 
- *   -- compositePanel
- *   -- add elements
- *   -- save parameter
- *  Differents:
- *   -- parameter is different from others... 
- *   -- dialog needs more items. Except this, we need the attribute info from event log 
- *     to fulfil the timestamp attribute
- * @author
+ * <code>NodeDialog</code> for the "PNReplayer" node.
+ * 
+ * @author 
  */
-public class TesterCCNodeDialog extends NodeDialogPane {
+public class DefaultPNReplayerNodeDialog extends NodeDialogPane {
+
 	JPanel m_compositePanel;
 	protected SMAlignmentReplayParameter m_parameter;
-	String[] strategyList = TesterCCNodeModel.strategyList;
-
-	/**
-	 * New pane for configuring the TesterCC node.
-	 */
-	protected TesterCCNodeDialog() {
-		m_compositePanel = new JPanel();
+	String[] strategyList = ReplayerUtil.strategyList;
+    /**
+     * New pane for configuring the PNReplayer node.
+     */
+    protected DefaultPNReplayerNodeDialog() {
+    	m_compositePanel = new JPanel();
 		m_compositePanel.setLayout(new BoxLayout(m_compositePanel, BoxLayout.Y_AXIS));
 
 		// we are going to use the customized SettingsModel for the node
@@ -54,19 +42,19 @@ public class TesterCCNodeDialog extends NodeDialogPane {
 		specialInit();
 		
 		super.addTab("Options", m_compositePanel);
-	}
-
-	protected void specialInit() {
+    }
+    
+    protected void specialInit() {
 		// TODO Auto-generated method stub
-		m_parameter = new SMAlignmentReplayParameter("Parameter in Tester");
+		m_parameter = new SMAlignmentReplayParameter(DefaultPNReplayerNodeModel.CFG_PARAMETER_NAME);
 		commonInitPanel(m_parameter);
 		
 	}
 
-	protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
+    protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
 		// parameter = new SMAlignmentReplayParameter("Parameter in Tester");
 		// we need to assign the classifier names tehre
-		List<String> classifierNames = getECNames(TesterCCNodeModel.classifierList);
+		List<String> classifierNames = XLogUtil.getECNames(DefaultPNReplayerNodeModel.classifierList);
 		DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
 				parameter.getMClassifierName(), "Select Classifier Name", classifierNames);
 		addDialogComponent(m_classifierComp);
@@ -90,15 +78,6 @@ public class TesterCCNodeDialog extends NodeDialogPane {
 		m_compositePanel.add(diaC.getComponentPanel());
 	}
 
-	// this function can be included into the event classifier
-	static List<String> getECNames(List<XEventClassifier> classifierList) {
-		// TODO Auto-generated method stub
-		List<String> classifierNames = new ArrayList();
-		for (XEventClassifier clf : classifierList) {
-			classifierNames.add(clf.name());
-		}
-		return classifierNames;
-	}
 
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
@@ -116,5 +95,6 @@ public class TesterCCNodeDialog extends NodeDialogPane {
 			e.printStackTrace();
 		}
 	}
-
+    
 }
+

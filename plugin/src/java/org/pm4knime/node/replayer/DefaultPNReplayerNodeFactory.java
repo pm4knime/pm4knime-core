@@ -6,20 +6,20 @@ import org.knime.core.node.NodeView;
 
 /**
  * This is an example implementation of the node factory of the
- * "MatchInstancesReplayer" node.
+ * "PNReplayer" node.
  *
  * @author 
  */
-public class MatchInstancesReplayerNodeFactory 
-        extends NodeFactory<MatchInstancesReplayerNodeModel> {
+public class DefaultPNReplayerNodeFactory 
+        extends NodeFactory<DefaultPNReplayerNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public MatchInstancesReplayerNodeModel createNodeModel() {
+    public DefaultPNReplayerNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new MatchInstancesReplayerNodeModel();
+        return new DefaultPNReplayerNodeModel();
     }
 
     /**
@@ -28,17 +28,17 @@ public class MatchInstancesReplayerNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 0;
+        return 1;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public NodeView<MatchInstancesReplayerNodeModel> createNodeView(final int viewIndex,
-            final MatchInstancesReplayerNodeModel nodeModel) {
+    public NodeView<DefaultPNReplayerNodeModel> createNodeView(final int viewIndex,
+            final DefaultPNReplayerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-		return null;
+		return new DefaultPNReplayerNodeView(nodeModel);
     }
 
     /**
@@ -56,7 +56,7 @@ public class MatchInstancesReplayerNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new MatchInstancesReplayerNodeDialog();
+        return new DefaultPNReplayerNodeDialog();
     }
 
 }

@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance;
+package org.pm4knime.node.replayer;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
@@ -6,20 +6,20 @@ import org.knime.core.node.NodeView;
 
 /**
  * This is an example implementation of the node factory of the
- * "TesterCCWithCT" node.
+ * "PNReplayer" node.
  *
  * @author Kefang Ding
  */
-public class TesterCCWithCTNodeFactory 
-        extends NodeFactory<TesterCCWithCTNodeModel> {
+public class PNReplayerNodeFactory 
+        extends NodeFactory<PNReplayerNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TesterCCWithCTNodeModel createNodeModel() {
+    public PNReplayerNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new TesterCCWithCTNodeModel();
+        return new PNReplayerNodeModel();
     }
 
     /**
@@ -28,17 +28,17 @@ public class TesterCCWithCTNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 1;
+        return 0;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public NodeView<TesterCCWithCTNodeModel> createNodeView(final int viewIndex,
-            final TesterCCWithCTNodeModel nodeModel) {
+    public NodeView<PNReplayerNodeModel> createNodeView(final int viewIndex,
+            final PNReplayerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-		return new TesterCCWithCTNodeView(nodeModel);
+		return null;
     }
 
     /**
@@ -56,7 +56,7 @@ public class TesterCCWithCTNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new TesterCCWithCTNodeDialog();
+        return new PNReplayerNodeDialog();
     }
 
 }

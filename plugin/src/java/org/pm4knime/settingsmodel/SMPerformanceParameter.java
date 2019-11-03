@@ -1,10 +1,26 @@
 package org.pm4knime.settingsmodel;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.XLogInfoFactory;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
+import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
+import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 
 /**
  * add more attributes:
@@ -86,4 +102,6 @@ public class SMPerformanceParameter extends SMAlignmentReplayParameter{
 		m_withSynMove.saveSettingsTo(settings);
 		m_withUnreliableResult.saveSettingsTo(settings);
 	}
+	
+	
 }

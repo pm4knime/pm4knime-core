@@ -1,20 +1,20 @@
-package org.pm4knime.node.replayer;
+package org.pm4knime.node.conformance;
 
 import org.knime.core.node.NodeView;
 
 /**
- * <code>NodeView</code> for the "MatchInstancesReplayer" node.
+ * <code>NodeView</code> for the "ConformanceChecker" node.
  *
  * @author 
  */
-public class MatchInstancesReplayerNodeView extends NodeView<MatchInstancesReplayerNodeModel> {
+public class ConformanceCheckerNodeView extends NodeView<ConformanceCheckerNodeModel> {
 
     /**
      * Creates a new view.
      * 
-     * @param nodeModel The model (class: {@link MatchInstancesReplayerNodeModel})
+     * @param nodeModel The model (class: {@link ConformanceCheckerNodeModel})
      */
-    protected MatchInstancesReplayerNodeView(final MatchInstancesReplayerNodeModel nodeModel) {
+    protected ConformanceCheckerNodeView(final ConformanceCheckerNodeModel nodeModel) {
         super(nodeModel);
         // TODO: generated method stub
     }

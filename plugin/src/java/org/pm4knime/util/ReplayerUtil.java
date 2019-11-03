@@ -3,15 +3,21 @@ package org.pm4knime.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 
+import org.deckfour.xes.classification.XEventClass;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedMoveModel;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
 import org.processmining.plugins.multietc.automaton.Automaton;
 import org.processmining.plugins.multietc.automaton.AutomatonFactory;
 import org.processmining.plugins.multietc.automaton.AutomatonNode;
@@ -19,6 +25,11 @@ import org.processmining.plugins.multietc.reflected.ReflectedLog;
 import org.processmining.plugins.multietc.reflected.ReflectedTrace;
 import org.processmining.plugins.multietc.res.MultiETCResult;
 import org.processmining.plugins.multietc.sett.MultiETCSettings;
+import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
+import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
+import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.matchinstances.InfoObjectConst;
 import org.processmining.plugins.petrinet.replayresult.PNMatchInstancesRepResult;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
@@ -37,7 +48,66 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  *
  */
 public class ReplayerUtil {
+	// here to list all the algirithm strategies
+	public final static String[] strategyList = {"ILP Replayer","non-ILP Replayer", "A*-ILP Based manifest replay"};
+	
+	public static IPNReplayAlgorithm getReplayer(String algName) {
+		// TODO Auto-generated method stub
+		IPNReplayAlgorithm replayEngine = null;
+    	if(algName.equals(strategyList[0])) {
+    		replayEngine = new PetrinetReplayerWithILP();
+    	}else if(algName.equals(strategyList[1])) {
+    		replayEngine = new PetrinetReplayerWithoutILP();
+    	}else if(algName.equals(strategyList[2])){
+    		replayEngine = new PetrinetReplayerNoILPRestrictedMoveModel();
+    	}
+    	
+		return replayEngine;
+	}
+	
+    
+	public static Map<TransClass, Integer> buildTMCostMap(TransClasses tc, int cost) {
+		// TODO Auto-generated method stub
+    	Map<TransClass, Integer> map= new HashMap<TransClass, Integer>();
+		
+		for (TransClass c : tc.getTransClasses()) {
+			map.put(c, cost);
+		}
+		return map;
+	}
 
+
+	public static Map<XEventClass, Integer> buildLMCostMap(Collection<XEventClass> eventClasses, int cost) {
+		// TODO Auto-generated method stub
+		Map<XEventClass, Integer> map= new HashMap<XEventClass, Integer>();
+		for (XEventClass c : eventClasses) {
+			map.put(c, cost);
+		}
+		
+		// TODO : set dummy event class here and assign it value
+		return map;
+	}
+
+	public static Map<TransClass, Set<EvClassPattern>> buildPattern(TransClasses tc, Collection<XEventClass> eventClasses) {
+    	
+    	Map<TransClass, Set<EvClassPattern>> pattern = new HashMap<TransClass, Set<EvClassPattern>>();
+    	
+    	for (TransClass t : tc.getTransClasses()) {
+			Set<EvClassPattern> p = new HashSet<EvClassPattern>();
+			line: for (XEventClass clazz : eventClasses)
+				// look for exact matches on the id
+				if (clazz.getId().equals(t.getId())) {
+					EvClassPattern pat = new EvClassPattern();
+					pat.add(clazz);
+					p.add(pat);
+					pattern.put(t, p);
+					break line;
+				}
+
+		}
+    	return pattern;
+    }
+	
 	/**
 	 * to convert PNResult to PNMatchInstancesRepResult;
 	 */

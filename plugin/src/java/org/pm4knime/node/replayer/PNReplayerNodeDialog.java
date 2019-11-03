@@ -1,23 +1,15 @@
-package org.pm4knime.node.conformance;
+package org.pm4knime.node.replayer;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.deckfour.xes.classification.XEventClassifier;
@@ -38,26 +30,25 @@ import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 import org.pm4knime.util.PetriNetUtil;
+import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 
 /**
- * <code>NodeDialog</code> for the "TesterCCWithCT" node.
- *  reorganize the codes to have more structure for extension
+ * <code>NodeDialog</code> for the "PNReplayer" node. 
+ * This dialog incldues the cost tables for each event class and transition. 
+ * 
  * @author Kefang Ding
  */
-public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
-	
+public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
+
 	protected JPanel m_compositePanel;
-	protected SMAlignmentReplayParameter m_parameter;
-	protected String[] strategyList = TesterCCNodeModel.strategyList;
-	
-	DialogComponentNumberEdit[] defaultCostComps; 
+	protected SMAlignmentReplayParameterWithCT m_parameter;
+	String[] strategyList = ReplayerUtil.strategyList;
     /**
-     * New pane for configuring the TesterCC node.
+     * New pane for configuring the PNReplayer node.
      */
-    protected TesterCCWithCTNodeDialog() {
-    	
+    protected PNReplayerNodeDialog() {
     	m_compositePanel = new JPanel();
         m_compositePanel.setLayout(new BoxLayout(m_compositePanel,
                 BoxLayout.Y_AXIS));
@@ -71,7 +62,8 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 		// TODO Auto-generated method stub
     	m_parameter  = new SMAlignmentReplayParameterWithCT("Parameter in Tester with CT");
     	
-    	SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+    	// TODO : remove tmp. just use the old parameter here
+    	SMAlignmentReplayParameterWithCT tmp =  m_parameter;
 		commonInitPanel(m_parameter);
 		
 		// here to add special codes from the additional items
@@ -97,8 +89,19 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 					// System.out.println("Old value is "+ oldValue);
 					int newValue = tmp.getMDefaultCosts()[idx].getIntValue();
 					// System.out.println("Current value is "+ newValue);
-					for(int rIdx =0 ; rIdx< tTable.getRowCount(); rIdx++)
-                		tTable.setValueAt(newValue, rIdx, 1);
+					// here we need to adjust the value due to the tau transitions in Petri net
+					// set them to zero. 
+					for(int rIdx =0 ; rIdx< tTable.getRowCount(); rIdx++) {
+						if(idx == 1) {
+							// in Petri net table 
+							String tName = (String) tTable.getValueAt(rIdx, 0);
+			                if(PetriNetUtil.isTauName(tName)) {
+			                	tTable.setValueAt(0, rIdx, 1);
+			                	continue;
+			                }
+						}
+						tTable.setValueAt(newValue, rIdx, 1);
+					}
                 	
                 	tTable.fireTableDataChanged();
 				}
@@ -111,7 +114,7 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 	}
     
     protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
-    	List<String> classifierNames  =  TesterCCNodeDialog.getECNames(TesterCCNodeModel.classifierList);
+    	List<String> classifierNames  =  XLogUtil.getECNames(DefaultPNReplayerNodeModel.classifierList);
     	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
     			m_parameter.getMClassifierName(), "Select Classifier Name", classifierNames );
     	addDialogComponent(m_classifierComp);
@@ -122,7 +125,7 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
     	
     	
     	Box cbox = new Box(BoxLayout.X_AXIS);
-    	defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
+    	DialogComponentNumberEdit[] defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
     	for( int i=0; i< SMAlignmentReplayParameter.CFG_COST_TYPE_NUM ; i++) {
     		defaultCostComps[i] = new DialogComponentNumberEdit(m_parameter.getMDefaultCosts()[i], 
     				SMAlignmentReplayParameter.CFG_MCOST_KEY[i] ,5);
@@ -155,14 +158,14 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 			SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
 			
 			if(!tmp.isMWithTM()) {
-				if (!(input[TesterCCWithCTNodeModel.INPORT_LOG] instanceof XLogPortObject))
+				if (!(input[DefaultPNReplayerNodeModel.INPORT_LOG] instanceof XLogPortObject))
 					throw new NotConfigurableException("Input is not a valid event log!");
 
-				if (!(input[TesterCCWithCTNodeModel.INPORT_PETRINET] instanceof PetriNetPortObject))
+				if (!(input[DefaultPNReplayerNodeModel.INPORT_PETRINET] instanceof PetriNetPortObject))
 					throw new NotConfigurableException("Input is not a valid Petri net!");
 				
-				XLogPortObject logPO = (XLogPortObject) input[TesterCCWithCTNodeModel.INPORT_LOG];
-				PetriNetPortObject netPO = (PetriNetPortObject) input[TesterCCWithCTNodeModel.INPORT_PETRINET];
+				XLogPortObject logPO = (XLogPortObject) input[DefaultPNReplayerNodeModel.INPORT_LOG];
+				PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerNodeModel.INPORT_PETRINET];
 				
 				XLog log = logPO.getLog();
 				// TODO: different classifier available
@@ -233,5 +236,5 @@ public class TesterCCWithCTNodeDialog  extends DataAwareNodeDialogPane{
 
 		return tPane;
 	}
-
 }
+

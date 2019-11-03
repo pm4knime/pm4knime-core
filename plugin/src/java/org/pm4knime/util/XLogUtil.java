@@ -34,7 +34,27 @@ import org.deckfour.xes.out.XesXmlSerializer;
  * this class is created  to include the utility used to deal with event log in XLog format
  */
 public class XLogUtil {
+	
+	// this function can be included into the event classifier
+	public static List<String> getECNames(List<XEventClassifier> classifierList) {
+		// TODO Auto-generated method stub
+		List<String> classifierNames = new ArrayList();
+		for (XEventClassifier clf : classifierList) {
+			classifierNames.add(clf.name());
+		}
+		return classifierNames;
+	}
 
+	
+	public static XEventClassifier getXEventClassifier(String clfName, List<XEventClassifier> classifierList) {
+		// TODO Auto-generated method stub
+    	for(XEventClassifier clf : classifierList) {
+ 			if(clf.name().equals(clfName))
+ 				return clf;
+ 		}
+ 		return null;
+	}
+	
 	public static void saveLog(XLog log, OutputStream objOut) {
 		XSerializer serializer = new XesXmlSerializer();
 		try {

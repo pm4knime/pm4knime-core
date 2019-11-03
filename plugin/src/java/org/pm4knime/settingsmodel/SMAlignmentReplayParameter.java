@@ -1,5 +1,14 @@
 package org.pm4knime.settingsmodel;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.XLogInfoFactory;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -12,6 +21,16 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
+import org.pm4knime.util.ReplayerUtil;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
+import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
+import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
+import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
+import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
 
 /**
  * this class is used to store the parameter for the alignment replayer. 
@@ -50,16 +69,22 @@ implements SettingsModelFlowVariableCompatible {
 	public static final int CFG_COST_TYPE_NUM = 3;
 	public static final int[] CFG_DEFAULT_MCOST = {1,1,0};
 	
+	
+	
 	public static String[] CFG_MCOST_KEY = {"log move cost", "model move cost",  "sync move cost"};
 	static String[] CFG_MOVE_KEY = { "log move", "model move", "sync move"};
 
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
 	
-	protected final String m_configName;
+	// remove the final before string
+	private String m_configName;
+	
 	private SettingsModelString m_strategy;
 	private SettingsModelString m_classifierName;
 	private SettingsModelIntegerBounded[] m_defaultCosts;
+	
+	public SMAlignmentReplayParameter() {}
 	
 	public SMAlignmentReplayParameter(final String configName) {
 		if ((configName == null) || "".equals(configName)) {
@@ -144,8 +169,9 @@ implements SettingsModelFlowVariableCompatible {
 	@Override
 	protected void loadSettingsForDialog(NodeSettingsRO settings, PortObjectSpec[] specs)
 			throws NotConfigurableException {
-		// TODO Auto-generated method stub
+		// TODO we get the setting from PortObjectSpec. How to load it ??
 		try {
+			
 			loadSettingsForModel(settings);
 		} catch (InvalidSettingsException e) {
 			// TODO Auto-generated catch block
@@ -211,5 +237,80 @@ implements SettingsModelFlowVariableCompatible {
 		// TODO Auto-generated method stub
 		return getClass().getSimpleName() + " ('" + m_configName + "')";
 	}
+	
+
+	// add conversion function to this parameter
+    public IPNReplayParameter getConfParameter(XLog log, AcceptingPetriNet anet, XEventClassifier eventClassifier,
+    		XEventClass evClassDummy) {
+    	XLogInfo logInfo = XLogInfoFactory.createLogInfo(log, eventClassifier);
+		Collection<XEventClass> eventClasses =  logInfo.getEventClasses().getClasses();
+		
+		int[] defaultCosts = new int [3];
+		for(int i=0; i< SMAlignmentReplayParameter.CFG_COST_TYPE_NUM; i++){
+			defaultCosts[i] = getMDefaultCosts()[i].getIntValue();
+		}
+		
+		// here we also need dummy event class for the cost, but we don't need to share it in another
+		// version. 
+		IPNReplayParameter parameters = new CostBasedCompleteParam(eventClasses,
+				evClassDummy, anet.getNet().getTransitions(), defaultCosts[0], defaultCosts[1]);
+		
+		parameters.setInitialMarking(anet.getInitialMarking());
+		// here cast needed to transfer from Set<Marking> to Marking[]
+		Marking[] fmList = new Marking[anet.getFinalMarkings().size()];
+		int i = 0;
+		for(Marking m : anet.getFinalMarkings())
+			fmList[i++] = m;
+    	
+		parameters.setFinalMarkings(fmList);
+    	parameters.setGUIMode(false);
+		parameters.setCreateConn(false);
+		
+    	return parameters;
+    }
+	
+	// add another conversion function to this parameter
+    public PNManifestReplayerParameter getPerfParameter(XLog log, AcceptingPetriNet anet, XEventClassifier eventClassifier ) {
+    	// how to create a table to assign such values here?? 
+		// if many event classes are available here?? 
+    	
+		XLogInfo logInfo = XLogInfoFactory.createLogInfo(log, eventClassifier);
+		Collection<XEventClass> eventClasses =  logInfo.getEventClasses().getClasses();
+
+		PNManifestReplayerParameter parameters = new PNManifestReplayerParameter();
+		//TODO : assign a better value here
+		parameters.setMaxNumOfStates(1000);
+		
+		// get the pattern map for transition & event classes 
+		TransClasses tc = new TransClasses(anet.getNet());
+		Map<TransClass, Set<EvClassPattern>> pattern = ReplayerUtil.buildPattern(tc, eventClasses);
+		TransClass2PatternMap mapping = new TransClass2PatternMap(log, anet.getNet(), eventClassifier, tc, pattern);
+		parameters.setMapping(mapping);
+		
+		// set the move cost
+		int lmCost = getMDefaultCosts()[0].getIntValue();
+		Map<XEventClass, Integer> mapLMCost = ReplayerUtil.buildLMCostMap(eventClasses, lmCost);
+		int mmCost = getMDefaultCosts()[1].getIntValue();
+		Map<TransClass, Integer> mapTMCost = ReplayerUtil.buildTMCostMap(tc, mmCost);
+		int smCost = getMDefaultCosts()[2].getIntValue();
+		Map<TransClass, Integer> mapSMCost = ReplayerUtil.buildTMCostMap(tc, smCost);
+		
+		parameters.setMapEvClass2Cost(mapLMCost);
+		parameters.setTrans2Cost(mapTMCost);
+		parameters.setTransSync2Cost(mapSMCost);
+		
+		
+		parameters.setInitMarking(anet.getInitialMarking());
+		Marking[] fmList = new Marking[anet.getFinalMarkings().size()];
+		int i = 0;
+		for(Marking m : anet.getFinalMarkings())
+			fmList[i++] = m;
+		
+		parameters.setFinalMarkings(fmList);
+		
+		parameters.setGUIMode(false);
+		
+    	return parameters;
+    } 
 	
 }
