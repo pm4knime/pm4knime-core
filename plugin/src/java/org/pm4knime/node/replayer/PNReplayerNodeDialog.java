@@ -60,7 +60,7 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
     
     protected void specialInit() {
 		// TODO Auto-generated method stub
-    	m_parameter  = new SMAlignmentReplayParameterWithCT("Parameter in Tester with CT");
+    	m_parameter  = new SMAlignmentReplayParameterWithCT(PNReplayerNodeModel.CFG_PARAMETER_NAME);
     	
     	// TODO : remove tmp. just use the old parameter here
     	SMAlignmentReplayParameterWithCT tmp =  m_parameter;

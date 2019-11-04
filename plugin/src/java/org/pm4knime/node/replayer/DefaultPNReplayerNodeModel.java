@@ -76,17 +76,19 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
  */
 public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectHolder{
 	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerNodeModel.class);
+	private static final  String message  = "Replayer In Default";	
+	public static String CFG_PARAMETER_NAME = "Parameter In " + message;
 	
 	protected static final int INPORT_LOG = 0;
 	protected static final int INPORT_PETRINET = 1;
 	
 	static List<XEventClassifier> classifierList = XLogUtil.getECList();
-	public static String CFG_PARAMETER_NAME = "Parameter in Replayer In Default";
+	
 	// assign one parameter the same values here 
 	SMAlignmentReplayParameter m_parameter;
 	// it can't belong to this class
 	XEventClass evClassDummy;
-	XEventClassifier eventClassifier ; 
+	XEventClassifier XEventClassifier ; 
 	
 	
 	RepResultPortObject repResultPO;
@@ -115,7 +117,18 @@ public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectH
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
 
-    	logger.info("Start: Unified PNReplayer");
+    	logger.info("Start: " + message);
+    	
+    	String strategyName = m_parameter.getMStrategy().getStringValue();
+    	executeWithoutLogger(inData, exec, strategyName);
+    	// in greed to output the strategy for replay
+		logger.info("End: " + message + " for "+ strategyName);
+		return new PortObject[]{repResultPO};
+    }
+
+    protected void executeWithoutLogger(final PortObject[] inData,
+            final ExecutionContext exec, String strategyName) throws Exception{
+      	// extract one method here to allow logger record its current class info
     	XLogPortObject logPO = (XLogPortObject) inData[INPORT_LOG];
     	PetriNetPortObject netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
     	XLog log = logPO.getLog();
@@ -130,7 +143,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectH
     	// if the strategy belongs to the first two, we use this, else, we use different ones.. 
     	PNRepResult repResult = null;
     	
-    	String strategyName = m_parameter.getMStrategy().getStringValue();
+    	// String strategyName = m_parameter.getMStrategy().getStringValue();
     	// for conformance checking
     	IPNReplayAlgorithm replayAlgorithm = null ;
     	
@@ -172,22 +185,23 @@ public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectH
 	    	repResult = replayAlgorithm.replayLog(pluginContext, anet.getNet(), log, mapping, parameters);
     	}
     	
+    	// put the dummy event class and event classifier in the info table for reuse
+    	// however, due to there is no serialization for event class, we can not save it
+    	// in rep result, the same for m_parameter saving. We need to make it into string and convert it back
+    	repResult.addInfo(XLogUtil.CFG_DUMMY_ECNAME, XLogUtil.serializeEventClass(evClassDummy));
+    	repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, XLogUtil.serializeEventClassifier(eventClassifier));
     	
 		repResultPO = new RepResultPortObject(repResult, log, anet);
+		
+		
 		m_rSpec.setMParameter(m_parameter);
 		repResultPO.setSpec(m_rSpec);
-		logger.info("End: Default PNReplayer for "+ strategyName);
-		return new PortObject[]{repResultPO};
     }
-
     
     public RepResultPortObject getRepResultPO() {
 		return repResultPO;
 	}
     
-    XEventClassifier getXEventClassifier() {
-    	return eventClassifier;
-    }
     /**
      * {@inheritDoc}
      */

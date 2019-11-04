@@ -23,16 +23,20 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.RepResultPortObject;
+import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.ReplayerUtil;
+import org.pm4knime.util.XLogUtil;
 
 /**
  * <code>NodeModel</code> for the "ConformanceChecker" node.
  *
  * @author 
  */
-public class ConformanceCheckerNodeModel extends NodeModel implements PortObjectHolder{
+public class ConformanceCheckerNodeModel extends NodeModel{
 	private static final NodeLogger logger = NodeLogger.getLogger(ConformanceCheckerNodeModel.class);
 	
 	private DataTableSpec m_tSpec;
@@ -57,11 +61,20 @@ public class ConformanceCheckerNodeModel extends NodeModel implements PortObject
     	logger.info("Start: Unified PNReplayer Conformance Checking");
     	repResultPO = (RepResultPortObject) inData[0];
     	
+    	// make the transitions in replay result and transitions corresponding!!
+    	ReplayerUtil.adjustRepResult(repResultPO.getRepResult(), repResultPO.getNet());
+    	
     	BufferedDataContainer buf = exec.createDataContainer(m_tSpec);
     	Map<String, Object> info = repResultPO.getRepResult().getInfo();
     	int i=0;
     	for(String key : info.keySet()) {
-    		Double value = (Double) info.get(key);
+    		
+    		Object origValue = info.get(key);
+    		
+    		if(!(origValue instanceof Double))
+    			continue;
+    		
+    		Double value = (Double) origValue;
     		
     		DataCell[] currentRow = new DataCell[2];
     		currentRow[0] = new StringCell(key);
@@ -72,7 +85,7 @@ public class ConformanceCheckerNodeModel extends NodeModel implements PortObject
     	buf.close();
     	BufferedDataTable bt = buf.getTable();
     	
-        return new BufferedDataTable[]{};
+        return new PortObject[]{bt};
     }
 
     /**
@@ -87,9 +100,9 @@ public class ConformanceCheckerNodeModel extends NodeModel implements PortObject
      * {@inheritDoc}
      */
     @Override
-    protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-    	if (!inSpecs[0].getClass().equals(RepResultPortObject.class))
+    	if (!inSpecs[0].getClass().equals(RepResultPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid replay result!");
 
     	// here we should give its spec for statistics info
@@ -99,7 +112,7 @@ public class ConformanceCheckerNodeModel extends NodeModel implements PortObject
     	
     	m_tSpec = new DataTableSpec(cSpec);
 		
-        return new DataTableSpec[]{m_tSpec};
+        return new PortObjectSpec[]{m_tSpec};
     }
 
     /**
@@ -138,32 +151,17 @@ public class ConformanceCheckerNodeModel extends NodeModel implements PortObject
         // TODO: generated method stub
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
 
-    @Override
-	public PortObject[] getInternalPortObjects() {
+	public RepResultPortObject getRepResultPO() {
 		// TODO Auto-generated method stub
-		return new PortObject[] { repResultPO};
+		return repResultPO;
 	}
 
-	/*
-	 * It defines methods to restore port objects. It is called after execution. 
-	 * because the view is based on the input and output port objects, so an internal view is in need.
-	 * Serialization is controlled by KNIME platform.
-	 */
 	@Override
-	public void setInternalPortObjects(PortObject[] portObjects) {
+	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
 		// TODO Auto-generated method stub
 		
-		repResultPO = (RepResultPortObject) portObjects[0];
 	}
 
 

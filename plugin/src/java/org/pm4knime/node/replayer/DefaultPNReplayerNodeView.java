@@ -1,22 +1,10 @@
 package org.pm4knime.node.replayer;
 
-import javax.swing.JComponent;
-
-import org.deckfour.xes.model.XLog;
 import org.knime.core.node.NodeView;
-import org.pm4knime.portobject.RepResultPortObject;
-import org.pm4knime.util.PetriNetUtil;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.framework.connections.ConnectionCannotBeObtained;
-import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
-import org.processmining.plugins.petrinet.replayresult.PNRepResult;
-import org.processmining.plugins.pnalignanalysis.visualization.projection.PNLogReplayProjectedVisPanel;
 
 /**
  * <code>NodeView</code> for the "PNReplayer" node.
- *
+ * This class is saved for later use. Currently, we don't need it here
  * @author 
  */
 public class DefaultPNReplayerNodeView extends NodeView<DefaultPNReplayerNodeModel> {
@@ -28,23 +16,7 @@ public class DefaultPNReplayerNodeView extends NodeView<DefaultPNReplayerNodeMod
      */
     protected DefaultPNReplayerNodeView(final DefaultPNReplayerNodeModel nodeModel) {
         super(nodeModel);
-        
-        RepResultPortObject reResultPO = nodeModel.getRepResultPO();
-        XLog log = reResultPO.getLog();
-        AcceptingPetriNet anet = reResultPO.getNet();
-        PNRepResult result = reResultPO.getRepResult();
-        
-        TransEvClassMapping map = PetriNetUtil.constructMapping(log, anet.getNet(), nodeModel.getXEventClassifier(), nodeModel.evClassDummy);
-        
-        JComponent projectView;
-		try {
-			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-			projectView = new PNLogReplayProjectedVisPanel(context, anet.getNet(), anet.getInitialMarking(), log, map, result);
-			setComponent(projectView);
-		} catch (ConnectionCannotBeObtained e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        // there is no view here to show the alignment??
     }
 
     /**

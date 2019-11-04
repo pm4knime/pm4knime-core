@@ -35,6 +35,62 @@ import org.deckfour.xes.out.XesXmlSerializer;
  */
 public class XLogUtil {
 	
+	public static final String CFG_DUMMY_ECNAME = "Dummy Event Class";
+	public static final String CFG_EVENTCLASSIFIER_NAME = "Event Classifier";
+	public static final String CFG_STRING_SEPERATOR = "::";
+	
+	// serialize the event class into string
+	public static String serializeEventClass(XEventClass ecls) {
+		String objString = ecls.getClass().getName() + CFG_STRING_SEPERATOR +
+				ecls.getId() + CFG_STRING_SEPERATOR +
+				ecls.getIndex() + CFG_STRING_SEPERATOR +
+				ecls.size();
+		return objString;
+	}
+	// deserialize event class from string
+	public static XEventClass deserializeEventClass(String objString) {
+		String[] attrs = objString.split(CFG_STRING_SEPERATOR);
+		if(attrs[0].equals(XEventClass.class.getName())) {
+			XEventClass ecls  = new XEventClass(attrs[1], Integer.parseInt(attrs[2]));
+			ecls.setSize(Integer.parseInt(attrs[3]));
+			return ecls;
+		}
+		
+		return null;
+	}
+	
+	// serialize the event classifier
+	public static String serializeEventClassifier(XEventClassifier eClassifier) {
+		
+		String objString = eClassifier.getClass().getName() + CFG_STRING_SEPERATOR + 
+				eClassifier.name();
+		// because we can save it, so here we don't use it 
+//		for(String value : eClassifier.getDefiningAttributeKeys()) {
+//			objString += value + CFG_STRING_SEPERATOR;
+//		}
+		return objString;
+	}
+	
+	// deserialize event class from string
+	public static XEventClassifier deserializeEventClassifier(String objString) {
+		String[] attrs = objString.split(CFG_STRING_SEPERATOR);
+		if(attrs[0].equals(XEventNameClassifier.class.getName())) {
+			
+			XEventClassifier eClassifier  = new XEventNameClassifier();
+			eClassifier.setName(attrs[1]);
+			return eClassifier;
+		}else if(attrs[0].equals(XEventLifeTransClassifier.class.getName())) {
+			XEventClassifier eClassifier  = new XEventLifeTransClassifier();
+			eClassifier.setName(attrs[1]);
+			return eClassifier;
+		}else {
+			System.out.println("Unknowm event classifier");
+		}
+		
+		return null;
+	}
+		
+	
 	// this function can be included into the event classifier
 	public static List<String> getECNames(List<XEventClassifier> classifierList) {
 		// TODO Auto-generated method stub
@@ -117,6 +173,7 @@ public class XLogUtil {
 	
 	// one function to get the event classifier with  log
 	public static List<XEventClassifier> getECList(XLog log){
+		// TODO : the difference is not clear
 		List<XEventClassifier> classifierList= new ArrayList();
 		classifierList.add(new XEventNameClassifier());
 		classifierList.add(new XEventLifeTransClassifier());

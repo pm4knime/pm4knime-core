@@ -28,7 +28,7 @@ public class DefaultPNReplayerNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 1;
+        return 0;
     }
 
     /**
@@ -38,7 +38,7 @@ public class DefaultPNReplayerNodeFactory
     public NodeView<DefaultPNReplayerNodeModel> createNodeView(final int viewIndex,
             final DefaultPNReplayerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-		return new DefaultPNReplayerNodeView(nodeModel);
+		return null;
     }
 
     /**

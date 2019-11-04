@@ -131,14 +131,14 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		AcceptingPetriNet anet = repResultPO.getNet();
     	
 		PNRepResult repResult = repResultPO.getRepResult();
-		
+		Map<String, Object> infoMap = repResult.getInfo();
 		// remove flatter parameters, we need reproduce the values here
 		// else, there is no replay result available here
 		// or we can pass the settings parameters to this node model By InputObject with settings m_parameter..
 		SMAlignmentReplayParameter specParameter =m_rSpec.getMParameter();
 		
-		XEventClassifier eventClassifier = XLogUtil.getXEventClassifier(specParameter.getMClassifierName().getStringValue(), classifierList);
-    	
+		XEventClassifier eventClassifier = (XEventClassifier) infoMap.get(XLogUtil.CFG_EVENTCLASSIFIER_NAME);;
+		
 		PNManifestReplayerParameter manifestParameters = specParameter.getPerfParameter(log, anet, eventClassifier);
 		PNManifestFlattener flattener = new PNManifestFlattener(anet.getNet(), manifestParameters);
 		
@@ -236,7 +236,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
 
-    	if (!inSpecs[0].getClass().equals(RepResultPortObject.class))
+    	if (!inSpecs[0].getClass().equals(RepResultPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid replay result!");
 		
 		// TODO : assign the table spec here

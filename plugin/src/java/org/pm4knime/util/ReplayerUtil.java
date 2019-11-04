@@ -327,4 +327,33 @@ public class ReplayerUtil {
 		
 		return refLog;
 	}
+
+
+	public static void adjustRepResult(PNRepResult repResult, AcceptingPetriNet anet) {
+		// TODO adjust the result in repResult to make it correpsond to net transitions values
+		Map<Transition, Transition> tMap = new HashMap();
+		
+		for (SyncReplayResult rep : repResult) {
+			// nodes store the transitions
+			List<Object> nodes = rep.getNodeInstance();
+			List<StepTypes> types = rep.getStepTypes();
+			
+			for(int i = 0; i< types.size(); i++) {
+				StepTypes type = types.get(i);
+				if(type == StepTypes.L){
+					continue;
+				}
+				
+				// syn step and transition step
+				Transition trans = (Transition) nodes.get(i);
+				if(!tMap.containsKey(trans)) {
+					Transition tInNet = PetriNetUtil.findTransition(trans.getLabel(), anet.getNet().getTransitions());
+					tMap.put(trans, tInNet);
+				}
+					
+				nodes.set(i, tMap.get(trans));
+			}	
+		}
+		
+	}
 }

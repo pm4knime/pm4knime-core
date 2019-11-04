@@ -12,6 +12,7 @@ import java.util.zip.ZipEntry;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
@@ -141,11 +142,19 @@ public class RepResultPortObject implements PortObject {
 			
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_REP_RESULT));
 			PNRepResult repResult = portObject.getRepResult();
-			// to mark the end of the elements
-			objOut.writeInt(repResult.size());
+			
 			// should we store the info at first?? Although they are the same in alignment, but we need to do it
 			// objOut.writeObject(repResult.getInfo());
+			// TODO: exception happens, because of the duplicated save but with different infoMap.
+			// the second one loses dummy and eventClassifier already. But why it is like this??
+			// if we save them into string, it should be fine
+			Map<String, Object> infoMap = repResult.getInfo();
+			// why I can have the info here??
+			// how to make sure the object stored in infoMap is serializable?? No secure way!!
+			objOut.writeObject(repResult.getInfo());
 			
+			// to mark the end of the elements
+			objOut.writeInt(repResult.size());
 			// Here begins to store the SyncReplayResult one by one 
 			for(SyncReplayResult alignment : repResult ) {
 				
@@ -208,40 +217,49 @@ public class RepResultPortObject implements PortObject {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
 			}
 			// sth with PortObjectSpec here to guide the verification
-			ObjectInputStream inObj = new ObjectInputStream(in);
+			ObjectInputStream objIn = new ObjectInputStream(in);
 			// firstly to get the entry name for replay result
 			nextEntry = in.getNextEntry();
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_REP_RESULT)) {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_REP_RESULT + "' not present");
 			}
 			RepResultPortObject repResultPO = new RepResultPortObject();
+			Map<String, Object> infoMap = null;
+			try {
+				
+				infoMap = (Map<String, Object>) objIn.readObject();
+				
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
-			int aSize = inObj.readInt();
+			int aSize = objIn.readInt();
 			// begin to read alignment one by one, but how to distinguish the reading for each alignment??
 			List<SyncReplayResult> col = new ArrayList<SyncReplayResult>();
 			
 			for(int sIdx = 0; sIdx < aSize; sIdx++) {
 			
 				List<Object> nodeInstances = new ArrayList();
-				int nSize  = inObj.readInt();
+				int nSize  = objIn.readInt();
 				for(int i=0; i < nSize; i++) {
 					
 						// make sure of the class to read
-						String classType = inObj.readUTF();
+						String classType = objIn.readUTF();
 						if(classType.equals(XEventClass.class.getName())) {
 							
-							String Id = inObj.readUTF();
-							int nIdx = inObj.readInt();
-							int esize = inObj.readInt();
+							String Id = objIn.readUTF();
+							int nIdx = objIn.readInt();
+							int esize = objIn.readInt();
 							
 							XEventClass ecls = new XEventClass(Id, nIdx);
 							ecls.setSize(esize);
 							nodeInstances.add(ecls);
 						}else if(classType.equals(Transition.class.getName())) {
-							String label = inObj.readUTF();
+							String label = objIn.readUTF();
 							Petrinet net = PetrinetFactory.newPetrinet("Temprorary Petri net for RepResult Loading");
 							try {
-								NodeID nId  = (NodeID) inObj.readObject();
+								NodeID nId  = (NodeID) objIn.readObject();
 								// here how to serialize the object is a problem
 								// it only reads bytes list, we need to convert the object into a net again
 								// !! Be careful about the converting and casting part
@@ -260,10 +278,10 @@ public class RepResultPortObject implements PortObject {
 					
 					// read other attributes here
 					try {
-						List<StepTypes> stepTypes = (List<StepTypes>) inObj.readObject();
-						SortedSet<Integer> traceIndex = (SortedSet<Integer>) inObj.readObject();
-						boolean isReliable = inObj.readBoolean();
-						Map<String, Double> info = (Map<String, Double>) inObj.readObject();
+						List<StepTypes> stepTypes = (List<StepTypes>) objIn.readObject();
+						SortedSet<Integer> traceIndex = (SortedSet<Integer>) objIn.readObject();
+						boolean isReliable = objIn.readBoolean();
+						Map<String, Double> info = (Map<String, Double>) objIn.readObject();
 						
 						SyncReplayResult result = new SyncReplayResult(nodeInstances, stepTypes, traceIndex.first());
 						result.setTraceIndex(traceIndex);
@@ -299,7 +317,9 @@ public class RepResultPortObject implements PortObject {
 			repResultPO.setRepResult(new PNRepResultImpl(col));
 			repResultPO.setLog(log);
 			repResultPO.setNet(anet);
-			
+			// when they use the Impl, it creates the info by itselves. So we don't need to store it here.
+			// but about the other infoMap, it could be not so lucky!! So, we still read the map and store it here
+			repResultPO.getRepResult().setInfo(infoMap);
 			// in.close();
 			System.out.println("Exit the load PO in serializer");
 			return repResultPO;

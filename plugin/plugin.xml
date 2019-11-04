@@ -45,19 +45,17 @@
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" id="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory"/>
 
 
-	<!-- nodes in conformance-->
-	<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.TesterCCNodeFactory" id="org.pm4knime.node.conformance.TesterCCNodeFactory"/>
-	<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.TesterCCWithCTNodeFactory" id="org.pm4knime.node.conformance.TesterCCWithCTNodeFactory"/>
-   
-   <!-- nodes in performance-->
-  	<node category-path="/processmining/performance" factory-class="org.pm4knime.node.performance.PerformanceCheckerNodeFactory" id="org.pm4knime.node.performance.PerformanceCheckerNodeFactory"/>
-  
-     <node category-path="/processmining/precision" factory-class="org.pm4knime.node.precision.PrecisionCheckerNodeFactory" id="org.pm4knime.node.precision.PrecisionCheckerNodeFactory"/>
-<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory" id="org.pm4knime.node.replayer.MatchInstancesReplayerNodeFactory"/>
-<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.DefaultPNReplayerNodeFactory" id="org.pm4knime.node.replayer.PNReplayerNodeFactory"/>
-<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.PNReplayerNodeFactory" id="org.pm4knime.node.replayer.PNReplayerNodeFactory"/>
-<node category-path="/" factory-class="org.pm4knime.node.conformance.ConformanceCheckerNodeFactory" id="org.pm4knime.node.conformance.ConformanceCheckerNodeFactory"/>
-</extension>
+		<!-- nodes in conformance-->
+		<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.ConformanceCheckerNodeFactory" id="org.pm4knime.node.conformance.ConformanceCheckerNodeFactory"/>
+	
+	   <!-- nodes in performance-->
+	  	<node category-path="/processmining/performance" factory-class="org.pm4knime.node.performance.PerformanceCheckerNodeFactory" id="org.pm4knime.node.performance.PerformanceCheckerNodeFactory"/>
+	  
+	     <node category-path="/processmining/precision" factory-class="org.pm4knime.node.precision.PrecisionCheckerNodeFactory" id="org.pm4knime.node.precision.PrecisionCheckerNodeFactory"/>
+	
+		<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.DefaultPNReplayerNodeFactory" id="org.pm4knime.node.replayer.PNReplayerNodeFactory"/>
+		<node category-path="/processmining/replay" factory-class="org.pm4knime.node.replayer.PNReplayerNodeFactory" id="org.pm4knime.node.replayer.PNReplayerNodeFactory"/>
+	</extension>
 
 	<extension point="org.knime.core.PortType">
 		<portType hidden="false" name="Event Log" objectClass="org.pm4knime.portobject.XLogPortObject" objectSerializer="org.pm4knime.portobject.XLogPortObject$XLogPortObjectSerializer" specClass="org.pm4knime.portobject.XLogPortObjectSpec" specSerializer="org.pm4knime.portobject.XLogPortObjectSpec$XLogPortObjectSpecSerializer"> </portType>

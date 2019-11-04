@@ -30,6 +30,7 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.node.performance.PerformanceCheckerNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.RepResultPortObject;
+import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.util.ReplayerUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
@@ -195,7 +196,7 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-    	if (!inSpecs[0].getClass().equals(RepResultPortObject.class))
+    	if (!inSpecs[0].getClass().equals(RepResultPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid replay result!");
 
         return new PortObjectSpec[]{null};

@@ -83,6 +83,7 @@ public class PetriNetUtil {
     	for(Transition t: tCol) {
     		// here due to the space character, we need to strip them at first
     		// and then compare it
+    		
     		if(transitionName.trim().equals(t.getLabel().trim()))
     			return t;
     	}
@@ -103,7 +104,7 @@ public class PetriNetUtil {
 			else
 				tSet.add(t.getLabel());
 		}
-		
+		// there is one method for this, get the transitions, add them here
 		List<String> nameList = new ArrayList<String>();
 		nameList.addAll(tSet);
 		nameList.addAll(tauSet);

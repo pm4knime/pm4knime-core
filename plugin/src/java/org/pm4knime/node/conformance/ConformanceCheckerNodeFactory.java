@@ -28,7 +28,7 @@ public class ConformanceCheckerNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 0;
+        return 1;
     }
 
     /**
@@ -38,7 +38,7 @@ public class ConformanceCheckerNodeFactory
     public NodeView<ConformanceCheckerNodeModel> createNodeView(final int viewIndex,
             final ConformanceCheckerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-		return null;
+		return new ConformanceCheckerNodeView(nodeModel);
     }
 
     /**
