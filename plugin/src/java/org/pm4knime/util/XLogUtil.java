@@ -35,6 +35,11 @@ import org.deckfour.xes.model.XAttributeTimestamp;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
+import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
+import org.deckfour.xes.model.impl.XAttributeImpl;
+import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
 
@@ -46,6 +51,7 @@ public class XLogUtil {
 	public static final String CFG_DUMMY_ECNAME = "Dummy Event Class";
 	public static final String CFG_EVENTCLASSIFIER_NAME = "Event Classifier";
 	public static final String CFG_STRING_SEPERATOR = "::";
+	public static final String CFG_ATTRIBUTE_SUFFIX = "-new";
 	
 	// serialize the event class into string
 	public static String serializeEventClass(XEventClass ecls) {
@@ -280,6 +286,8 @@ public class XLogUtil {
 			return Double.class;
 		} else if (xattr instanceof XAttributeDiscrete) {
 			return Integer.class;
+		}else if (xattr instanceof XAttributeLiteral) {
+			return String.class;
 		}
 		throw new IllegalArgumentException("Not supported data type");
 	}
@@ -305,74 +313,82 @@ public class XLogUtil {
 	}
 	
 	// merge log with ignore second log strategy. But simple ignore the trace
-	public static XLog mergeLogsIgnoreTrace(XLog log0, XLog log1) {
+	public static XLog mergeLogsIgnoreTrace(XLog log0, XLog log1, List<String> tKeys) {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
 		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
 		mlog.getGlobalEventAttributes().addAll(log1.getGlobalEventAttributes());
 		
-		Set<Long> caseIDSet = new HashSet();
-		String key = "concept:name";
+		Set<String> caseIDSet = new HashSet();
+		
 		// put the first event log into the mlog
 		for(XTrace trace: log0) {
 			mlog.add((XTrace) trace.clone());
-			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
-			caseIDSet.add(attr.getValue());
+			
+			// we need to get the values from it.. If we have string format
+			// it is totally fine for me
+			String  attrValue = trace.getAttributes().get(tKeys.get(0)).toString();
+			caseIDSet.add(attrValue);
 		}
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
-			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
-			if(!caseIDSet.contains(attr.getValue())) {
-				
+			String  attrValue = trace.getAttributes().get(tKeys.get(1)).toString();
+			if(!caseIDSet.contains(attrValue)) {
 				mlog.add((XTrace) trace.clone());
-				caseIDSet.add(attr.getValue());
 			}
 			
 		}
-		
 		return mlog;
 	}
 	
 	
-	// merge log with ignore second log strategy. But simple ignore the trace
-	public static XLog mergeLogsIgnoreEvent(XLog log0, XLog log1) {
+	// merge log with ignore second log strategy. But simple ignore the trace, 
+	// do they have conflicts on some attributes?? I think so, so we need to deal with the trace attributes
+	// by using with one, we need to do this??
+	// some attributes need change. 
+	public static XLog mergeLogsSeparateEvent(XLog log0, XLog log1, List<String> tKeys ,
+			List<XAttribute> exTraceAttrList0, List<XAttribute> traceAttrList1) {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
-		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
-		mlog.getGlobalEventAttributes().addAll(log1.getGlobalEventAttributes());
 		
-		Map<Long, XTrace> tMap = new HashMap();
-		String key = "concept:name";
+		for(XAttribute attr : traceAttrList1) {
+			String newKey = attr.getKey() + CFG_ATTRIBUTE_SUFFIX;
+			mlog.getGlobalTraceAttributes().add(cloneAttribute(attr, newKey));
+		}
+		
+		Map<String, XTrace> tMap = new HashMap();
+		
 		// put the first event log into the mlog
 		for(XTrace trace: log0) {
 			XTrace nTrace = (XTrace) trace.clone();
-			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
-			tMap.put(attr.getValue(), nTrace);
+			String  attrValue = trace.getAttributes().get(tKeys.get(0)).toString();
+			tMap.put(attrValue, nTrace);
 		}
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
-			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
-			long caseID = attr.getValue();
-			if(!tMap.keySet().contains(caseID)) {
-				XTrace nTrace = (XTrace) trace.clone();
-				tMap.put(attr.getValue(), nTrace);
-			}else {
-				// they have the same caseID, ignore the repetive events from second traces
-				XTrace oTrace = tMap.get(caseID);
-				
-				// check the events in trace if they are in the current trace
-				// the trace, we can't delete the event like this, but to remember the values there
+			String  attrValue = trace.getAttributes().get(tKeys.get(1)).toString();
+			
+			if(tMap.keySet().contains(attrValue)) {
+			
+				XTrace oTrace = tMap.get(attrValue);
+				// add all event from the current to oTrace
 				for(XEvent event: trace) {
-					// TODO : more check on this
-					if(!containEvent(trace, event, null)) {
-						oTrace.insertOrdered((XEvent) event.clone());
-					}
-					
+					oTrace.insertOrdered((XEvent) event.clone());
 				}
 				
-			}
+				// only for the ones with same caseID, we do it!! 
+				for(XAttribute exAttr : exTraceAttrList0)
+					oTrace.getAttributes().remove(exAttr.getKey());
+				for(XAttribute inAttr : traceAttrList1) {
+					String newKey = inAttr.getKey() + CFG_ATTRIBUTE_SUFFIX;
+					//  naming is important to show it out. fix the global attributes
+					oTrace.getAttributes().put(newKey,  cloneAttribute(inAttr, newKey));
+				}
+				
+			}else // without the same identifier
+				tMap.put(attrValue, trace);
 			
 		}
 		// convert map to mlog
@@ -382,25 +398,39 @@ public class XLogUtil {
 	}
 		
 	
-	public static boolean containEvent(XTrace trace, XEvent event, XEventClassifier classifier) {
+	public static XEvent findEvent(XTrace trace, XEvent event, String eKeyInTrace, String eKey) {
 		// TODO check if one trace contains the event with the current event classifier
 		if(trace.contains(event))
-			return true;
-		String key = "event name";
-		XAttribute eAttr  = event.getAttributes().get(key);
+			return event;
+		
+		XAttribute eAttr  = event.getAttributes().get(eKey);
 		for(XEvent e: trace) {
-			XAttribute attr  = e.getAttributes().get(key);
+			XAttribute attr  = e.getAttributes().get(eKeyInTrace);
 			if(attr instanceof XAttributeLiteral) {
 				if(((XAttributeLiteral) attr).getValue().equals(((XAttributeLiteral) eAttr).getValue()))
-					return true;
+					return e;
 			}else if(attr instanceof XAttributeDiscrete) {
 				if(((XAttributeDiscrete) attr).getValue() == ((XAttributeDiscrete) eAttr).getValue())
-					return true;
+					return e;
 			}
 		}
 		
-		return false;
+		return null;
 	}
+	
+	public static XAttribute cloneAttribute(XAttribute xattr, String newKey) {
+		if (xattr instanceof XAttributeContinuous) {
+			return new XAttributeContinuousImpl(newKey, ((XAttributeContinuous) xattr).getValue());
+		} else if (xattr instanceof XAttributeDiscrete) {
+			return new XAttributeDiscreteImpl(newKey, ((XAttributeDiscrete) xattr).getValue());
+		}else if (xattr instanceof XAttributeLiteral) {
+			return new XAttributeLiteralImpl(newKey, ((XAttributeLiteral) xattr).getValue());
+		}else if(xattr instanceof XAttributeTimestamp) {
+			return new XAttributeTimestampImpl(newKey, ((XAttributeTimestamp) xattr).getValue());
+		}
+		return null;
+	}
+	
 	// if we want to use the merge with attributes and event attributes, the ways to do this is:: 
 	// if they have the same caseId, then we merge them by using the trace and event attributes definde by before
 	// if they don`t have the same caseId, they we put them together
@@ -409,44 +439,81 @@ public class XLogUtil {
 	// to delete certain attributes, we can create another node extension for this. Add or delete attributes 
 	// for trace or event attributes there. We can handle this one. Waht we can do, is to put them together
 	// we don't need to choose the attribtues, just the strategy listed there
-	public static XLog mergeLogsInternal(XLog log0, XLog log1, List<XAttribute> traceAttrList0, 
-			List<XAttribute> traceAttrList1, List<XAttribute> eventAttrList0, List<XAttribute> eventAttrList1, 
-			List<XAttribute> exTraceAttrList0, 
-			List<XAttribute> exTraceAttrList1, List<XAttribute> exEventAttrList0, List<XAttribute> exEventAttrList1) {
+	// 
+	// exTraceAttrList0, exEventAttrList0 is empty and traceAttrList1 and eventAttrList1 includes all the attributes 
+	// we think they are separate traces and with different IDs. 
+	// we can have one indicator for this. if separate, or not. IF they are separate, we insert all events there
+	public static XLog mergeLogsInternal(XLog log0, XLog log1, List<String> tKeys, List<String> eKeys , List<XAttribute> exTraceAttrList0, List<XAttribute> exEventAttrList0, 
+			List<XAttribute> traceAttrList1,  List<XAttribute> eventAttrList1) {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
-		mlog.getGlobalTraceAttributes().clear();
-		mlog.getGlobalTraceAttributes().addAll(traceAttrList0);
-		mlog.getGlobalTraceAttributes().addAll(traceAttrList1);
-		mlog.getGlobalEventAttributes().addAll(eventAttrList0);
-		mlog.getGlobalEventAttributes().addAll(eventAttrList1);
+		// the attributes we remove is only for the traces with the same caseID. So it means at end, we need to keep them all?? 
+		// for other traces, we keep the old attributes there
+		for(XAttribute attr : traceAttrList1) {
+			String newKey = attr.getKey() + CFG_ATTRIBUTE_SUFFIX;
+			mlog.getGlobalTraceAttributes().add( cloneAttribute(attr, newKey));
+		}
 		
-		String key = "concept:name";
+		for(XAttribute attr : eventAttrList1) {
+			String newKey = attr.getKey() + CFG_ATTRIBUTE_SUFFIX;
+			mlog.getGlobalEventAttributes().add(cloneAttribute(attr, newKey));
+		}
+		
 		// how to find and change the trace with the same id ramdomly?? 
 		// create hash map, for the caseId and trace itself
-		Map<Long, XTrace> tMap = new HashMap();
+		Map<String, XTrace> tMap = new HashMap();
 		
 		for(XTrace trace: log0) {
 			XTrace nTrace = (XTrace) trace.clone();
-			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
-			// delete the attributes here with the same names... But are we talking about
-			tMap.put(attr.getValue(), nTrace);
+			String  attrValue = trace.getAttributes().get(tKeys.get(0)).toString();// delete the attributes here with the same names... But are we talking about
+			tMap.put(attrValue, nTrace);
 //			mlog.add(nTrace);
 		}
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
 			XTrace nTrace = (XTrace) trace.clone();
-			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
-			if(tMap.keySet().contains(attr.getValue())) {
+			String  attrValue = trace.getAttributes().get(tKeys.get(1)).toString();// delete the attributes here with the same names... But are we talking about
+			
+			if(tMap.keySet().contains(attrValue)) {
 				// combine them together for one event and one 
-				XTrace oTrace = tMap.get(attr.getValue());
+				XTrace oTrace = tMap.get(attrValue);
 				for(XEvent event: trace) {
-					oTrace.insertOrdered((XEvent) event.clone());
+					// just for the event with same eventID, we do this operation to make them as one
+					XEvent fe = findEvent(oTrace, event, eKeys.get(0), eKeys.get(1));
+					if(fe!=null) {
+						// check this event attributes and other attributes from this one
+						
+						// fe delete the exclused list and add addition ones
+						for(XAttribute exAttr : exEventAttrList0)
+							fe.getAttributes().remove(exAttr.getKey());
+						// add additional attr from log1
+						for(XAttribute inAttr : eventAttrList1) {
+							// here we should add values from the current event here
+							String newKey = inAttr.getKey() + CFG_ATTRIBUTE_SUFFIX;
+							// because it is a map, so if we use the same key, it's going to rewrite the values
+							// so the ways to do it, change the key for the new added attributes here.
+							fe.getAttributes().put(newKey,  cloneAttribute(inAttr, newKey));
+						
+						}
+					}else {
+						// for different ones, keep them as they are, for excluded part, also
+						oTrace.insertOrdered((XEvent) event.clone()); 
+					}
+					
+				}
+				
+				// deal with the attributes for trace
+				for(XAttribute exAttr : exTraceAttrList0)
+					oTrace.getAttributes().remove(exAttr.getKey());
+				for(XAttribute inAttr : traceAttrList1) {
+					String newKey = inAttr.getKey() + CFG_ATTRIBUTE_SUFFIX;
+					//  naming is important to show it out. fix the global attributes
+					oTrace.getAttributes().put(newKey,  cloneAttribute(inAttr, newKey));
 				}
 				
 			}else {
-				tMap.put(attr.getValue(), nTrace);
+				tMap.put(attrValue, nTrace);
 			}
 			
 		}
@@ -456,9 +523,6 @@ public class XLogUtil {
 		return mlog;
 	}
 	
-	public static XLog mergeLogsInternal(XLog log0, XLog log1) {
-		return log0;
-	}
 	/**
 	 * this method adds or delete trace and event attributes of log. It depends on the trace attributes and event attributes
 	 * we have choosen. But better used as delete this attributes. It is unique.

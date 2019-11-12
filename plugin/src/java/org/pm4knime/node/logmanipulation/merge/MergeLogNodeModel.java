@@ -2,7 +2,10 @@ package org.pm4knime.node.logmanipulation.merge;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -38,12 +41,23 @@ public class MergeLogNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(MergeLogNodeModel.class);
 	// check the m_strategy and m_string selection 
 	// here are three options
+
+	public static final int CGF_INPUTS_NUM = 2;
+	public static final String CFG_ATTRIBUTE_PREFIX = "Log ";
 	public static final String CFG_KEY_TRACE_STRATEGY = "Merge Strategy";
-	public static final String[]  CFG_TRACE_STRATEGY = {"Separate", "Ignore", "Internal Merge" };
+	public static final String[]  CFG_TRACE_STRATEGY = {"Separate Trace",  "Ignore Trace", "Internal Trace Merge", "Internal Event Merge"};
 	public static final String CFG_KEY_TRACE_ATTRSET = "Trace Attribute Set";
 	public static final String CFG_KEY_EVENT_ATTRSET = "Event Attribute Set";
+
+	public static final String[] CFG_KEY_CASE_ID = {"Case ID 0", "Case ID 1"};
+	public static final String[] CFG_KEY_EVENT_ID = {"Event ID 0", "Event ID 1"};
 	
 	SettingsModelString m_strategy =  new SettingsModelString(CFG_KEY_TRACE_STRATEGY, CFG_TRACE_STRATEGY[2]);
+	// create attributes to store the caseID and eventID for those two logs
+	// then we use the keys for it !!
+	SettingsModelString[] m_traceIDs = new SettingsModelString[CGF_INPUTS_NUM];
+	SettingsModelString[] m_eventIDs = new SettingsModelString[CGF_INPUTS_NUM];
+	
 	SettingsModelFilterString m_traceAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
 	SettingsModelFilterString m_eventAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
 	
@@ -54,6 +68,12 @@ public class MergeLogNodeModel extends NodeModel {
     
         // TODO: Specify the amount of input and output ports needed.
         super(new PortType[] { XLogPortObject.TYPE, XLogPortObject.TYPE }, new PortType[] { XLogPortObject.TYPE });
+        
+        for(int i=0; i< CGF_INPUTS_NUM; i++) {
+    		m_traceIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_CASE_ID[i], "");
+    		m_eventIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_EVENT_ID[i], "");	
+        }
+        
     }
 
     /**
@@ -66,6 +86,21 @@ public class MergeLogNodeModel extends NodeModel {
     	XLog log0 = ((XLogPortObject) inData[0]).getLog();
 		XLog log1 = ((XLogPortObject) inData[1]).getLog();
 		
+		double percent = 0.2;
+		List<XAttribute> tAttrList0 =  XLogUtil.getTAttributes(log0, percent);
+		List<XAttribute> tAttrList1 =  XLogUtil.getTAttributes(log1, percent);
+		
+		List<XAttribute> eAttrList0 =  XLogUtil.getEAttributes(log0, percent);
+		List<XAttribute> eAttrList1 =  XLogUtil.getEAttributes(log1, percent);
+		// this two attributes are used to decide the caseId and eventID\
+		// extract the tKeys from it
+		List<String> tKeys = new LinkedList();
+		List<String> eKeys = new LinkedList();
+		for(int i=0; i< CGF_INPUTS_NUM; i++) {
+			tKeys.add(m_traceIDs[i].getStringValue().split(CFG_ATTRIBUTE_PREFIX + i)[1]);
+			eKeys.add(m_eventIDs[i].getStringValue().split(CFG_ATTRIBUTE_PREFIX + i)[1]);
+		}
+		
 		XLog mlog = null;
     	// according to the strategy choice, we have different methods to merge
 		if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[0])) {
@@ -74,23 +109,66 @@ public class MergeLogNodeModel extends NodeModel {
 			mlog = XLogUtil.mergeLogsSeparate(log0, log1);
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[1])) {
 			// ignore the traces with same identifier from the second event log
-			mlog = XLogUtil.mergeLogsIgnoreTrace(log0, log1);
+			
+			mlog = XLogUtil.mergeLogsIgnoreTrace(log0, log1, tKeys);
 			
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[2])) {
-			// need to merge according to its trace attributes and event attributes
-			mlog = XLogUtil.mergeLogsIgnoreEvent(log0, log1);
+			// need to merge according to its trace attributes
+			// for this choice, only trace attributes are availabel
+			List<XAttribute> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
+			List<XAttribute> inTraceAttrList1 = getInAttrs(1, tAttrList1, m_traceAttrSet.getIncludeList());
+			mlog = XLogUtil.mergeLogsSeparateEvent(log0, log1, tKeys, exTraceAttrList0, inTraceAttrList1);
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[3])) {
 			// need to merge according to its trace attributes and event attributes
-			mlog = XLogUtil.mergeLogsInternal(log0, log1);
+			List<XAttribute> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
+			List<XAttribute> exEventAttrList0 = getExAttrs(0, eAttrList0, m_eventAttrSet.getExcludeList());
+			
+			// there are new attribute list to be added in traces with the same identifier
+			List<XAttribute> inTraceAttrList1 = getInAttrs(1, tAttrList1, m_traceAttrSet.getIncludeList());
+			List<XAttribute> inEventAttrList1 = getInAttrs(1, eAttrList1, m_eventAttrSet.getIncludeList());
+			
+			mlog = XLogUtil.mergeLogsInternal(log0, log1, tKeys, eKeys, exTraceAttrList0, exEventAttrList0, 
+					inTraceAttrList1, inEventAttrList1);
 		}else {
 			System.out.println("Not such strategy");
 		}
 		
+		XLogPortObject logPO = new XLogPortObject(mlog);
     	logger.info("End to merge event logs");
-        return new PortObject[]{};
+        return new PortObject[]{logPO};
     }
 
-    /**
+    private List<XAttribute> getInAttrs(int idx, List<XAttribute> attrList, List<String> attrNames ) {
+		// TODO Auto-generated method stub
+	   List<XAttribute> inAttrs = new LinkedList();
+	   
+	   for(XAttribute attr : attrList) {
+		   // how to decide if this attr should be contained 
+		   String key = CFG_ATTRIBUTE_PREFIX + idx +attr.getKey(); 
+		   // add more stuff here and check it 
+		   if(attrNames.contains(key)) {
+			   inAttrs.add(attr);
+		   }
+	   }
+	   
+	   return inAttrs;
+	}
+   
+    
+    private List<XAttribute> getExAttrs(int idx, List<XAttribute> attrList, List<String> attrNames) {
+		// TODO Auto-generated method stub
+	   List<XAttribute> exAttrs = new LinkedList();
+	   
+	   for(XAttribute attr : attrList) {
+		   String key = CFG_ATTRIBUTE_PREFIX + idx +attr.getKey(); 
+		   if(attrNames.contains(key))
+			   exAttrs.add(attr);
+	   }
+	   
+	   return exAttrs;
+	}
+   
+ /**
      * {@inheritDoc}
      */
     @Override
@@ -123,8 +201,15 @@ public class MergeLogNodeModel extends NodeModel {
     protected void saveSettingsTo(final NodeSettingsWO settings) {
          // TODO: generated method stub
     	m_strategy.saveSettingsTo(settings);
-    	m_traceAttrSet.saveSettingsTo(settings);
-    	m_eventAttrSet.saveSettingsTo(settings);
+    	
+    	for(int i=0; i< CGF_INPUTS_NUM; i++) {
+    		m_traceIDs[i].saveSettingsTo(settings);
+    		m_eventIDs[i].saveSettingsTo(settings);
+    	}
+//    	if(m_traceAttrSet.isEnabled())
+    		m_traceAttrSet.saveSettingsTo(settings);
+//    	if(m_eventAttrSet.isEnabled())
+    		m_eventAttrSet.saveSettingsTo(settings);
     }
 
     /**
@@ -135,8 +220,28 @@ public class MergeLogNodeModel extends NodeModel {
             throws InvalidSettingsException {
         // TODO: generated method stub
     	m_strategy.loadSettingsFrom(settings);
-    	m_traceAttrSet.loadSettingsFrom(settings);
-    	m_eventAttrSet.loadSettingsFrom(settings);
+    	
+
+		if(m_strategy.getStringValue().equals(MergeLogNodeModel.CFG_TRACE_STRATEGY[2])) {
+    		m_traceAttrSet.setEnabled(true);
+    		m_eventAttrSet.setEnabled(false);
+		}else if(m_strategy.getStringValue().equals(MergeLogNodeModel.CFG_TRACE_STRATEGY[3])) {
+    		m_traceAttrSet.setEnabled(true);
+    		m_eventAttrSet.setEnabled(true);
+    	}else {
+    		m_traceAttrSet.setEnabled(false);
+    		m_eventAttrSet.setEnabled(false);
+    	}
+    	
+    	for(int i=0; i< CGF_INPUTS_NUM; i++) {
+    		m_traceIDs[i].loadSettingsFrom(settings);
+    		m_eventIDs[i].loadSettingsFrom(settings);
+    	}
+    	
+    	if(m_traceAttrSet.isEnabled())
+    		m_traceAttrSet.loadSettingsFrom(settings);
+    	if(m_eventAttrSet.isEnabled())
+    		m_eventAttrSet.loadSettingsFrom(settings);
     }
 
     /**
@@ -145,7 +250,10 @@ public class MergeLogNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
+        // only m_traceAttrSet is enabled, we can get the m_event and m_traceAttrSet. Else no
+    	if(m_traceAttrSet.isEnabled()) {
+    		
+    	}
     }
     
     /**

@@ -1,7 +1,9 @@
 package org.pm4knime.node.logmanipulation.merge;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -68,14 +70,21 @@ import org.pm4knime.util.ui.DialogComponentAttributesFilter;
  *  Step 1: create tables to choose trace attributes 
  *  Step 2: accept the parameters. If we choose the complex way, we'd better set a parameter for this. Else,
  *  a simple way is OK.. 
+ *  
+ *  Step 3 : deal with the action changes in the model.
  * @author Kefang Ding
  */
 public class MergeLogNodeDialog extends DataAwareNodeDialogPane {
-	
+	private int num = MergeLogNodeModel.CGF_INPUTS_NUM;
 	protected JPanel m_compositePanel;
 	SettingsModelString m_strategy;
+	
+	SettingsModelString[] m_traceIDs;
+	SettingsModelString[] m_eventIDs;
 	SettingsModelFilterString m_traceAttrSet , m_eventAttrSet;
 	DialogComponentAttributesFilter m_traceAttrFilterComp, m_eventAttrFilterComp;
+	
+	private DialogComponentStringSelection[] tIDComps, eIDComps;
     /**
      * New pane for configuring the MergeLog node.
      */
@@ -90,12 +99,33 @@ public class MergeLogNodeDialog extends DataAwareNodeDialogPane {
     	DialogComponentStringSelection strategyComp = new DialogComponentStringSelection(m_strategy,"Choose Merge Strategy" ,MergeLogNodeModel.CFG_TRACE_STRATEGY);
     	m_compositePanel.add(strategyComp.getComponentPanel());
     	
+    	// add additional equation to choose the comparison
+    	
+    	m_traceIDs = new SettingsModelString[num];
+    	m_eventIDs = new SettingsModelString[num];
+    	tIDComps = new DialogComponentStringSelection[num];
+    	eIDComps = new DialogComponentStringSelection[num];
+    	for(int i=0; i< num;i++) {
+    		Box idChoosePane = createBox(true);
+    		m_traceIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_CASE_ID[i], "");
+    		// create comp for this traeID to make them equal
+    		tIDComps[i] = new DialogComponentStringSelection(m_traceIDs[i],"Choose Trace ID for log " + i, new String[]{" "});
+    		idChoosePane.add(tIDComps[i].getComponentPanel());
+    		
+    		m_eventIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_EVENT_ID[i], "");	
+    		eIDComps[i] = new DialogComponentStringSelection(m_eventIDs[i],"Event ID: ", new String[]{" "});
+    		idChoosePane.add(eIDComps[i].getComponentPanel());
+    		
+    		m_compositePanel.add(idChoosePane);
+    	}
+    	
+    	
     	m_traceAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
     	//m_traceAttrSet.setEnabled(false);
     	m_traceAttrFilterComp = new DialogComponentAttributesFilter(m_traceAttrSet, true);
     	m_compositePanel.add(m_traceAttrFilterComp.getComponentPanel());
     	
-    	m_eventAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
+    	m_eventAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, true );
     	// m_eventAttrSet.setEnabled(false);
     	// here must put them as the DataCell.class format. They are designed for DataTableSpec.
     	// so for us, we don't has DataTable as input, so there is some problems to updata
@@ -111,11 +141,14 @@ public class MergeLogNodeDialog extends DataAwareNodeDialogPane {
 			public void stateChanged(ChangeEvent arg0) {
 				// TODO if is is merge, then we enable the m_traceAttr and m_eventAttrSet, else disable
 				if(m_strategy.getStringValue().equals(MergeLogNodeModel.CFG_TRACE_STRATEGY[2])) {
-					
+					// internal trace merge
+					m_traceAttrSet.setEnabled(true);	
+					m_eventAttrSet.setEnabled(false);
+					// m_compositePanel.repaint();
+				}else if(m_strategy.getStringValue().equals(MergeLogNodeModel.CFG_TRACE_STRATEGY[3])) {
+					// internal event merge
 					m_traceAttrSet.setEnabled(true);
 					m_eventAttrSet.setEnabled(true);
-					
-					// m_compositePanel.repaint();
 				}else {
 					m_traceAttrSet.setEnabled(false);
 					m_eventAttrSet.setEnabled(false);
@@ -128,22 +161,43 @@ public class MergeLogNodeDialog extends DataAwareNodeDialogPane {
     }
     
     protected void addDialogComponent(final DialogComponent diaC) {
-		// TODO Auto-generated method stub
+		// TODO how to change the horizontal 
     	m_compositePanel.add(diaC.getComponentPanel());
 	}
 
+    private Box createBox(final boolean horizontal) {
+        final Box box;
+        if (horizontal) {
+            box = new Box(BoxLayout.X_AXIS);
+            box.add(Box.createVerticalGlue());
+        } else {
+            box = new Box(BoxLayout.Y_AXIS);
+            box.add(Box.createHorizontalGlue());
+        }
+         return box;
+    }
+    
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 		// TODO Auto-generated method stub
 		m_strategy.saveSettingsTo(settings);
+		
+		
+		for(int i=0; i< num; i++) {
+    		m_traceIDs[i].saveSettingsTo(settings);
+    		m_eventIDs[i].saveSettingsTo(settings);
+    	}
 		
 		m_traceAttrSet.saveSettingsTo(settings);
 		m_eventAttrSet.saveSettingsTo(settings);
 	}
 	
 	
+	@Override
 	protected void loadSettingsFrom(final NodeSettingsRO settings,
 			final PortObject[] input) throws NotConfigurableException {
+		// if we don't have such values, we need to search for event log. But if we have it. No need?
+		
 		if(!(input[0] instanceof XLogPortObject) || !(input[1] instanceof XLogPortObject)) {
 			// we can get the log object and then set all the choice of them, but at first, we need to put all the stuff here again
 			throw new NotConfigurableException("This is not valid event log inputs");
@@ -151,46 +205,51 @@ public class MergeLogNodeDialog extends DataAwareNodeDialogPane {
 		// get the two logs for merge
 		XLog log0 = ((XLogPortObject) input[0]).getLog();
 		XLog log1 = ((XLogPortObject) input[1]).getLog();
-		
+		XLog[] logs = {log0, log1};
 		// do we need to generate the Spec for XLog here in different order??  
 		// we need another dialog there to use this
 		// get the trace and event attributes list from both logs in tables 
 		double percent = 0.2;
-		List<XAttribute> tAttrList1 =  XLogUtil.getTAttributes(log0, percent);
-		List<XAttribute> tAttrList2 =  XLogUtil.getTAttributes(log1, percent);
-		//
-		List<String> tNameList = XLogUtil.getAttrNameList(tAttrList1);
-		int ti = 0;
-		for(; ti< tNameList.size(); ti++) {
-			tNameList.set(ti, "Log 0 " + tNameList.get(ti)); 
-		}
 		
-		for(String name: XLogUtil.getAttrNameList(tAttrList2)) {
-			tNameList.add(ti++, "Log 1 " + name); 
-		}
+		List<String> tNameList = new LinkedList();
 		
-		
-		m_traceAttrSet.setIncludeList(tNameList);
-    	
-		List<XAttribute> eAttrList1 =  XLogUtil.getEAttributes(log0, percent);
-		List<XAttribute> eAttrList2 =  XLogUtil.getEAttributes(log1, percent);
-		
-		List<String> eNameList = XLogUtil.getAttrNameList(eAttrList1);
-		int ei = 0;
-		for(; ei< eNameList.size(); ei++) {
-			eNameList.set(ei, "Log 0 " + eNameList.get(ei)); 
-		}
-		
-		for(String name: XLogUtil.getAttrNameList(eAttrList2)) {
-			eNameList.add(ei++, "Log 1 " + name); 
-		}
-		
-		m_eventAttrSet.setIncludeList(eNameList);
+		for(int i = 0; i< num; i++) {
+			// TODO: give log also in array, to make codes dense
+			List<XAttribute> tAttrList =  XLogUtil.getTAttributes(logs[i], percent);
+			
+			List<String> tmpNameList = XLogUtil.getAttrNameList(tAttrList);
+			
+			int ti=0;
+			for(; ti< tmpNameList.size(); ti++) {
+				tmpNameList.set(ti, MergeLogNodeModel.CFG_ATTRIBUTE_PREFIX + i + tmpNameList.get(ti)); 
+			}
+			tIDComps[i].replaceListItems(tmpNameList, tmpNameList.get(0));
 
-		System.out.println(m_eventAttrSet.getIncludeList().size());
-		// filter is wrong which causes the proble not good!!
-		System.out.println(m_eventAttrFilterComp.getValidIncludeColumns().size());
-		System.out.println(m_eventAttrFilterComp.getValidExcludeColumns().size());
+			tNameList.addAll(tmpNameList);
+		}
+		// how to make the include and exclude at this step??
+		m_traceAttrSet.setNewValues(tNameList, new LinkedList<String>(), true);
+    	
+		List<String> eNameList = new LinkedList();
+		for(int i = 0; i< num; i++) {
+			// TODO: give log also in array, to make codes dense
+			List<XAttribute> eAttrList = XLogUtil.getEAttributes(logs[i], percent);
+			
+			List<String> tmpNameList = XLogUtil.getAttrNameList(eAttrList);
+			
+			int ei=0;
+			for(; ei< tmpNameList.size(); ei++) {
+				tmpNameList.set(ei, MergeLogNodeModel.CFG_ATTRIBUTE_PREFIX + i + tmpNameList.get(ei)); 
+			}
+			eIDComps[i].replaceListItems(tmpNameList, tmpNameList.get(0));
+			eNameList.addAll(tmpNameList);
+		}
+		m_eventAttrSet.setNewValues(eNameList, new LinkedList<String>(), true);
+		
+//		System.out.println(m_eventAttrSet.getIncludeList().size());
+//		// filter is wrong which causes the proble not good!!
+//		System.out.println(m_eventAttrFilterComp.getValidIncludeColumns().size());
+//		System.out.println(m_eventAttrFilterComp.getValidExcludeColumns().size());
 		// how to update the values and show in dialog??
 		m_compositePanel.updateUI();
 		m_compositePanel.repaint();
