@@ -7,7 +7,11 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -15,6 +19,8 @@ import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventLifeTransClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
+import org.deckfour.xes.extension.std.XConceptExtension;
+import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.in.XParser;
 import org.deckfour.xes.in.XesXmlParser;
@@ -23,6 +29,8 @@ import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeContinuous;
 import org.deckfour.xes.model.XAttributeDiscrete;
+import org.deckfour.xes.model.XAttributeLiteral;
+import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XAttributeTimestamp;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
@@ -185,7 +193,7 @@ public class XLogUtil {
 		// get the event attributes types, like start time and complete time
 		// after checking this, we get the key names. They are the same.
 		// so what we get is the keySet..
-		List<XAttribute> attrList = getEAttributes(log, 0.2);
+		List<XAttribute> attrList = getTAttributes(log, 0.2);
 		List<String> attrNames = new ArrayList<String>();
 		
 		// the result is reliable, we need to traverse the log and trace for this
@@ -194,7 +202,6 @@ public class XLogUtil {
 				attrNames.add(attr.getKey());
 			}
 		}
-		
 		return attrNames;
 	}
 	
@@ -202,7 +209,7 @@ public class XLogUtil {
 	public static List<XAttribute> getEAttributes(XLog log, double percent){
 		// the result is not reliable, so traverse each trace there
 		List<XAttribute> attrList = log.getGlobalEventAttributes();
-		List<String> attrNames = getNameList(attrList);
+		List<String> attrNames = getAttrNameList(attrList);
 		int num = (int) (log.size() * percent);
 		// we should count the number of visited values there
 		for(XTrace trace: log) {
@@ -225,7 +232,7 @@ public class XLogUtil {
 	public static List<XAttribute> getTAttributes(XLog log, double percent){
 		// the result is not reliable, so traverse each trace there
 		List<XAttribute> attrList = log.getGlobalTraceAttributes();
-		List<String> attrNames = getNameList(attrList);
+		List<String> attrNames = getAttrNameList(attrList);
 		int num = (int) (log.size() * percent);
 		// we should count the number of visited values there
 		for(XTrace trace: log) {
@@ -241,7 +248,7 @@ public class XLogUtil {
 		return attrList;
 	}
 	
-	public static List<String> getNameList(List<XAttribute> attrList){
+	public static List<String> getAttrNameList(List<XAttribute> attrList){
 		List<String> attrNames = new ArrayList();
 		for(XAttribute attr : attrList) {
 			attrNames.add(attr.getKey());
@@ -275,5 +282,221 @@ public class XLogUtil {
 			return Integer.class;
 		}
 		throw new IllegalArgumentException("Not supported data type");
+	}
+	
+	// merge two event logs with separate strategy
+	public static XLog mergeLogsSeparate(XLog log0, XLog log1) {
+		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
+		mlog.getAttributes().putAll(log1.getAttributes());
+		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
+		mlog.getGlobalEventAttributes().addAll(log1.getGlobalEventAttributes());
+		
+		// put the first event log into the mlog
+		for(XTrace trace: log0) {
+			mlog.add((XTrace) trace.clone());
+		}
+		
+		// put the first event log into the mlog
+		for(XTrace trace: log1) {
+			mlog.add((XTrace) trace.clone());
+		}
+		
+		return mlog;
+	}
+	
+	// merge log with ignore second log strategy. But simple ignore the trace
+	public static XLog mergeLogsIgnoreTrace(XLog log0, XLog log1) {
+		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
+		mlog.getAttributes().putAll(log1.getAttributes());
+		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
+		mlog.getGlobalEventAttributes().addAll(log1.getGlobalEventAttributes());
+		
+		Set<Long> caseIDSet = new HashSet();
+		String key = "concept:name";
+		// put the first event log into the mlog
+		for(XTrace trace: log0) {
+			mlog.add((XTrace) trace.clone());
+			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
+			caseIDSet.add(attr.getValue());
+		}
+		
+		// put the first event log into the mlog
+		for(XTrace trace: log1) {
+			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
+			if(!caseIDSet.contains(attr.getValue())) {
+				
+				mlog.add((XTrace) trace.clone());
+				caseIDSet.add(attr.getValue());
+			}
+			
+		}
+		
+		return mlog;
+	}
+	
+	
+	// merge log with ignore second log strategy. But simple ignore the trace
+	public static XLog mergeLogsIgnoreEvent(XLog log0, XLog log1) {
+		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
+		mlog.getAttributes().putAll(log1.getAttributes());
+		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
+		mlog.getGlobalEventAttributes().addAll(log1.getGlobalEventAttributes());
+		
+		Map<Long, XTrace> tMap = new HashMap();
+		String key = "concept:name";
+		// put the first event log into the mlog
+		for(XTrace trace: log0) {
+			XTrace nTrace = (XTrace) trace.clone();
+			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
+			tMap.put(attr.getValue(), nTrace);
+		}
+		
+		// put the first event log into the mlog
+		for(XTrace trace: log1) {
+			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
+			long caseID = attr.getValue();
+			if(!tMap.keySet().contains(caseID)) {
+				XTrace nTrace = (XTrace) trace.clone();
+				tMap.put(attr.getValue(), nTrace);
+			}else {
+				// they have the same caseID, ignore the repetive events from second traces
+				XTrace oTrace = tMap.get(caseID);
+				
+				// check the events in trace if they are in the current trace
+				// the trace, we can't delete the event like this, but to remember the values there
+				for(XEvent event: trace) {
+					// TODO : more check on this
+					if(!containEvent(trace, event, null)) {
+						oTrace.insertOrdered((XEvent) event.clone());
+					}
+					
+				}
+				
+			}
+			
+		}
+		// convert map to mlog
+		mlog.addAll(tMap.values());
+		
+		return mlog;
+	}
+		
+	
+	public static boolean containEvent(XTrace trace, XEvent event, XEventClassifier classifier) {
+		// TODO check if one trace contains the event with the current event classifier
+		if(trace.contains(event))
+			return true;
+		String key = "event name";
+		XAttribute eAttr  = event.getAttributes().get(key);
+		for(XEvent e: trace) {
+			XAttribute attr  = e.getAttributes().get(key);
+			if(attr instanceof XAttributeLiteral) {
+				if(((XAttributeLiteral) attr).getValue().equals(((XAttributeLiteral) eAttr).getValue()))
+					return true;
+			}else if(attr instanceof XAttributeDiscrete) {
+				if(((XAttributeDiscrete) attr).getValue() == ((XAttributeDiscrete) eAttr).getValue())
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	// if we want to use the merge with attributes and event attributes, the ways to do this is:: 
+	// if they have the same caseId, then we merge them by using the trace and event attributes definde by before
+	// if they don`t have the same caseId, they we put them together
+	// another way to merge is if we ignore the ones with the same event in xlog. 
+	// if not ignore, we put the events in the same trace.. But we might need sth attributes from them
+	// to delete certain attributes, we can create another node extension for this. Add or delete attributes 
+	// for trace or event attributes there. We can handle this one. Waht we can do, is to put them together
+	// we don't need to choose the attribtues, just the strategy listed there
+	public static XLog mergeLogsInternal(XLog log0, XLog log1, List<XAttribute> traceAttrList0, 
+			List<XAttribute> traceAttrList1, List<XAttribute> eventAttrList0, List<XAttribute> eventAttrList1, 
+			List<XAttribute> exTraceAttrList0, 
+			List<XAttribute> exTraceAttrList1, List<XAttribute> exEventAttrList0, List<XAttribute> exEventAttrList1) {
+		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
+		mlog.getAttributes().putAll(log1.getAttributes());
+		mlog.getGlobalTraceAttributes().clear();
+		mlog.getGlobalTraceAttributes().addAll(traceAttrList0);
+		mlog.getGlobalTraceAttributes().addAll(traceAttrList1);
+		mlog.getGlobalEventAttributes().addAll(eventAttrList0);
+		mlog.getGlobalEventAttributes().addAll(eventAttrList1);
+		
+		String key = "concept:name";
+		// how to find and change the trace with the same id ramdomly?? 
+		// create hash map, for the caseId and trace itself
+		Map<Long, XTrace> tMap = new HashMap();
+		
+		for(XTrace trace: log0) {
+			XTrace nTrace = (XTrace) trace.clone();
+			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
+			// delete the attributes here with the same names... But are we talking about
+			tMap.put(attr.getValue(), nTrace);
+//			mlog.add(nTrace);
+		}
+		
+		// put the first event log into the mlog
+		for(XTrace trace: log1) {
+			XTrace nTrace = (XTrace) trace.clone();
+			XAttributeDiscrete attr = (XAttributeDiscrete) trace.getAttributes().get(key);
+			if(tMap.keySet().contains(attr.getValue())) {
+				// combine them together for one event and one 
+				XTrace oTrace = tMap.get(attr.getValue());
+				for(XEvent event: trace) {
+					oTrace.insertOrdered((XEvent) event.clone());
+				}
+				
+			}else {
+				tMap.put(attr.getValue(), nTrace);
+			}
+			
+		}
+		
+		// convert map to mlog
+		mlog.addAll(tMap.values());
+		return mlog;
+	}
+	
+	public static XLog mergeLogsInternal(XLog log0, XLog log1) {
+		return log0;
+	}
+	/**
+	 * this method adds or delete trace and event attributes of log. It depends on the trace attributes and event attributes
+	 * we have choosen. But better used as delete this attributes. It is unique.
+	 * Modify can also include changing the name or the type of those attributes. TO change an existing attributes, 
+	 * -- list the info for current attributes. The type and others
+	 * -- the info for new attributes, like the name and type. 
+	 * change the attributes name?? from KPI to output-come?? 
+	 * change the type of it?? It is like adding the attributes to trace and event attributes
+	 * Some things else, we have attributes manipluation for one event log!!! 
+	 * If there is some attributes calculated from another event log.. We don't do it!!
+	 * But to add the attrs, we need the expression from the addAttrs? Or random there, we need to do it in JavaSnippet.
+	 * It is a better way. To delete, then delete it. 
+	 * @param log
+	 * @return
+	 */
+	public static XLog modifyAttributes(XLog log, List<XAttribute> addAttrs, List<XAttribute> deleteAttrs, 
+			List<XAttribute> modifyAttrs) {
+		XLog mlog = XLogUtil.clonePureLog(log, "Modified Log");
+		
+		// we have a list of addAttr, but also the values here for them?? Or something else?? 
+		// attrs related to trace and events, the value can't be simply changed in this way. It needs more calculation
+		// so for attributes, what we can do is to delete the attributes. But we can get the list of those operations?
+		// not really!! We can sort the attributes and show the information about it. But we already have the view. 
+		// SO this function is to be saved
+		
+		return log;
+	}
+	
+	
+	
+	public static XLog clonePureLog(XLog log, String suffix) {
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+		// TODO : check if it is like the attributes like trace attributes and event attributes
+		XLog newLog = factory.createLog((XAttributeMap) log.getAttributes().clone());
+		XConceptExtension.instance().assignName(newLog, XConceptExtension.instance().extractName(log) + suffix);
+		newLog.getGlobalTraceAttributes().addAll(log.getGlobalTraceAttributes());
+		newLog.getGlobalEventAttributes().addAll(log.getGlobalEventAttributes());
+		newLog.getExtensions().addAll(log.getExtensions());
+		return newLog;
 	}
 }

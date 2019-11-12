@@ -1,34 +1,15 @@
 package org.pm4knime.node.logmanipulation.split;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
-
-import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.deckfour.xes.model.XAttributeMap;
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.processmining.contexts.uitopia.UIPluginContext;
-import org.processmining.framework.plugin.PluginContext;
-import org.processmining.framework.util.collection.AlphanumComparator;
 import org.processmining.incorporatenegativeinformation.dialogs.ui.AttributeLogFilter_UI;
 import org.processmining.incorporatenegativeinformation.models.AttributeLogFilter;
 
@@ -41,9 +22,6 @@ import org.processmining.incorporatenegativeinformation.models.AttributeLogFilte
  */
 public class SplitLogNodeDialog extends DataAwareNodeDialogPane {
 
-	private static final NodeLogger logger =
-			NodeLogger.getLogger(SplitLogNodeDialog.class);
-	
 	private String m_defaultTabTitle = "Customized Options";
 	
 	

@@ -32,6 +32,7 @@
 		<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.split2.LogSplitterNodeFactory" id="org.pm4knime.node.logmanipulation.split2.LogSplitterNodeFactory"/>
 		<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.split.SplitLogNodeFactory" id="org.pm4knime.node.logmanipulation.SplitLogNodeFactory"/>
 		<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.classify.RandomClassifierNodeFactory" id="org.pm4knime.node.logmanipulation.classify.RandomClassifierNodeFactory"/>
+		<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" id="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory"/>
 	
 		<!-- nodes in conversion-->
 		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.csv2log.CSV2XLogConverterNodeFactory" id="org.pm4knime.node.conversion.CVS2XLogConverterNodeFactory"/>

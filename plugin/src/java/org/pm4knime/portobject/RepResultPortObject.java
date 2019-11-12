@@ -25,6 +25,7 @@ import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.models.graphbased.LocalNodeID;
 import org.processmining.models.graphbased.NodeID;
 import org.processmining.models.graphbased.directed.AbstractDirectedGraph;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
@@ -177,7 +178,7 @@ public class RepResultPortObject implements PortObject {
 						// we only store the label, id and related net here
 						objOut.writeUTF(t.getClass().getName());
 						objOut.writeUTF(t.getLabel());
-						objOut.writeObject(t.getId());
+						objOut.writeObject(t.getLocalID());
 						
 					}
 				}
@@ -259,19 +260,21 @@ public class RepResultPortObject implements PortObject {
 							String label = objIn.readUTF();
 							Petrinet net = PetrinetFactory.newPetrinet("Temprorary Petri net for RepResult Loading");
 							try {
-								NodeID nId  = (NodeID) objIn.readObject();
+								LocalNodeID nId  = (LocalNodeID) objIn.readObject();
 								// here how to serialize the object is a problem
 								// it only reads bytes list, we need to convert the object into a net again
 								// !! Be careful about the converting and casting part
 								// net = (AbstractDirectedGraph<PetrinetNode, PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>>) PetriNetPortObject.convert2ANet(inObj);
+								Transition t = new Transition(label, (AbstractDirectedGraph<PetrinetNode, PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>>) net);
+								t.setLocalID(nId);
+								nodeInstances.add(t);
 								
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							// but here we need to have the transition with net, so we can store them all, but do we need ??
-							Transition t = new Transition(label, (AbstractDirectedGraph<PetrinetNode, PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>>) net);
-							nodeInstances.add(t);
+							
 						}
 						
 					}
