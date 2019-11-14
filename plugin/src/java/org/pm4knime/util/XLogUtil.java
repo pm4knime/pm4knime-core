@@ -563,4 +563,40 @@ public class XLogUtil {
 		newLog.getExtensions().addAll(log.getExtensions());
 		return newLog;
 	}
+	
+	// add artificial start and end transitions to the log. 
+	// refer to org.processmining.hybridilpminer.utils.XLogUtils , but allows the classifier to be specified
+	// to adapt the end use
+	public static XLog addArtificialStartAndEnd(XLog log, String artifStart, String artifEnd,
+			XEventClassifier eventClassifier) {
+		// TODO Auto-generated method stub
+		XLog copy = (XLog) log.clone();
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
+		List<XEventClassifier> classifiers = log.getClassifiers();
+		classifiers.add(eventClassifier);
+		
+		for (XTrace t : copy) {
+			t.add(0, factory.createEvent(createArtificialAttributeMap(factory, classifiers, artifStart)));
+			t.add(factory.createEvent(createArtificialAttributeMap(factory, classifiers, artifEnd)));
+		}
+		if (copy.isEmpty()) {
+			XTrace t = factory.createTrace();
+			t.add(0, factory.createEvent(createArtificialAttributeMap(factory, classifiers, artifStart)));
+			t.add(factory.createEvent(createArtificialAttributeMap(factory, classifiers, artifEnd)));
+			copy.add(t);
+		}
+		return copy;
+		
+	}
+	
+	public static XAttributeMap createArtificialAttributeMap(final XFactory factory,
+			final List<XEventClassifier> classifiers, final String artificialLabel) {
+		XAttributeMap map = factory.createAttributeMap();
+		for (XEventClassifier classifier : classifiers) {
+			for (String s : classifier.getDefiningAttributeKeys()) {
+				map.put(s, factory.createAttributeLiteral(s, artificialLabel, null));
+			}
+		}
+		return map;
+	}
 }

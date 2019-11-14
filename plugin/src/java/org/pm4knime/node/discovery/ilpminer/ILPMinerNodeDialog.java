@@ -20,7 +20,19 @@ import org.processmining.causalactivitymatrixminer.miners.MatrixMinerManager;
  * for saveSetting and loadSetting ...  
  * It's not a problem, because we can use it by adding there.. So what we need to do is getting it back. 
  * But how to get the settings again back?? 
- * In NodeModel,  saveSetting, we can load it from the settings..
+ * In NodeModel, saveSetting, we can load it from the settings.. but something here are not nice, because of the flow variable.. 
+ * 
+ * By using the default addDialog, it puts the values directly to the Settings. SO here, if we want to do sth differently. 
+ * We could save it in this way, but having the settings there, to control the load and setting stuff there. 
+ * 
+ * here we still use it, but in the loading part.. We need to check the values there. One thing, if we don't use the 
+ * 
+ * 14.11.2019 add advanced optional choices, it includes the
+ *  Advanced Options: 
+ * 			-- LP Objective: unweighted values, weighted values/ relative absolute freq
+ *  		-- LP Variable type: two variable per event, one variable per event
+ *  		-- Discovery Strategy: mine a place per causal relation, a connection place between each pair
+ * 
  * @author Kefang Ding
  */
 public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
@@ -48,8 +60,7 @@ public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
     	DialogComponentNumber m_noiseThresholdComp = new DialogComponentNumber(
     			 m_parameter.getMfilterThreshold(), "Set the Noise Threshold", 0.25);
     	addDialogComponent(m_noiseThresholdComp); 
-    	
-    	
+
     	// add static initialization
 		List<String> miners = new ArrayList<String>();
 		for (MatrixMiner miner : MatrixMinerManager.getInstance().getMiners()) {
@@ -59,28 +70,22 @@ public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
     			m_parameter.getMalgorithm(), "Set Algorithm", miners);
     	addDialogComponent(m_algorithmComp);
     	
-    }
-    
-    /*
-     * the thing is if it saves the values there again, or not...How about the interfaces it shows?? 
-     * we add additional ones.. Let us check
-     */
-    @Override
-    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
-            throws InvalidSettingsException {
-    	m_parameter.saveSettingsTo(settings);
-    }
-    
-    @Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
     	
-    	try {
-			m_parameter.loadSettingsFrom(settings);
-		} catch (InvalidSettingsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	// from this point, to create advanced settings
+    	createNewTabAt("Advanced Options", 1);
+    	DialogComponentStringSelection m_lpObjComp = new DialogComponentStringSelection(
+    			m_parameter.getMLPObj(), "Set Objective Function", SettingsModelILPMinerParameter.CFG_LPOBJ_TYPES);
+    	addDialogComponent(m_lpObjComp);
+    	
+    	DialogComponentStringSelection m_lpVarComp = new DialogComponentStringSelection(
+    			m_parameter.getMLPVar(), "Set Variable Distribution", SettingsModelILPMinerParameter.CFG_LPVAR_TYPES);
+    	addDialogComponent(m_lpVarComp);
+    	
+    	DialogComponentStringSelection m_DSComp = new DialogComponentStringSelection(
+    			m_parameter.getMDS(), "Set Discovery Strategy", SettingsModelILPMinerParameter.CFG_DS_TYPES);
+    	addDialogComponent(m_DSComp);
+    	
     }
+    
 }
 

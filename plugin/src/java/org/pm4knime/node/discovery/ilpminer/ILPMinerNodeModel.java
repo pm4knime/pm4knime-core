@@ -3,8 +3,7 @@ package org.pm4knime.node.discovery.ilpminer;
 import java.io.File;
 import java.io.IOException;
 
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -13,16 +12,31 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
+import org.processmining.causalactivitygraph.models.CausalActivityGraph;
+import org.processmining.causalactivitygraphcreator.algorithms.ConvertCausalActivityMatrixToCausalActivityGraphAlgorithm;
+import org.processmining.causalactivitygraphcreator.algorithms.DiscoverCausalActivityGraphAlgorithm;
+import org.processmining.causalactivitygraphcreator.parameters.DiscoverCausalActivityGraphParameters;
+import org.processmining.causalactivitymatrix.models.CausalActivityMatrix;
+import org.processmining.causalactivitymatrixminer.algorithms.DiscoverFromEventLogAlgorithm;
+import org.processmining.causalactivitymatrixminer.parameters.DiscoverFromEventLogParameters;
 import org.pm4knime.settingsmodel.SettingsModelILPMinerParameter;
+import org.processmining.framework.plugin.PluginContext;
+import org.processmining.hybridilpminer.parameters.XLogHybridILPMinerParametersImpl;
+import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
+import org.processmining.hybridilpminer.utils.XLogUtils;
+import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
+import org.pm4knime.util.XLogUtil;
+import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 
 /**
  * <code>NodeModel</code> for the "ILPMiner" node. 
@@ -34,10 +48,10 @@ import org.pm4knime.portobject.PetriNetPortObjectSpec;
  * Parameter: 
  * 		Normal Options:
  * 			-- event classifier
- * 			-- filter type and threshold
+ * 			-- filter type and threshold :
+ * 				  	LP-Filter : sequence-encoding filter, slack variable fiter, none
  * 			-- miner strategy
  * 		Advanced Options: 
- * 			-- LP-Filter : sequence-encoding filter, slack variable fiter, none
  * 			-- LP Objective: unweighted values, weighted values/ relative absolute freq
  *  		-- LP Variable type: two variable per event, one variable per event
  *  		-- Discovery Strategy: mine a place per causal relation, a connection place between each pair
@@ -79,10 +93,40 @@ public class ILPMinerNodeModel extends NodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
+    	logger.info("Start : ILPMiner " );
+    	XLogPortObject logPO = (XLogPortObject) inData[0];
+        XLog log = logPO.getLog();
+        
+        final String startLabel = "[start>@" + System.currentTimeMillis();
+		final String endLabel = "[end]@" + System.currentTimeMillis();
+		XLog artifLog = XLogUtil.addArtificialStartAndEnd(log, startLabel, endLabel, m_parameter.getEventClassifier());
+        
+		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
+        // create the parameter
+		XLogHybridILPMinerParametersImpl param = new XLogHybridILPMinerParametersImpl(context, artifLog);
+		m_parameter.setDefaultParameter(param);
+		// how to set the current values here for param
+		param.setEventClassifier(m_parameter.getEventClassifier());
+		
+		// set the miner for causality graph 
+		DiscoverCausalActivityGraphParameters gParam = new DiscoverCausalActivityGraphParameters(artifLog);
+		// set gParam according to the miner type
+		gParam.setMiner(m_parameter.getMalgorithm().getStringValue());
+		// discover the causal graph
+		DiscoverCausalActivityGraphAlgorithm algorithm = new DiscoverCausalActivityGraphAlgorithm();
+		CausalActivityGraph cag = algorithm.apply(context, artifLog, gParam);
+		param.getDiscoveryStrategy().setCausalActivityGraphParameters(gParam);
+    	param.getDiscoveryStrategy().setCausalActivityGraph(cag);
+        
     	
-    	System.out.println(m_parameter.getMalgorithm().getStringValue());
-        // TODO: Return a BufferedDataTable for each output port 
-        return new PortObject[]{};
+    	Object[] result = HybridILPMinerPlugin.discoverWithArtificialStartEnd(context, log, artifLog, param);
+        
+    	// create the accepting Petri net and PortObject
+    	AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1],  (Marking) result[2]);
+        PetriNetPortObject pnPO = new PetriNetPortObject(anet);
+        
+    	logger.info("End : ILPMiner " );
+        return new PortObject[]{pnPO};
     }
 
     /**
