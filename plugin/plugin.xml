@@ -44,6 +44,7 @@
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory" id="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory" id="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" id="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory"/>
+		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" id="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory"/>
 
 
 		<!-- nodes in conformance-->
