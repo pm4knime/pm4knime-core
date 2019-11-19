@@ -187,7 +187,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/objenesis-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/opencsv-2.4-patched.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/openide-lookup-1.9-patched-1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/OpenXES-20181205.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/OpenXES-20181205.jar" sourcepath="E:/Libraries/OpenXES/OpenXES-1.1.tar/OpenXES-1.1"/>
 	<classpathentry exported="true" kind="lib" path="lib/oplall-6.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/optics_dbScan-1.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.mozilla.javascript-1.7.2.jar"/>

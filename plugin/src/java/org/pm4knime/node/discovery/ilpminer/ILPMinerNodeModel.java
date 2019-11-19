@@ -26,7 +26,7 @@ import org.processmining.causalactivitygraphcreator.parameters.DiscoverCausalAct
 import org.processmining.causalactivitymatrix.models.CausalActivityMatrix;
 import org.processmining.causalactivitymatrixminer.algorithms.DiscoverFromEventLogAlgorithm;
 import org.processmining.causalactivitymatrixminer.parameters.DiscoverFromEventLogParameters;
-import org.pm4knime.settingsmodel.SettingsModelILPMinerParameter;
+import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.hybridilpminer.parameters.XLogHybridILPMinerParametersImpl;
 import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
@@ -77,14 +77,14 @@ public class ILPMinerNodeModel extends NodeModel {
             .getLogger(ILPMinerNodeModel.class);
 	public static String CFG_KEY_ILP_PARAMETER = "ILP Parameter";
 	
-	SettingsModelILPMinerParameter m_parameter; 
+	SMILPMinerParameter m_parameter; 
     /**
      * Constructor for the node model.
      */
     protected ILPMinerNodeModel() {
     	super(new PortType[] {XLogPortObject.TYPE}, new PortType[] {PetriNetPortObject.TYPE} );
     	
-    	m_parameter = new SettingsModelILPMinerParameter(ILPMinerNodeModel.CFG_KEY_ILP_PARAMETER);
+    	m_parameter = new SMILPMinerParameter(ILPMinerNodeModel.CFG_KEY_ILP_PARAMETER);
     }
 
     /**

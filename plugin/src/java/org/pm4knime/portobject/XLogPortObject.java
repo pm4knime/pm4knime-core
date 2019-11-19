@@ -22,6 +22,7 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
 
@@ -38,6 +39,7 @@ public class XLogPortObject extends AbstractPortObject {
 	private static final String ZIP_ENTRY_NAME = "XLogPortObject";
 
 	private XLog log = null;
+	
 
 	public XLogPortObject() {}
 	public XLogPortObject(XLog log) {
@@ -64,8 +66,10 @@ public class XLogPortObject extends AbstractPortObject {
 	
 	@Override
 	public PortObjectSpec getSpec() {
-		if(m_spec == null)
-			m_spec = new XLogPortObjectSpec();
+		
+		if(m_spec == null) 
+			m_spec = XLogSpecUtil.extractSpec(log);
+		
 		return m_spec;
 	}
 	

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Predictor"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Alignment-Based Replayer</name>
+
+	<shortDescription>
+		This alignment-based replayer accepts one event log and one Petri net as
+		input and outputs the optimal alignments for traces after replaying
+		traces on Petri net.
+		With this node, the cost can be set individually for each move on
+		log/model.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>
+			Alignment-based replay is the state-of-the-art technique in
+			conformance checking.
+			Alignments provide a robust and detailed view on the deviations. For each trace
+			from the event log after replaying,
+			there is one alignment corresponding to it.
+
+			<dl>
+				<dt>Sync move</dt>
+				<dd>The classification of the current event corresponds to the
+					firing transitions in Petri net.
+					In this case, during replaying, both the trace and process model move
+					to next comparison.
+				</dd>
+
+				<dt>Move on log</dt>
+				<dd>The classification of the current event don't have any
+					corresponding firing transitions in Petri net.
+					During replaying, the trace moves forwards but the state of process model
+					doesn't change.
+				</dd>
+
+				<dt>Move on model</dt>
+				<dd>The firing transitions in Petri net has no corresponding event
+					in the trace.
+					During replaying, the model moves forwards but the state of the event log
+					doesn't change.
+				</dd>
+			</dl>
+			<br />
+			With this node, the cost can be set individually for each move on
+			log/model.
+
+			<br />
+			More information seen in the :
+			<a href="https://ieeexplore.ieee.org/abstract/document/6037560">link</a>
+		</intro>
+
+		<option name="Event classifer">The classifier chosen to classify the event log.
+		</option>
+		<option name="Strategy type">
+			The strategy to replay the event log on Petri net. It includes
+			<ul>
+				<li>
+					ILP Replayer.
+					<br />
+					The repalyer calculates the optimal alignment based on ILP.
+				</li>
+				<li> Non-ILP Replayer.
+				</li>
+				<li>
+					A*-ILP Based Manifest Replayer.
+					<br />
+					This replayer is reserved for performance checking. It generates
+					the Manifest to wrap the alignments.
+				</li>
+			</ul>
+
+		</option>
+
+		<option name="Move on log cost">The unified cost for move on log in non-negative
+			integer. In default, it is 1.</option>
+		<option name="Move on model cost">The unified cost for move on model in non-negative
+			integer. In default, it is 1.</option>
+		<option name="Sync move cost">The unified cost for sync move in non-negative
+			integer. In default, it is 0.</option>
+
+		<option name="Move on log cost table">
+			The cost table for move on log with non-negative integer.
+			<br />
+			The cost table provides the ability to modify cost for each move.
+			The unified move cost can assign the same cost to all items in the
+			table.
+		</option>
+		<option name="Move on model cost table">The cost table for move on model in non-negative
+			integer. </option>
+		<option name="Sync move cost table">The cost table for sync move in non-negative
+			integer. </option>
+
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Event Log">Input port for an event log</inPort>
+		<inPort index="1" name="Petri Net">Input port for a Petri net</inPort>
+		<!-- possibly more input ports here -->
+		<outPort index="0" name="Replay Result">Output replay result after replaying.
+			It includes the alignment, implicitly the corresponding event log and Petri net as well.
+			
+		</outPort>
+
+		<!-- possibly more output ports here -->
+	</ports>
+
+</knimeNode>

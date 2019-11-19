@@ -68,12 +68,9 @@ implements SettingsModelFlowVariableCompatible {
 	
 	public static final int CFG_COST_TYPE_NUM = 3;
 	public static final int[] CFG_DEFAULT_MCOST = {1,1,0};
+	public static String[] CFG_MCOST_KEY = {"Move on log cost", "Move on model cost",  "Sync move cost"};
+	static String[] CFG_MOVE_KEY = { "Move on log", "Move on model", "Sync move"};
 	
-	
-	
-	public static String[] CFG_MCOST_KEY = {"log move cost", "model move cost",  "sync move cost"};
-	static String[] CFG_MOVE_KEY = { "log move", "model move", "sync move"};
-
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
 	

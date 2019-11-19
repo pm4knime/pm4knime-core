@@ -11,7 +11,7 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObjectSpec;
-import org.pm4knime.settingsmodel.SettingsModelILPMinerParameter;
+import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.processmining.causalactivitymatrixminer.miners.MatrixMiner;
 import org.processmining.causalactivitymatrixminer.miners.MatrixMinerManager;
 
@@ -38,22 +38,22 @@ import org.processmining.causalactivitymatrixminer.miners.MatrixMinerManager;
 public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
 
 	
-	SettingsModelILPMinerParameter m_parameter; 
+	SMILPMinerParameter m_parameter; 
     /**
      * New pane for configuring the ILPMiner node.
      */
     protected ILPMinerNodeDialog() {
     	
-    	m_parameter = new SettingsModelILPMinerParameter(ILPMinerNodeModel.CFG_KEY_ILP_PARAMETER);
+    	m_parameter = new SMILPMinerParameter(ILPMinerNodeModel.CFG_KEY_ILP_PARAMETER);
     	// list the strings here
-    	List<String> classifierNames = SettingsModelILPMinerParameter.getClassifierNames(SettingsModelILPMinerParameter.setDefaultClassifier());
+    	List<String> classifierNames = SMILPMinerParameter.getClassifierNames(SMILPMinerParameter.setDefaultClassifier());
     	// add the event classifier
     	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
     			m_parameter.getMclf(), "Set Classifier Name", classifierNames);
     	addDialogComponent(m_classifierComp);
     	
     	DialogComponentStringSelection m_filterTypeComp = new DialogComponentStringSelection(
-    			m_parameter.getMfilterType(), "Set Filter Type", SettingsModelILPMinerParameter.CFG_FILTER_TYPES);
+    			m_parameter.getMfilterType(), "Set Filter Type", SMILPMinerParameter.CFG_FILTER_TYPES);
     	addDialogComponent(m_filterTypeComp);
     	
     	// it is triggered from the last step to choose the type
@@ -74,15 +74,15 @@ public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
     	// from this point, to create advanced settings
     	createNewTabAt("Advanced Options", 1);
     	DialogComponentStringSelection m_lpObjComp = new DialogComponentStringSelection(
-    			m_parameter.getMLPObj(), "Set Objective Function", SettingsModelILPMinerParameter.CFG_LPOBJ_TYPES);
+    			m_parameter.getMLPObj(), "Set Objective Function", SMILPMinerParameter.CFG_LPOBJ_TYPES);
     	addDialogComponent(m_lpObjComp);
     	
     	DialogComponentStringSelection m_lpVarComp = new DialogComponentStringSelection(
-    			m_parameter.getMLPVar(), "Set Variable Distribution", SettingsModelILPMinerParameter.CFG_LPVAR_TYPES);
+    			m_parameter.getMLPVar(), "Set Variable Distribution", SMILPMinerParameter.CFG_LPVAR_TYPES);
     	addDialogComponent(m_lpVarComp);
     	
     	DialogComponentStringSelection m_DSComp = new DialogComponentStringSelection(
-    			m_parameter.getMDS(), "Set Discovery Strategy", SettingsModelILPMinerParameter.CFG_DS_TYPES);
+    			m_parameter.getMDS(), "Set Discovery Strategy", SMILPMinerParameter.CFG_DS_TYPES);
     	addDialogComponent(m_DSComp);
     	
     }

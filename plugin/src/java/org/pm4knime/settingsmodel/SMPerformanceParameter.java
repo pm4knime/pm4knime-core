@@ -1,26 +1,10 @@
 package org.pm4knime.settingsmodel;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
-import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
-import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
-import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
-import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 
 /**
  * add more attributes:
@@ -39,9 +23,9 @@ import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.Trans
  */
 public class SMPerformanceParameter extends SMAlignmentReplayParameter{
 
-	public final String CKF_KEY_TIMESTAMP = "Time Stamp";
-	public final String CKF_KEY_WITH_SYN_MOVE = "Consider Performance In Syn Moves";
-	public final String CKF_KEY_WITH_UNRELIABLE_RESULT = "Include Unreliable Replay Results";
+	public final String CKF_KEY_TIMESTAMP = "Time stamp";
+	public final String CKF_KEY_WITH_SYN_MOVE = "Consider performance in syn moves";
+	public final String CKF_KEY_WITH_UNRELIABLE_RESULT = "Include unreliable replay results";
 	
 	// this use to record the attribute name for time stamp
 	private SettingsModelString m_timeStamp;

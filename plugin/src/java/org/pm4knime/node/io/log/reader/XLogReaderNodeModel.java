@@ -23,7 +23,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.settingsmodel.XLogReaderNodeSettingsModel;
+import org.pm4knime.settingsmodel.SMXLogReaderParameter;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
 
@@ -31,7 +31,7 @@ public class XLogReaderNodeModel extends NodeModel {
 
 	// the logger instance
 	private static final NodeLogger logger = NodeLogger.getLogger(XLogReaderNodeModel.class);
-	private final XLogReaderNodeSettingsModel params = new XLogReaderNodeSettingsModel();
+	private final SMXLogReaderParameter params = new SMXLogReaderParameter();
 	
 	XLogPortObject logPO;
 	// private XLogPortObjectSpec outSpec ;
@@ -71,7 +71,7 @@ public class XLogReaderNodeModel extends NodeModel {
 		return logPO;
 	}
 
-	public XLogReaderNodeSettingsModel getParams() {
+	public SMXLogReaderParameter getParams() {
 		return params;
 	}
 

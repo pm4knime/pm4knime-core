@@ -49,7 +49,7 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  */
 public class ReplayerUtil {
 	// here to list all the algirithm strategies
-	public final static String[] strategyList = {"ILP Replayer","non-ILP Replayer", "A*-ILP Based manifest replay"};
+	public final static String[] strategyList = {"ILP Replayer","Non-ILP Replayer", "A*-ILP Based Manifest Replayer"};
 	
 	public static IPNReplayAlgorithm getReplayer(String algName) {
 		// TODO Auto-generated method stub

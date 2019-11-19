@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./Precision-icon.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>Precision Checker</name>
+    
+    <shortDescription>
+       Based on the replayer result, the node performs the ETConformance analysis.
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>
+        ETConformance is a Process  Conformance evaluation between an Event Log and a Petri Net. 
+        The plug-in  returns the values for some metrics (and some other information) and the
+ Minimal Disconformant Traces [MDT] (traces that helps to identify the exact
+ point where the model begins to allow more behavior than the log).  
+  In other words, for each trace 
+a1 …an in MDT, a1…an-1 is in the Petri Net and in the Log, but a1...an is only in the Petri 
+Net.
+ 
+ 		<br />
+			More information seen in the :
+			<a href="https://link.springer.com/chapter/10.1007/978-3-642-15618-2_16">paper</a> and 
+			<a href="https://svn.win.tue.nl/trac/prom/browser/Documentation/ETConformance%20plug-in.pdf">codes documentation</a>.
+        </intro>
+        
+        
+       <option name="Ordered presentation">It is true in default. </option>
+		<option name="Algorithm">The algorithm to calculate the precision. It includes the following algorithms.
+			<ul>
+			<!--  more details on the algorithms, what they do actually -->
+				<li>1-Align Precision.</li>
+				<li>All-Align Precision.</li>
+				<li>Representative-Align Precision.</li>
+				<li>ETC Precision (no invisible/duplicates allowed).</li>
+			</ul>
+ 		</option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Alignment">Replayed result in alignment as input. </inPort>
+		 
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="Precision Info">Precision Information</outPort>
+        
+    </ports>    
+</knimeNode>
