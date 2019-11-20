@@ -80,8 +80,9 @@ public class XLogPortObject extends AbstractPortObject {
 			return new JComponent[] {};
 		} else {
 			SlickerOpenLogSettings defViz = new SlickerOpenLogSettings();
-			return new JComponent[] {
-					defViz.showLogVis(PM4KNIMEGlobalContext.instance().getPluginContext(), this.log) };
+			JComponent logPanel = defViz.showLogVis(PM4KNIMEGlobalContext.instance().getPluginContext(), this.log);
+			logPanel.setName("Event Log");
+			return new JComponent[] {logPanel};
 		}
 	}
 

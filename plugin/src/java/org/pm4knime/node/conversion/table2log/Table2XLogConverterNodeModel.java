@@ -13,12 +13,14 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.node.logmanipulation.merge.MergeLogNodeModel;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 
@@ -42,7 +44,7 @@ import org.pm4knime.portobject.XLogPortObjectSpec;
  */
 public class Table2XLogConverterNodeModel extends NodeModel {
     
-	
+	private static final NodeLogger logger = NodeLogger.getLogger(Table2XLogConverterNodeModel.class);
 	// here we have optional item, but now just this two
 	static Table2XLogConfigModel m_config =  new Table2XLogConfigModel();
 	XLogPortObject logPO;
@@ -62,7 +64,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-
+    	logger.info("Start : Convert DataTable to Event Log" );
         // TODO: accept input DataTable, use the configuration columnNames, 
     	// convert the data into XLog
     	// how to check the type for this?
@@ -91,6 +93,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	XLog log = handler.getXLog();
     	logPO = new XLogPortObject(log);
     	
+    	logger.info("End : Convert DataTable to Event Log" );
         return new PortObject[]{logPO};
     }
 

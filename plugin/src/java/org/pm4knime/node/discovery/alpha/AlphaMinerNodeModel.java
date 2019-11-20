@@ -59,7 +59,7 @@ public class AlphaMinerNodeModel extends NodeModel {
 
 	@Override
 	protected PortObject[] execute(final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
-		logger.info("start: alpha miner");
+		logger.info("Start: Alpha Miner");
 		XLog log = ((XLogPortObject) inObjects[0]).getLog();
 		AlphaMinerParameters alphaParams = null;
 		
@@ -77,7 +77,7 @@ public class AlphaMinerNodeModel extends NodeModel {
 		AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1], fmSet);
 		
 		PetriNetPortObject po = new PetriNetPortObject(anet);
-		logger.info("end: alpha miner");
+		logger.info("End: Alpha Miner");
 		return new PortObject[] { po };
 	}
 

@@ -30,8 +30,8 @@ public class XLogSpecUtil {
 	public static final String CLASSIFIER_PREFIX = "#Classifier#";
 	
 
-	public static final String CFG_KEY_TRACE_ATTRSET = "Trace Attribute Set";
-	public static final String CFG_KEY_EVENT_ATTRSET = "Event Attribute Set";
+	public static final String CFG_KEY_TRACE_ATTRSET = "Trace attribute set";
+	public static final String CFG_KEY_EVENT_ATTRSET = "Event attribute set";
 	
 	public static XLogPortObjectSpec extractSpec(XLog log) {
 		Map<String, String> tMap = null, eMap = null, cMap = null;
@@ -53,6 +53,7 @@ public class XLogSpecUtil {
 	public static Map<String, String> convertAttr2Str(Collection<XAttribute> attrSet, String prefix){
 		Map<String, String> aMap =  new HashMap<String, String>();
 		for(XAttribute attr : attrSet) {
+			// check if the key has already include the prefix??
 			aMap.put(prefix + attr.getKey(), attr.getClass().getSimpleName());
 		}
 		

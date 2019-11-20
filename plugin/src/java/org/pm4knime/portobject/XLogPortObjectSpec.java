@@ -58,12 +58,12 @@ public class XLogPortObjectSpec implements PortObjectSpec {
 
 	public Map<String, String> getGEventAttrMap() {
 		// TODO Auto-generated method stub
-		return gTraceAttrMap;
+		return gEventAttrMap;
 	}
 
 	public Map<String, String> getGTraceAttrMap() {
 		// TODO Auto-generated method stub
-		return gEventAttrMap;
+		return gTraceAttrMap;
 	}
 
 	@Override
@@ -82,8 +82,9 @@ public class XLogPortObjectSpec implements PortObjectSpec {
         DataContainer result = new DataContainer(new DataTableSpec(names, types));
         // create the trace and event attributes here and add it there
         // we need to add trace and event prefix to distinguish it
+        int i=0;
         for(String key : gTraceAttrMap.keySet()) {
-        	DataRow row = new DefaultRow(new RowKey(key), gTraceAttrMap.get(key));
+        	DataRow row = new DefaultRow("Row " + (i++), key, gTraceAttrMap.get(key));
         	result.addRowToTable(row);
         }
         
@@ -92,12 +93,12 @@ public class XLogPortObjectSpec implements PortObjectSpec {
         	// we assume we already add them here
         	// However, if we do this, every time, we need to split the attributes to show them!! 
         	// but should be fine for showing information
-        	DataRow row = new DefaultRow(new RowKey(key), gEventAttrMap.get(key));
+        	DataRow row = new DefaultRow("Row " + (i++), key, gEventAttrMap.get(key));
         	result.addRowToTable(row);
         }
         
         for(String key : clfMap.keySet()) {
-        	DataRow row = new DefaultRow(new RowKey(key), clfMap.get(key));
+        	DataRow row = new DefaultRow("Row " + (i++), key, clfMap.get(key));
         	result.addRowToTable(row);
         }
         

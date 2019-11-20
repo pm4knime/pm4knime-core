@@ -9,7 +9,7 @@
     <fullDescription>
         <intro>This node applies the Alpha Miner on an event log</intro>
         
-        
+        <option name="Event classifer">The classifier chosen to classify the event log.</option>
         <option name="AlphaMiner Version">The AlphaMiner Variant. Currently it has two version, one is AlphaMiner Classic, 
          one is AlphaMiner Plus.  </option>
         

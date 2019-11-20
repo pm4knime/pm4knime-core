@@ -1,6 +1,5 @@
 package org.pm4knime.node.conversion.log2table;
 
-import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
@@ -9,12 +8,16 @@ import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
+import org.pm4knime.util.ui.DialogComponentAttributesFilter;
 
 /**
  * <code>NodeDialog</code> for the "Xlog2CSVConverter" node.
  * After adding the log attributes as XLogPortObjectSpec, we can choose the attributes to convert into data table.
  * 
- *  Using the column selection here
+ *  Using the column selection here. But one question here is that, if we use the DefaultNodeSettingsPane, 
+ *  for the DialogComponentColumnFilter, it demands the DataTabelSpec, which we can't give it. 
+ *  So we need to change the strategy to create another component here. 
+ *  
  * @author Kefang
  */
 public class XLog2TableConverterNodeDialog extends DefaultNodeSettingsPane {
@@ -25,14 +28,14 @@ public class XLog2TableConverterNodeDialog extends DefaultNodeSettingsPane {
      */
     protected XLog2TableConverterNodeDialog() {
     	// we should get the attribute set from the spec
-    	createNewTab("Choose trace attributes");
+    	createNewGroup("Choose trace attributes");
     	m_traceAttrSet = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, false );
-    	DialogComponentColumnFilter m_traceAttrFilterComp = new DialogComponentColumnFilter(m_traceAttrSet,0, true);
+    	DialogComponentAttributesFilter m_traceAttrFilterComp = new DialogComponentAttributesFilter(m_traceAttrSet, true);
         addDialogComponent(m_traceAttrFilterComp);
         
         createNewGroup("Choose event Attributes");
     	m_eventAttrSet = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
-    	DialogComponentColumnFilter m_eventAttrFilterComp = new DialogComponentColumnFilter(m_eventAttrSet,0, true);
+    	DialogComponentAttributesFilter m_eventAttrFilterComp = new DialogComponentAttributesFilter(m_eventAttrSet, true);
     	addDialogComponent(m_eventAttrFilterComp);
     }
     
@@ -58,10 +61,10 @@ public class XLog2TableConverterNodeDialog extends DefaultNodeSettingsPane {
 		    	XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
 		    	
 		    	m_traceAttrSet.setIncludeList(logSpec.getGTraceAttrMap().keySet());
-		    	m_traceAttrSet.getExcludeList().clear();
+		    	m_traceAttrSet.setExcludeList(new String[0]);
 		    	
 		    	m_eventAttrSet.setIncludeList(logSpec.getGEventAttrMap().keySet());
-		    	m_traceAttrSet.getExcludeList().clear();
+		    	m_eventAttrSet.setExcludeList(new String[0]);
     		}
     }
 }

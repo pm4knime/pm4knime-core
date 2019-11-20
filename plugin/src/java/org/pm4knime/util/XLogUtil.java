@@ -216,7 +216,8 @@ public class XLogUtil {
 		// the result is not reliable, so traverse each trace there
 		List<XAttribute> attrList = log.getGlobalEventAttributes();
 		List<String> attrNames = getAttrNameList(attrList);
-		int num = (int) (log.size() * percent);
+		int tmp = (int) (log.size() * percent) + 1;
+		int num =  tmp > 20? 20: tmp;
 		// we should count the number of visited values there
 		for(XTrace trace: log) {
 			for(XEvent event: trace) {
@@ -239,7 +240,8 @@ public class XLogUtil {
 		// the result is not reliable, so traverse each trace there
 		List<XAttribute> attrList = log.getGlobalTraceAttributes();
 		List<String> attrNames = getAttrNameList(attrList);
-		int num = (int) (log.size() * percent);
+		int tmp = (int) (log.size() * percent) + 1;
+		int num =  tmp > 20? 20: tmp;
 		// we should count the number of visited values there
 		for(XTrace trace: log) {
 			for(String attrKey : trace.getAttributes().keySet()) {

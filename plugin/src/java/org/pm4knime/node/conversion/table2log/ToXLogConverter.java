@@ -31,6 +31,8 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
+import org.pm4knime.util.XLogSpecUtil;
+import org.pm4knime.util.XLogUtil;
 import org.processmining.log.csvimport.config.CSVConversionConfig.CSVErrorHandlingMode;
 import org.processmining.log.utils.XUtils;
 
@@ -86,6 +88,7 @@ public class ToXLogConverter {
 		caseIDIdx = traceColumns.indexOf(config.getMCaseID().getStringValue());
 		eventIDIdx = eventColumns.indexOf(config.getMEventID().getStringValue());
 		cTimeIdx = eventColumns.indexOf(config.getMCompleteTime().getStringValue());
+		
 		
 		traceColVisited[caseIDIdx] = true;
 		eventColVisited[eventIDIdx] =true;
@@ -185,9 +188,24 @@ public class ToXLogConverter {
 		}
 		// Close last trace
 		endTrace(currentCaseID + "");	
+		
+
+		// TODO set the log attributes according to the config values 
+		// what we need is the concept:name for the trace attributes, also the ones for event attributes
+		// additional attributes and classifier ones
+		endLog();
 	}
 	
-	private void assignAttributeWithDataCell(XAttributable currentObj,DataCell otherData, String attrName) {
+	private void assignAttributeWithDataCell(XAttributable currentObj, DataCell otherData, String attrName) {
+		// check if the attrName has the prefix of the event attributes, or not.
+		// should we retrieve it back to the exact event log?? I think yes. We shouldn't change any information
+		// to split here. TO avoid the additional prefix
+		if(attrName.startsWith(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX))
+			attrName = attrName.split(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)[1];
+		else if(attrName.startsWith(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX))
+			attrName = attrName.split(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX)[1];
+		 
+		// add attributes to the log, we need to know the type of it.
 		
 		if(otherData.getType().equals(IntCell.TYPE)){
 			IntCell iCell = (IntCell) otherData;
@@ -247,6 +265,18 @@ public class ToXLogConverter {
 		
 	}
 	
+	// we end the log by assigning the global attributes			
+	public void endLog() {
+		if(!log.isEmpty()) {
+			// after this operation, traverse the trace and get its attributes from it
+			// better way to do this is to assign it after this operation!!!
+			List<XAttribute> tAttrs = XLogUtil.getTAttributes(log, 0.2);
+			List<XAttribute> eAttrs = XLogUtil.getEAttributes(log, 0.2);
+			log.getGlobalTraceAttributes().addAll(tAttrs);
+			log.getGlobalEventAttributes().addAll(eAttrs);
+		}
+	}
+	
 	public void startTrace(String caseId) {
 		currentEvents.clear();
 		// clear map and begin a new one
@@ -270,6 +300,7 @@ public class ToXLogConverter {
 		for(String attrKey : traceAttrMap.keySet()) {
 			DataCell data = traceAttrMap.get(attrKey);
 			assignAttributeWithDataCell(currentTrace, data, attrKey);
+			
 		}
 		
 		log.add(currentTrace);
@@ -379,5 +410,6 @@ public class ToXLogConverter {
 		return date;
 		// return Instant.parse(value).toDate();
 	}
+
 	
 }

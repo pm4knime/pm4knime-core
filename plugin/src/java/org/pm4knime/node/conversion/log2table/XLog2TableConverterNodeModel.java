@@ -11,6 +11,7 @@ import org.deckfour.xes.model.XAttributeDiscrete;
 import org.deckfour.xes.model.XAttributeLiteral;
 import org.deckfour.xes.model.XAttributeTimestamp;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.impl.XAttributeBooleanImpl;
 import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
 import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
@@ -32,6 +33,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -39,6 +41,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeModel;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
@@ -62,12 +65,13 @@ import org.pm4knime.util.XLogSpecUtil;
  * @author Kefang
  */
 public class XLog2TableConverterNodeModel extends NodeModel {
-    
+	private static final NodeLogger logger = NodeLogger.getLogger(XLog2TableConverterNodeModel.class);
+	
 	static final String CFG_TABLE_NAME = "Converted Data Table from Event Log";
 	
 	private SettingsModelFilterString m_traceAttrSet  = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, false );
 	
-	private SettingsModelFilterString m_eventAttrSet = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, false );
+	private SettingsModelFilterString m_eventAttrSet = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
 	
 	private XLogPortObjectSpec m_inSpec;
     /**
@@ -85,7 +89,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     @Override
     protected BufferedDataTable[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-    	
+    	logger.info("Start : Convert Event log to DataTable" );
     	XLogPortObject logPortObject = null ;
     	for(PortObject obj: inData)
         	if(obj instanceof XLogPortObject) {
@@ -106,6 +110,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     	FromXLogConverter.convert(log, bufCon);
     	
     	bufCon.close();
+    	logger.info("End : Convert Event log to DataTable" );
         return new BufferedDataTable[]{bufCon.getTable()};
     }
 
@@ -138,19 +143,19 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     
     private DataType findDataType(String cls) {
 		// TODO according to the type in string, we get the right data type for it
-    	if(cls.equals(XAttributeLiteral.class.getSimpleName())) {
+    	if(cls.equals(XAttributeLiteralImpl.class.getSimpleName())) {
 			// we don't care about the values here
 			return StringCell.TYPE;
-		}else if(cls.equals(XAttributeBoolean.class.getSimpleName())) {
+		}else if(cls.equals(XAttributeBooleanImpl.class.getSimpleName())) {
 			// we don't care about the values here
 			return BooleanCell.TYPE;
-		}else if(cls.equals(XAttributeDiscrete.class.getSimpleName())) {
+		}else if(cls.equals(XAttributeDiscreteImpl.class.getSimpleName())) {
 			// we don't care about the values here
 			return IntCell.TYPE;
-		}else if(cls.equals(XAttributeContinuous.class.getSimpleName())) {
+		}else if(cls.equals(XAttributeContinuousImpl.class.getSimpleName())) {
 			// we don't care about the values here
 			return DoubleCell.TYPE;
-		}else  if(cls.equals(XAttributeTimestamp.class.getSimpleName())) {
+		}else  if(cls.equals(XAttributeTimestampImpl.class.getSimpleName())) {
 			// we don't care about the values here
 			return DataType.getType(LocalDateTimeCell.class);
 		}else {
@@ -189,6 +194,9 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
          // TODO: generated method stub
+    	m_traceAttrSet.saveSettingsTo(settings);
+    	m_eventAttrSet.saveSettingsTo(settings);
+    	
     }
 
     /**
@@ -197,7 +205,9 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
+    	m_traceAttrSet.loadSettingsFrom(settings);
+    	m_eventAttrSet.loadSettingsFrom(settings);
+    	
     }
 
     /**

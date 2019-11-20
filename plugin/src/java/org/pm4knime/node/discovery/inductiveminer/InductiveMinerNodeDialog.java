@@ -2,6 +2,9 @@ package org.pm4knime.node.discovery.inductiveminer;
 
 import java.util.List;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
@@ -34,25 +37,26 @@ public class InductiveMinerNodeDialog extends DefaultNodeSettingsPane {
         
         // we need to add two options, one is for the type option, 
         String[] defaultValue =  InductiveMinerNodeModel.defaultType;
-        m_type = new SettingsModelString(InductiveMinerNodeModel.CFGKEY_METHOD_TYPE, defaultValue[0]);
+        m_type = new SettingsModelString(InductiveMinerNodeModel.CFGKEY_METHOD_TYPE, defaultValue[1]);
+        addDialogComponent(new DialogComponentStringSelection(m_type, "Select Inductive Miner Type", defaultValue));
         
         m_noiseThreshold = new SettingsModelDoubleBounded(
         		InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.2, 0, 1);
         DialogComponentNumber noiseThresholdComponent = new DialogComponentNumber(m_noiseThreshold, "Write the Noise Threshold", 0.1);
-        addDialogComponent(new DialogComponentStringSelection(m_type, "Select Inductive Miner Type", defaultValue));
+        m_noiseThreshold.setEnabled(true);
         addDialogComponent(noiseThresholdComponent);
-        /*
+        
         m_type.addChangeListener(new ChangeListener() {	
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
 				if(m_type.getStringValue().equals(defaultValue[0])) {
-		        	noiseThresholdComponent.setEnabled(false);
-		        	
-		        }
+					m_noiseThreshold.setEnabled(false);
+		        }else
+		        	m_noiseThreshold.setEnabled(true);
 			}
 		});
-		*/
+		
         // for noise filter, which is triggered by the choice of m_type 
         // this is for choose information w.r.t. the InData
         List<String> classifierNames =  InductiveMinerNodeModel.defaultClassifer;
