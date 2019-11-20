@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.uml2.common-1.5.0.v201005031530.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.uml2.uml_3.1.2.v201010261927.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AcceptingPetriNet-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AcceptingPetriNetClassicalReductor-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AcceptingPetriNetMiner-latest.jar"/>
