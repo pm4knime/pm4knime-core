@@ -18,10 +18,10 @@ public class AlphaMinerNodeDialog extends DefaultNodeSettingsPane {
 	protected AlphaMinerNodeDialog() {
         super();
         
+        
         // we need to add two options, one is for the type option, 
         String[] variantList =  AlphaMinerNodeModel.variantList;
         m_variant = new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
-        
         // flowVariable is implicitly defined by saveModel 
         addDialogComponent(new DialogComponentStringSelection(m_variant, "Select Algorithm", variantList));
         
