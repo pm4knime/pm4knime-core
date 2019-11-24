@@ -14,6 +14,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentColumnFilter;
+import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
@@ -38,7 +39,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
 	
 	DialogComponentStringSelection caseIDComp, eventIDComp, sTimeComp, cTimeComp; 
 	DialogComponentBoolean withSTimeComp;
-	DialogComponentStringSelection sFormatComp, cFormatComp;
+	DialogComponentString sFormatComp, cFormatComp;
 	DialogComponentColumnFilter m_traceAttrFilterComp, m_eventAttrFilterComp;
     /**
      * New pane for configuring the CVS2XLogConverter node.
@@ -75,8 +76,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(cTimeComp);
     	// set the format to change string to date format
     	m_cFormat = config.getMCFormat();
-    	cFormatComp = new DialogComponentStringSelection(m_cFormat, "Date format: ",
-    			Table2XLogConfigModel.createPredefinedFormats(), true);
+    	cFormatComp = new DialogComponentString(m_cFormat, "Date format: ");
     	addDialogComponent(cFormatComp);
     	this.setHorizontalPlacement(false);
     		
@@ -96,8 +96,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     	// set the format to change string to date format
     	m_sFormat = config.getMSFormat();
     	
-        sFormatComp = new DialogComponentStringSelection(m_sFormat, "Date format: ",
-        		Table2XLogConfigModel.createPredefinedFormats(), true);
+        sFormatComp = new DialogComponentString(m_sFormat, "Date format: ");
         m_sFormat.setEnabled(m_withSTime.getBooleanValue());
         addDialogComponent(sFormatComp);
         this.setHorizontalPlacement(false);

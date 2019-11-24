@@ -128,14 +128,15 @@ public class SplitLogNodeModel extends NodeModel {
     	lp2keep.setLog(logs[0]);
     	//String logname = XConceptExtension.instance().extractName(logs[0]);
     	//m_outSpecs[0].setTitle(logname + " Spec");
-    	lp2keep.setSpec(m_outSpecs[0]);
+    	// TODO : here the spec can not be assigned to it, so we need to change and create by ourself!!
+    	
     	
     	
     	XLogPortObject lp2dispose = new XLogPortObject();
     	lp2dispose.setLog(logs[1]);
     	//logname = XConceptExtension.instance().extractName(logs[1]);
     	//m_outSpecs[1].setTitle(logname + " Spec");
-    	lp2dispose.setSpec(m_outSpecs[1]);
+    	
     	logger.info("End Node Split the Event Log");
         return new PortObject[]{lp2keep, lp2dispose };
     }
@@ -161,7 +162,6 @@ public class SplitLogNodeModel extends NodeModel {
     	
     	// but after here, we need to check the data informaton to get it.. then how to do it ?? 
     	// load the data from it?? 
-    	
     	
 		m_outSpecs[0] = new XLogPortObjectSpec();
 		m_outSpecs[1] = new XLogPortObjectSpec();

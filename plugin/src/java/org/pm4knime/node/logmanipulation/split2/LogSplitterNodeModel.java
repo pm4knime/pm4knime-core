@@ -82,12 +82,10 @@ public class LogSplitterNodeModel extends NodeModel {
 				m_attributeValue.getStringValue());
 		XLogPortObject lp2keep = new XLogPortObject();
     	lp2keep.setLog(logs[0]);
-    	lp2keep.setSpec(m_outSpecs[0]);
-    	
     	
     	XLogPortObject lp2dispose = new XLogPortObject();
     	lp2dispose.setLog(logs[1]);
-    	lp2dispose.setSpec(m_outSpecs[1]);
+    	
     	logger.info("End Node Split the Event Log");
         return new PortObject[]{lp2keep, lp2dispose };
  

@@ -137,6 +137,8 @@ public class InductiveMinerNodeModel extends NodeModel {
         	param = new MiningParametersIMflc();
         else 
         	throw new InvalidSettingsException("unknown inductive miner type "+ m_type.getStringValue());
+    	
+    	
         param.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
         // we need to give one of the classifier to have it
         // we need to get the classifer it uses
@@ -213,6 +215,7 @@ public class InductiveMinerNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
           m_type.loadSettingsFrom(settings);
+//          setWithNoiseThreshold();
           if(isWithNoiseThreshold())
         	  m_noiseThreshold.loadSettingsFrom(settings);
     }
@@ -225,6 +228,7 @@ public class InductiveMinerNodeModel extends NodeModel {
             throws InvalidSettingsException {
             
        m_type.validateSettings(settings);
+       setWithNoiseThreshold();
        if(isWithNoiseThreshold())
     	   m_noiseThreshold.validateSettings(settings);
     }
@@ -250,14 +254,16 @@ public class InductiveMinerNodeModel extends NodeModel {
     }
 
 	public  boolean isWithNoiseThreshold() {
+		
 		return withNoiseThreshold;
 	}
 
 	public void setWithNoiseThreshold() {
-		if(!m_type.getStringValue().equals(defaultType[0])) {
+		if(m_type.getStringValue().equals(defaultType[0])) {
+			withNoiseThreshold = false;
+//			m_noiseThreshold = new SettingsModelDoubleBounded(CFGKEY_NOISE_THRESHOLD, 0.2, 0, 1.0);
+		}else
 			withNoiseThreshold = true;
-			m_noiseThreshold = new SettingsModelDoubleBounded(CFGKEY_NOISE_THRESHOLD, 0.2, 0, 1.0);
-		}
 	}
 
 }
