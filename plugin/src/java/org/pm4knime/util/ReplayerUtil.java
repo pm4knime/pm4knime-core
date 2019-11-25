@@ -49,7 +49,7 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  */
 public class ReplayerUtil {
 	// here to list all the algirithm strategies
-	public final static String[] strategyList = {"ILP Replayer","Non-ILP Replayer", "A*-ILP Based Manifest Replayer"};
+	public final static String[] strategyList = {"ILP Replayer", "Non-ILP Replayer", "A*-ILP Based Manifest Replayer"};
 	
 	public static IPNReplayAlgorithm getReplayer(String algName) {
 		// TODO Auto-generated method stub
@@ -95,8 +95,9 @@ public class ReplayerUtil {
     	for (TransClass t : tc.getTransClasses()) {
 			Set<EvClassPattern> p = new HashSet<EvClassPattern>();
 			line: for (XEventClass clazz : eventClasses)
-				// look for exact matches on the id
-				if (clazz.getId().equals(t.getId())) {
+				// look for exact matches on the id 
+				// TODO : if transitions is with +, we still want it have performance values there.
+				if (clazz.getId().equals(t.getId()) || t.getId().startsWith(clazz.getId())) {
 					EvClassPattern pat = new EvClassPattern();
 					pat.add(clazz);
 					p.add(pat);

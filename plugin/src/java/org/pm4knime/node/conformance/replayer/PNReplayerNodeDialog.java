@@ -115,10 +115,13 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
     
     protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
     	List<String> classifierNames  =  XLogUtil.getECNames(DefaultPNReplayerNodeModel.classifierList);
+    	
+    	parameter.getMClassifierName().setStringValue(classifierNames.get(0));
     	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
     			m_parameter.getMClassifierName(), "Select Classifier Name", classifierNames );
     	addDialogComponent(m_classifierComp);
     	
+    	parameter.getMStrategy().setStringValue(strategyList[0]);
     	DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(
     			m_parameter.getMStrategy(), "Select Replay Strategy", strategyList);
     	addDialogComponent(m_strategyComp);

@@ -106,7 +106,7 @@ public class ToXLogConverter {
 		
 		
 		String logName = csvData.getSpec().getName();
-		startLog(logName + "event log");
+		startLog(logName + " event log");
 		
 		for(DataRow row : csvData) {
 			// when it is a integer or string, not matter, right?? 

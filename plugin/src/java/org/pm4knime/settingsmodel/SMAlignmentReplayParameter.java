@@ -27,6 +27,8 @@ import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.DefTransClassifier;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.IDBasedTransClassifier;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
@@ -179,8 +181,7 @@ implements SettingsModelFlowVariableCompatible {
 	@Override
 	protected void saveSettingsForDialog(NodeSettingsWO settings) throws InvalidSettingsException {
 		// TODO Auto-generated method stub
-		final NodeSettingsWO subSettings =
-	            settings.addNodeSettings(m_configName);
+		final NodeSettingsWO subSettings  = settings; //= settings.addNodeSettings(m_configName);
 		
 		saveSettingsPure(subSettings);
 	}
@@ -203,8 +204,7 @@ implements SettingsModelFlowVariableCompatible {
 	@Override
 	protected void loadSettingsForModel(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO Auto-generated method stub
-		final NodeSettingsRO subSettings =
-                settings.getNodeSettings(m_configName);
+		final NodeSettingsRO subSettings =  settings; //   settings.getNodeSettings(m_configName);
 		
 		loadSettingsPure(subSettings);
 	}

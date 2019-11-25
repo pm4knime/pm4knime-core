@@ -3,7 +3,9 @@ package org.pm4knime.portobject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -150,10 +152,10 @@ public class RepResultPortObject implements PortObject {
 			// the second one loses dummy and eventClassifier already. But why it is like this??
 			// if we save them into string, it should be fine
 			Map<String, Object> infoMap = repResult.getInfo();
-			// why I can have the info here??
+			serializeInfo(infoMap);
 			// how to make sure the object stored in infoMap is serializable?? No secure way!!
-			objOut.writeObject(repResult.getInfo());
-			
+			// so we need to remember only the names for the class, after this, we will recover it.
+			objOut.writeObject(infoMap);
 			// to mark the end of the elements
 			objOut.writeInt(repResult.size());
 			// Here begins to store the SyncReplayResult one by one 
@@ -206,6 +208,19 @@ public class RepResultPortObject implements PortObject {
 			System.out.println("Exit the save PO in serializer");
 		}
 
+		private void serializeInfo(Map<String, Object> infoMap) {
+			// TODO Make the infoMap only contained serializable data.
+			// IF the value is not serialzable, we use its class name for it.
+			for(String key : infoMap.keySet()) {
+				Object value = infoMap.get(key);
+				if(!(value instanceof Serializable)) {
+					infoMap.put(key, value.getClass().getSimpleName());
+				}
+				
+			}
+			
+		}
+
 		@Override
 		public RepResultPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
 				ExecutionMonitor exec) throws IOException, CanceledExecutionException {
@@ -225,9 +240,8 @@ public class RepResultPortObject implements PortObject {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_REP_RESULT + "' not present");
 			}
 			RepResultPortObject repResultPO = new RepResultPortObject();
-			Map<String, Object> infoMap = null;
+			Map<String, Object> infoMap = new HashMap();
 			try {
-				
 				infoMap = (Map<String, Object>) objIn.readObject();
 				
 			} catch (ClassNotFoundException e1) {
@@ -328,6 +342,7 @@ public class RepResultPortObject implements PortObject {
 			return repResultPO;
 		}
 
+		
 		// end of the serializaer
 	}
 

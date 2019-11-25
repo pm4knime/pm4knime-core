@@ -16,12 +16,15 @@
         <option name="Event ID 1">Event Id for the second event log to identify events in traces with the same caseID</option>
         
         <option name="Merge Strategy">It includes four strategies:
-         Separate Trace: For the traces with same caseID, we still put them together. 
-         Ignore Trace: For the traces with the same caseID from the second event log, we ignore those traces.
-         Internal Trace Merge: For the traces with the same caseID, we merge all events from two traces together.
-         			But the trace attributes, we modify them according to the options.
-         Internal Event Merge: In traces with same caseID, the events with same eventID 
-                    merge together but with different attributes chosen from the table below. 
+        <ul>
+        	<li> Separate Trace: <br/> For the traces with same caseID, we still put them together. 
+        	</li>
+        	<li>Ignore Trace:  <br/> For the traces with the same caseID from the second event log, we ignore those traces.</li>
+	        <li>Internal Trace Merge: <br/>For the traces with the same caseID, we merge all events from two traces together.
+         			But the trace attributes, we modify them according to the options. </li>
+	        <li>Internal Event Merge: <br/> In traces with same caseID, the events with same eventID 
+                    merge together but with different attributes chosen from the table below. </li>
+        </ul>
         </option>
         
         <option name="Trace Attribute Set"> The trace attributes chosen for the merged traces 

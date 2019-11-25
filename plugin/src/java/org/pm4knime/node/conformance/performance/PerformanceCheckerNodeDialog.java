@@ -2,6 +2,7 @@ package org.pm4knime.node.conformance.performance;
 
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import org.deckfour.xes.model.XLog;
@@ -53,7 +54,9 @@ public class PerformanceCheckerNodeDialog extends DataAwareNodeDialogPane {
      * New pane for configuring the PerformanceChecker node.
      */
     protected PerformanceCheckerNodeDialog() {
-    	super();
+    	m_compositePanel = new JPanel();
+    	m_compositePanel.setLayout(new BoxLayout(m_compositePanel,
+                BoxLayout.Y_AXIS));
     	m_parameter = new SMPerformanceParameter("Performance Parameter");
     	
     	// add additional items to m_compositePanel panel
@@ -68,7 +71,7 @@ public class PerformanceCheckerNodeDialog extends DataAwareNodeDialogPane {
 		
 		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(), tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
     	addDialogComponent(m_withUnreliableResultComp);
-    	
+    	this.addTab("Options", m_compositePanel);
     }
     
     protected void addDialogComponent(final DialogComponent diaC) {
@@ -101,12 +104,12 @@ public class PerformanceCheckerNodeDialog extends DataAwareNodeDialogPane {
 			// do we need to repaint all the composite , or only the one corresponding to this attributes?
 			// when it is the first time to initialize parameter, we need the input PortObject
     		// when it is the second time to use this, the already existing values should be there
-			try {
-				m_parameter.loadSettingsFrom(settings);
-			} catch (InvalidSettingsException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				m_parameter.loadSettingsFrom(settings);
+//			} catch (InvalidSettingsException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			m_compositePanel.repaint();
 		
     }

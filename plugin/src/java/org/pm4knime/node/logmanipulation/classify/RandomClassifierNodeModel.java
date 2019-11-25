@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -22,6 +26,8 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.processmining.incorporatenegativeinformation.dialogs.ui.VariantWholeView;
+import org.processmining.incorporatenegativeinformation.help.Configuration;
 import org.processmining.incorporatenegativeinformation.help.EventLogUtilities;
 import org.processmining.incorporatenegativeinformation.models.TraceVariant;
 
@@ -55,12 +61,29 @@ public class RandomClassifierNodeModel extends NodeModel {
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
     	XLogPortObject logPortObject = (XLogPortObject) inData[0];
-    	if(logPortObject.getLog().isEmpty()) {
+    	XLog log = logPortObject.getLog();
+    	if(log.isEmpty()) {
     		throw new InvalidSettingsException("This event log is empty, reset a new event log");
     	}
     	// how to add the attributes to new event log?? We can do it later.
-    	
-        return new PortObject[]{logPortObject};
+    	XFactory factory = XFactoryRegistry.instance().currentDefault();
+    	XLog label_log = (XLog) log.clone();
+		XLogInfo info = XLogInfoFactory.createLogInfo(label_log);
+		
+		label_log.getGlobalTraceAttributes().add(factory.createAttributeBoolean(Configuration.POS_LABEL, false, null));
+		label_log.getGlobalTraceAttributes().add(factory.createAttributeBoolean(Configuration.FIT_LABEL, false, null));
+		
+		List<TraceVariant> variants = EventLogUtilities.getTraceVariants(label_log);
+		VariantWholeView view = new VariantWholeView(variants, info);
+		view.setSize(1000, 1000);
+		
+		// how to show this out?? This is one problem!! How to 
+		int n = JOptionPane.showConfirmDialog(null, view, "Classify Variants", JOptionPane.YES_NO_OPTION);
+		// if it is cancelled, what to do ?? we return back the old xlog and give it back
+		if(n== JOptionPane.YES_OPTION)
+			return new PortObject[]{new XLogPortObject(label_log)};
+		else
+			return  new PortObject[]{logPortObject};
     }
 
     /**

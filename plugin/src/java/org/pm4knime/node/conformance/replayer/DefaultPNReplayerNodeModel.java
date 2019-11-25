@@ -42,6 +42,7 @@ import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
 import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
 import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
+import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
@@ -74,7 +75,7 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
  *
  * @author 
  */
-public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectHolder{
+public class DefaultPNReplayerNodeModel extends NodeModel{
 	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerNodeModel.class);
 	private static final  String message  = "Replayer In Default";	
 	public static String CFG_PARAMETER_NAME = "Parameter In " + message;
@@ -164,7 +165,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectH
     		parameter.setCreateConn(false);
     		
     		PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
-    				.getFutureResultAwarePluginContext(PNLogReplayer.class);
+    				.getFutureResultAwarePluginContext(PNManifestReplayer.class);
     		PNLogReplayer replayer = new PNLogReplayer();
     		repResult = replayer.replayLog(pluginContext, anet.getNet(), log, flattener.getMap(),
     				replayAlgorithm, parameter);
@@ -262,24 +263,6 @@ public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectH
             CanceledExecutionException {
         // TODO: generated method stub
     }
-    
-    @Override
-	public PortObject[] getInternalPortObjects() {
-		// TODO Auto-generated method stub
-		return new PortObject[] { repResultPO};
-	}
-
-	/*
-	 * It defines methods to restore port objects. It is called after execution. 
-	 * because the view is based on the input and output port objects, so an internal view is in need.
-	 * Serialization is controlled by KNIME platform.
-	 */
-	@Override
-	public void setInternalPortObjects(PortObject[] portObjects) {
-		// TODO Auto-generated method stub
-		
-		repResultPO = (RepResultPortObject) portObjects[0];
-	}
 
 	@Override
 	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
@@ -287,6 +270,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel implements PortObjectH
 		// TODO Auto-generated method stub
 		
 	}
+    
 
 }
 

@@ -36,11 +36,9 @@
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Event Log">Input port for an event log</inPort>
-		<inPort index="1" name="Petri Net">Input port for a Petri net</inPort>
+		 <inPort index="0" name="Replay Result ">Replayer Result</inPort>
 		<!-- possibly more input ports here -->
-		<outPort index="0" name="Alignment">Output alignment result after
-			replaying</outPort>
+		  <outPort index="0" name="Performance StatInfo">Performance Statistical Information</outPort>
 		<outPort index="1" name="Global Performance Statistics">
 		It shows statistical performance of all cases from the event log. It focuses on the throughput time of cases. 
 		  	However, the global fitness information is also included.

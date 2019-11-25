@@ -199,12 +199,15 @@ public class XLogUtil {
 		// get the event attributes types, like start time and complete time
 		// after checking this, we get the key names. They are the same.
 		// so what we get is the keySet..
-		List<XAttribute> attrList = getTAttributes(log, 0.2);
+		// can't use it directly, because the global change there, so we need to get sth else
+		List<XAttribute> attrList = new ArrayList(); 
+		attrList.addAll(getTAttributes(log, 0.2));
+		attrList.addAll(getEAttributes(log, 0.2));
 		List<String> attrNames = new ArrayList<String>();
 		
 		// the result is reliable, we need to traverse the log and trace for this
 		for(XAttribute attr : attrList) {
-			if(attr instanceof XAttributeTimestamp) {
+			if(attr instanceof XAttributeTimestampImpl || attr instanceof XAttributeTimestamp) {
 				attrNames.add(attr.getKey());
 			}
 		}
@@ -214,7 +217,8 @@ public class XLogUtil {
 	// get the event attribute of an event log
 	public static List<XAttribute> getEAttributes(XLog log, double percent){
 		// the result is not reliable, so traverse each trace there
-		List<XAttribute> attrList = log.getGlobalEventAttributes();
+		List<XAttribute> attrList = new ArrayList(); 
+		attrList.addAll(log.getGlobalEventAttributes()); 
 		List<String> attrNames = getAttrNameList(attrList);
 		int tmp = (int) (log.size() * percent) + 1;
 		int num =  tmp > 20? 20: tmp;
@@ -222,8 +226,10 @@ public class XLogUtil {
 		for(XTrace trace: log) {
 			for(XEvent event: trace) {
 				for(String attrKey : event.getAttributes().keySet()) {
-					if(!attrNames.contains(attrKey))
-						attrList.add(event.getAttributes().get(attrKey));
+					if(!attrNames.contains(attrKey)) {
+						attrNames.add(attrKey);
+						attrList.add((XAttribute) event.getAttributes().get(attrKey).clone());
+					}
 				}
 			}
 			num--;
@@ -238,20 +244,25 @@ public class XLogUtil {
 	// but if we want to acess the attributes, we need its keys for this...
 	public static List<XAttribute> getTAttributes(XLog log, double percent){
 		// the result is not reliable, so traverse each trace there
-		List<XAttribute> attrList = log.getGlobalTraceAttributes();
+		List<XAttribute> attrList = new ArrayList(); 
+		attrList.addAll(log.getGlobalTraceAttributes());
 		List<String> attrNames = getAttrNameList(attrList);
 		int tmp = (int) (log.size() * percent) + 1;
 		int num =  tmp > 20? 20: tmp;
 		// we should count the number of visited values there
 		for(XTrace trace: log) {
 			for(String attrKey : trace.getAttributes().keySet()) {
-				if(!attrNames.contains(attrKey))
-					attrList.add(trace.getAttributes().get(attrKey));
+				if(!attrNames.contains(attrKey)) {
+					attrNames.add(attrKey);
+					// here will add the attributes directly on log
+					attrList.add((XAttribute)trace.getAttributes().get(attrKey).clone());
+				}
 			}
 			num--;
 			if(num < 0)
 				break;
 		}
+		// after this, we make the value as default
 		
 		return attrList;
 	}
@@ -282,13 +293,13 @@ public class XLogUtil {
 	
 	// get the class for one attribute
 	public static Class<?> getAttrClass(XAttribute xattr){
-		if (xattr instanceof XAttributeTimestamp) {
+		if (xattr instanceof XAttributeTimestamp || xattr instanceof XAttributeTimestampImpl) {
 			return java.util.Date.class;
-		} else if (xattr instanceof XAttributeContinuous) {
+		} else if (xattr instanceof XAttributeContinuous || xattr instanceof XAttributeContinuousImpl) {
 			return Double.class;
-		} else if (xattr instanceof XAttributeDiscrete) {
+		} else if (xattr instanceof XAttributeDiscrete || xattr instanceof XAttributeDiscreteImpl) {
 			return Integer.class;
-		}else if (xattr instanceof XAttributeLiteral) {
+		}else if (xattr instanceof XAttributeLiteral || xattr instanceof XAttributeLiteral) {
 			return String.class;
 		}
 		throw new IllegalArgumentException("Not supported data type");

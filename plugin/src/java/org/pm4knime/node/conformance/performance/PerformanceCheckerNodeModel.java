@@ -98,11 +98,9 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 public class PerformanceCheckerNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(PerformanceCheckerNodeModel.class);
 	
-	static String[] strategyList = {"A*-ILP Based manifest replay"};
 	static List<XEventClassifier> classifierList = XLogUtil.getECList();
 	// we create a similar nodeSetting like Conformance Checking?
 	SMPerformanceParameter m_parameter;
-	
 	RepResultPortObjectSpec m_rSpec ;
 	private Manifest  mResult;
 	private PerfCounter counter;
@@ -130,13 +128,14 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		AcceptingPetriNet anet = repResultPO.getNet();
     	
 		PNRepResult repResult = repResultPO.getRepResult();
-		Map<String, Object> infoMap = repResult.getInfo();
 		// remove flatter parameters, we need reproduce the values here
 		// else, there is no replay result available here
 		// or we can pass the settings parameters to this node model By InputObject with settings m_parameter..
 		SMAlignmentReplayParameter specParameter = m_rSpec.getMParameter();
 		
-		XEventClassifier eventClassifier = (XEventClassifier) infoMap.get(XLogUtil.CFG_EVENTCLASSIFIER_NAME);;
+		// because current we don't have the corresponding event classifier, so we need to make the correlation for it.
+		// here we have the name only!!! So be carefule, if we need sth..
+		XEventClassifier eventClassifier = XLogUtil.getXEventClassifier(specParameter.getMClassifierName().getStringValue(), classifierList);
 		
 		PNManifestReplayerParameter manifestParameters = specParameter.getPerfParameter(log, anet, eventClassifier);
 		PNManifestFlattener flattener = new PNManifestFlattener(anet.getNet(), manifestParameters);
@@ -239,7 +238,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 			throw new InvalidSettingsException("Input is not a valid replay result!");
 		
 		// TODO : assign the table spec here
-		
+    	m_rSpec = (RepResultPortObjectSpec) inSpecs[0];
         return new PortObjectSpec[]{null, null, null };
     	
     }
