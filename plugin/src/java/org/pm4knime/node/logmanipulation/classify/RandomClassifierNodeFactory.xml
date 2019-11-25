@@ -8,17 +8,13 @@
     
     <fullDescription>
         <intro>Insert long description here...</intro>
-        
-        
-        <option name="LogPosRate">Event Log Positive Rate</option>
-        <option name="TraceVariantPosRate">Trace Variant Positive Rate</option>
        
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="LogToClassify">Event Log to classify by randomly</inPort>
+        <inPort index="0" name="Event Log">Event Log to classify by randomly</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="LogWithLabel">Event log with labels after classification</outPort>
+        <outPort index="0" name="Event Log With Label">Event log with labels after classification</outPort>
         <!-- possibly more output ports here-->
     </ports>    
    

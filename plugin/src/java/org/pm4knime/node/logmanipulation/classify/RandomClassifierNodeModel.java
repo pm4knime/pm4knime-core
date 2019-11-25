@@ -33,28 +33,6 @@ import org.processmining.incorporatenegativeinformation.models.TraceVariant;
  */
 public class RandomClassifierNodeModel extends NodeModel {
 	
-	public static final String CFG_ATTRIBUTE_KEY = "class key";
-	
-	public static final String CFG_OVERLAP_RATE = "OverLapRate";
-    
-	public static final String CFG_POS_RATE = "Positive Rate";
-	
-	static SettingsModelString createSettingsModelAttributeKey() {
-	    return new SettingsModelString(CFG_ATTRIBUTE_KEY, "");
-	} 
-	
-	static SettingsModelDoubleBounded createSettingsModelOverlapRate() {
-	    return new SettingsModelDoubleBounded(CFG_OVERLAP_RATE, 0,0,1.0 );
-	}   
-	
-	static SettingsModelDoubleBounded createSettingsModelPosRate() {
-	    return new SettingsModelDoubleBounded(CFG_POS_RATE, 0,0,1.0 );
-	}   
-	SettingsModelString m_attributeKey = createSettingsModelAttributeKey();
-	SettingsModelDoubleBounded m_overlapRate = createSettingsModelOverlapRate();
-	SettingsModelDoubleBounded m_posRate = createSettingsModelPosRate();
-	
-	private XLogPortObjectSpec m_outSpec;
     /**
      * Constructor for the node model.
      */
@@ -80,21 +58,9 @@ public class RandomClassifierNodeModel extends NodeModel {
     	if(logPortObject.getLog().isEmpty()) {
     		throw new InvalidSettingsException("This event log is empty, reset a new event log");
     	}
-    	// create a new event log 
-    	XFactory factory = XFactoryRegistry.instance().currentDefault();
-		XLog label_log = (XLog)logPortObject.getLog().clone();
-		// how to decide the throughputtime of each trace?? 
-		label_log.getGlobalTraceAttributes().add(factory.createAttributeBoolean(m_attributeKey.getStringValue(), false, null));
-		
-		List<TraceVariant> variants = EventLogUtilities.getTraceVariants(label_log);
-		EventLogUtilities.assignVariantListLabel(variants, m_overlapRate.getDoubleValue(), m_posRate.getDoubleValue());
-		
-		// make the outport object
-		XLogPortObject logPortWithLabel = new XLogPortObject();
-		logPortWithLabel.setLog(label_log);
-		logPortWithLabel.setSpec(m_outSpec);
-		
-        return new PortObject[]{logPortWithLabel};
+    	// how to add the attributes to new event log?? We can do it later.
+    	
+        return new PortObject[]{logPortObject};
     }
 
     /**
@@ -103,9 +69,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     @Override
     protected void reset() {
         // TODO: generated method stub
-    	m_attributeKey.setStringValue("");
-    	m_overlapRate.setDoubleValue(0);
-    	m_posRate.setDoubleValue(0);
+    	
     }
 
     /**
@@ -119,9 +83,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     	if(! (inSpecs[0] instanceof XLogPortObjectSpec))
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
-		m_outSpec = new XLogPortObjectSpec();
-    	
-        return new PortObjectSpec[]{m_outSpec};
+        return new PortObjectSpec[]{new XLogPortObjectSpec()};
     }
 
     /**
@@ -130,10 +92,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
          // TODO: generated method stub
-    	m_attributeKey.saveSettingsTo(settings);
     	
-    	m_overlapRate.saveSettingsTo(settings);
-    	m_posRate.saveSettingsTo(settings);
     }
 
     /**
@@ -142,11 +101,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
-    	m_attributeKey.loadSettingsFrom(settings);
-    	
-    	m_overlapRate.loadSettingsFrom(settings);
-    	m_posRate.loadSettingsFrom(settings);
+       
     }
 
     /**
@@ -156,10 +111,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
-    	m_attributeKey.validateSettings(settings);
     	
-    	m_overlapRate.validateSettings(settings);
-    	m_posRate.validateSettings(settings);
     }
     
     /**

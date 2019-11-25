@@ -44,7 +44,7 @@ public class PetriNetUtil {
 
 	public static final String tauSuffix = "-tau";
 	
-	public static Set<Marking> guessFinalMarking(Petrinet net) {
+	public static Set<Marking> guessFinalMarking(PetrinetGraph net) {
 		// TODO Auto-generated method stub
 		List<Place> placeList = getEndPlace(net);
 		Set<Marking> finalSet = new HashSet<>();
@@ -56,7 +56,7 @@ public class PetriNetUtil {
 		return finalSet;
 	}
 	
-	public static List<Place> getEndPlace(Petrinet net) {
+	public static List<Place> getEndPlace(PetrinetGraph net) {
 		// firstly to get all places, if one place has no postset edges, then
 		// it is the endPlace
 		Collection<Place> places = net.getPlaces();
@@ -212,6 +212,11 @@ public class PetriNetUtil {
 		GraphLayoutConnection layout = new GraphLayoutConnection(net);
 		
 		pnml.convertToNet(net, marking, finalMarkings, layout);
+		// TODO : Check the finalMarkings , if it is empty, we create the final Marking on it. 
+		// Else, keep the old ones.
+		if(finalMarkings.isEmpty()) {
+			finalMarkings = PetriNetUtil.guessFinalMarking(net);
+		}
 		
 		AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) net, marking, finalMarkings);
 		
