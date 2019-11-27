@@ -14,6 +14,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDouble;
+import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -35,22 +36,17 @@ public class SampleLogNodeModel extends NodeModel {
 	// public static final String CFG_SAMPLE_NUM = "Sample Number";
 	public static final String CFG_SAMPLE_PERCENTAGE = "Sample Percentage";
 	
-	private XLogPortObjectSpec[] m_outSpecs = new XLogPortObjectSpec[getNrOutPorts()];
 	private final SettingsModelBoolean m_samplePref = createSamplePerference();
 	// private static final SettingsModelInteger m_sampleNum = null;
-	private final SettingsModelDouble m_samplePercentage = createSamplePercentage();
+	private final SettingsModelDoubleBounded m_samplePercentage = createSamplePercentage();
 	
 	static SettingsModelBoolean createSamplePerference() {
 		return new SettingsModelBoolean(CFG_SAMPLING_PERFERENCE, true);
 	}
-
-	/*
-	static SettingsModelInteger createSampleNum() {
-		return new SettingsModelInteger(CFG_SAMPLE_NUM, 10);
-	}
-	*/
-	static SettingsModelDouble createSamplePercentage() {
-		return new SettingsModelDouble(CFG_SAMPLE_PERCENTAGE, 0.2);
+	
+	// make sure the value is non negative
+	static SettingsModelDoubleBounded createSamplePercentage() {
+		return new SettingsModelDoubleBounded(CFG_SAMPLE_PERCENTAGE, 0.3, 0, Double.MAX_VALUE );
 	}
     /**
      * Constructor for the node model.
@@ -73,7 +69,7 @@ public class SampleLogNodeModel extends NodeModel {
     	// to test the valid setting, we need to set one button to see that we choose the percentage marking
     	// one simple way is to use the doubleBounded, but with one checkbox to define it is for the integer number
     	// one is the doubleBounded, only allowing it greater than 0.
-    	logger.info("Begin to Sample the Event Log");
+    	logger.info("Begin: Sample the Event Log");
     	// assign the log
     	XLogPortObject logPortObject = (XLogPortObject) inData[0];
 		XLog log = logPortObject.getLog();
@@ -86,19 +82,22 @@ public class SampleLogNodeModel extends NodeModel {
 		}else {
 			// conver the double value into the number 
 			int num =  (int) m_samplePercentage.getDoubleValue();
+			// check here if the num is bigger than the log size
+			if(num > log.size()) {
+				logger.warn("The chosen sample number is bigger than the log, will only output the whole log");
+				num = log.size();
+			}
 			logs = EventLogUtilities.sampleLog(log, num);
 		}
     	
 		// create the out port object
 		XLogPortObject sLogPortObject = new XLogPortObject();
 		sLogPortObject.setLog(logs[0]);
-		sLogPortObject.setSpec(m_outSpecs[0]);
     	
 		XLogPortObject dLogPortObject = new XLogPortObject();
 		dLogPortObject.setLog(logs[1]);
-		dLogPortObject.setSpec(m_outSpecs[1]);
-    	
-		logger.info("End Node Sample the Event Log");
+		
+		logger.info("End : Sample the Event Log");
         return new PortObject[]{sLogPortObject, dLogPortObject};
     }
 
@@ -121,7 +120,7 @@ public class SampleLogNodeModel extends NodeModel {
     	
     	// but here we need to validate the value of num and percentage, but how to choose them??
     	// choose either of them, it is totally fine, but how to make them into the code??
-    	
+    	XLogPortObjectSpec[] m_outSpecs = new XLogPortObjectSpec[getNrOutPorts()];
     	m_outSpecs[0] = new XLogPortObjectSpec();
 		m_outSpecs[1] = new XLogPortObjectSpec();
 		return new PortObjectSpec[] { m_outSpecs[0], m_outSpecs[1]};
@@ -152,16 +151,35 @@ public class SampleLogNodeModel extends NodeModel {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} this method only validates the values but not assign the values to the parameters. 
+     * Let us check another way to verify the configuration
      */
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
     	m_samplePref.validateSettings(settings);
-    	// m_sampleNum.validateSettings(settings);
+    	
     	m_samplePercentage.validateSettings(settings);
     	
+    	boolean usePercentage = settings.getBoolean(CFG_SAMPLING_PERFERENCE);
+    	double value = settings.getDouble(CFG_SAMPLE_PERCENTAGE);
+    	
+    	if(usePercentage) {
+    		// check the value if it is between 0 - .10
+    		if(value > 1.0) {
+    			throw new InvalidSettingsException("The current percentage " + value + 
+    					"  is out of bounds. Please give value between 0 - 1.0 ");
+    		}
+    		
+    	}else {
+    		// it must be an integer value here
+    		if(value == Math.floor(value) && !Double.isInfinite(value)) {
+    			// this is on integer value here, also we don't allow it to be negative!! 
+    		}else
+    			throw new InvalidSettingsException("The current value  " + value + 
+    					"  is not an integer. Please give an integer value");
+    	}
     }
     
     /**
