@@ -3,11 +3,31 @@
     <name>Random Classify Event Log</name>
     
     <shortDescription>
-        RandomClassifier classifies the event log randomly, and assigns labels to the trace
+        Random Classify Event Log node is supposed to classify the event log randomly based on trace variants. 
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>This node assigns labels to traces. Labels are firstly defined in configuration nodes. 
+        How to accept those labels?? How to give them values?? Another things is that, we must click on all the variants?
+        So it's better to define the default values for this. 
+        We need one label name, a set of possible values of this label. Define them as options.
+        For one trace variant, we have the percentage to define the values, but also the number on it. 
+        we can calculate the number for it. and decide the num to classify on it. Show the integer immediately.
+        This is the setting, we need to know. But for each value, there is one percentage for it. 
+        So we need to have the actionListener to adjust it. 
+          
+        The variants panel is always shown there. After we define the label and values, if we click on one variant,
+        it should list the options to change the default percentage there. 
+        
+        After configuration, we need to remember the values for each variant!!! Event class lists and the defined percentage.
+        When there are so many variants, we assign them already on the trace variants. 
+        
+        In another way, if there is not event log connected, we just check every trace variants and assign such values there. 
+        So one question is, how to combine the chosen panel. 
+        
+        Our first task, is to create the ones without the trace variants panel.  
+        
+        </intro>
        
     </fullDescription>
     

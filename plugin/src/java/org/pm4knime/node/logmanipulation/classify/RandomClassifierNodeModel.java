@@ -39,7 +39,9 @@ import org.processmining.incorporatenegativeinformation.models.TraceVariant;
  */
 public class RandomClassifierNodeModel extends NodeModel {
 	
-    /**
+    public static final String CFG_KEY_CONFIG = "Classify config";
+
+	/**
      * Constructor for the node model.
      */
     protected RandomClassifierNodeModel() {
