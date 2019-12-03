@@ -7,28 +7,17 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>This node assigns labels to traces. Labels are firstly defined in configuration nodes. 
-        How to accept those labels?? How to give them values?? Another things is that, we must click on all the variants?
-        So it's better to define the default values for this. 
-        We need one label name, a set of possible values of this label. Define them as options.
-        For one trace variant, we have the percentage to define the values, but also the number on it. 
-        we can calculate the number for it. and decide the num to classify on it. Show the integer immediately.
-        This is the setting, we need to know. But for each value, there is one percentage for it. 
-        So we need to have the actionListener to adjust it. 
-          
-        The variants panel is always shown there. After we define the label and values, if we click on one variant,
-        it should list the options to change the default percentage there. 
-        
-        After configuration, we need to remember the values for each variant!!! Event class lists and the defined percentage.
-        When there are so many variants, we assign them already on the trace variants. 
-        
-        In another way, if there is not event log connected, we just check every trace variants and assign such values there. 
-        So one question is, how to combine the chosen panel. 
-        
-        Our first task, is to create the ones without the trace variants panel.  
-        
+        <intro>Current node classifies the event log based on trace variant. Trace Variant is a set of traces 
+        which have the same event classes sequence. The following inputs are required:
+         a given label, a list of possible value and the corresponding percent. 
+         <br/> For example, given one Label Name "kpi", it has the following distribution, 
+         {"pos", 0.5} and {"neg", 0.5}. If there are 2 trace variants and each trace variant includes 10 traces, then
+         the in each trace variant, 5 traces are assigned with  "pos" for label "kpi", 5 traces are assigned as "neg". 
         </intro>
        
+        <option name="Label Name">The category name for classification</option>
+        <option name="Label Values">The possible label value.</option>
+        <option name="Label Value Percentage">The percentage of corresponding label value for one trace variant.</option>
     </fullDescription>
     
     <ports>
