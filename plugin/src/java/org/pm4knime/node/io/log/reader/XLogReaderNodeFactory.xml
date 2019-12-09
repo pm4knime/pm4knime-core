@@ -1,28 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./default.png" type="Source" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Event Log Reader</name>
-    
-    <shortDescription>
-        This node imports an event log
-    </shortDescription>
-    
-    <fullDescription>
-        <intro>This node imports an event log</intro>
-        
-        
-        <option name="Import File Name">File name to import event log</option>
-        
-    </fullDescription>
-    
-    <ports>
-        <!-- inPort index="0" name="In-Port name">Description of first input port...</inPort-->
-        <!-- possibly more input ports here-->
-        <outPort index="0" name="Event Log">The Event Log</outPort>
-        <!-- possibly more output ports here-->
-    </ports>    
-    <views>
-        <view index="0" name="Log Trace View">View trace variant in log</view>
-        <view index="1" name="Dotted Chart View">Dotted Chart for Log View</view>
-        <!--view index="1" name="name of second view">Description of second view...</view-->
-    </views>
+<knimeNode icon="./default.png" type="Source"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Event Log Reader</name>
+
+	<shortDescription>
+		This node imports an event log from disk.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>This node imports an event log from disk. The allowed files are
+			{"XES","XES_GZ","MXML","MXML_GZ"}.
+			The output is shown in a graphical view.
+		</intro>
+
+
+		<option name="File Type">The file type of the event log</option>
+		<option name="Read Method ">
+			The methods to read an event log. There are two methods available:
+
+			<ul>
+				<li>
+					OPEN NAIVE:
+					<br />
+					Open XES standard reading method. Only XES Standard extensions can
+					be read from the xml file.
+				</li>
+				<li>
+					IEEE XES:
+					<br />
+					IEEE XES can read a lenient IEEE XES log from a plain XML
+					serialization.
+				</li>
+			</ul>
+
+		</option>
+		<option name="Selected File">The location of the event log</option>
+	</fullDescription>
+
+	<ports>
+		<!-- inPort index="0" name="In-Port name">Description of first input port...</inPort -->
+		<!-- possibly more input ports here -->
+		<outPort index="0" name="Event Log">The imported event Log</outPort>
+		<!-- possibly more output ports here -->
+	</ports>
+	
 </knimeNode>

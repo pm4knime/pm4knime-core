@@ -258,7 +258,8 @@ Bundle-ClassPath: lib/AcceptingPetriNet-latest.jar,
  lib/xstream-1.4.9.jar,
  lib/YAWL-latest.jar,
  lib/YAWLEditor-2.3.5.wo.jgraph.jar,
- .
+ .,
+ lib/XESStandard-latest.jar
 Export-Package: org.pm4knime.node.conformance.fitness,
  org.pm4knime.node.conformance.performance,
  org.pm4knime.node.conformance.precision,

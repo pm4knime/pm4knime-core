@@ -116,10 +116,10 @@ public class SplitLogNodeModel extends NodeModel {
             final ExecutionContext exec) throws Exception {
 
         // TODO: Return split event log from them
-    	logger.info("Begin to Split the Event Log");
+    	logger.info("Begin: Split the Event Log");
     	// assign the log
-    	XLogPortObject logPortObject = (XLogPortObject) inData[0];
-		log = logPortObject.getLog();
+    	XLogPortObject logPO = (XLogPortObject) inData[0];
+		log = logPO.getLog();
 		
 		AttributeLogFilterPlugin filterPlugin = new AttributeLogFilterPlugin();
     	XLog[] logs = filterPlugin.filterLogInList(log, createFilter());
@@ -134,10 +134,8 @@ public class SplitLogNodeModel extends NodeModel {
     	
     	XLogPortObject lp2dispose = new XLogPortObject();
     	lp2dispose.setLog(logs[1]);
-    	//logname = XConceptExtension.instance().extractName(logs[1]);
-    	//m_outSpecs[1].setTitle(logname + " Spec");
     	
-    	logger.info("End Node Split the Event Log");
+    	logger.info("End: Split the Event Log");
         return new PortObject[]{lp2keep, lp2dispose };
     }
 

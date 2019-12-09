@@ -1,9 +1,11 @@
-package org.pm4knime.node.io.log.reader;
+package org.pm4knime.node.visualization;
 
 import java.awt.Dimension;
+
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.NodeView;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
@@ -14,12 +16,22 @@ import org.processmining.logprojection.LogView;
 import org.processmining.logprojection.plugins.dottedchart.DottedChart.DottedChartException;
 import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartInspector;
 
-public class XLogReaderNodeView extends NodeView<XLogReaderNodeModel> {
+/**
+ * <code>NodeView</code> for the "LogVisualization" node.
+ *
+ * @author Kefang Ding
+ */
+public class LogVisualizationNodeView extends NodeView<LogVisualizationNodeModel> {
 
-	protected XLogReaderNodeView(int viewIndex, XLogReaderNodeModel nodeModel) {
-		super(nodeModel);
-		// TODO we set different view according to the viewIdx
-		XLog xlog = nodeModel.getLogPO().getLog();
+    /**
+     * Creates a new view.
+     * 
+     * @param nodeModel The model (class: {@link LogVisualizationNodeModel})
+     */
+    protected LogVisualizationNodeView(int viewIndex, final LogVisualizationNodeModel nodeModel) {
+        super(nodeModel);
+        // if we want to have the view after reloading, we need to set the internal model clearly
+        XLog xlog = nodeModel.getLogPO().getLog();
 		// SettingsModelString m_fileName =  nodeModel.getParams().getFilePathSettingsModel();
 		
 		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
@@ -50,10 +62,9 @@ public class XLogReaderNodeView extends NodeView<XLogReaderNodeModel> {
 			break;
 		
 		}
-		// viewIdx = 1, traceVariant, or we can use other to substitute it
-	}
+    }
 
-	@Override
+    @Override
 	protected void onClose() {
 		// TODO Auto-generated method stub
 		System.out.println("Check the calling hierarchy in model close");
@@ -75,4 +86,6 @@ public class XLogReaderNodeView extends NodeView<XLogReaderNodeModel> {
 		System.out.println("Check the calling hierarchy in model changed");
 	}
 
+
 }
+

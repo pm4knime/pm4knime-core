@@ -9,8 +9,6 @@ import java.util.List;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -24,13 +22,11 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeModel;
-import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.portobject.DFMPortObject;
 import org.pm4knime.portobject.DFMPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
+import org.pm4knime.util.XLogUtil;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
 import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiner;
@@ -40,7 +36,7 @@ import org.processmining.plugins.directlyfollowsmodel.mining.variants.DFMMiningP
 
 /**
  * <code>NodeModel</code> for the "DFMMiner" node.
- * 
+ * @reference code : org.processmining.plugins.directlyfollowsmodel.mining.plugins.DirectlyFollowsModelMinerPlugin
  * @author Kefang Ding
  */
 public class DFMMinerNodeModel extends NodeModel {
@@ -51,12 +47,9 @@ public class DFMMinerNodeModel extends NodeModel {
 	public static final String CFG_NOISE_THRESHOLD_KEY = "NoiseThreshold";
 	public static final String CFG_CLASSIFIER_KEY = "Classifier";
 	public static final String CFG_LCC_KEY = "LifeCycleClassifier";
-	private static Collection<XEventClassifier> clfs = setDefaultClassifier();
-	private static Collection<XEventClassifier> lcClfs = setDefaultLCClassifier();
-	public static List<String> defaultClfNames = setClassifierNames(clfs);
-	public static List<String> defaultLcClfNames = setClassifierNames(lcClfs);
+	static List<XEventClassifier> classifierList = XLogUtil.getECList();
+	static List<XEventClassifier> lcClassifierList = XLogUtil.getDefaultLifeCycleClassifier();
 	
-		
 	private SettingsModelDoubleBounded m_noiseThreshold = new SettingsModelDoubleBounded(DFMMinerNodeModel.CFG_NOISE_THRESHOLD_KEY, 0.8, 0, 1.0);
 	private SettingsModelString m_clf = new SettingsModelString(DFMMinerNodeModel.CFG_CLASSIFIER_KEY, "");
 	private SettingsModelString m_lcClf = new SettingsModelString(DFMMinerNodeModel.CFG_LCC_KEY, "");
@@ -90,6 +83,7 @@ public class DFMMinerNodeModel extends NodeModel {
     	// but first try the default setting, later to add the dialog
     	DFMMiningParameters params = createParameter();
     	DirectlyFollowsModel dfm = DFMMiner.mine(log, params, null);
+    
     	DFMPortObject dfmPO = new DFMPortObject(dfm);
     	
     	return new PortObject[]{dfmPO};
@@ -100,32 +94,15 @@ public class DFMMinerNodeModel extends NodeModel {
 		// TODO Auto-generated method stub
     	DFMMiningParametersAbstract params =  new DFMMiningParametersDefault();
     	params.setNoiseThreshold(m_noiseThreshold.getDoubleValue());
-    	XEventClassifier clf = mapClassifier(m_clf.getStringValue(), clfs);
+    	XEventClassifier clf = XLogUtil.getXEventClassifier(m_clf.getStringValue(), classifierList);
     	params.setClassifier(clf);
     	
-    	XLifeCycleClassifier lcclf = (XLifeCycleClassifier) mapClassifier(m_lcClf.getStringValue(), lcClfs);
-    	params.setLifeCycleClassifier( lcclf);
+    	XEventClassifier lcclf = XLogUtil.getXEventClassifier(m_lcClf.getStringValue(), lcClassifierList);
+    	params.setLifeCycleClassifier( (XLifeCycleClassifier) lcclf);
     	
 		return params;
 	}
-
-    private XEventClassifier mapClassifier(String name, Collection<XEventClassifier> clfs) {
-    	for(XEventClassifier clf: clfs) {
-			if(clf.name().equals(name))
-				return clf;
-		}
-    	return null;
-    }
-
-    private static List<String> setClassifierNames(Collection<XEventClassifier> classList){
-    	List<String> nameList = new ArrayList();
-    	
-		for(XEventClassifier clf: classList) {
-			nameList.add(clf.name());
-		}
-	
-		return nameList;
-    }
+    
 	/**
      * {@inheritDoc}
      */
@@ -149,17 +126,15 @@ public class DFMMinerNodeModel extends NodeModel {
 
     private static Collection<XEventClassifier> setDefaultClassifier(){
     	Collection<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();
+    	// what happens if we only use this one classifier?? How about the logSpec introduced before??
+    	// we can also use the information to classify the event and get the directly-follow relation..
+    	// However, the current situation is quite ok. Then save it. 
+    	// but it is not consistent with other miner, change it to use XLogUtil. 
 		classifiers.add(new XEventNameClassifier());
 		return classifiers;
     }
     
-    private static Collection<XEventClassifier> setDefaultLCClassifier() {
-		// TODO Auto-generated method stub
-    	Collection<XEventClassifier> classifiers = new ArrayList<>();
-		classifiers.add(new LifeCycleClassifier());
-		return classifiers;
-	}
-
+    
     /**
      * {@inheritDoc}
      */

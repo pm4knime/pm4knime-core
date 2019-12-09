@@ -42,6 +42,8 @@ import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
+import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
+import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 
 /*
  * this class is created  to include the utility used to deal with event log in XLog format
@@ -176,6 +178,15 @@ public class XLogUtil {
 		nameList.addAll(ecSet);
 		return nameList;
 	}
+	
+	public static List<XEventClassifier> getDefaultLifeCycleClassifier() {
+		// TODO Auto-generated method stub
+		List<XEventClassifier> classifiers = new ArrayList<>();
+		classifiers.add(new LifeCycleClassifier());
+		classifiers.add(new XLifeCycleClassifierIgnore());
+		return classifiers;
+	}
+
 	
 	// one function to get the event classifier without log
 	public static List<XEventClassifier> getECList(){

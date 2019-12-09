@@ -3,9 +3,6 @@ package org.pm4knime.node.discovery.dfgminer;
 import java.io.File;
 import java.io.IOException;
 
-import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -19,24 +16,18 @@ import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.portobject.DFMPortObject;
 import org.pm4knime.portobject.DFMPortObjectSpec;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2AcceptingPetriNet;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParametersForPetriNet;
 import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.InductiveMinerWithoutLog;
@@ -81,7 +72,7 @@ public class DFM2PMNodeModel extends NodeModel {
 
         // TODO: check the input data as DFMPortObject and output a Petri net
     	
-    	logger.info("Begin:  DFM2PMMiner");
+    	logger.info("Begin:  DFM2PM Miner");
     	
     	DFMPortObject dfmPO = null ;
     	for(PortObject obj: inData)
@@ -101,8 +92,9 @@ public class DFM2PMNodeModel extends NodeModel {
 		};
 		// here we have parameter to be set: noiseThrehold, do we still need to reset this threshold? 
 		// or not like this?? we set noise threshold for further filtering
-		// MiningParametersIMWithoutLog params = new MiningParametersIMWithoutLog();
-		MiningParametersIMInfrequentWithoutLog params = new MiningParametersIMInfrequentWithoutLog();
+		MiningParametersIMWithoutLog params = new MiningParametersIMWithoutLog();
+		// MiningParametersIMInfrequentWithoutLog params = new MiningParametersIMInfrequentWithoutLog();
+		// how to get this noise value?? 
 		params.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
 		params.setUseMultithreading(m_useMT.getBooleanValue());
 		
@@ -114,6 +106,7 @@ public class DFM2PMNodeModel extends NodeModel {
 		AcceptingPetriNet anet = InductiveMinerPlugin.postProcessTree2PetriNet(tree, cancler);
 		PetriNetPortObject pnPO = new PetriNetPortObject(anet);
     	
+		logger.info("End:  DFM2PM Miner");
     	return new PortObject[]{pnPO, ptPO};
     }
 
