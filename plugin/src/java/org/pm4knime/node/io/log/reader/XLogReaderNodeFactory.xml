@@ -16,7 +16,7 @@
 		</intro>
 
 
-		<option name="File Type">The file type of the event log</option>
+		<option name="Read Type">The file type of the event log</option>
 		<option name="Read Method ">
 			The methods to read an event log. There are two methods available:
 
@@ -28,7 +28,7 @@
 					be read from the xml file.
 				</li>
 				<li>
-					IEEE XES:
+					IEEE Lenient:
 					<br />
 					IEEE XES can read a lenient IEEE XES log from a plain XML
 					serialization.

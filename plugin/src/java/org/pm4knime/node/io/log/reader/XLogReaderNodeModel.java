@@ -29,7 +29,7 @@ public class XLogReaderNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(XLogReaderNodeModel.class);
 	public static String[] CFG_TYPES = {"XES","XES_GZ","MXML","MXML_GZ"};
 	 // if we choose the xes, the possible values are limited in the xes , is that true?? Later deal with it 
-	public static String[] CFG_METHODS = {"OPEN NAIVE", "IEEE XES"};
+	public static String[] CFG_METHODS = {"OPEN NAIVE", "IEEE Lenient"};
 	
 	SettingsModelString m_format = createFormatModel();
 	SettingsModelString m_method = createMethodModel();
