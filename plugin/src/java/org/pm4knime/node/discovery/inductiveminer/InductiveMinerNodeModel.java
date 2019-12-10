@@ -52,7 +52,6 @@ public class InductiveMinerNodeModel extends NodeModel {
     private static final NodeLogger logger = NodeLogger
             .getLogger(InductiveMinerNodeModel.class);
   
-    public static final int IN_PORT = 0;
 	public static final String[] defaultType = {
 			"Inductive Miner", //
 			"Inductive Miner - Infrequent", //
@@ -141,7 +140,8 @@ public class InductiveMinerNodeModel extends NodeModel {
     	
         param.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
         // we need to give one of the classifier to have it
-        // we need to get the classifer it uses
+        // we need to get the classifer for use?? The classifier is extracted from the event log
+        // so check the event log and find out the real classifier !!
         
         XEventClassifier classifier = mapClassifier(m_classifier.getStringValue());
         param.setClassifier(classifier);
@@ -169,6 +169,8 @@ public class InductiveMinerNodeModel extends NodeModel {
     // it should be object based, shouldn't be static to class!!! 
     private static Collection<XEventClassifier> setDefaultClassifier(){
     	Collection<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();
+    	// we should be able to get the classifiers from the event log and save it in PortObjecSpec. 
+    	// choose it and do it now!! 
 		classifiers.add(new XEventNameClassifier());
 		return classifiers;
     }

@@ -26,6 +26,9 @@ import org.knime.core.node.tableview.TableView;
  * For one log, we need to assign the spec, which is extracted from the event log. 
  * 
  * Currently, only the attributes we care, which includes the global, trace, and event attributes
+ * @Modification: 10 Dec 2019 complete the classifier!!
+ *   Classifier is stored as a map, with the Prefix and its name, to the class it belongs to 
+ *         aMap.put(prefix + clf.name(), clf.getClass().getSimpleName());
  * @author kefang-pads
  *
  */

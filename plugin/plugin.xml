@@ -39,7 +39,11 @@
 
 		<!-- nodes in discovery-->
        <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory"/>
-      <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory"/>
+      <node
+            category-path="/processmining/discovery"
+            deprecated="true"
+            factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory"/>
+      <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory"/>
