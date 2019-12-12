@@ -7,7 +7,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.pm4knime.util.ui.DefaultMinerNodeDialog;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 public class InductiveMinerNodeDialog2 extends DefaultMinerNodeDialog{
 

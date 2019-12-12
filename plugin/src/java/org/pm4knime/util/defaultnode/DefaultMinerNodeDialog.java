@@ -1,7 +1,8 @@
-package org.pm4knime.util.ui;
+package org.pm4knime.util.defaultnode;
 
 import java.util.Map;
 
+import org.deckfour.xes.extension.std.XConceptExtension;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NotConfigurableException;
@@ -63,8 +64,21 @@ public abstract class DefaultMinerNodeDialog extends DefaultNodeSettingsPane {
 	        	XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
 	        	// the key is the name for classifier with prefix, the value is the class name for it
 	        	Map<String, String>  clfMap = logSpec.getClassifiersMap();
-	        	// we don't need the prefix for classifier
-	        	classifierComp.replaceListItems(clfMap.keySet(), clfMap.keySet().iterator().next());
+	        	// add attributes as available classifier
+	        	clfMap.putAll(logSpec.getGEventAttrMap());
+	        	// set the default classifier as concept:name by checking the key 
+	        	String defaultClassifier = clfMap.keySet().iterator().next();
+	        	
+	        	for(String key : clfMap.keySet()) {
+	        		if(key.contains(XConceptExtension.KEY_NAME)) {
+	        			// set it as the default classifier 
+	        			m_classifier.setStringValue(key);
+	        			defaultClassifier = key;
+	        		}
+	        		
+	        	}
+	        	
+	        	classifierComp.replaceListItems(clfMap.keySet(), defaultClassifier);
 	    	}
 		} catch (InvalidSettingsException e) {
 			// TODO Auto-generated catch block

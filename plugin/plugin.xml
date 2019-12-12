@@ -36,13 +36,11 @@
 		<!-- nodes in conversion-->
 		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory"/>
 		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory"/>
+		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
 
 		<!-- nodes in discovery-->
        <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory"/>
-      <node
-            category-path="/processmining/discovery"
-            deprecated="true"
-            factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory"/>
+      <node category-path="/processmining/discovery" deprecated="true" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory"/>
       <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory"/>
 		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory"/>
