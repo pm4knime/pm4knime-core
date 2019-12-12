@@ -19,6 +19,7 @@
          </intro>
        
         <tab name="Threshold Setting for Heuristics Miner">
+        	<option name="Event classifer">The event classifier chosen to classify the event log.</option>
             <option name="Threshold: Relative-to-best">"Admissable distance between directly follows relations for an "
 					+ "activity and the activity's best one. At 0 only the best directly follows "
 					+ "relation will be shown for every activity, at 100 all will be shown."</option>
@@ -38,7 +39,7 @@
     
     <ports>
         <inPort index="0" name="Event Log">An event log as input</inPort>
-        <outPort index="?" name="Petri net">The discovered process model in Petri net</outPort>
+        <outPort index="0" name="Petri net">The discovered process model in Petri net</outPort>
 		
     </ports>    
     <views>

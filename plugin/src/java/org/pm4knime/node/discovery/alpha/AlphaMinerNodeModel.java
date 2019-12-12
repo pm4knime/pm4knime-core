@@ -27,6 +27,7 @@ import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.alphaminer.parameters.AlphaMinerParameters;
@@ -39,7 +40,7 @@ import org.processmining.models.semantics.petrinet.Marking;
  * @author kefang-pads
  *
  */
-public class AlphaMinerNodeModel extends NodeModel {
+public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 
 	// TODO: make the different versions of the alpha available through some
 	// settings model
@@ -53,14 +54,15 @@ public class AlphaMinerNodeModel extends NodeModel {
 	private SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
 	
 	protected AlphaMinerNodeModel() {
-		super(new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) },
-				new PortType[] { PortTypeRegistry.getInstance().getPortType(PetriNetPortObject.class, false) });
+		super(new PortType[] { XLogPortObject.TYPE },
+				new PortType[] { PetriNetPortObject.TYPE });
 	}
 
+	
 	@Override
-	protected PortObject[] execute(final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+	protected PortObject mine(XLog log) throws Exception {
+		// TODO Auto-generated method stub
 		logger.info("Start: Alpha Miner");
-		XLog log = ((XLogPortObject) inObjects[0]).getLog();
 		AlphaMinerParameters alphaParams = null;
 		
 		if(m_variant.getStringValue().equals(AlphaVersion.CLASSIC.toString()))
@@ -69,17 +71,18 @@ public class AlphaMinerNodeModel extends NodeModel {
 			alphaParams = new AlphaMinerParameters(AlphaVersion.PLUS);
 		
 		Object[] result = AlphaMinerPlugin.apply(PM4KNIMEGlobalContext.instance().getFutureResultAwarePluginContext(AlphaMinerPlugin.class), log,
-				new XEventNameClassifier(), alphaParams);
+				getEventClassifier(), alphaParams);
 		
 		// when there is no finalMarking available, we set the finalMarking automatically
 		Set<Marking> fmSet = PetriNetUtil.guessFinalMarking((Petrinet) result[0]); // new HashMap();
 		
 		AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1], fmSet);
 		
-		PetriNetPortObject po = new PetriNetPortObject(anet);
+		PetriNetPortObject pnPO = new PetriNetPortObject(anet);
 		logger.info("End: Alpha Miner");
-		return new PortObject[] { po };
+		return pnPO;
 	}
+
 
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -87,46 +90,24 @@ public class AlphaMinerNodeModel extends NodeModel {
 		if(!inSpecs[0].getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
 		
-		PetriNetPortObjectSpec spec = new PetriNetPortObjectSpec();
-		return new PortObjectSpec[] { spec };
-	}
-
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-
+		PetriNetPortObjectSpec pnSpec = new PetriNetPortObjectSpec();
+		return new PortObjectSpec[] { pnSpec };
 	}
 
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		// TODO Auto-generated method stub
-
+		super.saveSettingsTo(settings);
+		
+		m_variant.saveSettingsTo(settings);
 	}
 
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void reset() {
-		// TODO Auto-generated method stub
-
+		super.loadValidatedSettingsFrom(settings);
+		
+		m_variant.loadSettingsFrom(settings);
 	}
 
 }

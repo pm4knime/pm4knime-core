@@ -1,8 +1,8 @@
 package org.pm4knime.node.discovery.alpha;
 
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 /**
  * @Date: 20.11.2019 Need to add the choose of classifier to classify the log
@@ -12,18 +12,16 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  * @author kefang-pads
  *
  */
-public class AlphaMinerNodeDialog extends DefaultNodeSettingsPane {
-	private final SettingsModelString m_variant;
+public class AlphaMinerNodeDialog extends DefaultMinerNodeDialog {
+	private SettingsModelString m_variant;
 	
-	protected AlphaMinerNodeDialog() {
-        super();
-        
-        
-        // we need to add two options, one is for the type option, 
-        String[] variantList =  AlphaMinerNodeModel.variantList;
+
+	@Override
+	public void init() {
+		String[] variantList =  AlphaMinerNodeModel.variantList;
         m_variant = new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
         // flowVariable is implicitly defined by saveModel 
         addDialogComponent(new DialogComponentStringSelection(m_variant, "Select Algorithm", variantList));
-        
+		
 	}
 }

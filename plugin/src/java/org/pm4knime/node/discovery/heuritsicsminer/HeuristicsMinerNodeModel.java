@@ -1,33 +1,23 @@
 package org.pm4knime.node.discovery.heuritsicsminer;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.framework.plugin.PluginContext;
@@ -43,7 +33,7 @@ import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.settings.H
  *
  * @author Kefang Ding
  */
-public class HeuristicsMinerNodeModel extends NodeModel {
+public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements PortObjectHolder{
 	
 	private static final NodeLogger logger = NodeLogger
             .getLogger(HeuristicsMinerNodeModel.class);
@@ -77,26 +67,9 @@ public class HeuristicsMinerNodeModel extends NodeModel {
         		new PortType[] { PetriNetPortObject.TYPE });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws Exception {
-    	
-    	logger.info("Begin Heuristic Miner");
-        // TODO: due heutistic parameter setting, we generate a heuristic model here, 
-    	// one is to convert it directly into Petri net , another is to create separate portObject here
-    	// create one model here to show HeuristicNet. So we need to create one net object to read and write it again?? 
-    	XLogPortObject logPortObject = null ;
-    	XLog log = null;
-    	for(PortObject obj: inData)
-        	if(obj instanceof XLogPortObject) {
-        		logPortObject = (XLogPortObject)obj;
-        		break;
-        	}
-        
-        log = logPortObject.getLog();
+	protected PortObject mine(XLog log) throws Exception{
+    	logger.info("Begin: Heuristic Miner");
     	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(FlexibleHeuristicsMinerPlugin.class);
@@ -109,8 +82,8 @@ public class HeuristicsMinerNodeModel extends NodeModel {
     	
     	PetriNetPortObject pnPO = new PetriNetPortObject(anet);
     	
-    	logger.info("End: heuristics miner");
-        return new PortObject[]{pnPO};
+    	logger.info("End: Heuristics miner");
+    	return pnPO;
     }
 
     public HeuristicsNet getHNet() {
@@ -130,23 +103,13 @@ public class HeuristicsMinerNodeModel extends NodeModel {
 		heuristicsMinerSettings.setUseLongDistanceDependency(m_withLT.getBooleanValue());
 		heuristicsMinerSettings.setCheckBestAgainstL2L(false);
 		heuristicsMinerSettings.setAndThreshold(Double.NaN);
-		heuristicsMinerSettings.setClassifier(getXEventClassifier());
+		
+		XEventClassifier classifier = getEventClassifier();
+		heuristicsMinerSettings.setClassifier(classifier);
 		
 		return heuristicsMinerSettings;
 	}
 
-	private XEventClassifier getXEventClassifier() {
-		// TODO Auto-generated method stub
-		return new XEventNameClassifier();
-	}
-
-	/**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
 
     /**
      * {@inheritDoc} here is XLogPortObject in need and it outputs the heutistic port object
@@ -159,7 +122,6 @@ public class HeuristicsMinerNodeModel extends NodeModel {
     	if(!inSpecs[0].getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
-    	
         return new PortObjectSpec[]{new PetriNetPortObjectSpec()};
     }
 
@@ -169,6 +131,8 @@ public class HeuristicsMinerNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
          // TODO: 
+    	super.saveSettingsTo(settings);
+    	
     	m_r2b.saveSettingsTo(settings);
     	m_dependency.saveSettingsTo(settings); 
     	m_length1Loop.saveSettingsTo(settings); 
@@ -185,6 +149,8 @@ public class HeuristicsMinerNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
+    	super.loadValidatedSettingsFrom(settings);
+		 
     	
     	m_r2b.loadSettingsFrom(settings);
     	m_dependency.loadSettingsFrom(settings); 
@@ -202,28 +168,22 @@ public class HeuristicsMinerNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
+    	super.validateSettings(settings);
     }
 
+	@Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		// TODO here is no use from portObjects, because what we need is the HNet, and we can't serialize it!!
+		// we can't save it from the portObject
+		
+	}
+     
+   
 }
 

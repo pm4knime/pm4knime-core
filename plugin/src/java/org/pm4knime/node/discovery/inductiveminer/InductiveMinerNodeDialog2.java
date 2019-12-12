@@ -15,7 +15,7 @@ public class InductiveMinerNodeDialog2 extends DefaultMinerNodeDialog{
 	private SettingsModelDoubleBounded m_noiseThreshold;
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		// TODO put other parameters here except classifier
 		String[] defaultValue =  InductiveMinerNodeModel.defaultType;
         m_type = new SettingsModelString(InductiveMinerNodeModel.CFGKEY_METHOD_TYPE, defaultValue[1]);
         addDialogComponent(new DialogComponentStringSelection(m_type, "Inductive Miner Type", defaultValue));

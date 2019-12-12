@@ -36,7 +36,7 @@ import org.pm4knime.util.XLogUtil;
  *
  * @author 
  */
-public class FitnessCheckerNodeModel extends NodeModel{
+public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHolder{
 	private static final NodeLogger logger = NodeLogger.getLogger(FitnessCheckerNodeModel.class);
 	
 	private DataTableSpec m_tSpec;
@@ -159,13 +159,22 @@ public class FitnessCheckerNodeModel extends NodeModel{
 		return repResultPO;
 	}
 
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		repResultPO = (RepResultPortObject)portObjects[0];
+	}
+
+	@Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 }
 
