@@ -18,12 +18,8 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
 
 public abstract class DefaultMinerNodeModel extends NodeModel {
@@ -63,7 +59,7 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	public XEventClassifier getEventClassifier() {
 		// get the list of classifiers from the event log!!
 		XLog log = logPO.getLog();
-		List<XEventClassifier> classifiers = new ArrayList();// log.getClassifiers();
+		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
 		classifiers.addAll( log.getClassifiers());
 		// check the attributes as classifier here //and assign them as the XEventAttributeClassifier
 		for(XAttribute eAttr: log.getGlobalEventAttributes()) {
@@ -99,20 +95,29 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 		// TODO save m_classifier into the settings
 		m_classifier.saveSettingsTo(settings);
 		// operation for another parameters
+		saveSpecificSettingsTo(settings);
 	}
+	
+	protected abstract void saveSpecificSettingsTo(NodeSettingsWO settings);
 
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO validate classifeir
 		m_classifier.validateSettings(settings);
+		validateSpecificSettings(settings);
 	}
-
+	
+	protected abstract void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException;
+	
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO load m_classifier
 		m_classifier.loadSettingsFrom(settings);
+		loadSpecificValidatedSettingsFrom(settings);
 	}
 
+	protected abstract void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException;
+	
 	@Override
 	protected void reset() {
 	}

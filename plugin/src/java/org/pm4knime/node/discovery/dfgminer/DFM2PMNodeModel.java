@@ -18,21 +18,16 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.DFMPortObject;
 import org.pm4knime.portobject.DFMPortObjectSpec;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
 import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
-import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.InductiveMinerWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
-import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMInfrequentWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMWithoutLog;
 import org.processmining.processtree.ProcessTree;
 
@@ -60,7 +55,7 @@ public class DFM2PMNodeModel extends NodeModel {
     protected DFM2PMNodeModel() {
     
         // TODO: input is a DFM, output are Petri net and a Process tree.
-    	super(new PortType[] {DFMPortObject.TYPE}, new PortType[] {PetriNetPortObject.TYPE, ProcessTreePortObject.TYPE} );
+    	super(new PortType[] {DFMPortObject.TYPE}, new PortType[] {ProcessTreePortObject.TYPE} );
     }
 
     /**
@@ -87,7 +82,9 @@ public class DFM2PMNodeModel extends NodeModel {
     	PluginContext context =  PM4KNIMEGlobalContext.instance().getPluginContext(); //.getFutureResultAwarePluginContext(IM.class);
     	Canceller cancler = new Canceller() {
 			public boolean isCancelled() {
+				// to make it accept the KNIME cancelation and make it cancled.
 				return context.getProgress().isCancelled();
+				
 			}
 		};
 		// here we have parameter to be set: noiseThrehold, do we still need to reset this threshold? 
@@ -103,11 +100,8 @@ public class DFM2PMNodeModel extends NodeModel {
     	ProcessTree pt = EfficientTree2processTree.convert(tree);
     	ProcessTreePortObject ptPO = new ProcessTreePortObject(pt);
     	
-		AcceptingPetriNet anet = InductiveMinerPlugin.postProcessTree2PetriNet(tree, cancler);
-		PetriNetPortObject pnPO = new PetriNetPortObject(anet);
-    	
 		logger.info("End:  DFM2PM Miner");
-    	return new PortObject[]{pnPO, ptPO};
+    	return new PortObject[]{ptPO};
     }
 
     /**
@@ -128,10 +122,10 @@ public class DFM2PMNodeModel extends NodeModel {
     	if(!inSpecs[0].getClass().equals(DFMPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid directly-follows model!");
     	
-    	PetriNetPortObjectSpec pnPOSpec = new PetriNetPortObjectSpec();
+    	
     	ProcessTreePortObjectSpec ptPOSpec = new ProcessTreePortObjectSpec();
     	
-    	return new PortObjectSpec[]{pnPOSpec, ptPOSpec};
+    	return new PortObjectSpec[]{ ptPOSpec};
     }
 
     /**

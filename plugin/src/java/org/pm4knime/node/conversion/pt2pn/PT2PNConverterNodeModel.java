@@ -3,8 +3,6 @@ package org.pm4knime.node.conversion.pt2pn;
 import java.io.File;
 import java.io.IOException;
 
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -16,19 +14,12 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel2;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
 import org.processmining.processtree.ProcessTree;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.InvalidProcessTreeException;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.NotYetImplementedException;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.PetrinetWithMarkings;
 
 /**
  * <code>NodeModel</code> for the "PT2PNConverter" node. It covverts a process tree into Petri net.
@@ -59,14 +50,7 @@ public class PT2PNConverterNodeModel extends NodeModel {
     	ProcessTreePortObject ptPO = (ProcessTreePortObject) inObjects[0];
     	ProcessTree tree = ptPO.getTree();
     	
-    	PetrinetWithMarkings pn = null;
-		try {
-			pn = ProcessTree2Petrinet.convert(tree);
-		} catch (NotYetImplementedException e) {
-			e.printStackTrace();
-		} catch (InvalidProcessTreeException e) {
-			e.printStackTrace();
-		}
+    	ProcessTree2Petrinet.PetrinetWithMarkings pn = ProcessTree2Petrinet.convert(tree, false);
 
 		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet(pn.petrinet, pn.initialMarking,
 				pn.finalMarking);

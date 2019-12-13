@@ -125,52 +125,7 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
         return new PortObjectSpec[]{new PetriNetPortObjectSpec()};
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) {
-         // TODO: 
-    	super.saveSettingsTo(settings);
-    	
-    	m_r2b.saveSettingsTo(settings);
-    	m_dependency.saveSettingsTo(settings); 
-    	m_length1Loop.saveSettingsTo(settings); 
-        m_length2Loop.saveSettingsTo(settings); 
-        m_longDistance.saveSettingsTo(settings);
-        
-        m_allConnected.saveSettingsTo(settings);
-        m_withLT.saveSettingsTo(settings);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        // TODO: generated method stub
-    	super.loadValidatedSettingsFrom(settings);
-		 
-    	
-    	m_r2b.loadSettingsFrom(settings);
-    	m_dependency.loadSettingsFrom(settings); 
-    	m_length1Loop.loadSettingsFrom(settings); 
-        m_length2Loop.loadSettingsFrom(settings); 
-        m_longDistance.loadSettingsFrom(settings);
-        
-        m_allConnected.loadSettingsFrom(settings);
-        m_withLT.loadSettingsFrom(settings);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-    	super.validateSettings(settings);
-    }
-
+   
 	@Override
 	public PortObject[] getInternalPortObjects() {
 		// TODO Auto-generated method stub
@@ -182,6 +137,36 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
 		// TODO here is no use from portObjects, because what we need is the HNet, and we can't serialize it!!
 		// we can't save it from the portObject
 		
+	}
+
+	@Override
+	protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
+		m_r2b.saveSettingsTo(settings);
+    	m_dependency.saveSettingsTo(settings); 
+    	m_length1Loop.saveSettingsTo(settings); 
+        m_length2Loop.saveSettingsTo(settings); 
+        m_longDistance.saveSettingsTo(settings);
+        
+        m_allConnected.saveSettingsTo(settings);
+        m_withLT.saveSettingsTo(settings);
+	}
+
+	@Override
+	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+		m_r2b.loadSettingsFrom(settings);
+    	m_dependency.loadSettingsFrom(settings); 
+    	m_length1Loop.loadSettingsFrom(settings); 
+        m_length2Loop.loadSettingsFrom(settings); 
+        m_longDistance.loadSettingsFrom(settings);
+        
+        m_allConnected.loadSettingsFrom(settings);
+        m_withLT.loadSettingsFrom(settings);
 	}
      
    

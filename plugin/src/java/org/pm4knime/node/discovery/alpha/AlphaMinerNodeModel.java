@@ -1,26 +1,16 @@
 package org.pm4knime.node.discovery.alpha;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Set;
 
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.port.PortTypeRegistry;
-import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
@@ -94,19 +84,24 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 		return new PortObjectSpec[] { pnSpec };
 	}
 
+
 	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) {
-		super.saveSettingsTo(settings);
-		
+	protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
+		// TODO Auto-generated method stub
 		m_variant.saveSettingsTo(settings);
 	}
 
-	
+
 	@Override
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO Auto-generated method stub
-		super.loadValidatedSettingsFrom(settings);
 		
+	}
+
+
+	@Override
+	protected void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+		// TODO Auto-generated method stub
 		m_variant.loadSettingsFrom(settings);
 	}
 
