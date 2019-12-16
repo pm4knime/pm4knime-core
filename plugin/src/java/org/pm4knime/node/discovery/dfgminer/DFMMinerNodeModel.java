@@ -61,6 +61,7 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 		DFMMiningParameters params = createParameter();
 		DirectlyFollowsModel dfm = DFMMiner.mine(log, params, null);
 
+		
 		DFMPortObject dfmPO = new DFMPortObject(dfm);
 		logger.info("End:  DFM Miner");
 		return dfmPO;

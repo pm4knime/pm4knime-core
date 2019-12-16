@@ -3,9 +3,6 @@ package org.pm4knime.node.conversion.table2log;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -16,7 +13,6 @@ import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentColumnFilter;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
@@ -24,22 +20,33 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  * <code>NodeDialog</code> for the "CVS2XLogConverter" node.
  * 
  * @author Kefang Ding
+ * @Modification 13 Dec 2019, changes include :
+ *  -- dispose the attributes choices panel, but need to distinguish the trace attributes and event attributes?? 
+ *  That's why I have added all the attributes there!! to choose. 
+ *  ===> final decision: no need to change this panel
+ *  -- set specific attributes for the event log!! 
+ *    ++ caseID column, we need to define it. Else, I'd like to say no... there is always the attributes called concept:name
+ *    which is used to show the event logs there
+ *    ++ with lifecycle:transition
+ *      -- yes, choose the column for value and the time stamp for it!!  Automatically to add it in the model.
+ *      -- no, choose the complete time stamp but without assign the lifecycle: transition.
+ *  Choose with lifecycle, then automatically the column choice is enabled, after this, choose the timestamp and its format!!
+ *  
+ *  // do two line, one to choose if with time stamp, the other for timestamp
  */
 public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
 
 	// here we have optional item, but now just this two
 	private List<String> m_possibleColumns ;
-	private SettingsModelString m_caseID, m_eventID ;
+	private SettingsModelString m_caseID,  m_eventClass;
 	
-	private SettingsModelString m_startTime, m_completeTime;
-	private SettingsModelString m_sFormat, m_cFormat;
-	private SettingsModelBoolean m_withSTime;
+	private SettingsModelString m_lifecycleName, m_timeStamp,  m_tsFormat;
 	private SettingsModelFilterString m_traceAttrSet , m_eventAttrSet;
 	Table2XLogConfigModel config;
 	
-	DialogComponentStringSelection caseIDComp, eventIDComp, sTimeComp, cTimeComp; 
-	DialogComponentBoolean withSTimeComp;
-	DialogComponentString sFormatComp, cFormatComp;
+	DialogComponentStringSelection caseIDComp, eventClassComp, timeStampComp, lifecycleNameComp; 
+	DialogComponentBoolean withLifecycleComp;
+	DialogComponentString tsFormatComp;
 	DialogComponentColumnFilter m_traceAttrFilterComp, m_eventAttrFilterComp;
     /**
      * New pane for configuring the CVS2XLogConverter node.
@@ -61,47 +68,35 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     			"Choose CaseID Column", m_possibleColumns);
     	addDialogComponent(caseIDComp);
     	
+    	
     	// add eventID choose to the panel
-    	m_eventID = config.getMEventID();
-    	eventIDComp = new DialogComponentStringSelection(m_eventID, 
-    			"Choose EventID Column", m_possibleColumns);
-    	addDialogComponent(eventIDComp);
+    	m_eventClass = config.getMEventClass();
+    	eventClassComp = new DialogComponentStringSelection(m_eventClass, 
+    			"Choose Eventclass Column", m_possibleColumns);
+    	addDialogComponent(eventClassComp);
     	
     	
-        this.setHorizontalPlacement(true);
-        // complete time choose 
-    	m_completeTime = config.getMCompleteTime();
-    	cTimeComp = new DialogComponentStringSelection(m_completeTime, 
-    			"Choose Complete Time Column", m_possibleColumns);
-    	addDialogComponent(cTimeComp);
-    	// set the format to change string to date format
-    	m_cFormat = config.getMCFormat();
-    	cFormatComp = new DialogComponentString(m_cFormat, "Date format: ");
-    	addDialogComponent(cFormatComp);
-    	this.setHorizontalPlacement(false);
-    		
-    	// start time choice but as an option
-    	m_withSTime = config.getMWithSTime();
-    	withSTimeComp = new DialogComponentBoolean(m_withSTime, "With Start Time");
-    	addDialogComponent(withSTimeComp);
-    	
-    	
-    	this.setHorizontalPlacement(true);
-    	m_startTime = config.getMStartTime();
-    	m_startTime.setEnabled(m_withSTime.getBooleanValue());
-    	sTimeComp = new DialogComponentStringSelection(m_startTime, 
-    			"Choose Start Time Column", m_possibleColumns);
-    	
-    	addDialogComponent(sTimeComp);
-    	// set the format to change string to date format
-    	m_sFormat = config.getMSFormat();
-    	
-        sFormatComp = new DialogComponentString(m_sFormat, "Date format: ");
-        m_sFormat.setEnabled(m_withSTime.getBooleanValue());
-        addDialogComponent(sFormatComp);
-        this.setHorizontalPlacement(false);
+    	// @modify 16 Dec 2019: to add one option to choose if there is lifecycle attribute enable with checkbox
+    	// if the checkbox is enabled, then choose one column to set the lifecycle transition
+    	// after this, choose the columns for time annd format
+    	// add life cycle component choice
+    	// add eventID choose to the panel
+    	// optional choices for them. They can be empty there
+    	m_lifecycleName = config.getMLifecycle();
+    	lifecycleNameComp = new DialogComponentStringSelection(m_lifecycleName, "Life Cycle", m_possibleColumns);
+    	addDialogComponent(lifecycleNameComp);
         
+        // in default, it is the complete time, but we don't assign it there until we have the clear lifecycle choose
+    	m_timeStamp = config.getMTimeStamp();
+    	timeStampComp = new DialogComponentStringSelection(m_timeStamp, 
+    			"Choose Time Stamp Column", m_possibleColumns);
     	
+    	addDialogComponent(timeStampComp);
+    	// set the format to change string to date format
+    	m_tsFormat = config.getMTSFormat();
+        tsFormatComp = new DialogComponentString(m_tsFormat, "Date format: ");
+        addDialogComponent(tsFormatComp);
+        
     	// here we set another panel to set attributes for trace or events
         createNewTab("Choose attributes set");
         createNewGroup("Choose Columns as Trace Attributes: ");
@@ -118,17 +113,6 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     	ecPanel.setConversionConfig(config);
     	addTab("Expert Choice", ecPanel);
     	
-    	m_withSTime.addChangeListener(new ChangeListener() {
-
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			// TODO Auto-generated method stub
-			m_startTime.setEnabled(m_withSTime.getBooleanValue());
-			m_sFormat.setEnabled(m_withSTime.getBooleanValue());
-			
-		}
-  		
-  	});
     }
     
     /**
@@ -146,6 +130,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     @Override
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final DataTableSpec[] specs) throws NotConfigurableException {
+    	// here we should add additional values, if there are here 
     	DataTableSpec spec = (DataTableSpec) specs[0];
     	m_possibleColumns.clear();
     	for(String colName : spec.getColumnNames())
@@ -153,18 +138,22 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     	
     	// here we can set the values for config from the eventID values there.
     	caseIDComp.replaceListItems(m_possibleColumns, m_caseID.getStringValue());
-    	eventIDComp.replaceListItems(m_possibleColumns, m_eventID.getStringValue());
-    	sTimeComp.replaceListItems(m_possibleColumns, m_startTime.getStringValue());
-    	cTimeComp.replaceListItems(m_possibleColumns, m_completeTime.getStringValue());
+    	eventClassComp.replaceListItems(m_possibleColumns, m_eventClass.getStringValue());
+    	timeStampComp.replaceListItems(m_possibleColumns, m_timeStamp.getStringValue());
     	
     	m_traceAttrSet.setIncludeList(m_possibleColumns);
     	m_eventAttrSet.setIncludeList(m_possibleColumns);
+    	
+    	
+    	// add empty for their choices!!
+    	m_possibleColumns.add(Table2XLogConfigModel.CFG_NO_OPTION);
+//    	eventIDComp.replaceListItems(m_possibleColumns, m_eventID.getStringValue());
+    	lifecycleNameComp.replaceListItems(m_possibleColumns, m_lifecycleName.getStringValue());
     	
 		try {
 			// separate reason is that I want to simplify the codes for other item;
 			// but one thing is that we summary some model values into config
 			// make it work at first, then improve it later
-
 			config.loadSettings(settings);
 		} catch (InvalidSettingsException e) {
 			// TODO Auto-generated catch block
@@ -180,10 +169,6 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     @Override
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
-    	// here we assign the m_possibleColumns values for option?? Not really, let us check
-    	// System.out.println("possible columns length: " + m_possibleColumns.size());
-    	// how to save the settings to the whole config?? we create the ConfigModel, 
-    	// but in default, how to do it??
     	config.saveSettings(settings);
     }
     

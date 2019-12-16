@@ -41,6 +41,7 @@ import org.processmining.log.utils.XUtils;
  * @author kefang-pads
  * @reference org.processmining.log.csvimport.handler.XESConversionHandlerImpl
  * @modify reason: add trace and event attribute sets. So we can assign them in category
+ * @modify 16 Dec 2019. To change the model to add lifecycle transition for building event log.  
  */
 public class ToXLogConverter {
 
@@ -53,7 +54,8 @@ public class ToXLogConverter {
 	
 	private XEvent currentEvent = null;
 	private XEvent currentStartEvent;
-	private int instanceCounter = 0;
+	// need to check if we have the available values for it. But else, we don't need here
+//	private int instanceCounter = 0;
 	
 	// save trace attributes set
 	private Map<String, DataCell> traceAttrMap = new HashMap<String, DataCell>();
@@ -83,27 +85,28 @@ public class ToXLogConverter {
 		boolean[] traceColVisited = new boolean[traceColIndices.length];
 		boolean[] eventColVisited = new boolean[eventColIndices.length];
 		
-		int caseIDIdx = -1, eventIDIdx = -1, cTimeIdx = -1, sTimeIdx = -1;
+		int caseIDIdx = -1, eventClassIdx, tsIdx = -1;
 		
 		caseIDIdx = traceColumns.indexOf(config.getMCaseID().getStringValue());
-		eventIDIdx = eventColumns.indexOf(config.getMEventID().getStringValue());
-		cTimeIdx = eventColumns.indexOf(config.getMCompleteTime().getStringValue());
+		eventClassIdx = eventColumns.indexOf(config.getMEventClass().getStringValue());
+		// complete time the time stamp here in default
+		tsIdx = eventColumns.indexOf(config.getMTimeStamp().getStringValue());
+		String tsFormat = config.getMTSFormat().getStringValue();
 		
+		// optional for lifecycle column, but there is no need to specify the event ID for it!!  Lifecycle is useful!!
+		boolean withLifecycle = false; 
+		int  lifecycleIdx = -1;
+		if(!config.getMLifecycle().getStringValue().equals(Table2XLogConfigModel.CFG_NO_OPTION)) {
+			withLifecycle = true;
+			lifecycleIdx = eventColumns.indexOf(config.getMLifecycle().getStringValue());
+		}
 		
 		traceColVisited[caseIDIdx] = true;
-		eventColVisited[eventIDIdx] =true;
-		eventColVisited[cTimeIdx] =true;
-		if(config.isShouldAddStartEventAttributes()) {
-			sTimeIdx = eventColumns.indexOf(config.getMCompleteTime().getStringValue());
-			eventColVisited[sTimeIdx] = true;
-		}
+		eventColVisited[eventClassIdx] =true;
+		eventColVisited[tsIdx] =true;
+		
+		
 		String currentCaseID = "-1", newCaseID="";
-		
-		String cFormat = config.getMCFormat().getStringValue();
-		String sFormat = null;
-		if(config.isShouldAddStartEventAttributes())
-			sFormat = config.getMSFormat().getStringValue();
-		
 		
 		String logName = csvData.getSpec().getName();
 		startLog(logName + " event log");
@@ -124,7 +127,6 @@ public class ToXLogConverter {
 			}
 			
 			// get trace attributes 
-			
 			for(int tIdx = 0; tIdx< traceColIndices.length ; tIdx++) {
 				if(traceColVisited[tIdx])
 					continue; 
@@ -143,30 +145,26 @@ public class ToXLogConverter {
 
 			// deal with new event class, it can be in discrete value
 			String eventClass = null;
-			DataCell eventIDData = row.getCell(eventColIndices[eventIDIdx]);
-			if(eventIDData.getType().equals(IntCell.TYPE)) {
-				eventClass = ((IntCell)eventIDData).getIntValue() + "";
-			}else if(eventIDData.getType().equals(StringCell.TYPE)) {
-				eventClass = ((StringCell)eventIDData).getStringValue();
-			}
-				
-			// read time stamp, one way, to convert due to the use of DataTable, 
-			// another way, to convert them one by one
+			DataCell eventClassData = row.getCell(eventColIndices[eventClassIdx]);
+			eventClass = ((StringCell)eventClassData).getStringValue();
 			
-			// if we don't use the original convertion in knime, it should work
+				
 			try {
 				// if the values there are also like this, what to do?? 
 				// String cTime = ((StringCell) row.getCell(eventColIndices[cTimeIdx])).getStringValue();
-				String cTime = row.getCell(eventColIndices[cTimeIdx]).toString();
-				Date cTimeDate = convertString2Date(cFormat, cTime);
-				Date sTimeDate = null;
-				if(config.isShouldAddStartEventAttributes()) {
-					sTimeIdx = eventColumns.indexOf(config.getMCompleteTime().getStringValue());
-					// String sTime = ((StringCell) row.getCell(eventColIndices[sTimeIdx])).getStringValue();// need to make sure the format same??
-					String sTime = row.getCell(eventColIndices[sTimeIdx]).toString();
-					sTimeDate = convertString2Date(sFormat, sTime);
+				String cTime = row.getCell(eventColIndices[tsIdx]).toString();
+				Date timeStamp = convertString2Date(tsFormat, cTime);
+				
+				// here we check the lifecycle transition and assign the values to it!! 
+				String lifecycle = null ;
+				if(withLifecycle) {
+					// here we need to get the value from the column
+					DataCell lifecycleData = row.getCell(eventColIndices[lifecycleIdx]);
+					lifecycle = ((StringCell)lifecycleData).getStringValue();
 				}
-				startEvent(eventClass, cTimeDate, sTimeDate);
+				
+				
+				startEvent(eventClass, timeStamp, lifecycle);
 				
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -189,10 +187,6 @@ public class ToXLogConverter {
 		// Close last trace
 		endTrace(currentCaseID + "");	
 		
-
-		// TODO set the log attributes according to the config values 
-		// what we need is the concept:name for the trace attributes, also the ones for event attributes
-		// additional attributes and classifier ones
 		endLog();
 	}
 	
@@ -306,52 +300,24 @@ public class ToXLogConverter {
 		log.add(currentTrace);
 	}
 	
-	public void startEvent(String eventClass, Date completionTime, Date startTime) {
+	public void startEvent(String eventClass, Date timeStamp, String lifecycle) {
 		if (config.getErrorHandlingMode() == CSVErrorHandlingMode.OMIT_EVENT_ON_ERROR) {
 			// Include the other events in that trace
 			errorDetected = false;
 		}
 		
 		currentEvent = factory.createEvent();
-		if (eventClass != null) {
-			assignName(factory, currentEvent, eventClass);
-		}
+		
+		assignName(factory, currentEvent, eventClass);
+		assignTimestamp(factory, currentEvent, timeStamp);
+		
+//		if(instance!=null)
+//			assignInstance(factory, currentEvent, instance);
+		// just add the time stamp with the corresponding lifecycle
+		if(lifecycle != null) {
+			// find the corresponding conversion for the lifecycle to standard model change!
+			assignLifecycleTransition(factory, currentEvent, lifecycle);
 
-		if (startTime == null && completionTime == null) {
-			// Both times are unknown only create an event assuming it is the completion event
-			assignLifecycleTransition(factory, currentEvent, XLifecycleExtension.StandardModel.COMPLETE);
-		} else if (startTime != null && completionTime != null) {
-			// Both start and complete are present
-			String instance = String.valueOf((instanceCounter++));
-
-			// Assign attribute for complete event (currentEvent)			
-			assignTimestamp(factory, currentEvent, completionTime);
-			assignInstance(factory, currentEvent, instance);
-			assignLifecycleTransition(factory, currentEvent, XLifecycleExtension.StandardModel.COMPLETE);
-
-			// Add additional start event
-			currentStartEvent = factory.createEvent();
-			if (eventClass != null) {
-				assignName(factory, currentStartEvent, eventClass);
-			}
-			assignTimestamp(factory, currentStartEvent, startTime);
-			assignInstance(factory, currentStartEvent, instance);
-			assignLifecycleTransition(factory, currentStartEvent, XLifecycleExtension.StandardModel.START);
-
-		} else {
-			// Either start or complete are present
-			if (completionTime != null) {
-				// Only create Complete
-				assignTimestamp(factory, currentEvent, completionTime);
-				assignLifecycleTransition(factory, currentEvent, XLifecycleExtension.StandardModel.COMPLETE);
-			} else if (startTime != null) {
-				// Only create Start
-				assignTimestamp(factory, currentEvent, startTime);
-				assignLifecycleTransition(factory, currentEvent, XLifecycleExtension.StandardModel.START);
-			} else {
-				throw new IllegalStateException(
-						"Both start and complete time are NULL. This should never be the case here!");
-			}
 		}
 	}
 
@@ -380,11 +346,24 @@ public class ToXLogConverter {
 		XUtils.putAttribute(a, value);
 	}
 
-	private static void assignLifecycleTransition(XFactory factory, XAttributable a, StandardModel lifecycle) {
-		assignAttribute(a, factory.createAttributeLiteral(XLifecycleExtension.KEY_TRANSITION, lifecycle.getEncoding(),
+	private static void assignLifecycleTransition(XFactory factory, XAttributable a, String lifecycle) {
+		StandardModel lcModel = StandardModel.valueOf(lifecycle);
+		assignAttribute(a, factory.createAttributeLiteral(XLifecycleExtension.KEY_TRANSITION, lcModel.getEncoding(),
 				XLifecycleExtension.instance()));
 	}
+	
 
+	private static void assignName(XFactory factory, XAttributable a, String value) {
+		// here if we assign it as the concept:name or as the activity?? If at end, all the 
+		assignAttribute(a,
+				factory.createAttributeLiteral(XConceptExtension.KEY_NAME, value, XConceptExtension.instance()));
+	}
+
+	// assign instance and assign name are different behaviour!! But what we want to have is the event class!!
+	// if there is one event ID available, we can assign it, but it can't be as the main function.
+	// event name is required, but the instance is not so!! Then what we need to do is 
+	// if there is no choices for the event ID and no choices for the lifecycle, we think they don't have such attributes here!!
+	// instance Id, we can assign them to number if it is a need. But actually not in need??
 	private static void assignInstance(XFactory factory, XAttributable a, String value) {
 		assignAttribute(a,
 				factory.createAttributeLiteral(XConceptExtension.KEY_INSTANCE, value, XConceptExtension.instance()));
@@ -393,11 +372,6 @@ public class ToXLogConverter {
 	private static void assignTimestamp(XFactory factory, XAttributable a, Date value) {
 		assignAttribute(a,
 				factory.createAttributeTimestamp(XTimeExtension.KEY_TIMESTAMP, value, XTimeExtension.instance()));
-	}
-
-	private static void assignName(XFactory factory, XAttributable a, String value) {
-		assignAttribute(a,
-				factory.createAttributeLiteral(XConceptExtension.KEY_NAME, value, XConceptExtension.instance()));
 	}
 	
 	// convert string to DateTime there, one easy solution is to delete the zone in data and time
