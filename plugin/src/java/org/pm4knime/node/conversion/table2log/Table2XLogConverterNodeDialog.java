@@ -15,6 +15,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 
 /**
  * <code>NodeDialog</code> for the "CVS2XLogConverter" node.
@@ -42,7 +43,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
 	
 	private SettingsModelString m_lifecycleName, m_timeStamp,  m_tsFormat;
 	private SettingsModelFilterString m_traceAttrSet , m_eventAttrSet;
-	Table2XLogConfigModel config;
+	SMTable2XLogConfig config;
 	
 	DialogComponentStringSelection caseIDComp, eventClassComp, timeStampComp, lifecycleNameComp; 
 	DialogComponentBoolean withLifecycleComp;
@@ -60,8 +61,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     	// if there is no start time or complete time, how to set them there is not chosen then??
     	
     	// another panel is about the advanced configuration here
-    	config = new Table2XLogConfigModel();
-    	// config = CSV2XLogConverterNodeModel.m_config;
+    	config = new SMTable2XLogConfig(Table2XLogConverterNodeModel.CFG_KEY_CONFIG);
     	// add caseID choose to the panel
     	m_caseID = config.getMCaseID();
     	caseIDComp = new DialogComponentStringSelection(m_caseID, 
@@ -130,7 +130,10 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     @Override
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final DataTableSpec[] specs) throws NotConfigurableException {
-    	// here we should add additional values, if there are here 
+    	// If at first, we already add the settings here, we need to load the saved value at first, and then check the values there
+    	// check if it is after reset, or it is the first time to import into the workflow??
+    	
+    	
     	DataTableSpec spec = (DataTableSpec) specs[0];
     	m_possibleColumns.clear();
     	for(String colName : spec.getColumnNames())
@@ -154,7 +157,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
 			// separate reason is that I want to simplify the codes for other item;
 			// but one thing is that we summary some model values into config
 			// make it work at first, then improve it later
-			config.loadSettings(settings);
+			config.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -169,7 +172,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     @Override
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
-    	config.saveSettings(settings);
+    	config.saveSettingsTo(settings);
     }
     
 	

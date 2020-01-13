@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
+import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.processmining.framework.util.ui.widgets.ProMComboBox;
 import org.processmining.log.csvimport.config.CSVConversionConfig.CSVEmptyCellHandlingMode;
 import org.processmining.log.csvimport.config.CSVConversionConfig.CSVErrorHandlingMode;
@@ -84,7 +85,7 @@ public class ExpertConfigPanel extends JPanel{
 	private final ProMComboBox<CSVEmptyCellHandlingMode> emptyCellHandlingModeCbx;
 	private final ProMComboBox<CSVErrorHandlingMode> errorHandlingModeCbx;
 
-	private Table2XLogConfigModel conversionConfig;
+	private SMTable2XLogConfig conversionConfig;
 	
 	
 	public ExpertConfigPanel() {
@@ -214,12 +215,12 @@ public class ExpertConfigPanel extends JPanel{
 		}
 	}
 
-	public Table2XLogConfigModel getConversionConfig() {
+	public SMTable2XLogConfig getConversionConfig() {
 		return conversionConfig;
 	}
 
-	public void setConversionConfig(Table2XLogConfigModel conversionConfig) {
-		this.conversionConfig = conversionConfig;
+	public void setConversionConfig(SMTable2XLogConfig config) {
+		this.conversionConfig = config;
 	}
 	
 	private JLabel createLabel(String caption, String description) {

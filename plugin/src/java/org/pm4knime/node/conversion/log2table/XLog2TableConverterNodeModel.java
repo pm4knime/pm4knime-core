@@ -160,6 +160,12 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     @Override
     protected void reset() {
         // TODO: generated method stub
+    	m_traceAttrSet.setIncludeList(new String[0]);
+    	m_traceAttrSet.setExcludeList(new String[0]);
+    	
+
+    	m_eventAttrSet.setIncludeList(new String[0]);
+    	m_eventAttrSet.setExcludeList(new String[0]);
     }
 
     /**

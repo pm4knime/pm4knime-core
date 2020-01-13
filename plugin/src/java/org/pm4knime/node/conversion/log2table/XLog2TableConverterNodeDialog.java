@@ -23,7 +23,7 @@ public class XLog2TableConverterNodeDialog extends DefaultNodeSettingsPane {
 
 	private SettingsModelFilterString m_traceAttrSet, m_eventAttrSet;
     /**
-     * New pane for configuring the Xlog2CSVConverter node.
+     * New pane for configuring the Xlog2TableConverter node.
      */
     protected XLog2TableConverterNodeDialog() {
     	// we should get the attribute set from the spec
@@ -52,6 +52,7 @@ public class XLog2TableConverterNodeDialog extends DefaultNodeSettingsPane {
     	// we can check the m_traceAttrSet situations. 
     	// in default, it can load the values from save and other stuff, but when it is 
     	// initialized, there is no values here, so we get values from PortObjectSpec
+    	
     	if(m_traceAttrSet.getIncludeList().isEmpty() && m_traceAttrSet.getExcludeList().isEmpty())
     		if(m_eventAttrSet.getIncludeList().isEmpty() && m_eventAttrSet.getExcludeList().isEmpty()) {
     	

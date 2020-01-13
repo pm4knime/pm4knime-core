@@ -33,7 +33,7 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="CSV File">A file read from CSV Reader</inPort>
+        <inPort index="0" name="Data Table">A Data Table in KNIME</inPort>
         <!-- possibly more input ports here-->
         <outPort index="0" name="Event Log">The event log converted from file. </outPort>
         <!-- possibly more output ports here-->

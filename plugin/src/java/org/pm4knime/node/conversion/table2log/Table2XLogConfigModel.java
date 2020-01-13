@@ -52,6 +52,8 @@ public class Table2XLogConfigModel {
 	public static final String CFG_KEY_TS_FORMAT = "Time stamp format";
 	public static final String CFG_NO_OPTION = "NO AVAILABLE";
 
+	private String configName;
+	
 	private SettingsModelString m_caseID = new SettingsModelString(CFG_KEY_CASEID, "CaseID");
 	private SettingsModelString m_eventClass = new SettingsModelString(CFG_KEY_EVENTCLASS, "Event Class");
 	
@@ -76,6 +78,9 @@ public class Table2XLogConfigModel {
 	private CSVErrorHandlingMode errorHandlingMode = CSVErrorHandlingMode.OMIT_TRACE_ON_ERROR;
 	private CSVEmptyCellHandlingMode emptyCellHandlingMode = CSVEmptyCellHandlingMode.SPARSE;
 	
+	public Table2XLogConfigModel(String configName) {
+		
+	}
 
 	public void setErrorHandlingMode(CSVErrorHandlingMode errorHandlingMode) {
 		// TODO Auto-generated method stub
@@ -221,5 +226,11 @@ public class Table2XLogConfigModel {
 	public SettingsModelString getMEventClass() {
 		// TODO Auto-generated method stub
 		return m_eventClass;
+	}
+
+	public void clear() {
+		// TODO set the included list to be cleared to adapt to the new connection
+		
+		
 	}
 }

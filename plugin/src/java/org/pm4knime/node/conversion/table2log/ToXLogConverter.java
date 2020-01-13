@@ -14,7 +14,6 @@ import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
 import org.deckfour.xes.extension.std.XOrganizationalExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
-import org.deckfour.xes.extension.std.XLifecycleExtension.StandardModel;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XAttributable;
@@ -31,6 +30,7 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
+import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.log.csvimport.config.CSVConversionConfig.CSVErrorHandlingMode;
@@ -60,11 +60,11 @@ public class ToXLogConverter {
 	// save trace attributes set
 	private Map<String, DataCell> traceAttrMap = new HashMap<String, DataCell>();
 	
-	Table2XLogConfigModel config = null;
+	SMTable2XLogConfig config = null;
 	
-	public void setConfig(Table2XLogConfigModel config) {
-		this.config = config;
-		factory = config.getFactory();
+	public void setConfig(SMTable2XLogConfig m_config) {
+		this.config = m_config;
+		factory = m_config.getFactory();
 	}
 	
 	
@@ -73,7 +73,7 @@ public class ToXLogConverter {
 	 * so we know which one is which event?
 	 * @param logName
 	 */
-	public void convertCVS2Log(BufferedDataTable csvData) {
+	public void convertDataTable2Log(BufferedDataTable csvData) {
 		
 		// get trace and event attribute available sets here 
 		List<String> traceColumns= config.getMTraceAttrSet().getIncludeList();
@@ -99,6 +99,7 @@ public class ToXLogConverter {
 		if(!config.getMLifecycle().getStringValue().equals(Table2XLogConfigModel.CFG_NO_OPTION)) {
 			withLifecycle = true;
 			lifecycleIdx = eventColumns.indexOf(config.getMLifecycle().getStringValue());
+			eventColVisited[lifecycleIdx] =  true;
 		}
 		
 		traceColVisited[caseIDIdx] = true;
@@ -161,6 +162,7 @@ public class ToXLogConverter {
 					// here we need to get the value from the column
 					DataCell lifecycleData = row.getCell(eventColIndices[lifecycleIdx]);
 					lifecycle = ((StringCell)lifecycleData).getStringValue();
+					
 				}
 				
 				
@@ -317,7 +319,6 @@ public class ToXLogConverter {
 		if(lifecycle != null) {
 			// find the corresponding conversion for the lifecycle to standard model change!
 			assignLifecycleTransition(factory, currentEvent, lifecycle);
-
 		}
 	}
 
@@ -347,8 +348,15 @@ public class ToXLogConverter {
 	}
 
 	private static void assignLifecycleTransition(XFactory factory, XAttributable a, String lifecycle) {
-		StandardModel lcModel = StandardModel.valueOf(lifecycle);
-		assignAttribute(a, factory.createAttributeLiteral(XLifecycleExtension.KEY_TRANSITION, lcModel.getEncoding(),
+		// here we don't use the standard model implictly. How to get the transition value??
+		// StandardModel lcModel = StandardModel.valueOf(lifecycle);
+		// this is one way, another way, we just assign the lifecycle transition directly as one attribute
+//		XesLifecycleTransition lfTransition = XesLifecycleTransition.valueOf(lifecycle);
+//		
+//		assignAttribute(a, factory.createAttributeLiteral(XLifecycleExtension.KEY_TRANSITION, lfTransition.getTransition(),
+//				XLifecycleExtension.instance()));
+		
+		assignAttribute(a, factory.createAttributeLiteral(XLifecycleExtension.KEY_TRANSITION, lifecycle,
 				XLifecycleExtension.instance()));
 	}
 	

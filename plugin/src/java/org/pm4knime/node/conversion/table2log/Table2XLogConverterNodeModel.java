@@ -22,6 +22,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 
 /**
  * <code>NodeModel</code> for the "CVS2XLogConverter" node. This node is coded without ProM plugin. 
@@ -45,7 +46,8 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     
 	private static final NodeLogger logger = NodeLogger.getLogger(Table2XLogConverterNodeModel.class);
 	// here we have optional item, but now just this two
-	static Table2XLogConfigModel m_config =  new Table2XLogConfigModel();
+	public static final String CFG_KEY_CONFIG = "Table to event log conveter config";
+	static SMTable2XLogConfig m_config =  new SMTable2XLogConfig(CFG_KEY_CONFIG);
 	XLogPortObject logPO;
     /**
      * Constructor for the node model.
@@ -67,7 +69,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
         // TODO: accept input DataTable, use the configuration columnNames, 
     	// convert the data into XLog
     	// how to check the type for this?
-    	BufferedDataTable csvData = (BufferedDataTable) inData[0];
+    	BufferedDataTable tData = (BufferedDataTable) inData[0];
     	
     	// sort the table w.r.t. caseID column
     	List<String> m_inclList = new ArrayList<String>();
@@ -77,7 +79,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	boolean m_missingToEnd = false;
     	boolean m_sortInMemory = false;
     	BufferedDataTableSorter sorter = new BufferedDataTableSorter(
-    			csvData, m_inclList, m_sortOrder, m_missingToEnd);
+    			tData, m_inclList, m_sortOrder, m_missingToEnd);
     	
         sorter.setSortInMemory(m_sortInMemory);
         BufferedDataTable sortedTable = sorter.sort(exec);
@@ -88,7 +90,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	ToXLogConverter handler = new ToXLogConverter();
     	handler.setConfig(m_config);
     	
-    	handler.convertCVS2Log(sortedTable);
+    	handler.convertDataTable2Log(sortedTable);
     	XLog log = handler.getXLog();
     	logPO = new XLogPortObject(log);
     	
@@ -102,6 +104,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     @Override
     protected void reset() {
         // TODO: generated method stub
+    	
     }
 
     /**
@@ -127,7 +130,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
          // TODO: generated method stub
     	// we can add additional info into settings
     	// settings.addStringArray("Column Names", m_possibleColumns);
-    	m_config.saveSettings(settings);
+    	m_config.saveSettingsTo(settings);
     }
 
     /**
@@ -142,9 +145,8 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	// not necessary if we have m_caseID and m_eventID already
     	// m_possibleColumns = settings.getStringArray("Column Names");
     	
-    	m_config.loadSettings(settings);
+    	m_config.loadSettingsFrom(settings);
     	
-    	System.out.println(m_config.getErrorHandlingMode());
     }
 
     /**

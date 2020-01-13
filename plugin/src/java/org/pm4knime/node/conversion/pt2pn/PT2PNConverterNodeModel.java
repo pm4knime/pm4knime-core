@@ -22,7 +22,7 @@ import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
 import org.processmining.processtree.ProcessTree;
 
 /**
- * <code>NodeModel</code> for the "PT2PNConverter" node. It covverts a process tree into Petri net.
+ * <code>NodeModel</code> for the "PT2PNConverter" node. It converts a process tree into Petri net.
  * Since the conversion is guaranteed to work, so no need of NodeDialog. 
  *
  * @author Kefang Ding

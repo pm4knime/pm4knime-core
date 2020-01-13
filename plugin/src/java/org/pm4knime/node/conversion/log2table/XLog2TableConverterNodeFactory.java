@@ -6,7 +6,7 @@ import org.knime.core.node.NodeView;
 
 /**
  * This is an example implementation of the node factory of the
- * "Xlog2CSVConverter" node.
+ * "Xlog2TableConverter" node.
  *
  * @author Kefang
  */
