@@ -27,6 +27,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.XLogPortObject;
+import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 import org.pm4knime.util.PetriNetUtil;
@@ -45,6 +46,10 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 	protected JPanel m_compositePanel;
 	protected SMAlignmentReplayParameterWithCT m_parameter;
 	String[] strategyList = ReplayerUtil.strategyList;
+	
+	DialogComponentStringSelection m_classifierComp;
+	
+	XLogPortObject logPO;
     /**
      * New pane for configuring the PNReplayer node.
      */
@@ -114,12 +119,31 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 	}
     
     protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
-    	List<String> classifierNames  =  XLogUtil.getECNames(DefaultPNReplayerNodeModel.classifierList);
+    	// TODO : complete the codes with classifer names
     	
-    	parameter.getMClassifierName().setStringValue(classifierNames.get(0));
-    	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
-    			m_parameter.getMClassifierName(), "Select Classifier Name", classifierNames );
+    	m_classifierComp = new DialogComponentStringSelection(
+    			m_parameter.getMClassifierName(), "Select Classifier Name", new String[ ]{""} );
     	addDialogComponent(m_classifierComp);
+    	// if the parameter changes, the log activity should changes too.
+    	m_parameter.getMClassifierName().addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO it implements the update if we change the event classifier in choice
+				SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+				if(logPO != null && tmp.isMWithTM()) {
+					XLog log = logPO.getLog();
+					// here the value is still the old value, 
+					XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, 
+							m_parameter.getMClassifierName().getStringValue());
+					
+					List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
+					tmp.setCostTM(ecNames, 0);
+				}
+			}
+    		
+    	});
+    	
     	
     	parameter.getMStrategy().setStringValue(strategyList[0]);
     	DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(
@@ -148,49 +172,71 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 			final PortObject[] input) throws NotConfigurableException {
     	// not know the situation of m_parameter.loadSettingsFrom, what can we get?? 
     	// what's the values now in settings?? how to cooperate the values from PortObjectInput and current settings?
-    	
-    	// 1. settings are from the saved workflow, we can get the settings there
-    	// 2. settings is empty, so we don't touch it 
-    	// check the values in settings
-    	
     	try {
 			m_parameter.loadSettingsFrom(settings);
+//			
+//			tmp.loadSettingsFrom(settings);
 			
-		} catch (InvalidSettingsException e) {
-			// TODO if there is not with TM, we set it from the input PortObject
-			SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
-			
-			if(!tmp.isMWithTM()) {
-				if (!(input[DefaultPNReplayerNodeModel.INPORT_LOG] instanceof XLogPortObject))
-					throw new NotConfigurableException("Input is not a valid event log!");
+			String selectedItem = m_parameter.getMClassifierName().getStringValue();
+    		
+			if (!(input[DefaultPNReplayerNodeModel.INPORT_LOG] instanceof XLogPortObject))
+				throw new NotConfigurableException("Input is not a valid event log!");
 
-				if (!(input[DefaultPNReplayerNodeModel.INPORT_PETRINET] instanceof PetriNetPortObject))
-					throw new NotConfigurableException("Input is not a valid Petri net!");
+			if (!(input[DefaultPNReplayerNodeModel.INPORT_PETRINET] instanceof PetriNetPortObject))
+				throw new NotConfigurableException("Input is not a valid Petri net!");
+			
+			logPO = (XLogPortObject) input[DefaultPNReplayerNodeModel.INPORT_LOG];
+			PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerNodeModel.INPORT_PETRINET];
+			
+			XLogPortObjectSpec logSpec = (XLogPortObjectSpec) logPO.getSpec();
+			if(!logSpec.getClassifiersMap().keySet().contains(
+					m_parameter.getMClassifierName().getStringValue())) {
+				// how to find the one with more sense for classifier here??
+				// if it has the concept:name shown there, we choose this one
 				
-				XLogPortObject logPO = (XLogPortObject) input[DefaultPNReplayerNodeModel.INPORT_LOG];
-				PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerNodeModel.INPORT_PETRINET];
+				selectedItem = logSpec.getClassifiersMap().keySet().iterator().next();
+				for(String key :  logSpec.getClassifiersMap().keySet()) {
+					if(key.contains("concept:name")) {
+						selectedItem = key;
+						break;
+					}
+					
+				}
 				
-				XLog log = logPO.getLog();
-				// TODO: different classifier available
-				XEventClassifier eventClassifier = new XEventNameClassifier();
+				m_parameter.getMClassifierName().setStringValue(selectedItem);
+				m_classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), selectedItem);
 				
-				// here, no need to show the dummy event class name here
-//				XEventClass evClassDummy = TesterCCWithCTNodeModel.getDummyEC();
-				List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
-//				ecNames.add(evClassDummy.getId());
-				tmp.setCostTM(ecNames, 0);
 				
-				AcceptingPetriNet anet = netPO.getANet();
-				List<String> tNames = PetriNetUtil.extractTransitionNames(anet.getNet());
-				tmp.setCostTM(tNames, 1);
+				SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter; 
+				if(!tmp.isMWithTM()) {
+					// first time to initialize the value. Else just load all the values, it is enough
+					XLog log = logPO.getLog();
+					XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, selectedItem);
+					// this is neglected because we have now the corresponding settings from classifier
+					List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
+//					ecNames.add(evClassDummy.getId());
+					tmp.setCostTM(ecNames, 0);
+					
+					AcceptingPetriNet anet = netPO.getANet();
+					List<String> tNames = PetriNetUtil.extractTransitionNames(anet.getNet());
+					tmp.setCostTM(tNames, 1);
+					
+					// if only names from transition side are in need, show the transitions names for dialog
+					// no need to refer dummy event classes
+					tmp.setCostTM(tNames, 2);	
+					tmp.setMWithTM(true);
+					
+				}
 				
-				// if only names from transition side are in need, show the transitions names for dialog
-				// no need to refer dummy event classes
-				tmp.setCostTM(tNames, 2);	
-				tmp.setMWithTM(true);
+				
 			}
-		}finally {
-			m_compositePanel.repaint();
+			
+    		
+		} catch (InvalidSettingsException | NullPointerException e) {
+			// TODO if there is not with TM, we set it from the input PortObject
+			e.printStackTrace();
+			throw new NotConfigurableException("Please make sure the connected event log in excution state");
+			
 		}
     	
     }
@@ -202,7 +248,10 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 		m_parameter.saveSettingsTo(settings);
 	}
 
-	
+	/**
+	 * to loadSettingsFrom, if there is data avaiable, then no need to use the PortObjectSpec
+	 * but if there is no data, for example, only configuration step. we don't have it
+	 
 	@Override
 	protected void loadSettingsFrom(final NodeSettingsRO settings,
             final PortObjectSpec[] specs) throws NotConfigurableException {
@@ -213,7 +262,9 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 			e.printStackTrace();
 		}
 	}
-
+	 */
+	
+	
 	/*
 	 * create a cost Table given input: -- default cost Value for all rows -- column
 	 * names -- costTable passed through the NodeModel and JTable
@@ -232,12 +283,15 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		JScrollPane tPane = new JScrollPane(table);
-		if (idx < 1)
-			tPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		else
-			tPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		tPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		
+//		if (idx < 1)
+//			tPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		else
+//			tPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
 		return tPane;
 	}
+	
 }
 

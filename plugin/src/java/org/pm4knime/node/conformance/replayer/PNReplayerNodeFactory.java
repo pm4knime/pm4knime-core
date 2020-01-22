@@ -28,7 +28,7 @@ public class PNReplayerNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 1;
+        return 0;
     }
 
     /**

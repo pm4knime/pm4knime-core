@@ -76,11 +76,12 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 		m_withTM = settings.getBoolean("withTM");
 		if(!m_withTM) {
 			// System.out.println("There is no table model available!");
-			throw new InvalidSettingsException("There is no table model available!");
-		}
-		
-		for (int i = 0; i < CFG_COST_TYPE_NUM; i++) {
-			loadTMFrom(i, settings);
+			System.out.println("There is no table model available!");
+		}else {
+			
+			for (int i = 0; i < CFG_COST_TYPE_NUM; i++) {
+				loadTMFrom(i, settings);
+			}
 		}
 	}
 
@@ -120,7 +121,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 	}
 
 	public void setCostTM(Collection<String> nameList, int idx) {
-		
+		m_costTMs[idx].getDataVector().clear();
 		// if this DataTable is new created, add column  names to it
 		if(m_costTMs[idx].getDataVector().size() < 1) {
 			// TODO : to distinguish the invisible transitions and set its cost to 0 
@@ -132,19 +133,6 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
    					m_costTMs[idx].addRow(new Object[] {name, CFG_DEFAULT_MCOST[idx]});
 			}
 			
-		}else {
-			m_costTMs[idx].getDataVector().clear();
-			int i=0;
-			for(String name : nameList ) {
-				m_costTMs[idx].setValueAt(name, i, 0);
-				if(PetriNetUtil.isTauName(name)) {
-					m_costTMs[idx].setValueAt(0, i, 1);
-					
-				}else {
-   					m_costTMs[idx].setValueAt(CFG_DEFAULT_MCOST[idx], i, 1);
-   				}
-				i++;
-			}
 		}
 		
 	}

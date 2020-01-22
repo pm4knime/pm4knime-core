@@ -2,13 +2,17 @@ package org.pm4knime.node.conformance.replayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -31,6 +35,7 @@ import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
@@ -83,8 +88,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 	protected static final int INPORT_LOG = 0;
 	protected static final int INPORT_PETRINET = 1;
 	
-	static List<XEventClassifier> classifierList = XLogUtil.getECList();
-	
+	// classifierList is assigned from the configure method, and changed with the event log data
+
 	// assign one parameter the same values here 
 	SMAlignmentReplayParameter m_parameter;
 	// it can't belong to this class
@@ -135,9 +140,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	XLog log = logPO.getLog();
     	AcceptingPetriNet anet = netPO.getANet();
     	
-    	
-    	XEventClassifier eventClassifier = XLogUtil.getXEventClassifier(m_parameter.getMClassifierName().getStringValue(), classifierList);
-    	
+    	// here to change the operation on the classifier
+    	XEventClassifier eventClassifier = getEventClassifier(log, m_parameter.getMClassifierName().getStringValue());
     	// mapping is not in performance checker... 
     	// need to set it private
     	// according to the different types strategy there. 
@@ -199,6 +203,27 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 		repResultPO.setSpec(m_rSpec);
     }
     
+ // get the classifier parameters from it 
+ 	public static XEventClassifier getEventClassifier(XLog log, String classifierName) {
+ 		// get the list of classifiers from the event log!!
+ 		
+ 		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
+ 		classifiers.addAll( log.getClassifiers());
+ 		// check the attributes as classifier here //and assign them as the XEventAttributeClassifier
+ 		for(XAttribute eAttr: log.getGlobalEventAttributes()) {
+ 			// create new classifier for the new eAttr here, given the name with prefix for it!!
+ 			XEventClassifier attrClf = new XEventAttributeClassifier(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX + 
+ 					eAttr.getKey(), eAttr.getKey());
+ 			classifiers.add(attrClf);
+ 		}
+ 		
+ 		for(XEventClassifier clf: classifiers) {
+ 			if(clf.name().equals(classifierName))
+ 				return clf;
+ 		}
+     	return null;
+ 	}
+    
     public RepResultPortObject getRepResultPO() {
 		return repResultPO;
 	}
@@ -219,15 +244,30 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
             throws InvalidSettingsException {
     	if (!inSpecs[INPORT_LOG].getClass().equals(XLogPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid event log!");
+    	
 
 		if (!inSpecs[INPORT_PETRINET].getClass().equals(PetriNetPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid Petri net!");
+		
+		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) inSpecs[INPORT_LOG];
+		
+		// logSpec is null when we change the connected event log to another file
+		// the reason behind is the logSpec is created based on the read log data. So here, 
+		// we can give a warning here
+		if(logSpec.getClassifiersMap() == null) {
+			this.setWarningMessage("No event log is read. To continue the configuration, "
+					+ "please read the event log into KNIME"); 
+			
+		}else
+			m_parameter.getClassifierSet().setStringArrayValue(logSpec.getClassifiersMap().keySet().toArray(new String[0]));
+		// here it seems there is no need to update the values here, test it and get the result
 		
 		m_rSpec = new RepResultPortObjectSpec();
 		// one question, how to add the type information here to make them valid at first step??
 		return new PortObjectSpec[]{ m_rSpec};
     }
 
+    
     /**
      * {@inheritDoc}
      */

@@ -143,7 +143,7 @@ public class DialogComponentAttributesFilter extends DialogComponent {
 
 	@Override
 	protected void checkConfigurabilityBeforeLoad(PortObjectSpec[] specs) throws NotConfigurableException {
-		// TODO Auto-generated method stub
+		// TODO check before opening the dialog, how to distinugish it is the first time to load, or second time??
 		
 	}
 

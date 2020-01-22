@@ -17,9 +17,12 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
+import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
 
 public abstract class DefaultMinerNodeModel extends NodeModel {
@@ -29,10 +32,14 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	}
 
 	public static final String CFG_KEY_CLASSIFIER = "Event Classifier";
+	public static final String CFG_KEY_CLASSIFIER_SET = "Event Classifier Set";
 	
 	// set the classifier here , what if there is no explicit classifier there?? What to do then??
 	// we need to use the default ones!! Let us check it and fill it later??
 	SettingsModelString m_classifier =  new SettingsModelString(CFG_KEY_CLASSIFIER, "");
+	// we need a list to store the classifierList for each node. Not as static attributes there
+	SettingsModelStringArray classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
+			new String[0]) ;
 	
 	XLogPortObject logPO = null;
 	
@@ -50,6 +57,35 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 		PortObject pmPO = mine(logPO.getLog());
 		return new PortObject[] { pmPO};
 	}
+	
+	// set the classifierList here to update every time for the new spec 
+	@Override
+	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
+		if (!inSpecs[0].getClass().equals(XLogPortObjectSpec.class))
+			throw new InvalidSettingsException("Input is not a valid Event Log!");
+		
+		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) inSpecs[0];
+		
+		if(logSpec.getClassifiersMap() == null) {
+			// even with more serious result..
+			this.setWarningMessage("No event log is read. To continue the configuration, "
+					+ "please read the event log into KNIME"); 
+			
+		}else {
+			// set the classifierSet values from this method, but it means 
+			// for each configuration, it updates the values..How to adjust the values 
+			// after reloading, it will not invoke the configuration method. 
+			classifierSet.setStringArrayValue(logSpec.getClassifiersMap().keySet().toArray(new String[0]));
+			// here we set the new values here
+//			m_classifier.setStringValue("");
+		}
+		// after the classifierSet updates, we need to create the output Spec
+		// but this differs from each node. We are going to use the extend method for this
+		return configureOutSpec(logSpec);
+	}
+	
+	protected abstract PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) ;
 	
 	
 	protected abstract PortObject mine(XLog log) throws Exception; 
@@ -94,6 +130,7 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	protected void saveSettingsTo(NodeSettingsWO settings) {
 		// TODO save m_classifier into the settings
 		m_classifier.saveSettingsTo(settings);
+//		classifierSet.saveSettingsTo(settings);
 		// operation for another parameters
 		saveSpecificSettingsTo(settings);
 	}
@@ -104,6 +141,7 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO validate classifeir
 		m_classifier.validateSettings(settings);
+//		classifierSet.validateSettings(settings);
 		validateSpecificSettings(settings);
 	}
 	
@@ -113,6 +151,8 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO load m_classifier
 		m_classifier.loadSettingsFrom(settings);
+//		classifierSet.loadSettingsFrom(settings);
+		
 		loadSpecificValidatedSettingsFrom(settings);
 	}
 

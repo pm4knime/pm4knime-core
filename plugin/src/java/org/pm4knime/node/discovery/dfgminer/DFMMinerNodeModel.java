@@ -81,15 +81,13 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 		return params;
 	}
 
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
-		if (!inSpecs[0].getClass().equals(XLogPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Event Log!");
-
+	protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
 		return new PortObjectSpec[] { new DFMPortObjectSpec() };
 	}
 

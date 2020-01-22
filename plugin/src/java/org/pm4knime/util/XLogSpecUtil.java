@@ -46,6 +46,8 @@ public class XLogSpecUtil {
 
 		List<XEventClassifier> clfList  = log.getClassifiers();
 		cMap = convertClf2Str(clfList, CLASSIFIER_PREFIX);
+		// add the event attributes as classifiers here
+		cMap.putAll(eMap);
 		
 		return new XLogPortObjectSpec(tMap, eMap, cMap);
 	}

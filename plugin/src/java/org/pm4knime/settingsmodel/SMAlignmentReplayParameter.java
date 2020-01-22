@@ -13,11 +13,11 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.SettingsModel;
 import org.knime.core.node.defaultnodesettings.SettingsModelFlowVariableCompatible;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
@@ -27,8 +27,6 @@ import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
-import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.DefTransClassifier;
-import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.IDBasedTransClassifier;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
@@ -75,12 +73,13 @@ implements SettingsModelFlowVariableCompatible {
 	
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
-	
+	final String CFG_KEY_CLASSIFIER_SET = "Event classifier set";
 	// remove the final before string
 	private String m_configName;
 	
 	private SettingsModelString m_strategy;
 	private SettingsModelString m_classifierName;
+	private SettingsModelStringArray classifierSet; 
 	private SettingsModelIntegerBounded[] m_defaultCosts;
 	
 	public SMAlignmentReplayParameter() {}
@@ -96,6 +95,8 @@ implements SettingsModelFlowVariableCompatible {
 		// the default values in dialog
 		m_strategy = new SettingsModelString(CFGKEY_STRATEGY_TYPE, "");
 		m_classifierName = new SettingsModelString(CKF_KEY_EVENT_CLASSIFIER, "");
+		classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
+					new String[0]) ;
 		m_defaultCosts = new SettingsModelIntegerBounded[CFG_COST_TYPE_NUM];
 		// m_defaultCosts here 
 		for( int i=0; i< CFG_COST_TYPE_NUM ; i++) {
@@ -134,6 +135,9 @@ implements SettingsModelFlowVariableCompatible {
 		this.m_defaultCosts = defaultCosts;
 	}
 	
+	public SettingsModelStringArray getClassifierSet() {
+		return classifierSet;
+	}
 
 	@Override
 	public String getKey() {
@@ -153,10 +157,16 @@ implements SettingsModelFlowVariableCompatible {
 		// TODO Auto-generated method stub
 		SMAlignmentReplayParameter clone = new SMAlignmentReplayParameter(m_configName);
 		clone.setMClassifierName(m_classifierName);
+//		clone.setClassifierSet(classifierSet);
 		clone.setMStrategy(m_strategy);
 		clone.setMDefaultCosts(m_defaultCosts);
 		
 		return clone;
+	}
+
+	private void setClassifierSet(SettingsModelStringArray classifierSet2) {
+		// TODO Auto-generated method stub
+		this.classifierSet = classifierSet2;
 	}
 
 	@Override
@@ -189,6 +199,7 @@ implements SettingsModelFlowVariableCompatible {
 	protected void saveSettingsPure(NodeSettingsWO subSettings) {
 		m_strategy.saveSettingsTo(subSettings);
     	m_classifierName.saveSettingsTo(subSettings);
+//    	classifierSet.saveSettingsTo(subSettings);
     	
     	for(int i=0; i< CFG_COST_TYPE_NUM; i++){
     		m_defaultCosts[i].saveSettingsTo(subSettings);
@@ -213,6 +224,7 @@ implements SettingsModelFlowVariableCompatible {
 		
 		m_strategy.loadSettingsFrom(subSettings);
     	m_classifierName.loadSettingsFrom(subSettings);
+//    	classifierSet.loadSettingsFrom(subSettings);
     	for(int i=0; i< CFG_COST_TYPE_NUM; i++){
     		m_defaultCosts[i].loadSettingsFrom(subSettings);
     	}

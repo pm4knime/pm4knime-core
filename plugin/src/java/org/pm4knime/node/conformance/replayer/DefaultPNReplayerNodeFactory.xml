@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./default.png" type="Predictor"
-	xmlns="http://knime.org/node/v2.8"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+<knimeNode icon="./default.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
 	<name>Alignment-Based Replayer(Default)</name>
 
 	<shortDescription>
-		This alignment-based replayer accepts one event log and one Petri net as
-		input and outputs the optimal alignments for traces after replaying
+		This alignment-based replayer accepts one event log
+		and one Petri net as
+		input and outputs the optimal alignments for
+		traces after replaying
 		traces on Petri net.
-		In default mode, it sets unified cost for each move type.
+		In default mode, it sets
+		unified cost for each move type.
 	</shortDescription>
 
 	<fullDescription>
 		<intro>
 			Alignment-based replay is the state-of-the-art technique in
 			conformance checking.
-			Alignments provide a robust and detailed view on the deviations. For each trace
+			Alignments provide a robust and detailed view on
+			the deviations. For each trace
 			from the event log after replaying,
 			there is one alignment corresponding to it.
 			<dl>
 				<dt>Sync move</dt>
 				<dd>The classification of the current event corresponds to the
 					firing transitions in Petri net.
-					In this case, during replaying, both the trace and process model move
+					In this case, during replaying,
+					both the trace and process model move
 					to next comparison.
 				</dd>
 
 				<dt>Move on log</dt>
 				<dd>The classification of the current event don't have any
 					corresponding firing transitions in Petri net.
-					During replaying, the trace moves forwards but the state of process model
+					During replaying, the
+					trace moves forwards but the state of process model
 					doesn't change.
 				</dd>
 
 				<dt>Move on model</dt>
 				<dd>The firing transitions in Petri net has no corresponding event
 					in the trace.
-					During replaying, the model moves forwards but the state of the event log
+					During replaying, the model moves forwards but the
+					state of the event log
 					doesn't change.
 				</dd>
 			</dl>
@@ -74,11 +78,14 @@
 		</option>
 
 		<option name="Move on log cost">The unified cost for move on log in non-negative
-			integer. In default, it is 1.</option>
+			integer. In default, it is 1.
+		</option>
 		<option name="Move on model cost">The unified cost for move on model in non-negative
-			integer. In default, it is 1.</option>
+			integer. In default, it is 1.
+		</option>
 		<option name="Sync move cost">The unified cost for sync move in non-negative
-			integer. In default, it is 0.</option>
+			integer. In default, it is 0.
+		</option>
 
 	</fullDescription>
 

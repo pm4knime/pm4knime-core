@@ -73,13 +73,9 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 		return pnPO;
 	}
 
-
 	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		
-		if(!inSpecs[0].getClass().equals(XLogPortObjectSpec.class)) 
-    		throw new InvalidSettingsException("Input is not a valid Event Log!");
-		
+	protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
+		// TODO Auto-generated method stub
 		PetriNetPortObjectSpec pnSpec = new PetriNetPortObjectSpec();
 		return new PortObjectSpec[] { pnSpec };
 	}
@@ -105,4 +101,6 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 		m_variant.loadSettingsFrom(settings);
 	}
 
+
+	
 }

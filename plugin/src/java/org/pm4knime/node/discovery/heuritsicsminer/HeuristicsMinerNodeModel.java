@@ -115,13 +115,9 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
      * {@inheritDoc} here is XLogPortObject in need and it outputs the heutistic port object
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
 
-        // TODO: generated method stub
-    	if(!inSpecs[0].getClass().equals(XLogPortObjectSpec.class)) 
-    		throw new InvalidSettingsException("Input is not a valid Event Log!");
-    	
+       
         return new PortObjectSpec[]{new PetriNetPortObjectSpec()};
     }
 

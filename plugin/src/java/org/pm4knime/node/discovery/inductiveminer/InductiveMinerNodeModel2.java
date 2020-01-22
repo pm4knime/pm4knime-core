@@ -47,14 +47,12 @@ public class InductiveMinerNodeModel2 extends DefaultMinerNodeModel {
 	}
 
 	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
-		if (!inSpecs[0].getClass().equals(XLogPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Event Log!");
-
+	protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
+		// TODO Auto-generated method stub
 		ProcessTreePortObjectSpec ptSpec = new ProcessTreePortObjectSpec();
 		return new PortObjectSpec[] { ptSpec };
 	}
+	
 
 	@Override
 	protected PortObject mine(XLog log) throws Exception {
@@ -126,4 +124,6 @@ public class InductiveMinerNodeModel2 extends DefaultMinerNodeModel {
 		m_type.loadSettingsFrom(settings);
 		m_noiseThreshold.loadSettingsFrom(settings);
 	}
+
+	
 }
