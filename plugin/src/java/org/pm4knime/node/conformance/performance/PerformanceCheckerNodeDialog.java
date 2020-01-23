@@ -1,125 +1,118 @@
 package org.pm4knime.node.conformance.performance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.portobject.RepResultPortObject;
+import org.pm4knime.portobject.RepResultPortObjectSpec;
+import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogUtil;
 
 /**
- * <code>NodeDialog</code> for the "PerformanceChecker" node.
- * There are 7 configuration panels in ProM for Performance Checker. 
- * We ignore 
- * -- event name pattern assignment, use only single activity at first
- * -- transition pattern assignment
- * -- pairwise transition occurrence 
+ * <code>NodeDialog</code> for the "PerformanceChecker" node. There are 7
+ * configuration panels in ProM for Performance Checker. We ignore -- event name
+ * pattern assignment, use only single activity at first -- transition pattern
+ * assignment -- pairwise transition occurrence
  * 
- * Use panels:
- * -- choose algorithm
- * -- set move costs table, first just use default nodes
- * -- choose timestamp attribute
- * -- choose the comparison strategy for syn moves
+ * Use panels: -- choose algorithm -- set move costs table, first just use
+ * default nodes -- choose timestamp attribute -- choose the comparison strategy
+ * for syn moves
  * 
- * To create those tables, at first, put them together, then split them later... 
- *  Make the tables with different sizes and also its own scrollpane 
+ * To create those tables, at first, put them together, then split them later...
+ * Make the tables with different sizes and also its own scrollpane
  * 
  * 
- * TODO 1: unified Performance Checker here.. Without CT. 
- * TODO 2: extend conformance checking parameters but with more attributes. Only define them into two parts,
- * one is with CT, one is without CT. 
- * TODO 4: change the dialog panels there..
+ * TODO 1: unified Performance Checker here.. Without CT. TODO 2: extend
+ * conformance checking parameters but with more attributes. Only define them
+ * into two parts, one is with CT, one is without CT. TODO 4: change the dialog
+ * panels there..
  * 
- * One question to think:: if we assign them the same name, what if there are more nodes there,
- * how to make sure that they are different storage??
+ * One question to think:: if we assign them the same name, what if there are
+ * more nodes there, how to make sure that they are different storage??
+ * 
  * @author Kefang Ding
  */
-public class PerformanceCheckerNodeDialog extends DataAwareNodeDialogPane {
+public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 	protected JPanel m_compositePanel;
 	SMPerformanceParameter m_parameter;
-	DialogComponentStringSelection m_timestampComp ;
-    /**
-     * New pane for configuring the PerformanceChecker node.
-     */
-    protected PerformanceCheckerNodeDialog() {
-    	m_compositePanel = new JPanel();
-    	m_compositePanel.setLayout(new BoxLayout(m_compositePanel,
-                BoxLayout.Y_AXIS));
-    	m_parameter = new SMPerformanceParameter("Performance Parameter");
-    	
-    	// add additional items to m_compositePanel panel
-    	SMPerformanceParameter tmp = (SMPerformanceParameter) m_parameter;
-    	// 1. syn move strategy
-    	DialogComponentBoolean m_withSynMoveComp = new DialogComponentBoolean(tmp.isMWithSynMove(), tmp.CKF_KEY_WITH_SYN_MOVE);
-    	addDialogComponent(m_withSynMoveComp);
-    	// 2. the attributes of time stamp... 
-    	m_timestampComp = new DialogComponentStringSelection(tmp.getMTimeStamp(),
-				tmp.CKF_KEY_TIMESTAMP, new String[]{""} ) ;
+	DialogComponentStringSelection m_timestampComp;
+
+	/**
+	 * New pane for configuring the PerformanceChecker node.
+	 */
+	protected PerformanceCheckerNodeDialog() {
+
+		m_parameter = new SMPerformanceParameter("Performance Parameter");
+
+		// add additional items to m_compositePanel panel
+		SMPerformanceParameter tmp = (SMPerformanceParameter) m_parameter;
+		// 1. syn move strategy
+		DialogComponentBoolean m_withSynMoveComp = new DialogComponentBoolean(tmp.isMWithSynMove(),
+				tmp.CKF_KEY_WITH_SYN_MOVE);
+		addDialogComponent(m_withSynMoveComp);
+		// 2. the attributes of time stamp...
+		m_timestampComp = new DialogComponentStringSelection(tmp.getMTimeStamp(), tmp.CKF_KEY_TIMESTAMP,
+				new String[] { "" });
 		addDialogComponent(m_timestampComp);
-		
-		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(), tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
-    	addDialogComponent(m_withUnreliableResultComp);
-    	this.addTab("Options", m_compositePanel);
-    }
-    
-    protected void addDialogComponent(final DialogComponent diaC) {
-		// TODO Auto-generated method stub
-		m_compositePanel.add(diaC.getComponentPanel());
+
+		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(),
+				tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
+		addDialogComponent(m_withUnreliableResultComp);
 	}
 
-    
-    /**
-     * to get the attributes from event log, especially the time stamp information. we need PortObject.
-     * 
-     */
-    @Override
-    protected void loadSettingsFrom(final NodeSettingsRO settings,
-			final PortObject[] input) throws NotConfigurableException {
-    	
-			if (!(input[0] instanceof RepResultPortObject))
-				throw new NotConfigurableException("Input is not a valid replayer log!");
-			
-			// TODO : check the type if it is mainfest replayer result
-			RepResultPortObject repResultPO = (RepResultPortObject) input[0];
-			
-			XLog log = repResultPO.getLog();
-			
-			// get the attributes available for the time stamp from event log
-			List<String> tsAttrNameList = XLogUtil.getTSAttrNames(log);
-			
-			m_timestampComp.replaceListItems(tsAttrNameList, tsAttrNameList.get(0));
-		
-			// do we need to repaint all the composite , or only the one corresponding to this attributes?
-			// when it is the first time to initialize parameter, we need the input PortObject
-    		// when it is the second time to use this, the already existing values should be there
-//			try {
-//				m_parameter.loadSettingsFrom(settings);
-//			} catch (InvalidSettingsException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			m_compositePanel.repaint();
-		
-    }
-
+	/**
+	 * to get the attributes from event log, especially the time stamp information.
+	 * we need PortObject.
+	 * 
+	 */
 	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-		// TODO Auto-generated method stub
-		m_parameter.saveSettingsTo(settings);
-	}
+	public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+			throws NotConfigurableException {
 
+		if (!(specs[0] instanceof RepResultPortObjectSpec))
+			throw new NotConfigurableException("Input is not a valid replayer log!");
+
+		RepResultPortObjectSpec repResultPO = (RepResultPortObjectSpec) specs[0];
+
+		// if we have the classifier set from the parameter, we can't figure out the key
+		// for time stamp.
+		// to solve it, two ways: 1. follow the old method
+		// 2. save the class name information for event classifiers too.
+		// to save the space, we can concatenate the class name and its value together,
+		// we we use it, we split the name and class name
+		SMAlignmentReplayParameter specParameter = repResultPO.getMParameter();
+
+		List<String> tsAttrNameList = new ArrayList<String>();
+		for (String clfPlusClass : specParameter.getClassifierSet().getStringArrayValue()) {
+			String[] clfPlusClassArray = clfPlusClass.split(SMAlignmentReplayParameter.CFG_KEY_CLASSIFIER_SEPARATOR);
+			if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
+				
+				tsAttrNameList.add(clfPlusClassArray[0]);
+		}
+
+		if (!tsAttrNameList.contains(m_parameter.getMTimeStamp().getStringValue())) {
+			m_timestampComp.replaceListItems(tsAttrNameList, tsAttrNameList.get(0));
+			m_parameter.getMTimeStamp().setStringValue(tsAttrNameList.get(0));
+			m_parameter.setClassifierSet(specParameter.getClassifierSet().getStringArrayValue());
+		}
+
+	}
 
 }
-

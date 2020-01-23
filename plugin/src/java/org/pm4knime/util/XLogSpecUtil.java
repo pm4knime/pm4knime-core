@@ -34,67 +34,43 @@ public class XLogSpecUtil {
 	public static final String CFG_KEY_EVENT_ATTRSET = "Event attribute set";
 	
 	public static XLogPortObjectSpec extractSpec(XLog log) {
-		Map<String, String> tMap = null, eMap = null, cMap = null;
+		Map<String, Class> tMap = null, eMap = null, cMap = null;
 		
 		// get the attributes from the log 
-		List<XAttribute> attrs = log.getGlobalTraceAttributes();
+		List<XAttribute> attrs = XLogUtil.getTAttributes(log, 0.2);
 		tMap = convertAttr2Str(attrs, TRACE_ATTRIBUTE_PREFIX);
 		
-		attrs = log.getGlobalEventAttributes();
+		attrs = XLogUtil.getEAttributes(log, 0.2);
+		// more attributes need to check in events, not just the global attributes there		
 		eMap = convertAttr2Str(attrs, EVENT_ATTRIBUTE_PREFIX);
 		// convert those attribtues to map in string
 
 		List<XEventClassifier> clfList  = log.getClassifiers();
 		cMap = convertClf2Str(clfList, CLASSIFIER_PREFIX);
 		// add the event attributes as classifiers here
+		// before put, check if they repeat the data
 		cMap.putAll(eMap);
 		
 		return new XLogPortObjectSpec(tMap, eMap, cMap);
 	}
 	
-	public static Map<String, String> convertAttr2Str(Collection<XAttribute> attrSet, String prefix){
-		Map<String, String> aMap =  new HashMap<String, String>();
+	public static Map<String, Class> convertAttr2Str(Collection<XAttribute> attrSet, String prefix){
+		Map<String, Class> aMap =  new HashMap<String, Class>();
 		for(XAttribute attr : attrSet) {
 			// check if the key has already include the prefix??
-			aMap.put(prefix + attr.getKey(), attr.getClass().getSimpleName());
+			aMap.put(prefix + attr.getKey(), attr.getClass());
 		}
 		
 		return aMap;
 	}
 	
-	public static Map<String, String> convertClf2Str(Collection<XEventClassifier> clfSet, String prefix){
-		Map<String, String> aMap =  new HashMap<String, String>();
+	public static Map<String, Class> convertClf2Str(Collection<XEventClassifier> clfSet, String prefix){
+		Map<String, Class> aMap =  new HashMap<String, Class>();
 		for(XEventClassifier clf : clfSet) {
-			aMap.put(prefix + clf.name(), clf.getClass().getSimpleName());
+			aMap.put(prefix + clf.name(), clf.getClass());
 		}
 		
 		return aMap;
-	}
-	
-	// here we need to convert from the map to the attribute back 
-	public static XAttribute convertStr2Attr(String key, String prefix, String cls) {
-		if(prefix!=null && prefix.length() > 0) {
-			// split the key due to the prefix
-			key = key.split(prefix)[1];
-		}
-		
-		// create the attribute due to the cls
-		if(cls.equals(XAttributeLiteral.class.getSimpleName())) {
-			// we don't care about the values here
-			return new XAttributeLiteralImpl(key, "");
-		}else if(cls.equals(XAttributeDiscrete.class.getSimpleName())) {
-			// we don't care about the values here
-			return new XAttributeDiscreteImpl(key, 0);
-		}else if(cls.equals(XAttributeContinuous.class.getSimpleName())) {
-			// we don't care about the values here
-			return new XAttributeContinuousImpl(key, 0);
-		}else  if(cls.equals(XAttributeTimestamp.class.getSimpleName())) {
-			// we don't care about the values here
-			return new XAttributeTimestampImpl(key, 0);
-		}else {
-			System.out.println("The attribute is not recognized");
-		} 
-		return null;
 	}
 	
 	// here we need to convert from the map to the attribute back 

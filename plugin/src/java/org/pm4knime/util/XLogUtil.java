@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventLifeTransClassifier;
@@ -118,14 +119,25 @@ public class XLogUtil {
 	}
 
 	
-	public static XEventClassifier getXEventClassifier(String clfName, List<XEventClassifier> classifierList) {
-		// TODO Auto-generated method stub
-    	for(XEventClassifier clf : classifierList) {
- 			if(clf.name().equals(clfName))
+	public static XEventClassifier getEventClassifier(XLog log, String classifierName) {
+ 		// get the list of classifiers from the event log!!
+ 		
+ 		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
+ 		classifiers.addAll( log.getClassifiers());
+ 		// check the attributes as classifier here //and assign them as the XEventAttributeClassifier
+ 		for(XAttribute eAttr: log.getGlobalEventAttributes()) {
+ 			// create new classifier for the new eAttr here, given the name with prefix for it!!
+ 			XEventClassifier attrClf = new XEventAttributeClassifier(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX + 
+ 					eAttr.getKey(), eAttr.getKey());
+ 			classifiers.add(attrClf);
+ 		}
+ 		
+ 		for(XEventClassifier clf: classifiers) {
+ 			if(clf.name().equals(classifierName))
  				return clf;
  		}
- 		return null;
-	}
+     	return null;
+ 	}
 	
 	public static void saveLog(XLog log, OutputStream objOut) {
 		XSerializer serializer = new XesXmlSerializer();
@@ -177,32 +189,6 @@ public class XLogUtil {
 		List<String> nameList = new ArrayList<String>();
 		nameList.addAll(ecSet);
 		return nameList;
-	}
-	
-	public static List<XEventClassifier> getDefaultLifeCycleClassifier() {
-		// TODO Auto-generated method stub
-		List<XEventClassifier> classifiers = new ArrayList<>();
-		classifiers.add(new LifeCycleClassifier());
-		classifiers.add(new XLifeCycleClassifierIgnore());
-		return classifiers;
-	}
-
-	
-	// one function to get the event classifier without log
-	public static List<XEventClassifier> getECList(){
-		List<XEventClassifier> classifierList= new ArrayList();
-		classifierList.add(new XEventNameClassifier());
-		classifierList.add(new XEventLifeTransClassifier());
-		return classifierList;
-	}
-	
-	// one function to get the event classifier with  log
-	public static List<XEventClassifier> getECList(XLog log){
-		// TODO : the difference is not clear
-		List<XEventClassifier> classifierList= new ArrayList();
-		classifierList.add(new XEventNameClassifier());
-		classifierList.add(new XEventLifeTransClassifier());
-		return classifierList;
 	}
 	
 	// get the event attributes available for the time stamp from event log

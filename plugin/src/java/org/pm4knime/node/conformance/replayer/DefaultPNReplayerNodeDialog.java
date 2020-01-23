@@ -73,9 +73,8 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
     @Override
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final PortObjectSpec[] specs) throws NotConfigurableException {
-    	// m_parameter should also change its value there, if we change the spec there!!
-    	try {
-    		m_parameter.getMClassifierName().loadSettingsFrom(settings);
+    		
+    		// m_parameter.getMClassifierName().loadSettingsFrom(settings);
     		String selectedItem = m_parameter.getMClassifierName().getStringValue();
     		
     		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
@@ -83,15 +82,9 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
     				m_parameter.getMClassifierName().getStringValue())) {
 				selectedItem = logSpec.getClassifiersMap().keySet().iterator().next();
 				m_parameter.getMClassifierName().setStringValue(selectedItem);
+				m_classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), selectedItem);
 			}
     		
-    		m_classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), selectedItem);
-    		
-    	}catch (InvalidSettingsException | NullPointerException e ) {
-			// TODO Auto-generated catch block
-			throw new NotConfigurableException("Please make sure the connected event log in eexcution state");
-			
-		}
     	
     }
 }

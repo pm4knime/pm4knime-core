@@ -171,7 +171,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     		PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
     				.getFutureResultAwarePluginContext(PNManifestReplayer.class);
     		PNLogReplayer replayer = new PNLogReplayer();
-    		repResult = replayer.replayLog(pluginContext, anet.getNet(), log, flattener.getMap(),
+    		repResult = replayer.replayLog(pluginContext, flattener.getNet(), log, flattener.getMap(),
     				replayAlgorithm, parameter);
     		
     	}else {
@@ -258,9 +258,18 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 			this.setWarningMessage("No event log is read. To continue the configuration, "
 					+ "please read the event log into KNIME"); 
 			
-		}else
-			m_parameter.getClassifierSet().setStringArrayValue(logSpec.getClassifiersMap().keySet().toArray(new String[0]));
-		// here it seems there is no need to update the values here, test it and get the result
+		}else {
+			List<String> clfPlusClassNameList = new ArrayList<String>();
+			String clfPlusClassName ; 
+			for(String key : logSpec.getClassifiersMap().keySet()) {
+				// the split character is hard coded, please remember!!
+				clfPlusClassName = key + 
+						SMAlignmentReplayParameter.CFG_KEY_CLASSIFIER_SEPARATOR + logSpec.getClassifiersMap().get(key);
+				clfPlusClassNameList.add(clfPlusClassName);
+			}
+			// but we need to save it into one spec, so we can load the values. 
+			m_parameter.setClassifierSet(clfPlusClassNameList.toArray(new String[0]));
+		}
 		
 		m_rSpec = new RepResultPortObjectSpec();
 		// one question, how to add the type information here to make them valid at first step??

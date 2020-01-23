@@ -113,14 +113,14 @@ public class XLog2TableConverterNodeModel extends NodeModel {
 		for (String attrKey : m_traceAttrSet.getIncludeList()) {
 			// how to get the traceTypes here?? We have the m_spec from the input, we need to use it!!
 			attrNames.add(attrKey);
-			String attrType = m_inSpec.getGTraceAttrMap().get(attrKey);
+			String attrType = m_inSpec.getGTraceAttrMap().get(attrKey).getSimpleName();
 			attrTypes.add(findDataType(attrType));
 		}
 		
 		for (String attrKey : m_eventAttrSet.getIncludeList()) {
 			// how to get the traceTypes here?? We have the m_spec from the input, we need to use it!!
 			attrNames.add(attrKey);
-			String attrType = m_inSpec.getGEventAttrMap().get(attrKey);
+			String attrType = m_inSpec.getGEventAttrMap().get(attrKey).getSimpleName();
 			attrTypes.add(findDataType(attrType));
 		}
 		

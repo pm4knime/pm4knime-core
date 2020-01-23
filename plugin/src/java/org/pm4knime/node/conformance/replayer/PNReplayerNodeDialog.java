@@ -1,10 +1,16 @@
 package org.pm4knime.node.conformance.replayer;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,6 +31,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.util.StringIconOption;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
@@ -124,25 +131,51 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
     	m_classifierComp = new DialogComponentStringSelection(
     			m_parameter.getMClassifierName(), "Select Classifier Name", new String[ ]{""} );
     	addDialogComponent(m_classifierComp);
-    	// if the parameter changes, the log activity should changes too.
-    	m_parameter.getMClassifierName().addChangeListener(new ChangeListener() {
+    	
+    	/*
+    	Component[] comps  = m_classifierComp.getComponentPanel().getComponents();
+    	
+    	for(Component comp : comps) {
+    		if(comp.getClass().equals(JComboBox.class)) {
+    			// we have this componnet, we add listener on it to change the values there
+    			JComboBox cBox = (JComboBox) comp;
+    			cBox.addItemListener(new ItemListener() {
 
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				// TODO it implements the update if we change the event classifier in choice
-				SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
-				if(logPO != null && tmp.isMWithTM()) {
-					XLog log = logPO.getLog();
-					// here the value is still the old value, 
-					XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, 
-							m_parameter.getMClassifierName().getStringValue());
-					
-					List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
-					tmp.setCostTM(ecNames, 0);
-				}
-			}
+					@Override
+					public void itemStateChanged(ItemEvent event) {
+						// TODO if the value changes 
+						if (event.getStateChange() == ItemEvent.SELECTED) {
+							String item = (String) event.getItem();
+							
+							// update the current cost list
+							SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+							
+							if(logPO != null && tmp.isMWithTM()) {
+								XLog log = logPO.getLog();
+								// here the value is still the old value, 
+								System.out.println("the current value is "+ m_parameter.getMClassifierName().getStringValue());
+								XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, 
+										m_parameter.getMClassifierName().getStringValue());
+								
+								List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
+								tmp.setCostTM(ecNames, 0);
+							}
+						}
+						System.out.println("Item Change");
+						
+					}
+    				
+    			});
+    		}
     		
-    	});
+    	}
+    	*/
+    	// if the parameter changes, the log activity should changes too.
+    	/*
+    	
+    	
+    	*/ 
+    	
     	
     	
     	parameter.getMStrategy().setStringValue(strategyList[0]);
@@ -173,6 +206,7 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
     	// not know the situation of m_parameter.loadSettingsFrom, what can we get?? 
     	// what's the values now in settings?? how to cooperate the values from PortObjectInput and current settings?
     	try {
+    		// before we need to consider the selected values here 
 			m_parameter.loadSettingsFrom(settings);
 //			
 //			tmp.loadSettingsFrom(settings);
@@ -231,9 +265,34 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 				
 			}
 			
+			m_parameter.getMClassifierName().addChangeListener(new ChangeListener() {
+	    		// here if we set the values here, but why there is value "" to this step??
+	    		// this is done because of the m_classiferComp still uses its empty selected item there
+	    		// update the classifier, it notifies the comp, which is nice, but why the selectedItem
+	    		// is still empty? Also, the old value and the new value, how to get it??
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					// TODO it implements the update if we change the event classifier in choice
+					SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+					
+					if(logPO != null && tmp.isMWithTM()) {
+						XLog log = logPO.getLog();
+						// here the value is still the old value, 
+						System.out.println("the current value is "+ m_parameter.getMClassifierName().getStringValue());
+						XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, 
+								m_parameter.getMClassifierName().getStringValue());
+						
+						List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
+						tmp.setCostTM(ecNames, 0);
+					}
+				}
+	    		
+	    	});
+			
     		
 		} catch (InvalidSettingsException | NullPointerException e) {
 			// TODO if there is not with TM, we set it from the input PortObject
+			System.out.println("Some wrong is here");
 			e.printStackTrace();
 			throw new NotConfigurableException("Please make sure the connected event log in excution state");
 			

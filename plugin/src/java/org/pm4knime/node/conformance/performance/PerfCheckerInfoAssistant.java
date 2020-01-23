@@ -3,13 +3,22 @@ package org.pm4knime.node.conformance.performance;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
+import org.deckfour.xes.model.XAttributeContinuous;
+import org.deckfour.xes.model.XAttributeDiscrete;
+import org.deckfour.xes.model.XAttributeTimestamp;
+import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
+import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
+import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
+import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
@@ -31,7 +40,8 @@ public class PerfCheckerInfoAssistant {
 	NumberFormat nfDouble ;
 	NumberFormat nfInteger;
 	// init it with the counter information
-	public PerfCheckerInfoAssistant(SMPerformanceParameter parameter, Manifest  manifest, PerfCounter counter) {
+
+	public PerfCheckerInfoAssistant(SMPerformanceParameter parameter, Manifest  manifest, PerfCounter counter) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		m_parameter = parameter;
 		mResult = (ManifestEvClassPattern) manifest;
 		
@@ -39,9 +49,10 @@ public class PerfCheckerInfoAssistant {
 		buildInfoParameter();
 	}
 	
-	private void buildInfoParameter() {
+	private void buildInfoParameter() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		String timeAttr = m_parameter.getMTimeStamp().getStringValue();
+       
         
 		// create caseFilter
 		boolean[] caseFilter = new boolean[mResult.getLog().size()];
@@ -52,8 +63,31 @@ public class PerfCheckerInfoAssistant {
 				caseFilter[i] = mResult.isCaseReliable(i);
 			}
 		}
-		
-		infoProvider.init( mResult, timeAttr, XLogUtil.getAttrClass(mResult.getLog(), timeAttr), caseFilter);
+		// here we could answer it with the classifierSet value it has
+		Class cls = null ;
+		for (String clfPlusClass : m_parameter.getClassifierSet().getStringArrayValue()) {
+			String[] clfPlusClassArray = clfPlusClass.split(SMAlignmentReplayParameter.CFG_KEY_CLASSIFIER_SEPARATOR);
+			if (clfPlusClassArray[0].equals(timeAttr)) {
+				// we need the name from the log cMap, to get it there
+				String className = clfPlusClassArray[1];
+				if(className.equals(XAttributeTimestampImpl.class.toString()))
+					cls = Date.class;
+				else if(className.equals(XAttributeContinuousImpl.class.toString()))
+					cls = Double.class;
+				else if(className.equals(XAttributeDiscreteImpl.class.toString()))
+					cls = Integer.class;
+				else
+					throw new IllegalArgumentException("Not supported data type");
+				
+				break; 
+			}
+				
+			
+		}
+		 if(timeAttr.contains(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)) {
+	        	timeAttr = timeAttr.split(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)[1];
+	        }
+		infoProvider.init( mResult, timeAttr, cls, caseFilter);
 		
 		// format 
 		nfDouble = NumberFormat.getInstance();

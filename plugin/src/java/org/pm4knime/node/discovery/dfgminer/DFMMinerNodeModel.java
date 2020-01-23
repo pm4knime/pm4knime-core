@@ -40,7 +40,9 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 	// inductive miner
 	public static final String CFG_NOISE_THRESHOLD_KEY = "Noise threshold";
 	public static final String CFG_LCC_KEY = "LifeCycle classifier";
-	static List<XEventClassifier> lcClassifierList = XLogUtil.getDefaultLifeCycleClassifier();
+	// TODO : to find all the possible lifecycle classifier list there
+	// event more codes need on DFMMiner here
+	static List<XEventClassifier> lcClassifierList ; // = XLogUtil.getDefaultLifeCycleClassifier();
 
 	private SettingsModelString m_lcClf = new SettingsModelString(DFMMinerNodeModel.CFG_LCC_KEY, "");
 	private SettingsModelDoubleBounded m_noiseThreshold = new SettingsModelDoubleBounded(
@@ -58,7 +60,7 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 	protected PortObject mine(XLog log) throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("Begin:  DFM Miner");
-		DFMMiningParameters params = createParameter();
+		DFMMiningParameters params = createParameter(log);
 		DirectlyFollowsModel dfm = DFMMiner.mine(log, params, null);
 
 		
@@ -67,14 +69,15 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 		return dfmPO;
 	}
 
-	private DFMMiningParameters createParameter() {
+	private DFMMiningParameters createParameter(XLog log) {
 		// TODO Auto-generated method stub
 		DFMMiningParametersAbstract params = new DFMMiningParametersDefault();
 
 		XEventClassifier clf = getEventClassifier();
 		params.setClassifier(clf);
 
-		XEventClassifier lcclf = XLogUtil.getXEventClassifier(m_lcClf.getStringValue(), lcClassifierList);
+		//TODO: check the affect from the lifecycle changes.. From one node to another node
+		XEventClassifier lcclf = XLogUtil.getEventClassifier(log, m_lcClf.getStringValue());
 		params.setLifeCycleClassifier((XLifeCycleClassifier) lcclf);
 
 		params.setNoiseThreshold(m_noiseThreshold.getDoubleValue());

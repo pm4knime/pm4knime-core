@@ -74,6 +74,8 @@ implements SettingsModelFlowVariableCompatible {
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
 	final String CFG_KEY_CLASSIFIER_SET = "Event classifier set";
+	public final static String CFG_KEY_CLASSIFIER_SEPARATOR = "##";
+	
 	// remove the final before string
 	private String m_configName;
 	
@@ -98,6 +100,7 @@ implements SettingsModelFlowVariableCompatible {
 		classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
 					new String[0]) ;
 		m_defaultCosts = new SettingsModelIntegerBounded[CFG_COST_TYPE_NUM];
+		
 		// m_defaultCosts here 
 		for( int i=0; i< CFG_COST_TYPE_NUM ; i++) {
 			m_defaultCosts[i] = new SettingsModelIntegerBounded(CFG_MCOST_KEY[i], CFG_DEFAULT_MCOST[i], 0, Integer.MAX_VALUE );
@@ -164,9 +167,9 @@ implements SettingsModelFlowVariableCompatible {
 		return clone;
 	}
 
-	private void setClassifierSet(SettingsModelStringArray classifierSet2) {
-		// TODO Auto-generated method stub
-		this.classifierSet = classifierSet2;
+	// here we only set the values for the array, not substitute the values
+	public void setClassifierSet(String[] newValue) {
+		classifierSet.setStringArrayValue(newValue);
 	}
 
 	@Override
@@ -199,7 +202,9 @@ implements SettingsModelFlowVariableCompatible {
 	protected void saveSettingsPure(NodeSettingsWO subSettings) {
 		m_strategy.saveSettingsTo(subSettings);
     	m_classifierName.saveSettingsTo(subSettings);
-//    	classifierSet.saveSettingsTo(subSettings);
+    	// one difficulty is how to get it from the classifierSet?? 
+    	// how to get and save it here??
+    	classifierSet.saveSettingsTo(subSettings);
     	
     	for(int i=0; i< CFG_COST_TYPE_NUM; i++){
     		m_defaultCosts[i].saveSettingsTo(subSettings);
@@ -221,13 +226,21 @@ implements SettingsModelFlowVariableCompatible {
 	}
 	
 	protected void loadSettingsPure(NodeSettingsRO subSettings) throws InvalidSettingsException {
-		
-		m_strategy.loadSettingsFrom(subSettings);
-    	m_classifierName.loadSettingsFrom(subSettings);
-//    	classifierSet.loadSettingsFrom(subSettings);
-    	for(int i=0; i< CFG_COST_TYPE_NUM; i++){
-    		m_defaultCosts[i].loadSettingsFrom(subSettings);
+		if(subSettings.containsKey(CFGKEY_STRATEGY_TYPE))
+			m_strategy.loadSettingsFrom(subSettings);
+		if(subSettings.containsKey(CKF_KEY_EVENT_CLASSIFIER))
+			 m_classifierName.loadSettingsFrom(subSettings);
+    	// here test if it contains the value here..
+    	if(subSettings.containsKey(CFG_KEY_CLASSIFIER_SET))
+    		classifierSet.loadSettingsFrom(subSettings);
+    	
+    	
+    		for(int i=0; i< CFG_COST_TYPE_NUM; i++){
+    			if(subSettings.containsKey(CFG_MCOST_KEY[i])) {
+    				m_defaultCosts[i].loadSettingsFrom(subSettings);
+        	}
     	}
+    	
 	}
 
 	@Override
@@ -294,6 +307,7 @@ implements SettingsModelFlowVariableCompatible {
 		TransClasses tc = new TransClasses(anet.getNet());
 		Map<TransClass, Set<EvClassPattern>> pattern = ReplayerUtil.buildPattern(tc, eventClasses);
 		TransClass2PatternMap mapping = new TransClass2PatternMap(log, anet.getNet(), eventClassifier, tc, pattern);
+		
 		parameters.setMapping(mapping);
 		
 		// set the move cost

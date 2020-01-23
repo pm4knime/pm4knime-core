@@ -5,6 +5,7 @@ import javax.swing.JComponent;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.NodeView;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.framework.connections.ConnectionCannotBeObtained;
 import org.processmining.framework.plugin.PluginContext;
@@ -44,6 +45,10 @@ public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeM
         
         PerfCounter counter = nodeModel.getCounter();
         String timeAttr = m_parameter.getMTimeStamp().getStringValue();
+        
+        if(timeAttr.contains(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)) {
+        	timeAttr = timeAttr.split(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)[1];
+        }
         
         boolean withUnreliabelResult = m_parameter.isMWithUnreliableResult().getBooleanValue();
         try {

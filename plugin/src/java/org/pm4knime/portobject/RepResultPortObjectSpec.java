@@ -13,6 +13,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
+import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 
 /**
  * how to set the spec to its Portobject there?
@@ -59,7 +60,8 @@ public class RepResultPortObjectSpec implements PortObjectSpec {
 			// how to save m_parameter with out, but not the settings?? 
 			
 			SMAlignmentReplayParameter m_parameter = portObjectSpec.getMParameter();
-			NodeSettings tmp = new NodeSettings(ZIP_ENTRY_NAME + ":"+ m_parameter.getConfigName());
+			NodeSettings tmp = new NodeSettings(ZIP_ENTRY_NAME + ":" 
+					+ m_parameter.getClass().getSimpleName() + ":" + m_parameter.getConfigName());
 			m_parameter.saveSettingsTo(tmp);
 			
 			ObjectOutputStream objOut = new ObjectOutputStream(out);
@@ -78,11 +80,20 @@ public class RepResultPortObjectSpec implements PortObjectSpec {
 			ObjectInputStream objIn = new ObjectInputStream(in);
 			try {
 				NodeSettings tmp = (NodeSettings) objIn.readObject();
-				String configName = tmp.getKey().split(":")[1];
-				// how to get the config name and then use it to load the values??
-				SMAlignmentReplayParameter m_parameter = new SMAlignmentReplayParameter(configName);
-				m_parameter.loadSettingsFrom(tmp);
-				return new RepResultPortObjectSpec(m_parameter);
+				String[] configStringArray = tmp.getKey().split(":");
+				
+				if(configStringArray[1].equals(SMAlignmentReplayParameter.class.getSimpleName())) {
+					
+					// how to get the config name and then use it to load the values??
+					SMAlignmentReplayParameter m_parameter = new SMAlignmentReplayParameter(configStringArray[2]);
+					m_parameter.loadSettingsFrom(tmp);
+					return new RepResultPortObjectSpec(m_parameter);
+				}else {
+					SMAlignmentReplayParameterWithCT m_parameter = new SMAlignmentReplayParameterWithCT(configStringArray[2]);
+					m_parameter.loadSettingsFrom(tmp);
+					return new RepResultPortObjectSpec(m_parameter);
+				}
+				
 			} catch (ClassNotFoundException | InvalidSettingsException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

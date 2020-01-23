@@ -35,13 +35,13 @@ import org.knime.core.node.tableview.TableView;
 public class XLogPortObjectSpec implements PortObjectSpec {
 	private static final String ZIP_ENTRY_NAME = "XLogPortObjectSpec";
 	// if we save the attributes as string in spec, we change the storage to be map
-	Map<String, String> gTraceAttrMap, gEventAttrMap, clfMap;
+	Map<String, Class> gTraceAttrMap, gEventAttrMap, clfMap;
 	public XLogPortObjectSpec() {
 		
 	}
 	
-	public XLogPortObjectSpec(Map<String, String> gTraceAttrMap, Map<String, String> gEventAttrMap, 
-			Map<String, String> clfMap ) {
+	public XLogPortObjectSpec(Map<String, Class> gTraceAttrMap, Map<String, Class> gEventAttrMap, 
+			Map<String, Class> clfMap ) {
 		this.gTraceAttrMap = gTraceAttrMap;
 		this.gEventAttrMap = gEventAttrMap;
 		this.clfMap = clfMap;
@@ -54,17 +54,17 @@ public class XLogPortObjectSpec implements PortObjectSpec {
 	}
 	
 	
-	public Map<String, String> getClassifiersMap() {
+	public Map<String, Class> getClassifiersMap() {
 		// TODO Auto-generated method stub
 		return clfMap;
 	}
 
-	public Map<String, String> getGEventAttrMap() {
+	public Map<String, Class> getGEventAttrMap() {
 		// TODO Auto-generated method stub
 		return gEventAttrMap;
 	}
 
-	public Map<String, String> getGTraceAttrMap() {
+	public Map<String, Class> getGTraceAttrMap() {
 		// TODO Auto-generated method stub
 		return gTraceAttrMap;
 	}
@@ -87,21 +87,13 @@ public class XLogPortObjectSpec implements PortObjectSpec {
         // we need to add trace and event prefix to distinguish it
         int i=0;
         for(String key : gTraceAttrMap.keySet()) {
-        	DataRow row = new DefaultRow("Row " + (i++), key, gTraceAttrMap.get(key));
+        	DataRow row = new DefaultRow("Row " + (i++), key, gTraceAttrMap.get(key).getSimpleName());
         	result.addRowToTable(row);
         }
         
-        for(String key : gEventAttrMap.keySet()) {
-        	// add prefix to the key to make sure it show the right way, or we already add trace prefix to it!!
-        	// we assume we already add them here
-        	// However, if we do this, every time, we need to split the attributes to show them!! 
-        	// but should be fine for showing information
-        	DataRow row = new DefaultRow("Row " + (i++), key, gEventAttrMap.get(key));
-        	result.addRowToTable(row);
-        }
         
         for(String key : clfMap.keySet()) {
-        	DataRow row = new DefaultRow("Row " + (i++), key, clfMap.get(key));
+        	DataRow row = new DefaultRow("Row " + (i++), key, clfMap.get(key).getSimpleName());
         	result.addRowToTable(row);
         }
         
@@ -140,12 +132,12 @@ public class XLogPortObjectSpec implements PortObjectSpec {
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NAME)) {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
 			}
-			Map<String, String> tMap = null, eMap = null, cMap = null;
+			Map<String, Class> tMap = null, eMap = null, cMap = null;
 			try(ObjectInputStream objIn = new ObjectInputStream(in)){
 				try {
-					tMap= (Map<String, String>) objIn.readObject();
-					eMap = (Map<String, String>) objIn.readObject();
-					cMap = (Map<String, String>) objIn.readObject();
+					tMap= (Map<String, Class>) objIn.readObject();
+					eMap = (Map<String, Class>) objIn.readObject();
+					cMap = (Map<String, Class>) objIn.readObject();
 					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block

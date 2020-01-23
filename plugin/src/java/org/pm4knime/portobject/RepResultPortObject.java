@@ -143,6 +143,12 @@ public class RepResultPortObject implements PortObject {
 			System.out.println("Enter the save PO in serializer");
 			ObjectOutputStream objOut = new ObjectOutputStream(out);
 			
+			// save Petri net without PortObject 
+			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NET));
+			AcceptingPetriNet anet = portObject.getNet();
+			PetriNetUtil.exportToStream(anet, out);
+			out.closeEntry();
+			
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_REP_RESULT));
 			PNRepResult repResult = portObject.getRepResult();
 			
@@ -180,7 +186,6 @@ public class RepResultPortObject implements PortObject {
 						// we only store the label, id and related net here
 						objOut.writeUTF(t.getClass().getName());
 						objOut.writeUTF(t.getLabel());
-						objOut.writeObject(t.getLocalID());
 						
 					}
 				}
@@ -192,11 +197,7 @@ public class RepResultPortObject implements PortObject {
 				objOut.writeObject(alignment.getInfo());
 			}
 			out.closeEntry();
-			// save Petri net without PortObject 
-			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NET));
-			AcceptingPetriNet anet = portObject.getNet();
-			PetriNetUtil.exportToStream(anet, out);
-			out.closeEntry();
+			
 			
 			// without the help of port Object
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_LOG));
@@ -234,6 +235,19 @@ public class RepResultPortObject implements PortObject {
 			}
 			// sth with PortObjectSpec here to guide the verification
 			ObjectInputStream objIn = new ObjectInputStream(in);
+			
+			// put the Petri net reading at first to make the same transition same like in the replayer list there
+			nextEntry = in.getNextEntry();
+			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NET)) {
+				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NET + "' not present");
+			}
+			// AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
+			AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
+			// after this, we make a list of transitions ans refer to this transition in the reloading part
+			Map<String, Transition> transNameMap = new HashMap();
+			for(Transition t : anet.getNet().getTransitions())
+				transNameMap.put(t.getLabel(), t);
+			
 			// firstly to get the entry name for replay result
 			nextEntry = in.getNextEntry();
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_REP_RESULT)) {
@@ -272,22 +286,9 @@ public class RepResultPortObject implements PortObject {
 							nodeInstances.add(ecls);
 						}else if(classType.equals(Transition.class.getName())) {
 							String label = objIn.readUTF();
-							Petrinet net = PetrinetFactory.newPetrinet("Temprorary Petri net for RepResult Loading");
-							try {
-								LocalNodeID nId  = (LocalNodeID) objIn.readObject();
-								// here how to serialize the object is a problem
-								// it only reads bytes list, we need to convert the object into a net again
-								// !! Be careful about the converting and casting part
-								// net = (AbstractDirectedGraph<PetrinetNode, PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>>) PetriNetPortObject.convert2ANet(inObj);
-								Transition t = new Transition(label, (AbstractDirectedGraph<PetrinetNode, PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>>) net);
-								t.setLocalID(nId);
-								nodeInstances.add(t);
-								
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							// but here we need to have the transition with net, so we can store them all, but do we need ??
+							// get transitions from the anet by comparing its label and the name
+							Transition tInRes = transNameMap.get(label);
+							nodeInstances.add(tInRes);
 							
 						}
 						
@@ -312,13 +313,6 @@ public class RepResultPortObject implements PortObject {
 					}
 					
 				}
-			// Since XLogUtil.loadLog(inObj), close the InputStream, so we put the Petri net reading at first 
-			nextEntry = in.getNextEntry();
-			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NET)) {
-				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NET + "' not present");
-			}
-			// AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
-			AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
 			
 			// firstly to get the entry name for replay result
 			nextEntry = in.getNextEntry();
@@ -326,9 +320,8 @@ public class RepResultPortObject implements PortObject {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_LOG + "' not present");
 			}
 			
-			// this method closes the InputStream, why it can't read the data there?
+			// this method closes the InputStream, why it can't read the data
 			XLog log = XLogUtil.loadLog(in);
-			
 			
 			// use this alignment object, we need to reload it here
 			repResultPO.setRepResult(new PNRepResultImpl(col));
