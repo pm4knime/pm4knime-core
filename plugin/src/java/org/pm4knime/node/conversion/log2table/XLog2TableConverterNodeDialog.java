@@ -1,5 +1,10 @@
 package org.pm4knime.node.conversion.log2table;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
@@ -46,21 +51,35 @@ public class XLog2TableConverterNodeDialog extends DefaultNodeSettingsPane {
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final PortObjectSpec[] specs) throws NotConfigurableException {
     	
-    	
+    		// if we only check the include lists here;
+    		// when the new spec includes more values, it can't add the new values into the 
+    	// right place here. to make sure that they are from the same values, 
+    	// we check the both sides. get all values from the traceAttrSet, compare '
+    	// if they are the same, if they are not, then change the traceAttrSet to the new values here
 	    	if(!(specs[0] instanceof XLogPortObjectSpec))
 	    		throw new NotConfigurableException("the spec does not have the right type");
 	    	XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
-	    
-	    	if(!logSpec.getGTraceAttrMap().keySet().containsAll(m_traceAttrSet.getIncludeList())) {
+	    	
+	    	List<String> configTraceAttrColumns = new ArrayList<String>(m_traceAttrSet.getIncludeList());
+	    	configTraceAttrColumns.addAll(m_traceAttrSet.getExcludeList());
+	    	Set<String> specTraceColumns = logSpec.getGTraceAttrMap().keySet();
+	    	
+	    	if(!specTraceColumns.containsAll(configTraceAttrColumns) 
+	    		|| !configTraceAttrColumns.containsAll(specTraceColumns)) {
 	    		// here how to know if it has some changes, we have the excluded list there
-	    		m_traceAttrSet.setIncludeList(logSpec.getGTraceAttrMap().keySet());
+	    		m_traceAttrSet.setIncludeList(specTraceColumns);
 		    	m_traceAttrSet.setExcludeList(new String[0]);
 		    	
 	    	}
 	    	
-	    	if(!logSpec.getGEventAttrMap().keySet().containsAll(m_traceAttrSet.getIncludeList())) {
-
-		    	m_eventAttrSet.setIncludeList(logSpec.getGEventAttrMap().keySet());
+	    	List<String> configEventAttrColumns = new ArrayList<String>(m_eventAttrSet.getIncludeList());
+	    	configEventAttrColumns.addAll(m_eventAttrSet.getExcludeList());
+	    	Set<String> specEventColumns = logSpec.getGEventAttrMap().keySet();
+	    	
+	    	
+	    	if(!specEventColumns.containsAll(configEventAttrColumns) 
+		    		|| !configEventAttrColumns.containsAll(specEventColumns)) {
+		    	m_eventAttrSet.setIncludeList(specEventColumns);
 		    	m_eventAttrSet.setExcludeList(new String[0]);
 	    	}
 	    
