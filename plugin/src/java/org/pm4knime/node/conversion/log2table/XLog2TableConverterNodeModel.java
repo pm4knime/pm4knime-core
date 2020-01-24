@@ -88,12 +88,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
         	}
         
     	XLog log = logPortObject.getLog();
-    	// check the trace attributes we have chosen for the output!!  
-    	// should we keep the attributes here. 
-    	// FromXLogConverter.createSpec(log);
-    	// DataTableSpec outSpec = FromXLogConverter.createAttrSpec(log);
     	
-    	// if we have the dialog choices, we can create the outSpec easier than this one. 
     	DataTableSpec outSpec = createSpec();
     	
     	BufferedDataContainer bufCon = exec.createDataContainer(outSpec);
@@ -160,12 +155,6 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     @Override
     protected void reset() {
         // TODO: generated method stub
-    	m_traceAttrSet.setIncludeList(new String[0]);
-    	m_traceAttrSet.setExcludeList(new String[0]);
-    	
-
-    	m_eventAttrSet.setIncludeList(new String[0]);
-    	m_eventAttrSet.setExcludeList(new String[0]);
     }
 
     /**

@@ -1,16 +1,10 @@
 package org.pm4knime.node.conformance.replayer;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,7 +13,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
@@ -30,8 +23,6 @@ import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.util.StringIconOption;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
@@ -131,52 +122,6 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
     	m_classifierComp = new DialogComponentStringSelection(
     			m_parameter.getMClassifierName(), "Select Classifier Name", new String[ ]{""} );
     	addDialogComponent(m_classifierComp);
-    	
-    	/*
-    	Component[] comps  = m_classifierComp.getComponentPanel().getComponents();
-    	
-    	for(Component comp : comps) {
-    		if(comp.getClass().equals(JComboBox.class)) {
-    			// we have this componnet, we add listener on it to change the values there
-    			JComboBox cBox = (JComboBox) comp;
-    			cBox.addItemListener(new ItemListener() {
-
-					@Override
-					public void itemStateChanged(ItemEvent event) {
-						// TODO if the value changes 
-						if (event.getStateChange() == ItemEvent.SELECTED) {
-							String item = (String) event.getItem();
-							
-							// update the current cost list
-							SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
-							
-							if(logPO != null && tmp.isMWithTM()) {
-								XLog log = logPO.getLog();
-								// here the value is still the old value, 
-								System.out.println("the current value is "+ m_parameter.getMClassifierName().getStringValue());
-								XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, 
-										m_parameter.getMClassifierName().getStringValue());
-								
-								List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
-								tmp.setCostTM(ecNames, 0);
-							}
-						}
-						System.out.println("Item Change");
-						
-					}
-    				
-    			});
-    		}
-    		
-    	}
-    	*/
-    	// if the parameter changes, the log activity should changes too.
-    	/*
-    	
-    	
-    	*/ 
-    	
-    	
     	
     	parameter.getMStrategy().setStringValue(strategyList[0]);
     	DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(

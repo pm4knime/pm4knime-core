@@ -13,6 +13,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.SettingsModel;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
 import org.processmining.log.csvimport.config.CSVConversionConfig;
@@ -43,6 +44,8 @@ public class SMTable2XLogConfig extends SettingsModel{
 	public static final String CFG_KEY_TS_FORMAT = "Time stamp format";
 	public static final String CFG_NO_OPTION = "NO AVAILABLE";
 	
+	public static final String CFG_KEY_COLUMN_SET = "Column Set";
+	private SettingsModelStringArray m_columnSet = new SettingsModelStringArray(CFG_KEY_COLUMN_SET, new String[] {""});
 	
 	private SettingsModelString m_caseID = new SettingsModelString(CFG_KEY_CASEID, "CaseID");
 	private SettingsModelString m_eventClass = new SettingsModelString(CFG_KEY_EVENTCLASS, "Event Class");
@@ -152,6 +155,13 @@ public class SMTable2XLogConfig extends SettingsModel{
 		this.m_eventAttrSet = m_eventAttrSet;
 	}
 	
+	public void setColumnSet(String[] newValue) {
+		m_columnSet.setStringArrayValue(newValue);
+	}
+	
+	public SettingsModelStringArray getColumnSet() {
+		return m_columnSet;
+	}
 	
 	@Override
 	protected String getModelTypeID() {
@@ -201,6 +211,15 @@ public class SMTable2XLogConfig extends SettingsModel{
     	
     	m_traceAttrSet.loadSettingsFrom(settings);
     	m_eventAttrSet.loadSettingsFrom(settings);
+    	// add the item to save the possible columns
+    	// during the process, it happens that m_columnSet can not be loaded
+    	if(settings.containsKey(CFG_KEY_COLUMN_SET)) {
+    		
+    		m_columnSet.loadSettingsFrom(settings);
+    		
+    	}else {
+    		System.out.println("column set can not be loaded");
+    	}
     	
 		String fName = settings.getString(CFG_KEY_XFACTORY);
 		
@@ -234,6 +253,8 @@ public class SMTable2XLogConfig extends SettingsModel{
     	
     	m_traceAttrSet.saveSettingsTo(settings);
     	m_eventAttrSet.saveSettingsTo(settings);
+    	
+    	m_columnSet.saveSettingsTo(settings);
     	
 		settings.addString(CFG_KEY_XFACTORY, factory.getName());
 		settings.addString(CFG_KEY_ERROR_HANDLE_MODE, errorHandlingMode.name());

@@ -1,6 +1,7 @@
 package org.pm4knime.node.conversion.table2log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.knime.core.data.DataTableSpec;
@@ -35,7 +36,7 @@ import org.pm4knime.settingsmodel.SMTable2XLogConfig;
  *  
  *  // do two line, one to choose if with time stamp, the other for timestamp
  */
-public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
+public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
 
 	// here we have optional item, but now just this two
 	private List<String> m_possibleColumns ;
@@ -55,7 +56,7 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
     protected Table2XLogConverterNodeDialog() {
     	// here to initialise the option
     	m_possibleColumns = new ArrayList<String>();
-    	m_possibleColumns.add("");
+    	m_possibleColumns.add(SMTable2XLogConfig.CFG_NO_OPTION);
     	// all the this options, how to make them as optional choice?? 
     	// if we have optional choice, it means we can use the default values?? or just guess values there
     	// if there is no start time or complete time, how to set them there is not chosen then??
@@ -108,11 +109,18 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
         m_eventAttrFilterComp = new DialogComponentColumnFilter(m_eventAttrSet,0, true);
         addDialogComponent(m_eventAttrFilterComp);
 
-        
+        // change this part to match the KNIME rules here
         ExpertConfigPanel ecPanel = new ExpertConfigPanel();
     	ecPanel.setConversionConfig(config);
     	addTab("Expert Choice", ecPanel);
     	
+    }
+    
+    @Override
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
+            throws InvalidSettingsException {
+        // to save the values from the expertconfigPanel into the settings and also the classifierSet into settings
+    	config.saveSettingsTo(settings);
     }
     
     /**
@@ -132,9 +140,59 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
             final DataTableSpec[] specs) throws NotConfigurableException {
     	// If at first, we already add the settings here, we need to load the saved value at first, and then check the values there
     	// check if it is after reset, or it is the first time to import into the workflow??
-    	
+    	try {
+			config.getColumnSet().loadSettingsFrom(settings);
+    		// when settings loads, it is also limits to the possible items available options.
+//			config.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
     	DataTableSpec spec = (DataTableSpec) specs[0];
+    	m_possibleColumns = new ArrayList<String>(Arrays.asList(spec.getColumnNames()));
+		m_possibleColumns.add(SMTable2XLogConfig.CFG_NO_OPTION);
+		List<String> configColumns = Arrays.asList(config.getColumnSet().getStringArrayValue());
+		
+    	if(! configColumns.containsAll(m_possibleColumns) 
+    		 ||	!m_possibleColumns.containsAll(configColumns)){
+    		caseIDComp.replaceListItems(m_possibleColumns, m_possibleColumns.get(0));
+        	eventClassComp.replaceListItems(m_possibleColumns,  m_possibleColumns.get(0));
+        	timeStampComp.replaceListItems(m_possibleColumns,  m_possibleColumns.get(0));
+        	lifecycleNameComp.replaceListItems(m_possibleColumns, m_possibleColumns.get(0));
+    		
+    		m_traceAttrSet.setIncludeList(spec.getColumnNames());
+        	m_eventAttrSet.setIncludeList(spec.getColumnNames());
+        	
+        	config.setColumnSet(m_possibleColumns.toArray(new String[0]));
+        	
+    	}else {
+    		// if it contains, one is from the reload, change all the possiblecolumns there 
+    		// after this, we can reload all the values.. 
+    		
+    		caseIDComp.replaceListItems(m_possibleColumns, config.getMCaseID().getStringValue());
+    		eventClassComp.replaceListItems(m_possibleColumns, config.getMEventClass().getStringValue());
+    		
+    		timeStampComp.replaceListItems(m_possibleColumns,  config.getMTimeStamp().getStringValue());
+        	lifecycleNameComp.replaceListItems(m_possibleColumns, config.getMLifecycle().getStringValue());
+        	
+        	try {
+				config.loadSettingsFrom(settings);
+			} catch (InvalidSettingsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    		
+    	
+    	
+    	
+    	
+    	// set the colNumbers here, if it changes, we change them all.
+    	// there are some difference, so we need to change them, else no change?? 
+    	
+    	
+    	/*
     	m_possibleColumns.clear();
     	for(String colName : spec.getColumnNames())
     		m_possibleColumns.add(colName) ;
@@ -162,19 +220,8 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
     }
     
-    
-    /**
-     * Override this method to  
-     */
-    @Override
-    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
-            throws InvalidSettingsException {
-    	config.saveSettingsTo(settings);
-    }
-    
-	
 }
 

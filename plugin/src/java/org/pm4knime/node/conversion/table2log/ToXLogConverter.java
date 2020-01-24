@@ -60,6 +60,8 @@ public class ToXLogConverter {
 	// save trace attributes set
 	private Map<String, DataCell> traceAttrMap = new HashMap<String, DataCell>();
 	
+	DateTimeFormatter df ; //;
+	
 	SMTable2XLogConfig config = null;
 	
 	public void setConfig(SMTable2XLogConfig m_config) {
@@ -92,11 +94,15 @@ public class ToXLogConverter {
 		// complete time the time stamp here in default
 		tsIdx = eventColumns.indexOf(config.getMTimeStamp().getStringValue());
 		String tsFormat = config.getMTSFormat().getStringValue();
+		df = DateTimeFormatter.ofPattern(tsFormat);
 		
 		// optional for lifecycle column, but there is no need to specify the event ID for it!!  Lifecycle is useful!!
 		boolean withLifecycle = false; 
 		int  lifecycleIdx = -1;
-		if(!config.getMLifecycle().getStringValue().equals(Table2XLogConfigModel.CFG_NO_OPTION)) {
+		if(!config.getMLifecycle().getStringValue().equals(SMTable2XLogConfig.CFG_NO_OPTION)) {
+			// exception happens, when eventAttrSet excluses life-cycle column, which one is the optimal choices?
+			// if we choose lifecycle there, then we should keep it into our event attr!! 
+			// only when it is no-available, it can be excluded. But we test it in configuration part.
 			withLifecycle = true;
 			lifecycleIdx = eventColumns.indexOf(config.getMLifecycle().getStringValue());
 			eventColVisited[lifecycleIdx] =  true;
@@ -154,7 +160,7 @@ public class ToXLogConverter {
 				// if the values there are also like this, what to do?? 
 				// String cTime = ((StringCell) row.getCell(eventColIndices[cTimeIdx])).getStringValue();
 				String cTime = row.getCell(eventColIndices[tsIdx]).toString();
-				Date timeStamp = convertString2Date(tsFormat, cTime);
+				Date timeStamp = convertString2Date( cTime);
 				
 				// here we check the lifecycle transition and assign the values to it!! 
 				String lifecycle = null ;
@@ -367,15 +373,6 @@ public class ToXLogConverter {
 				factory.createAttributeLiteral(XConceptExtension.KEY_NAME, value, XConceptExtension.instance()));
 	}
 
-	// assign instance and assign name are different behaviour!! But what we want to have is the event class!!
-	// if there is one event ID available, we can assign it, but it can't be as the main function.
-	// event name is required, but the instance is not so!! Then what we need to do is 
-	// if there is no choices for the event ID and no choices for the lifecycle, we think they don't have such attributes here!!
-	// instance Id, we can assign them to number if it is a need. But actually not in need??
-	private static void assignInstance(XFactory factory, XAttributable a, String value) {
-		assignAttribute(a,
-				factory.createAttributeLiteral(XConceptExtension.KEY_INSTANCE, value, XConceptExtension.instance()));
-	}
 
 	private static void assignTimestamp(XFactory factory, XAttributable a, Date value) {
 		assignAttribute(a,
@@ -383,10 +380,9 @@ public class ToXLogConverter {
 	}
 	
 	// convert string to DateTime there, one easy solution is to delete the zone in data and time
-	public Date convertString2Date(String format, String value) throws ParseException {
-		// we need the predefined format in knime 
-		
-		DateTimeFormatter df = DateTimeFormatter.ofPattern(format);
+	public Date convertString2Date(String value) throws ParseException {
+		// local time is ok now, use another simple format to process the date
+		// Error: with the parse, and also errors with the reloading process
 		LocalDateTime ldt = LocalDateTime.parse(value, df);
 		Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
 		return date;

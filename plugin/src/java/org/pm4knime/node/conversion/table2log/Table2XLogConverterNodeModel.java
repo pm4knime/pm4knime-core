@@ -3,6 +3,7 @@ package org.pm4knime.node.conversion.table2log;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
@@ -47,7 +48,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(Table2XLogConverterNodeModel.class);
 	// here we have optional item, but now just this two
 	public static final String CFG_KEY_CONFIG = "Table to event log conveter config";
-	static SMTable2XLogConfig m_config =  new SMTable2XLogConfig(CFG_KEY_CONFIG);
+	SMTable2XLogConfig m_config =  new SMTable2XLogConfig(CFG_KEY_CONFIG);
 	XLogPortObject logPO;
     /**
      * Constructor for the node model.
@@ -117,9 +118,20 @@ public class Table2XLogConverterNodeModel extends NodeModel {
         // Input PortObject is a DataTableSpec, output Spec is XLogPortObject
     	if(!inSpecs[0].getClass().equals(DataTableSpec.class)) 
     		throw new InvalidSettingsException("Input is not a CSV File!");
+    	// here check the options from the exlcuded list from traceAttrSet and event Attr set
+    	// to make sure, the columns in the first panel must be included in the lists 
+    	if(m_config.getMTraceAttrSet().getIncludeList().contains(m_config.getMCaseID().getStringValue())) 
+    		if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMEventClass().getStringValue()))
+    			if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMLifecycle().getStringValue()) 
+    					|| m_config.getMLifecycle().getStringValue().equals(SMTable2XLogConfig.CFG_NO_OPTION))
+    				if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMTimeStamp().getStringValue()))
+    					return new PortObjectSpec[]{new XLogPortObjectSpec()};
     	
-    	// return new PortObjectSpec[]{inSpecs[0]};
-    	return new PortObjectSpec[]{new XLogPortObjectSpec()};
+    	
+    	throw new InvalidSettingsException("Make sure the attribute set choice panel includes all"
+    			+ " the choices in the panel!");
+    	
+    	
     }
 
     /**
