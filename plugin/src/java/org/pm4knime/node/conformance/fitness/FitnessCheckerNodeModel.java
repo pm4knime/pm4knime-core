@@ -60,13 +60,16 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
             final ExecutionContext exec) throws Exception {
     	logger.info("Start: Unified PNReplayer Conformance Checking");
     	repResultPO = (RepResultPortObject) inData[0];
-    	
+// check cancellation of node before sync
+    	exec.checkCanceled();
     	// make the transitions in replay result and transitions corresponding!!
     	ReplayerUtil.adjustRepResult(repResultPO.getRepResult(), repResultPO.getNet());
     	
     	BufferedDataContainer buf = exec.createDataContainer(m_tSpec);
     	// one warning here, if we could get the fitness information , or not.
     	// if the types are changed from this step, then exceptions happen.
+// check cancellation of node before writing
+    	exec.checkCanceled();
     	Map<String, Object> info = repResultPO.getRepResult().getInfo();
     	int i=0;
     	for(String key : info.keySet()) {
@@ -86,7 +89,8 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
     	}
     	buf.close();
     	BufferedDataTable bt = buf.getTable();
-    	
+// check cancellation of node before closing
+    	exec.checkCanceled();
         return new PortObject[]{bt};
     }
 

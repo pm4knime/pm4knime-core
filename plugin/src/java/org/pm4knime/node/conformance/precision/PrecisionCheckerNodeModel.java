@@ -126,7 +126,8 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
     	logger.info("Start: ETC Precision Checking");
-    	
+    	// check cancellation of node
+    	exec.checkCanceled();
     	repResultPO = (RepResultPortObject) inData[0];
     	
     	PNRepResult repResult = repResultPO.getRepResult();
@@ -138,10 +139,9 @@ public class PrecisionCheckerNodeModel extends NodeModel {
 		// so the new loaded version differs from the transitions from anet
 		ReflectedLog refLog = ReplayerUtil.extractRefLog(matchResult, anet);
 		// make refLog with the corresponding version in anet
-		
-		
 		MultiETCSettings sett = getParameter();
-		
+		// check cancellation of node before the precision checking
+    	exec.checkCanceled();
 		// based on match result, get the precision indication
 		Object[] result = ReplayerUtil.checkMultiETC(refLog, anet, sett);
 		MultiETCResult res = (MultiETCResult) result[0];
@@ -154,6 +154,8 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     	
     	tBuf.close();
     	
+    	// check cancellation of node
+    	exec.checkCanceled();
     	logger.info("End: ETC Precision Checking");
     
         return new PortObject[]{tBuf.getTable()};

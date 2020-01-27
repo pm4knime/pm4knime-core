@@ -91,15 +91,15 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 
 		// TODO: Return a BufferedDataTable for each output port
 		logger.info("Start: ManifestReplayer Performance Checking");
+		
 		RepResultPortObject repResultPO = (RepResultPortObject) inData[0];
-
 		XLog log = repResultPO.getLog();
 		AcceptingPetriNet anet = repResultPO.getNet();
 
 		PNRepResult repResult = repResultPO.getRepResult();
 		// here to syn the transitions from replay result and accepting petri net
 //		
-
+		
 		// pass the values of specParameter to m_parameter
 		// we can do it when it is in configuration state, or here??
 		SMAlignmentReplayParameter specParameter = m_rSpec.getMParameter();
@@ -110,19 +110,22 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// more time..
 		XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
 				specParameter.getMClassifierName().getStringValue());
-
+		
 		PNManifestReplayerParameter manifestParameters = specParameter.getPerfParameter(log, anet, eventClassifier);
 		PNManifestFlattener flattener = new PNManifestFlattener(anet.getNet(), manifestParameters);
 		// important is the transitions in flattener and replayer result should be the
 		// same!!
 		// how to make this happen?? After the generation of flattener,
 		// it generates a new map during the building process. How to make the ones
+// check cancellation of node before sync
+    	exec.checkCanceled();
 		sync(repResult, flattener);
 
 		// problem with mismatch of replay result and flattener.. How to change them??
 		// can't change the flattener, then change the ones in replayer result.
 		// it takes time, but it is what we need, so what!!
-
+// check cancellation of node before replaying
+    	exec.checkCanceled();
 		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
 				flattener.getFinalMarkings(), log, flattener, repResult, manifestParameters.getMapping());
 		// we need to set the classifier for the mResult here
@@ -154,6 +157,8 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		gBuf.close();
 		tBuf.close();
 		pBuf.close();
+// check cancellation of node after replaying
+    	exec.checkCanceled();
 		logger.info("End: ManifestReplayer Performance Evaluation");
 		return new PortObject[] { gBuf.getTable(), tBuf.getTable(), pBuf.getTable() };
 	}

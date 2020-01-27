@@ -62,7 +62,7 @@ public class SMILPMinerParameter extends SettingsModel
 	static Collection<XEventClassifier> classifiers ; 
 	
 	private String m_configName;
-	SettingsModelString m_clf, m_filterType, m_algorithm;
+	SettingsModelString m_filterType, m_algorithm;
 	SettingsModelDoubleBounded m_filterThreshold;
 	
 	// advanced settings
@@ -90,7 +90,7 @@ public class SMILPMinerParameter extends SettingsModel
         }
 		m_configName = configName;
 		
-		m_clf = new SettingsModelString(CFG_KEY_CLASSIFIER, "");
+//		m_clf = new SettingsModelString(CFG_KEY_CLASSIFIER, "");
 		m_filterType = new SettingsModelString(CFG_KEY_FILTER_TYPE, "");
 		m_filterThreshold = new SettingsModelDoubleBounded(CFG_KEY_FILTER_THRESHOLD, 0.25, 0, 1.0);
 		// add several choices to have the miner
@@ -126,7 +126,7 @@ public class SMILPMinerParameter extends SettingsModel
 	public void setMDS(SettingsModelString m_ds) {
 		this.m_ds = m_ds;
 	}
-
+/*
 	public SettingsModelString getMclf() {
 		return m_clf;
 	}
@@ -134,7 +134,7 @@ public class SMILPMinerParameter extends SettingsModel
 	public void setMclf(SettingsModelString m_clf) {
 		this.m_clf = m_clf;
 	}
-
+*/
 	public SettingsModelString getMfilterType() {
 		return m_filterType;
 	}
@@ -198,7 +198,7 @@ public class SMILPMinerParameter extends SettingsModel
 	protected SMILPMinerParameter createClone() {
 		// TODO Auto-generated method stub
 		SMILPMinerParameter clone =  new SMILPMinerParameter(m_configName);
-		clone.setMclf(m_clf);
+//		clone.setMclf(m_clf);
 		clone.setMfilterType(m_filterType);
 		clone.setMfilterThreshold(m_filterThreshold);
 		clone.setMalgorithm(m_algorithm);
@@ -253,7 +253,7 @@ public class SMILPMinerParameter extends SettingsModel
 		// TODO Auto-generated method stub
 		final NodeSettingsWO subSettings = settings;
 //	            settings.addNodeSettings(m_configName);
-		m_clf.saveSettingsTo(subSettings);
+//		m_clf.saveSettingsTo(subSettings);
 		m_filterType.saveSettingsTo(subSettings);
 		m_filterThreshold.saveSettingsTo(subSettings);
 		m_algorithm.saveSettingsTo(subSettings);
@@ -277,7 +277,7 @@ public class SMILPMinerParameter extends SettingsModel
 //                settings.getNodeSettings(m_configName);
 //		
 		
-		m_clf.loadSettingsFrom(subSettings);
+//		m_clf.loadSettingsFrom(subSettings);
 		m_filterType.loadSettingsFrom(subSettings);
 		m_filterThreshold.loadSettingsFrom(subSettings);
 		m_algorithm.loadSettingsFrom(subSettings);
@@ -303,16 +303,6 @@ public class SMILPMinerParameter extends SettingsModel
 	public String toString() {
 		// TODO Auto-generated method stub
 		return getClass().getSimpleName() + " ('" + m_configName + "')";
-	}
-
-	public XEventClassifier getEventClassifier() {
-		// TODO refer to the event classifier from the m_clf and then classifierList it uses
-		String name = m_clf.getStringValue();
-		for(XEventClassifier clf : classifiers) {
-			if(clf.name().equals(name))
-				return clf;
-		}
-		return null;
 	}
 
 }

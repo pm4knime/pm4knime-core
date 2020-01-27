@@ -3,20 +3,19 @@
     <name>DFM Miner</name>
     
     <shortDescription>
-        This node is created for discovering Directly-Follows Model from an event log.
+        This node is created for discovering Directly-Follows graph from an event log.
     </shortDescription>
     
     <fullDescription>
-        <intro> This node is created for discovering Directly-Follows Model. It accepts an event log as input and generates DirectlyFollowsModel as output.
+        <intro> This node is created for discovering Directly-Follows Model as a graph. It accepts an event log as input and generates DirectlyFollowsModel as output.
         In this package without note, Directly-Follows Model  is abbreviated as DFM. A DFM is composed of activities in rectangle, 
         which are connected with arcs for directly-follows relation. The green rectangles represent the start activities, while the red
         ones for the end activities.   
         </intro>
         
-        
-        <option name="noiseeThreshold">noise threshold to filter dfm</option>
-        <option name="Event classifer">The classifier chosen to classify the event log.</option>
-        <option name="lifecycle classifier tyep">LifeCycle Classifier type</option>
+         <option name="Event classifer">The classifier chosen to classify the event log.</option>
+        <option name="Variant">The variant type used to extract one directly-follows graph from event log. There are three options. </option>
+       
         
     </fullDescription>
     

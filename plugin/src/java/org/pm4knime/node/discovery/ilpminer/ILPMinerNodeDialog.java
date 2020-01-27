@@ -3,15 +3,10 @@ package org.pm4knime.node.discovery.ilpminer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.settingsmodel.SMILPMinerParameter;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 import org.processmining.causalactivitymatrixminer.miners.MatrixMiner;
 import org.processmining.causalactivitymatrixminer.miners.MatrixMinerManager;
 
@@ -35,30 +30,25 @@ import org.processmining.causalactivitymatrixminer.miners.MatrixMinerManager;
  * 
  * @author Kefang Ding
  */
-public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
+public class ILPMinerNodeDialog extends DefaultMinerNodeDialog {
 
 	
 	SMILPMinerParameter m_parameter; 
     /**
      * New pane for configuring the ILPMiner node.
      */
-    protected ILPMinerNodeDialog() {
-    	
-    	m_parameter = new SMILPMinerParameter(ILPMinerNodeModel.CFG_KEY_ILP_PARAMETER);
-    	// list the strings here
-    	List<String> classifierNames = SMILPMinerParameter.getClassifierNames(SMILPMinerParameter.setDefaultClassifier());
-    	// add the event classifier
-    	DialogComponentStringSelection m_classifierComp = new DialogComponentStringSelection(
-    			m_parameter.getMclf(), "Set Classifier Name", classifierNames);
-    	addDialogComponent(m_classifierComp);
-    	
+	
+	@Override
+	public void init() {
+		m_parameter = new SMILPMinerParameter(ILPMinerNodeModel.CFG_KEY_ILP_PARAMETER);
+  
     	DialogComponentStringSelection m_filterTypeComp = new DialogComponentStringSelection(
     			m_parameter.getMfilterType(), "Set Filter Type", SMILPMinerParameter.CFG_FILTER_TYPES);
     	addDialogComponent(m_filterTypeComp);
     	
     	// it is triggered from the last step to choose the type
     	DialogComponentNumber m_noiseThresholdComp = new DialogComponentNumber(
-    			 m_parameter.getMfilterThreshold(), "Set the Noise Threshold", 0.25);
+    			 m_parameter.getMfilterThreshold(), "Noise Threshold", 0.25);
     	addDialogComponent(m_noiseThresholdComp); 
 
     	// add static initialization
@@ -84,8 +74,8 @@ public class ILPMinerNodeDialog extends DefaultNodeSettingsPane {
     	DialogComponentStringSelection m_DSComp = new DialogComponentStringSelection(
     			m_parameter.getMDS(), "Set Discovery Strategy", SMILPMinerParameter.CFG_DS_TYPES);
     	addDialogComponent(m_DSComp);
-    	
-    }
+	}
+	
     
 }
 

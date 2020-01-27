@@ -8,8 +8,10 @@
     
     <fullDescription>
         <intro>With input of a Directly-Follows Model, this node discovers a Process Tree and a Petri net. </intro>
-         <option name="Noise Threshold">noise threshold to filter dfm</option>
-      	<option name="Use Multi-thread">If to use multi threads for the conversion</option>
+        <option name="Event classifer">The event classifier chosen to classify the event log.</option>
+        <option name="Variant">The variant type used to mine one process tree from one directly-follows graph. There are three options. </option>
+         <option name="Noise Threshold">noise threshold to set the fitting trace percent with respect to the new model. 0.8 is as the default value.</option>
+      	
       
     </fullDescription>
     

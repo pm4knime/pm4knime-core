@@ -117,7 +117,6 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
     @Override
     protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
 
-       
         return new PortObjectSpec[]{new PetriNetPortObjectSpec()};
     }
 

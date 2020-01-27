@@ -1,10 +1,15 @@
 package org.pm4knime.node.discovery.dfgminer;
 
-import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.pm4knime.util.XLogUtil;
+import org.knime.core.node.port.PortObjectSpec;
+import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 /**
@@ -13,20 +18,47 @@ import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
  * @author Kefang Ding
  */
 public class DFMMinerNodeDialog extends DefaultMinerNodeDialog {
-
-	private SettingsModelDoubleBounded m_noiseThreshold = null;
-	private SettingsModelString m_lcClf = null;
+	// set the variants to convert the directly-follows graph 
+	SettingsModelString m_variant;
 
 	@Override
 	public void init() {
-		m_lcClf = new SettingsModelString(DFMMinerNodeModel.CFG_LCC_KEY, "");
-    	DialogComponentStringSelection lcClfComp = new DialogComponentStringSelection(m_lcClf, "LifeCycle Classifier",
-    			XLogUtil.getECNames(DFMMinerNodeModel.lcClassifierList));
-    	addDialogComponent(lcClfComp);
+		m_variant = new SettingsModelString(DFMMinerNodeModel.CFG_VARIANT_KEY, DFMMinerNodeModel.CFG_VARIANT_VALUES[0]);
+		// the variants values are fixed
+		DialogComponentStringSelection variantComp = new DialogComponentStringSelection(m_variant, "Variant",
+				DFMMinerNodeModel.CFG_VARIANT_VALUES);
+    	addDialogComponent(variantComp);
     	
-    	m_noiseThreshold = new SettingsModelDoubleBounded(DFMMinerNodeModel.CFG_NOISE_THRESHOLD_KEY, 0.2, 0, 1.0);
-    	DialogComponentNumber noiseThresholdComponent = new DialogComponentNumber(m_noiseThreshold, "Fitness Threshold", 0.8);
-    	addDialogComponent(noiseThresholdComponent);
 	}
+	
+	@Override
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
+            final PortObjectSpec[] specs) throws NotConfigurableException {
+		try {
+			
+			classifierSet.loadSettingsFrom(settings);
+    		List<String> configClassifierSet = Arrays.asList(classifierSet.getStringArrayValue());
+    		
+    		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
+			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
+			specClassifierSet.addAll(DFMMinerNodeModel.sClfNames);
+			
+			if(! configClassifierSet.containsAll(specClassifierSet) 
+		    		 ||	!specClassifierSet.containsAll(configClassifierSet)){
+				
+				classifierSet.setStringArrayValue(specClassifierSet.toArray(new String[0]));
+			}
+			
+			classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
+			m_classifier.loadSettingsFrom(settings);
+			
+		} catch (InvalidSettingsException | NullPointerException e ) {
+			// TODO Auto-generated catch block
+			throw new NotConfigurableException("Please make sure the connected event log in excution state");
+			
+		}
+	}
+	
+	
 }
 

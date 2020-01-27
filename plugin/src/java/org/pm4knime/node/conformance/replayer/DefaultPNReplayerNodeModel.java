@@ -108,7 +108,6 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	super(new PortType[] { XLogPortObject.TYPE, PetriNetPortObject.TYPE }, new PortType[] {RepResultPortObject.TYPE });
     	evClassDummy = new XEventClass("dummy", 1);
     	// need to initialize the parameters later, because it has different types there.
-    	// adjust childclass 
     	initializeParameter();
     }
 
@@ -124,8 +123,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
             final ExecutionContext exec) throws Exception {
 
     	logger.info("Start: " + message);
-    	
     	String strategyName = m_parameter.getMStrategy().getStringValue();
+    	
     	executeWithoutLogger(inData, exec, strategyName);
     	// in greed to output the strategy for replay
 		logger.info("End: " + message + " for "+ strategyName);
@@ -135,6 +134,9 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     protected void executeWithoutLogger(final PortObject[] inData,
             final ExecutionContext exec, String strategyName) throws Exception{
       	// extract one method here to allow logger record its current class info
+    	// check cancellation of node
+    	exec.checkCanceled();
+    	
     	XLogPortObject logPO = (XLogPortObject) inData[INPORT_LOG];
     	PetriNetPortObject netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
     	XLog log = logPO.getLog();
@@ -142,14 +144,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	
     	// here to change the operation on the classifier
     	XEventClassifier eventClassifier = getEventClassifier(log, m_parameter.getMClassifierName().getStringValue());
-    	// mapping is not in performance checker... 
-    	// need to set it private
-    	// according to the different types strategy there. 
-    	// if the strategy belongs to the first two, we use this, else, we use different ones.. 
+
     	PNRepResult repResult = null;
-    	
-    	// String strategyName = m_parameter.getMStrategy().getStringValue();
-    	// for conformance checking
     	IPNReplayAlgorithm replayAlgorithm = null ;
     	
     	// for performance only
@@ -170,6 +166,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     		
     		PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
     				.getFutureResultAwarePluginContext(PNManifestReplayer.class);
+    		// check cancellation of node before replaying the result
+        	exec.checkCanceled();
     		PNLogReplayer replayer = new PNLogReplayer();
     		repResult = replayer.replayLog(pluginContext, flattener.getNet(), log, flattener.getMap(),
     				replayAlgorithm, parameter);
@@ -186,7 +184,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 	    	IPNReplayParameter parameters =  m_parameter.getConfParameter(log, anet, eventClassifier, evClassDummy);
 	    	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 					.getFutureResultAwarePluginContext(PNLogReplayer.class);
-	    	
+	    	// check cancellation of node before replaying the result
+        	exec.checkCanceled();
 	    	repResult = replayAlgorithm.replayLog(pluginContext, anet.getNet(), log, mapping, parameters);
     	}
     	
@@ -196,9 +195,10 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	repResult.addInfo(XLogUtil.CFG_DUMMY_ECNAME, XLogUtil.serializeEventClass(evClassDummy));
     	repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, XLogUtil.serializeEventClassifier(eventClassifier));
     	
+    	// check cancellation of node after replaying the result
+    	exec.checkCanceled();
+    	
 		repResultPO = new RepResultPortObject(repResult, log, anet);
-		
-		
 		m_rSpec.setMParameter(m_parameter);
 		repResultPO.setSpec(m_rSpec);
     }
