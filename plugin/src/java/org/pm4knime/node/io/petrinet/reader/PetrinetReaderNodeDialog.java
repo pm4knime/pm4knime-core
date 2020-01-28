@@ -30,7 +30,7 @@ public class PetrinetReaderNodeDialog extends DefaultNodeSettingsPane {
         		JFileChooser.OPEN_DIALOG, false, createFlowVariableModel(m_fileName), ".pnml");
         fileChooser.setBorderTitle("Input Location");
         addDialogComponent(fileChooser);  
-        String[] defaultValue =  PetrinetReaderNodeModel.defaultValue;
+        String[] defaultValue =  PetrinetReaderNodeModel.defaultTypes;
         m_type = new SettingsModelString(PetrinetReaderNodeModel.GFG_PETRINET_TYPE, defaultValue[0]);
         addDialogComponent(new DialogComponentStringSelection(m_type, "Select Import Petri net Type", defaultValue));
         

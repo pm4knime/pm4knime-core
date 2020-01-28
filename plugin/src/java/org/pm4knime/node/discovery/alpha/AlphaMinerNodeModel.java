@@ -3,6 +3,7 @@ package org.pm4knime.node.discovery.alpha;
 import java.util.Set;
 
 import org.deckfour.xes.model.XLog;
+import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -50,7 +51,7 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 
 	
 	@Override
-	protected PortObject mine(XLog log) throws Exception {
+	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("Start: Alpha Miner");
 		AlphaMinerParameters alphaParams = null;

@@ -1,49 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./HM-icon.png" type="Learner" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Heuristics Miner</name>
-    
-    <shortDescription>
-        This nodes implements the HeuristicsMiner to discover process models.
-    </shortDescription>
-    
-    <fullDescription>
-        <intro> This nodes implements the Heuristics Miner to discover process models. 
-        Heuristics Miner is an algorithm that acts on the Directly-Follows Graph, 
-        providing way to handle with noise and to find dependency between activities. An heuristics net or causal
-        net is the output, which is a directed graph with activities as nodes, dependency interpreted as arcs and bindings. 
-        The Heuristics Net can be then converted into a Petri net.
-        <br/>
-        The node Heuristics Miner shows the Heuristics Net as one internal result in View "Heuristic Net", while it 
-        outputs a Petri net after implicit conversion.
-        
-         </intro>
-       
-        <tab name="Threshold Setting for Heuristics Miner">
-        	<option name="Event classifer">The event classifier chosen to classify the event log.</option>
-            <option name="Threshold: Relative-to-best">"Admissable distance between directly follows relations for an "
-					+ "activity and the activity's best one. At 0 only the best directly follows "
-					+ "relation will be shown for every activity, at 100 all will be shown."</option>
-            <option name="Threshold: Dependency">Strength of the directly follows relations determines when to 
-               show arcs (based on how frequently one activity is followed by another). </option>
-            <option name="Threshold: Length-one-loops">Show arcs based on frequency of L1L observations</option>
-            <option name="Threshold: Length-two-loops">Show arcs based on frequency of L2L observations</option>
-            <option name="Threshold: Long distance">Show arcs based on how frequently one activity is " + "eventually followed by another</option>
-        </tab>
-        
-       <option name="All tasks connected">Every task needs to have at least one input and output arc, 
-       			except one initial and one final activity.</option>
-       <option name="Long distance dependency">Show long distance relations in the model.</option>
-     
-       
-    </fullDescription>
-    
-    <ports>
-        <inPort index="0" name="Event Log">An event log as input</inPort>
-        <outPort index="0" name="Petri net">The discovered process model in Petri net</outPort>
-		
-    </ports>    
-    <views>
-        <view index="0" name="Heuristic Net">Heuristic Net Visualization</view>
-        
-    </views>
+<knimeNode icon="./HM-icon.png" type="Learner"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Heuristics Miner</name>
+
+	<shortDescription>
+		This nodes implements the HeuristicsMiner to discover process models.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>
+			This nodes implements the Heuristics Miner to discover process
+			models.
+			Heuristics Miner is an algorithm that acts on the Directly-Follows Graph,
+			providing way to handle with noise and to find dependency between
+			activities. An heuristics net or causal
+			net is the output, which is a directed graph with activities as nodes,
+			dependency interpreted as arcs and bindings.
+			The Heuristics Net can be then converted into a Petri net.
+			<br />
+			The node Heuristics Miner shows the Heuristics Net as one internal
+			result in View "Heuristic Net", while it
+			outputs a Petri net after implicit conversion.
+
+		</intro>
+
+
+		<option name="Event classifer">The event classifier chosen to classify the event
+			log.</option>
+		<option name="All tasks connected">Every task needs to have at least one input and
+			output arc,
+			except one initial and one final activity.
+		</option>
+		<option name="Long distance dependency">Show long distance relations in the model.
+		</option>
+
+
+		<option name="Threshold: Relative-to-best">"Admissable distance between directly follows
+			relations for an "
+			+ "activity and the activity's best one. At 0 only the best directly
+			follows "
+			+ "relation will be shown for every activity, at 100 all will be
+			shown."
+		</option>
+		<option name="Threshold: Dependency">Strength of the directly follows relations
+			determines when to
+			show arcs (based on how frequently one activity is followed by another).
+		</option>
+		<option name="Threshold: Length-one-loops">Show arcs based on frequency of L1L observations
+		</option>
+		<option name="Threshold: Length-two-loops">Show arcs based on frequency of L2L observations
+		</option>
+		<option name="Threshold: Long distance">Show arcs based on how frequently one activity is
+			" + "eventually followed by another</option>
+
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Event Log">An event log as input</inPort>
+		<outPort index="0" name="Petri net">The discovered process model in Petri
+			net</outPort>
+
+	</ports>
+	<views>
+		<view index="0" name="Heuristic Net">Heuristic Net Visualization</view>
+
+	</views>
 </knimeNode>

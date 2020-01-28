@@ -1,6 +1,12 @@
 package org.pm4knime.node.conformance.replayer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
@@ -17,7 +23,7 @@ import org.pm4knime.util.ReplayerUtil;
  */
 public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
 
-	DialogComponentStringSelection m_classifierComp ;
+	DialogComponentStringSelection classifierComp ;
 	protected SMAlignmentReplayParameter m_parameter;
 	String[] strategyList = ReplayerUtil.strategyList;
 	
@@ -47,11 +53,11 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
     	// dialog components. But how to refresh their values according to spec?? 
     	
     	// check if it is an empty values here??
-		m_classifierComp = new DialogComponentStringSelection(
+		classifierComp = new DialogComponentStringSelection(
 				parameter.getMClassifierName(), "Select Classifier Name", 
 				new String[ ]{""});
 		
-		addDialogComponent(m_classifierComp);
+		addDialogComponent(classifierComp);
 
 		parameter.getMStrategy().setStringValue(strategyList[0]);
 		DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(parameter.getMStrategy(),
@@ -72,19 +78,43 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
     @Override
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final PortObjectSpec[] specs) throws NotConfigurableException {
+    	
+    	try {
+    		// because it is not stored in the settings, so we should load the settings
     		
-    		// m_parameter.getMClassifierName().loadSettingsFrom(settings);
-    		String selectedItem = m_parameter.getMClassifierName().getStringValue();
+    		m_parameter.loadSettingsFrom(settings);
+    		List<String> configClassifierSet = Arrays.asList(m_parameter.getClassifierSet().getStringArrayValue());
     		
     		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
-    		if(!logSpec.getClassifiersMap().keySet().contains(
-    				m_parameter.getMClassifierName().getStringValue())) {
-				selectedItem = logSpec.getClassifiersMap().keySet().iterator().next();
-				m_parameter.getMClassifierName().setStringValue(selectedItem);
-				m_classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), selectedItem);
+			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
+			
+			
+			if(! configClassifierSet.containsAll(specClassifierSet) 
+		    		 ||	!specClassifierSet.containsAll(configClassifierSet)){
+				m_parameter.getClassifierSet().setStringArrayValue(specClassifierSet.toArray(new String[0]));
 			}
-    		
+			// one invalid settings is from the classifierComp, no matter where it is, it needs update 
+			classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
+			// this is also not the right way to do this.. 
+			// comp saves its separate settings there?? But if we only use settings but separate its saving..
+			// could we do this? Comp is already saved into the setting. We can do it again, to save it again
+			// but make sure that there is no underconfig??
+			m_parameter.getMClassifierName().loadSettingsFrom(settings);
+			
+		} catch (InvalidSettingsException | NullPointerException e ) {
+			// TODO Auto-generated catch block
+			throw new NotConfigurableException("Please make sure the connected event log in eexcution state");
+			
+		}
     	
+    }
+    
+    @Override
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
+            throws InvalidSettingsException {
+        assert settings != null;
+        
+        m_parameter.saveSettingsTo(settings);
     }
 }
 

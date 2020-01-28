@@ -2,6 +2,7 @@ package org.pm4knime.node.discovery.heuritsicsminer;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
+import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -68,7 +69,7 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
     }
 
     @Override
-	protected PortObject mine(XLog log) throws Exception{
+	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception{
     	logger.info("Begin: Heuristic Miner");
     	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()

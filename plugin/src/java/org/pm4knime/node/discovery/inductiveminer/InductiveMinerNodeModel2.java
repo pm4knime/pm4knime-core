@@ -2,6 +2,7 @@ package org.pm4knime.node.discovery.inductiveminer;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
+import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -55,7 +56,7 @@ public class InductiveMinerNodeModel2 extends DefaultMinerNodeModel {
 	
 
 	@Override
-	protected PortObject mine(XLog log) throws Exception {
+	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
 		// TODO the most important part, however, should we set the classifier
 		// as one parameter, and no need to explicitly infer the classifier from it ??
 		// Now, it is just fine

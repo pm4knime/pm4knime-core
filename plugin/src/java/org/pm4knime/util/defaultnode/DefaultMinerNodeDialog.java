@@ -63,8 +63,7 @@ public abstract class DefaultMinerNodeDialog extends DefaultNodeSettingsPane {
      *  reloading can change the configuration?? 
      *   -- it can't affect the configuration, we use settings value;; 
      *   -- it affect the configuration, but still no need to do this
-     *   
-     *  If 
+     *    
      */
     @Override
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,

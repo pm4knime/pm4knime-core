@@ -98,7 +98,7 @@ implements SettingsModelFlowVariableCompatible {
 		m_strategy = new SettingsModelString(CFGKEY_STRATEGY_TYPE, "");
 		m_classifierName = new SettingsModelString(CKF_KEY_EVENT_CLASSIFIER, "");
 		classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
-					new String[0]) ;
+					new String[] {""});
 		m_defaultCosts = new SettingsModelIntegerBounded[CFG_COST_TYPE_NUM];
 		
 		// m_defaultCosts here 
@@ -226,14 +226,13 @@ implements SettingsModelFlowVariableCompatible {
 	}
 	
 	protected void loadSettingsPure(NodeSettingsRO subSettings) throws InvalidSettingsException {
-		if(subSettings.containsKey(CFGKEY_STRATEGY_TYPE))
-			m_strategy.loadSettingsFrom(subSettings);
-		if(subSettings.containsKey(CKF_KEY_EVENT_CLASSIFIER))
-			 m_classifierName.loadSettingsFrom(subSettings);
+		
+		m_strategy.loadSettingsFrom(subSettings);
+		
+		m_classifierName.loadSettingsFrom(subSettings);
     	// here test if it contains the value here..
-    	if(subSettings.containsKey(CFG_KEY_CLASSIFIER_SET))
-    		classifierSet.loadSettingsFrom(subSettings);
     	
+    	classifierSet.loadSettingsFrom(subSettings);
     	
     		for(int i=0; i< CFG_COST_TYPE_NUM; i++){
     			if(subSettings.containsKey(CFG_MCOST_KEY[i])) {

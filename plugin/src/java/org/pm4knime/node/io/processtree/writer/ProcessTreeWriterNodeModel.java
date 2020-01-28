@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -21,9 +19,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
-import org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeDialog;
-import org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeModel;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 

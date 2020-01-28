@@ -37,7 +37,7 @@ import org.processmining.processtree.ptml.importing.PtmlImportTree;
 public class ProcessTreeReaderNodeModel extends NodeModel {
 	
 	private static final NodeLogger logger = NodeLogger
-            .getLogger(PetrinetReaderNodeModel.class);
+            .getLogger(ProcessTreeReaderNodeModel.class);
 	
 	private final SettingsModelString m_fileName = ProcessTreeReaderNodeDialog.createFileNameModel();
 	

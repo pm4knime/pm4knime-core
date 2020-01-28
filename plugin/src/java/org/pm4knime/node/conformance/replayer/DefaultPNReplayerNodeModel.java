@@ -3,15 +3,10 @@ package org.pm4knime.node.conformance.replayer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
@@ -23,7 +18,6 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.PetriNetPortObject;
@@ -40,7 +34,6 @@ import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedMoveModel;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
@@ -52,7 +45,6 @@ import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerPar
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
-import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 
 /**
@@ -88,14 +80,9 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 	protected static final int INPORT_LOG = 0;
 	protected static final int INPORT_PETRINET = 1;
 	
-	// classifierList is assigned from the configure method, and changed with the event log data
-
-	// assign one parameter the same values here 
 	SMAlignmentReplayParameter m_parameter;
 	// it can't belong to this class
 	XEventClass evClassDummy;
-	XEventClassifier XEventClassifier ; 
-	
 	
 	RepResultPortObject repResultPO;
 	RepResultPortObjectSpec m_rSpec ;
@@ -248,28 +235,6 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 
 		if (!inSpecs[INPORT_PETRINET].getClass().equals(PetriNetPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid Petri net!");
-		
-		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) inSpecs[INPORT_LOG];
-		
-		// logSpec is null when we change the connected event log to another file
-		// the reason behind is the logSpec is created based on the read log data. So here, 
-		// we can give a warning here
-		if(logSpec.getClassifiersMap() == null) {
-			this.setWarningMessage("No event log is read. To continue the configuration, "
-					+ "please read the event log into KNIME"); 
-			
-		}else {
-			List<String> clfPlusClassNameList = new ArrayList<String>();
-			String clfPlusClassName ; 
-			for(String key : logSpec.getClassifiersMap().keySet()) {
-				// the split character is hard coded, please remember!!
-				clfPlusClassName = key + 
-						SMAlignmentReplayParameter.CFG_KEY_CLASSIFIER_SEPARATOR + logSpec.getClassifiersMap().get(key);
-				clfPlusClassNameList.add(clfPlusClassName);
-			}
-			// but we need to save it into one spec, so we can load the values. 
-			m_parameter.setClassifierSet(clfPlusClassNameList.toArray(new String[0]));
-		}
 		
 		m_rSpec = new RepResultPortObjectSpec();
 		// one question, how to add the type information here to make them valid at first step??

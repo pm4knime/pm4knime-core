@@ -55,7 +55,7 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 		// getEventClassifier(logPO.getLog());
 // check cancellation of node before mining
     	exec.checkCanceled();
-		PortObject pmPO = mine(logPO.getLog());
+		PortObject pmPO = mine(logPO.getLog(), exec);
 // check cancellation of node after mining
     	exec.checkCanceled();
 		return new PortObject[] { pmPO};
@@ -76,7 +76,7 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	protected abstract PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) ;
 	
 	
-	protected abstract PortObject mine(XLog log) throws Exception; 
+	protected abstract PortObject mine(XLog log, final ExecutionContext exec) throws Exception; 
 
 	
 	// get the classifier parameters from it 

@@ -35,14 +35,14 @@ public class PetrinetReaderNodeModel extends NodeModel {
     private static final NodeLogger logger = NodeLogger
             .getLogger(PetrinetReaderNodeModel.class);
     
-    public static final String CFG_FILE_NAME = "PetriNet fileName";
+    public static final String CFG_FILE_NAME = "PetriNet FileName";
 
     // now we should assign one read types to the model
-    public static final String GFG_PETRINET_TYPE = "petrinetType";
+    public static final String GFG_PETRINET_TYPE = "Petrinet Type";
     // don't know the use of this parameter
-	public static final String CFG_HISTORY_ID = "historyID";
+	public static final String CFG_HISTORY_ID = "History ID";
 	
-	public static final String[] defaultValue = new String[] {"Petri Net"};
+	public static final String[] defaultTypes = new String[] {".pnml"};
 
     
 	private final SettingsModelString m_fileName = new SettingsModelString(PetrinetReaderNodeModel.CFG_FILE_NAME, "");
@@ -62,7 +62,7 @@ public class PetrinetReaderNodeModel extends NodeModel {
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
     	PetriNetPortObject m_netPort = null;
-        if(m_type.getStringValue().equals(defaultValue[0])) {
+        if(m_type.getStringValue().equals(defaultTypes[0])) {
             logger.info("Read Naive Petri net !");
             
             // read the file and create fileInputStream

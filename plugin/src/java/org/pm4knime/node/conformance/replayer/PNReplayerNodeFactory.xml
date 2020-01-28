@@ -21,28 +21,31 @@
 			from the event log after replaying,
 			there is one alignment corresponding to it.
 
-			<dl>
-				<dt>Sync move</dt>
-				<dd>The classification of the current event corresponds to the
+			<ul>
+				<li>Sync move <br/>
+				The classification of the current event corresponds to the
 					firing transitions in Petri net.
-					In this case, during replaying, both the trace and process model move
+					In this case, during replaying,
+					both the trace and process model move
 					to next comparison.
-				</dd>
+				</li>
 
-				<dt>Move on log</dt>
-				<dd>The classification of the current event don't have any
+				<li>Move on log<br/>
+				The classification of the current event don't have any
 					corresponding firing transitions in Petri net.
-					During replaying, the trace moves forwards but the state of process model
+					During replaying, the
+					trace moves forwards but the state of process model
 					doesn't change.
-				</dd>
+				</li>
 
-				<dt>Move on model</dt>
-				<dd>The firing transitions in Petri net has no corresponding event
+				<li>Move on model<br/>
+				The firing transitions in Petri net has no corresponding event
 					in the trace.
-					During replaying, the model moves forwards but the state of the event log
+					During replaying, the model moves forwards but the
+					state of the event log
 					doesn't change.
-				</dd>
-			</dl>
+				</li>
+			</ul>
 			<br />
 			With this node, the cost can be set individually for each move on
 			log/model.

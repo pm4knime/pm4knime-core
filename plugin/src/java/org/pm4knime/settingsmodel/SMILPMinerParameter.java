@@ -59,8 +59,6 @@ public class SMILPMinerParameter extends SettingsModel
 	public static final String CFG_KEY_FILTER_THRESHOLD = "Noise Threshold";
 	public static final String CFG_KEY_MINER_ALGORITHM = "Miner Algorithm";
 	
-	static Collection<XEventClassifier> classifiers ; 
-	
 	private String m_configName;
 	SettingsModelString m_filterType, m_algorithm;
 	SettingsModelDoubleBounded m_filterThreshold;
@@ -221,20 +219,6 @@ public class SMILPMinerParameter extends SettingsModel
 		return m_configName;
 	}
 
-	public static Collection<XEventClassifier> setDefaultClassifier(){
-    	classifiers = new ArrayList<XEventClassifier>();
-    	// I would like to say..Nana, sth wrong with the event name classifier
-		classifiers.add(new XEventNameClassifier());
-		return classifiers;
-    }
-    
-    public static List<String> getClassifierNames(Collection<XEventClassifier> classList){
-    	List<String> nameList = new ArrayList();
-		for(XEventClassifier clf: classList) {
-			nameList.add(clf.name());
-		}
-		return nameList;
-    }
 	
 	@Override
 	protected void loadSettingsForDialog(NodeSettingsRO settings, PortObjectSpec[] specs)
