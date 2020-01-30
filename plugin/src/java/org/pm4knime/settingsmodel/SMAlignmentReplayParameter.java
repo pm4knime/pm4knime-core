@@ -74,7 +74,6 @@ implements SettingsModelFlowVariableCompatible {
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
 	final String CFG_KEY_CLASSIFIER_SET = "Event classifier set";
-	public final static String CFG_KEY_CLASSIFIER_SEPARATOR = "##";
 	
 	// remove the final before string
 	private String m_configName;
@@ -214,7 +213,15 @@ implements SettingsModelFlowVariableCompatible {
 	@Override
 	protected void validateSettingsForModel(NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO Auto-generated method stub
+		m_strategy.validateSettings(settings);
+		m_classifierName.validateSettings(settings);
 		
+		classifierSet.validateSettings(settings);
+		
+
+    	for(int i=0; i< CFG_COST_TYPE_NUM; i++){
+    		m_defaultCosts[i].validateSettings(settings);
+    	}
 	}
 
 	@Override
@@ -230,8 +237,6 @@ implements SettingsModelFlowVariableCompatible {
 		m_strategy.loadSettingsFrom(subSettings);
 		
 		m_classifierName.loadSettingsFrom(subSettings);
-    	// here test if it contains the value here..
-    	
     	classifierSet.loadSettingsFrom(subSettings);
     	
     		for(int i=0; i< CFG_COST_TYPE_NUM; i++){

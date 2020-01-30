@@ -130,7 +130,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	AcceptingPetriNet anet = netPO.getANet();
     	
     	// here to change the operation on the classifier
-    	XEventClassifier eventClassifier = getEventClassifier(log, m_parameter.getMClassifierName().getStringValue());
+    	XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log, m_parameter.getMClassifierName().getStringValue());
 
     	PNRepResult repResult = null;
     	IPNReplayAlgorithm replayAlgorithm = null ;
@@ -177,10 +177,8 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	}
     	
     	// put the dummy event class and event classifier in the info table for reuse
-    	// however, due to there is no serialization for event class, we can not save it
-    	// in rep result, the same for m_parameter saving. We need to make it into string and convert it back
     	repResult.addInfo(XLogUtil.CFG_DUMMY_ECNAME, XLogUtil.serializeEventClass(evClassDummy));
-    	repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, XLogUtil.serializeEventClassifier(eventClassifier));
+    	repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, m_parameter.getMClassifierName().getStringValue());
     	
     	// check cancellation of node after replaying the result
     	exec.checkCanceled();
@@ -189,27 +187,6 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 		m_rSpec.setMParameter(m_parameter);
 		repResultPO.setSpec(m_rSpec);
     }
-    
- // get the classifier parameters from it 
- 	public static XEventClassifier getEventClassifier(XLog log, String classifierName) {
- 		// get the list of classifiers from the event log!!
- 		
- 		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
- 		classifiers.addAll( log.getClassifiers());
- 		// check the attributes as classifier here //and assign them as the XEventAttributeClassifier
- 		for(XAttribute eAttr: log.getGlobalEventAttributes()) {
- 			// create new classifier for the new eAttr here, given the name with prefix for it!!
- 			XEventClassifier attrClf = new XEventAttributeClassifier(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX + 
- 					eAttr.getKey(), eAttr.getKey());
- 			classifiers.add(attrClf);
- 		}
- 		
- 		for(XEventClassifier clf: classifiers) {
- 			if(clf.name().equals(classifierName))
- 				return clf;
- 		}
-     	return null;
- 	}
     
     public RepResultPortObject getRepResultPO() {
 		return repResultPO;
@@ -237,6 +214,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 			throw new InvalidSettingsException("Input is not a valid Petri net!");
 		
 		m_rSpec = new RepResultPortObjectSpec();
+		m_rSpec.setMParameter(m_parameter);
 		// one question, how to add the type information here to make them valid at first step??
 		return new PortObjectSpec[]{ m_rSpec};
     }

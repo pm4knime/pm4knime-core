@@ -67,9 +67,10 @@ public class XLogPortObject extends AbstractPortObject {
 	@Override
 	public PortObjectSpec getSpec() {
 		
-		if(m_spec == null) 
+		if(m_spec == null) {
+			System.out.println("New created log spec");
 			m_spec = XLogSpecUtil.extractSpec(log);
-		
+		}
 		return m_spec;
 	}
 	
@@ -113,6 +114,8 @@ public class XLogPortObject extends AbstractPortObject {
 			e.printStackTrace();
 		}
 		this.setLog(log.get(0));
+		// this is very important, if we want to have sth from spec!!
+		this.setSpec((XLogPortObjectSpec) spec);
 		in.close();
 	}
 

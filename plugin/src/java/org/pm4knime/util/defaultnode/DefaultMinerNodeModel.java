@@ -2,12 +2,7 @@ package org.pm4knime.util.defaultnode;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -23,7 +18,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.util.XLogSpecUtil;
+import org.pm4knime.util.XLogUtil;
 
 public abstract class DefaultMinerNodeModel extends NodeModel {
 	
@@ -83,21 +78,8 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 	public XEventClassifier getEventClassifier() {
 		// get the list of classifiers from the event log!!
 		XLog log = logPO.getLog();
-		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
-		classifiers.addAll( log.getClassifiers());
-		// check the attributes as classifier here //and assign them as the XEventAttributeClassifier
-		for(XAttribute eAttr: log.getGlobalEventAttributes()) {
-			// create new classifier for the new eAttr here, given the name with prefix for it!!
-			XEventClassifier attrClf = new XEventAttributeClassifier(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX + 
-					eAttr.getKey(), eAttr.getKey());
-			classifiers.add(attrClf);
-		}
+		return XLogUtil.getEventClassifier(log, m_classifier.getStringValue());
 		
-		for(XEventClassifier clf: classifiers) {
-			if(clf.name().equals(m_classifier.getStringValue()))
-				return clf;
-		}
-    	return null;
 	}
 	
 	@Override

@@ -14,7 +14,6 @@ import java.util.zip.ZipEntry;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
@@ -27,14 +26,7 @@ import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.models.graphbased.LocalNodeID;
-import org.processmining.models.graphbased.NodeID;
-import org.processmining.models.graphbased.directed.AbstractDirectedGraph;
-import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
-import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
-import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.PNRepResultImpl;
 import org.processmining.plugins.petrinet.replayresult.StepTypes;
@@ -116,7 +108,9 @@ public class RepResultPortObject implements PortObject {
 	@Override
 	public PortObjectSpec getSpec() {
 		// TODO if it access the null one??
-		return m_rSpec ;
+		if(m_rSpec != null)
+			return m_rSpec ;
+		return new RepResultPortObjectSpec();
 	}
 
 	@Override
@@ -140,7 +134,7 @@ public class RepResultPortObject implements PortObject {
 				throws IOException, CanceledExecutionException {
 			// TODO get item of alignment one item for another item to serialze them
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NAME));
-			System.out.println("Enter the save PO in serializer");
+			System.out.println("Enter the save  "+ ZIP_ENTRY_NAME + " in serializer");
 			ObjectOutputStream objOut = new ObjectOutputStream(out);
 			
 			// save Petri net without PortObject 
@@ -206,7 +200,7 @@ public class RepResultPortObject implements PortObject {
 			out.closeEntry();
 			
 			// out.close();
-			System.out.println("Exit the save PO in serializer");
+			System.out.println("Exit the save "+ ZIP_ENTRY_NAME + " in serializer");
 		}
 
 		private void serializeInfo(Map<String, Object> infoMap) {
@@ -228,7 +222,7 @@ public class RepResultPortObject implements PortObject {
 			// TODO Auto-generated method stub
 			// in the same order of writing part
 			
-			System.out.println("Enter the load PO in serializer");
+			System.out.println("Enter the load "+ ZIP_ENTRY_NAME + " in serializer");
 			ZipEntry nextEntry = in.getNextEntry();
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NAME)) {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
@@ -330,8 +324,10 @@ public class RepResultPortObject implements PortObject {
 			// when they use the Impl, it creates the info by itselves. So we don't need to store it here.
 			// but about the other infoMap, it could be not so lucky!! So, we still read the map and store it here
 			repResultPO.getRepResult().setInfo(infoMap);
+			// this is very important if we want to have some data from spec!!
+			repResultPO.setSpec((RepResultPortObjectSpec) spec);
 			// in.close();
-			System.out.println("Exit the load PO in serializer");
+			System.out.println("Exit the load "+ ZIP_ENTRY_NAME + " in serializer");
 			return repResultPO;
 		}
 

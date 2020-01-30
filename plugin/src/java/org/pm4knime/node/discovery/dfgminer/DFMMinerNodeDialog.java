@@ -10,6 +10,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 /**
@@ -40,7 +41,9 @@ public class DFMMinerNodeDialog extends DefaultMinerNodeDialog {
     		List<String> configClassifierSet = Arrays.asList(classifierSet.getStringArrayValue());
     		
     		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
-			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
+			List<String> specClassifierSet = new ArrayList<String>(
+					XLogSpecUtil.getClassifierWithClsList(logSpec.getClassifiersMap()));
+			
 			specClassifierSet.addAll(DFMMinerNodeModel.sClfNames);
 			
 			if(! configClassifierSet.containsAll(specClassifierSet) 
@@ -49,7 +52,8 @@ public class DFMMinerNodeDialog extends DefaultMinerNodeDialog {
 				classifierSet.setStringArrayValue(specClassifierSet.toArray(new String[0]));
 			}
 			
-			classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
+			classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), 
+					logSpec.getClassifiersMap().keySet().iterator().next());
 			m_classifier.loadSettingsFrom(settings);
 			
 		} catch (InvalidSettingsException | NullPointerException e ) {

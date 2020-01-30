@@ -41,7 +41,10 @@ public class RepResultPortObjectSpec implements PortObjectSpec {
 
 	public SMAlignmentReplayParameter getMParameter() {
 		// TODO Auto-generated method stub
-		return m_parameter;
+		if(m_parameter !=null)
+			return m_parameter;
+		else
+			return new SMAlignmentReplayParameter();
 	}
 	public void setMParameter(SMAlignmentReplayParameter parameter) {
 		// TODO Auto-generated method stub

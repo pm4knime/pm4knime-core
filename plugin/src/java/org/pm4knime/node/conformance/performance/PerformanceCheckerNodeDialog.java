@@ -3,27 +3,21 @@ package org.pm4knime.node.conformance.performance;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
-import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
-import org.pm4knime.util.XLogUtil;
+import org.pm4knime.util.XLogSpecUtil;
 
 /**
  * <code>NodeDialog</code> for the "PerformanceChecker" node. There are 7
@@ -89,24 +83,29 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 		if (!(specs[0] instanceof RepResultPortObjectSpec))
 			throw new NotConfigurableException("Input is not a valid replayer log!");
 
-		RepResultPortObjectSpec repResultPO = (RepResultPortObjectSpec) specs[0];
+		RepResultPortObjectSpec repResultPOSpec = (RepResultPortObjectSpec) specs[0];
 
 		// if we have the classifier set from the parameter, we can't figure out the key
 		// for time stamp.
 		// to solve it, two ways: 1. follow the old method
 		// 2. save the class name information for event classifiers too.
 		// to save the space, we can concatenate the class name and its value together,
-		// we we use it, we split the name and class name
-		SMAlignmentReplayParameter specParameter = repResultPO.getMParameter();
+		// we we use it, we split the name and class name. we can judge the class, only according its attribute name
+		// so that means, if we want to set the map to str... 
+		// we depend on the SpecObject to provide us the right value but now it doesn't 
+		
+		// we will expect we have the spec totally loaded here!! 
+		SMAlignmentReplayParameter specParameter = repResultPOSpec.getMParameter();
 
 		List<String> tsAttrNameList = new ArrayList<String>();
-		for (String clfPlusClass : specParameter.getClassifierSet().getStringArrayValue()) {
-			String[] clfPlusClassArray = clfPlusClass.split(SMAlignmentReplayParameter.CFG_KEY_CLASSIFIER_SEPARATOR);
-			if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
-				
-				tsAttrNameList.add(clfPlusClassArray[0]);
+		if(specParameter.getClassifierSet() != null) {
+			for (String clfPlusClass : specParameter.getClassifierSet().getStringArrayValue()) {
+				String[] clfPlusClassArray = clfPlusClass.split(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR);
+				if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
+					
+					tsAttrNameList.add(clfPlusClassArray[0]);
+			}
 		}
-
 		if (!tsAttrNameList.contains(m_parameter.getMTimeStamp().getStringValue())) {
 			m_timestampComp.replaceListItems(tsAttrNameList, tsAttrNameList.get(0));
 			m_parameter.getMTimeStamp().setStringValue(tsAttrNameList.get(0));
@@ -114,5 +113,13 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 		}
 
 	}
+	
+	@Override
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
+            throws InvalidSettingsException {
+        assert settings != null;
+        
+        m_parameter.saveSettingsTo(settings);
+    }
 
 }

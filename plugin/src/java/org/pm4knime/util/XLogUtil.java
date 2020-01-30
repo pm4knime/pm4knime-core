@@ -76,38 +76,6 @@ public class XLogUtil {
 		return null;
 	}
 	
-	// serialize the event classifier
-	public static String serializeEventClassifier(XEventClassifier eClassifier) {
-		
-		String objString = eClassifier.getClass().getName() + CFG_STRING_SEPERATOR + 
-				eClassifier.name();
-		// because we can save it, so here we don't use it 
-//		for(String value : eClassifier.getDefiningAttributeKeys()) {
-//			objString += value + CFG_STRING_SEPERATOR;
-//		}
-		return objString;
-	}
-	
-	// deserialize event class from string
-	public static XEventClassifier deserializeEventClassifier(String objString) {
-		String[] attrs = objString.split(CFG_STRING_SEPERATOR);
-		if(attrs[0].equals(XEventNameClassifier.class.getName())) {
-			
-			XEventClassifier eClassifier  = new XEventNameClassifier();
-			eClassifier.setName(attrs[1]);
-			return eClassifier;
-		}else if(attrs[0].equals(XEventLifeTransClassifier.class.getName())) {
-			XEventClassifier eClassifier  = new XEventLifeTransClassifier();
-			eClassifier.setName(attrs[1]);
-			return eClassifier;
-		}else {
-			System.out.println("Unknowm event classifier");
-		}
-		
-		return null;
-	}
-		
-	
 	// this function can be included into the event classifier
 	public static List<String> getECNames(List<XEventClassifier> classifierList) {
 		// TODO Auto-generated method stub

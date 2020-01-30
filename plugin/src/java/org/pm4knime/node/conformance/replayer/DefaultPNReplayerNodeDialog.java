@@ -15,6 +15,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.ReplayerUtil;
+import org.pm4knime.util.XLogSpecUtil;
 
 /**
  * <code>NodeDialog</code> for the "PNReplayer" node.
@@ -86,7 +87,9 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
     		List<String> configClassifierSet = Arrays.asList(m_parameter.getClassifierSet().getStringArrayValue());
     		
     		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) specs[0];
-			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
+    		// with class name for each classifier here
+			List<String> specClassifierSet = new ArrayList<String>(
+					XLogSpecUtil.getClassifierWithClsList(logSpec.getClassifiersMap()));
 			
 			
 			if(! configClassifierSet.containsAll(specClassifierSet) 
@@ -94,7 +97,11 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
 				m_parameter.getClassifierSet().setStringArrayValue(specClassifierSet.toArray(new String[0]));
 			}
 			// one invalid settings is from the classifierComp, no matter where it is, it needs update 
-			classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
+			// if we include class into the classifierSet, to show it into the classifierComp,
+			// we still use the event attribute classifier, before this, we need to change the showing of 
+			// classifierComp
+			classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), 
+					logSpec.getClassifiersMap().keySet().iterator().next());
 			// this is also not the right way to do this.. 
 			// comp saves its separate settings there?? But if we only use settings but separate its saving..
 			// could we do this? Comp is already saved into the setting. We can do it again, to save it again
@@ -108,6 +115,8 @@ public class DefaultPNReplayerNodeDialog extends DefaultNodeSettingsPane {
 		}
     	
     }
+    
+    
     
     @Override
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)

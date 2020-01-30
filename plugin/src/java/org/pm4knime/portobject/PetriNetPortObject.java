@@ -2,9 +2,6 @@ package org.pm4knime.portobject;
 
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
@@ -20,19 +17,8 @@ import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
-import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.acceptingpetrinet.plugins.VisualizeAcceptingPetriNetPlugin;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.models.connections.GraphLayoutConnection;
-import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
-import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetImpl;
-import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
-import org.processmining.plugins.pnml.base.Pnml;
-import org.processmining.plugins.pnml.base.Pnml.PnmlType;
-import org.processmining.plugins.pnml.base.PnmlElementFactory;
 
 /**
  * this class defines PetriNetPortObject. It includes models as Petrinet + InitialMarking, FinalMarking, FinalMarkings[].
@@ -54,7 +40,7 @@ public class PetriNetPortObject  implements PortObject{
 	
 	// use AcceptingPetriNet as the model
 	AcceptingPetriNet m_anet ;
-		
+	PetriNetPortObjectSpec m_spec;
 	
 	public PetriNetPortObject() {}
 	
@@ -84,10 +70,14 @@ public class PetriNetPortObject  implements PortObject{
 	@Override
 	public PetriNetPortObjectSpec getSpec() {
 		// here we need to create a POSpec for Petri net
-		PetriNetPortObjectSpec spec = new PetriNetPortObjectSpec();
-		return spec;
+		if(m_spec!=null)
+			return m_spec;
+		return new PetriNetPortObjectSpec();
 	}
 
+	public void setSpec(PetriNetPortObjectSpec spec) {
+		m_spec = spec;
+	}
 	/**
 	 * If we show the Petri net as the AcceptingPetriNet, better to use AcceptingPetrinet as model.
 	 * If there are no finalMarking, we can assign them. That's all the important stuff here.

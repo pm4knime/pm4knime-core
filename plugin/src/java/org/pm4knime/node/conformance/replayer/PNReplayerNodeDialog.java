@@ -32,6 +32,7 @@ import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 
@@ -47,7 +48,7 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 	protected SMAlignmentReplayParameterWithCT m_parameter;
 	String[] strategyList = ReplayerUtil.strategyList;
 
-	DialogComponentStringSelection m_classifierComp;
+	DialogComponentStringSelection classifierComp;
 
 	XLogPortObject logPO;
 
@@ -121,9 +122,9 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 	protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
 		// TODO : complete the codes with classifer names
 
-		m_classifierComp = new DialogComponentStringSelection(m_parameter.getMClassifierName(),
+		classifierComp = new DialogComponentStringSelection(m_parameter.getMClassifierName(),
 				"Select Classifier Name", new String[] { "" });
-		addDialogComponent(m_classifierComp);
+		addDialogComponent(classifierComp);
 
 		parameter.getMStrategy().setStringValue(strategyList[0]);
 		DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(m_parameter.getMStrategy(),
@@ -156,7 +157,7 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 			// before we need to consider the selected values here
 			m_parameter.loadSettingsFrom(settings);
 
-			String selectedItem = m_parameter.getMClassifierName().getStringValue();
+//			String selectedItem = m_parameter.getMClassifierName().getStringValue();
 
 			if (!(input[DefaultPNReplayerNodeModel.INPORT_LOG] instanceof XLogPortObject))
 				throw new NotConfigurableException("Input is not a valid event log!");
@@ -168,25 +169,29 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 			PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerNodeModel.INPORT_PETRINET];
 
 			XLogPortObjectSpec logSpec = (XLogPortObjectSpec) logPO.getSpec();
-			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
-
+//			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
+			List<String> specClassifierSet = new ArrayList<String>(
+					XLogSpecUtil.getClassifierWithClsList(logSpec.getClassifiersMap()));
+			
 			List<String> configClassifierSet = Arrays.asList(m_parameter.getClassifierSet().getStringArrayValue());
 
 			if (!configClassifierSet.containsAll(specClassifierSet)
 					|| !specClassifierSet.containsAll(configClassifierSet)) {
 
 				m_parameter.getClassifierSet().setStringArrayValue(specClassifierSet.toArray(new String[0]));
-				selectedItem = specClassifierSet.get(0);
+//				selectedItem = specClassifierSet.get(0);
 			}
-			m_classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
-			m_parameter.getMClassifierName().setStringValue(selectedItem);
-
+//			m_classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
+			classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), 
+					logSpec.getClassifiersMap().keySet().iterator().next());
+			m_parameter.getMClassifierName().loadSettingsFrom(settings);
+			
 			SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
 			if (!tmp.isMWithTM()) {
 				// first time to initialize the value. Else just load all the values, it is
 				// enough
 				XLog log = logPO.getLog();
-				XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log, selectedItem);
+				XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log, m_parameter.getMClassifierName().getStringValue());
 				// this is neglected because we have now the corresponding settings from
 				// classifier
 				List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
@@ -221,7 +226,7 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 						XLog log = logPO.getLog();
 						// here the value is still the old value,
 						System.out.println("the current value is " + m_parameter.getMClassifierName().getStringValue());
-						XEventClassifier eventClassifier = DefaultPNReplayerNodeModel.getEventClassifier(log,
+						XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
 								m_parameter.getMClassifierName().getStringValue());
 
 						List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);

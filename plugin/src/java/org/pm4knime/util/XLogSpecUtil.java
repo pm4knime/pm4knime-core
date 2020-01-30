@@ -1,5 +1,6 @@
 package org.pm4knime.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +29,8 @@ public class XLogSpecUtil {
 	public static final String TRACE_ATTRIBUTE_PREFIX = "#Trace Attribute#";
 	public static final String EVENT_ATTRIBUTE_PREFIX = "#Event Attribute#";
 	public static final String CLASSIFIER_PREFIX = ""; // "#Classifier#";
+	public final static String CFG_KEY_CLASSIFIER_SEPARATOR = "###";
 	
-
 	public static final String CFG_KEY_TRACE_ATTRSET = "Trace attribute set";
 	public static final String CFG_KEY_EVENT_ATTRSET = "Event attribute set";
 	
@@ -53,6 +54,21 @@ public class XLogSpecUtil {
 		
 		return new XLogPortObjectSpec(tMap, eMap, cMap);
 	}
+	
+	
+	public static List<String> getClassifierWithClsList(Map<String, Class>  clfMap) {
+		// TODO Auto-generated method stub
+		List<String> classifierWithClsList = new ArrayList();
+		for(String key : clfMap.keySet()) {
+			
+			String clfWithClsStr = key + XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR +
+					clfMap.get(key).toString();
+			classifierWithClsList.add(clfWithClsStr);
+		}
+		
+		return classifierWithClsList;
+	}
+
 	
 	public static Map<String, Class> convertAttr2Str(Collection<XAttribute> attrSet, String prefix){
 		Map<String, Class> aMap =  new HashMap<String, Class>();

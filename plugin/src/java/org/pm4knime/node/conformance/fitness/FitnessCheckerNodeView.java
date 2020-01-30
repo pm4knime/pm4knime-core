@@ -46,7 +46,7 @@ public class FitnessCheckerNodeView extends NodeView<FitnessCheckerNodeModel> {
 		XEventClass dummy = XLogUtil.deserializeEventClass(eclsString);
 		
 		String eclassifierString  = (String) infoMap.get(XLogUtil.CFG_EVENTCLASSIFIER_NAME);
-		XEventClassifier eventClassifier = XLogUtil.deserializeEventClassifier(eclassifierString);
+		XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log, eclassifierString);
         // anet is different from the ones that we used to replay. But we can't change the reading method. Write Emial to talk about this!!
         TransEvClassMapping map = PetriNetUtil.constructMapping(log, anet.getNet(), eventClassifier, dummy);
         // only one way to make them match is to change the transitions in replayed result!!! 

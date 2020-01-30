@@ -170,7 +170,7 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
 	@Override
 	public PortObject[] getInternalPortObjects() {
 		// TODO Auto-generated method stub
-		return null;
+		return new PortObject[] {repResultPO};
 	}
 
 	@Override

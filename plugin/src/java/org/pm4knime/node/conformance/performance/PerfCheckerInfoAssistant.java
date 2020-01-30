@@ -66,7 +66,7 @@ public class PerfCheckerInfoAssistant {
 		// here we could answer it with the classifierSet value it has
 		Class cls = null ;
 		for (String clfPlusClass : m_parameter.getClassifierSet().getStringArrayValue()) {
-			String[] clfPlusClassArray = clfPlusClass.split(SMAlignmentReplayParameter.CFG_KEY_CLASSIFIER_SEPARATOR);
+			String[] clfPlusClassArray = clfPlusClass.split(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR);
 			if (clfPlusClassArray[0].equals(timeAttr)) {
 				// we need the name from the log cMap, to get it there
 				String className = clfPlusClassArray[1];
