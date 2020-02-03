@@ -4,16 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.model.XAttributeMap;
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -29,9 +21,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.processmining.framework.plugin.PluginContext;
-import org.processmining.framework.util.collection.AlphanumComparator;
 import org.processmining.incorporatenegativeinformation.models.AttributeLogFilter;
 import org.processmining.incorporatenegativeinformation.plugins.AttributeLogFilterPlugin;
 

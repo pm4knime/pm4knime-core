@@ -1,7 +1,6 @@
 package org.pm4knime.node.conversion.log2table;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 

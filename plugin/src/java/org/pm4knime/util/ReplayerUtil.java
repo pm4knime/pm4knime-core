@@ -28,7 +28,6 @@ import org.processmining.plugins.multietc.sett.MultiETCSettings;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
-import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.matchinstances.InfoObjectConst;
 import org.processmining.plugins.petrinet.replayresult.PNMatchInstancesRepResult;

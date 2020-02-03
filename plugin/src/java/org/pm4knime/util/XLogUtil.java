@@ -2,8 +2,6 @@ package org.pm4knime.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +16,6 @@ import java.util.TreeSet;
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventLifeTransClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
@@ -38,13 +34,10 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
 import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
-import org.deckfour.xes.model.impl.XAttributeImpl;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
-import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 
 /*
  * this class is created  to include the utility used to deal with event log in XLog format

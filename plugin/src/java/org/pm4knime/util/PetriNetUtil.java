@@ -2,7 +2,6 @@ package org.pm4knime.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +18,6 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
-import org.pm4knime.portobject.PetriNetPortObject;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.models.connections.GraphLayoutConnection;
@@ -32,10 +30,12 @@ import org.processmining.models.graphbased.directed.petrinet.elements.Transition
 import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
+import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
 import org.processmining.plugins.pnml.base.Pnml;
-import org.processmining.plugins.pnml.base.PnmlElementFactory;
 import org.processmining.plugins.pnml.base.Pnml.PnmlType;
+import org.processmining.plugins.pnml.base.PnmlElementFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -90,6 +90,14 @@ public class PetriNetUtil {
 		return null;
 	}
 
+	public static TransClass findTransClass(String tcName, TransClasses tcClasses) {
+		// 
+    	for(TransClass tc: tcClasses.getTransClasses()) {
+    		if(tcName.equals(tc.getId()))
+    			return tc;
+    	}
+		return null;
+	}
 	/*
 	 * this function collects the transition from log and outputs the names in the sorted order.
 	 * we list the visible transitions at first, then silent transitions in order

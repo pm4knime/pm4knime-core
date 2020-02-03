@@ -20,7 +20,6 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
-import org.processmining.directlyfollowsmodelminer.model.DirectlyFollowsModel;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.dfgOnly.DfgImpl;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizDirectlyFollowsGraph;

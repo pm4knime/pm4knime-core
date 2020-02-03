@@ -7,7 +7,6 @@ import org.processmining.framework.connections.impl.ConnectionManagerImpl;
 import org.processmining.framework.packages.PackageDescriptor;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.PluginDescriptor;
-import org.processmining.framework.plugin.PluginExecutionResult;
 import org.processmining.framework.plugin.PluginManager;
 import org.processmining.framework.plugin.ProMFuture;
 import org.processmining.framework.plugin.Progress;

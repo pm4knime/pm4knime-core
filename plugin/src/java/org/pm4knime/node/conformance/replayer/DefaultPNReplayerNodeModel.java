@@ -2,12 +2,9 @@ package org.pm4knime.node.conformance.replayer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.deckfour.xes.classification.XEventAttributeClassifier;
+
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -29,7 +26,6 @@ import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
-import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;

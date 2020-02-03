@@ -27,9 +27,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.ReplayerUtil;
-import org.pm4knime.util.XLogUtil;
 
 /**
  * <code>NodeModel</code> for the "ConformanceChecker" node.
@@ -162,7 +160,8 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
 		// TODO Auto-generated method stub
 		return repResultPO;
 	}
-
+	
+	@Override
 	public void setInternalPortObjects(PortObject[] portObjects) {
 		repResultPO = (RepResultPortObject)portObjects[0];
 	}

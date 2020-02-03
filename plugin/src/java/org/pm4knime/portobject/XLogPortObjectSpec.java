@@ -3,16 +3,14 @@ package org.pm4knime.portobject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+
 import javax.swing.JComponent;
 
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
-import org.knime.core.data.RowKey;
 import org.knime.core.data.container.DataContainer;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.StringCell;
@@ -20,7 +18,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 import org.knime.core.node.tableview.TableView;
-import org.pm4knime.util.XLogSpecUtil;
 /**
  * we don't have things to write in this PortObjectSpec. For the XLog of Inform from the LogInfo,
  * if we check and make that they should be the same, then when we manipulate log, we have exception of the 

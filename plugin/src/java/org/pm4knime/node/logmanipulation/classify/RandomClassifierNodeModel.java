@@ -26,6 +26,7 @@ import org.pm4knime.util.TraceVariantUtil;
 import org.processmining.log.utils.TraceVariantByClassifier;
 import org.processmining.log.utils.XUtils;
 import org.processmining.logenhancement.view.LogViewVisualizer;
+
 import com.google.common.collect.ImmutableListMultimap;
 
 /**

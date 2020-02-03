@@ -2,6 +2,7 @@ package org.pm4knime.util.defaultnode;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;

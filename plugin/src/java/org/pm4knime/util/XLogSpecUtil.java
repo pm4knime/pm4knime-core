@@ -8,15 +8,7 @@ import java.util.Map;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XAttribute;
-import org.deckfour.xes.model.XAttributeContinuous;
-import org.deckfour.xes.model.XAttributeDiscrete;
-import org.deckfour.xes.model.XAttributeLiteral;
-import org.deckfour.xes.model.XAttributeTimestamp;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
-import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
-import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
-import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 
 /**

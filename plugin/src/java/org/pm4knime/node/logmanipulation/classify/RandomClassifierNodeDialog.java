@@ -1,11 +1,8 @@
 package org.pm4knime.node.logmanipulation.classify;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.deckfour.xes.model.XLog;

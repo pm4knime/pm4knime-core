@@ -1,11 +1,5 @@
 package org.pm4knime.settingsmodel;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;

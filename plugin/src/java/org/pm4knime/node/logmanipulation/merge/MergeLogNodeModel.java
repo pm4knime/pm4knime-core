@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -22,7 +20,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.logmanipulation.split.SplitLogNodeModel;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogUtil;

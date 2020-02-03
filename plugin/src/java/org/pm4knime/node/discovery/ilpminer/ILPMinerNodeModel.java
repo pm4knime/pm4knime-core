@@ -10,24 +10,24 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.settingsmodel.SMILPMinerParameter;
+import org.pm4knime.util.XLogUtil;
+import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.causalactivitygraph.models.CausalActivityGraph;
 import org.processmining.causalactivitygraphcreator.algorithms.DiscoverCausalActivityGraphAlgorithm;
 import org.processmining.causalactivitygraphcreator.parameters.DiscoverCausalActivityGraphParameters;
-import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.hybridilpminer.parameters.XLogHybridILPMinerParametersImpl;
 import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.pm4knime.util.XLogUtil;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 
 /**
  * <code>NodeModel</code> for the "ILPMiner" node. 

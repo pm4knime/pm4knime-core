@@ -3,6 +3,7 @@ package org.pm4knime.node.discovery.dfgminer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NotConfigurableException;

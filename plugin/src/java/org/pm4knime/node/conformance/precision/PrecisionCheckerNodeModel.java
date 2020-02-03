@@ -2,16 +2,8 @@ package org.pm4knime.node.conformance.precision;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataCell;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.DataType;
-import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.DoubleCell;
-import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -27,25 +19,15 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.conformance.performance.PerformanceCheckerNodeModel;
-import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
-import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.util.ReplayerUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.multietc.plugins.MultiETCPlugin;
 import org.processmining.plugins.multietc.reflected.ReflectedLog;
 import org.processmining.plugins.multietc.res.MultiETCResult;
 import org.processmining.plugins.multietc.sett.MultiETCSettings;
-import org.processmining.plugins.multietc.sett.MultiETCSettingsUI;
 import org.processmining.plugins.petrinet.replayresult.PNMatchInstancesRepResult;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
-import org.processmining.plugins.petrinet.replayresult.PNRepResultImpl;
-import org.processmining.plugins.petrinet.replayresult.StepTypes;
-import org.processmining.plugins.replayer.replayresult.AllSyncReplayResult;
-import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 
 /**
  * <code>NodeModel</code> for the "PrecisionChecker" node.

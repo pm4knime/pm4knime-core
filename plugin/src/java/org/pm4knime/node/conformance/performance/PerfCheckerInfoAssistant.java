@@ -5,21 +5,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import org.deckfour.xes.model.XAttributeContinuous;
-import org.deckfour.xes.model.XAttributeDiscrete;
-import org.deckfour.xes.model.XAttributeTimestamp;
 import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
 import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogSpecUtil;
-import org.pm4knime.util.XLogUtil;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
@@ -101,14 +95,7 @@ public class PerfCheckerInfoAssistant {
 	}
 	
 	public void fillGlobalData(BufferedDataContainer gBuf) {
-		// TODO according to the replay result, assign the statistic info table
-//		DataCell[] currentRow = new DataCell[2];
-//		currentRow[0] = new StringCell("Test Property");
-//		currentRow[1] = new DoubleCell(0.5);
-//		gBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
-		
-		
-		
+				
 		int propCounter = 0;
 		DataCell[] currentRow ;
 		// info[propCounter++] = new Object[] { "#Cases", infoProvider.getCaseTotalFreq() > 0 ? infoProvider.getCaseTotalFreq() : "-"};
@@ -180,14 +167,6 @@ public class PerfCheckerInfoAssistant {
 	
 	
 	public void fillPlaceData(BufferedDataContainer pBuf, Collection<Place> places) {
-		// TODO Auto-generated method stub
-//		DataCell[] currentRow = new DataCell[pBuf.getTableSpec().getNumColumns()];
-//		currentRow[0] = new StringCell("Test Place");
-//		currentRow[1] = new StringCell("Test Place Pro");
-//		for(int i=2; i< pBuf.getTableSpec().getNumColumns() ; i++)
-//			currentRow[i] = new DoubleCell(0.5);
-//		pBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
-		
 		String[] properties = { "Waiting time", "Synchronization time", "Sojourn time"};
 		
 		for(Place place : places) {
@@ -223,14 +202,7 @@ public class PerfCheckerInfoAssistant {
 
 	// add all transitions performance info to the tBuf
 	public void fillTransitionData(BufferedDataContainer tBuf, Collection<Transition> transitions) {
-		// TODO Auto-generated method stub
-//		DataCell[] currentRow = new DataCell[tBuf.getTableSpec().getNumColumns()];
-//		currentRow[0] = new StringCell("Test Transition");
-//		currentRow[1] = new StringCell("Test Transition Pro");
-//		for(int i=2; i< tBuf.getTableSpec().getNumColumns() ; i++)
-//			currentRow[i] = new DoubleCell(0.5);
-//		tBuf.addRowToTable(new DefaultRow(0 +"", currentRow));
-//		
+		
 		String[] properties = {"Throughput time", "Waiting time", "Sojourn time"};
 		// to fit the existing methods, get the transitions number
 		for(Transition trans : transitions) {

@@ -1,7 +1,6 @@
 package org.pm4knime.portobject;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -21,7 +20,6 @@ import org.processmining.processtree.ProcessTree;
 import org.processmining.processtree.impl.ProcessTreeImpl;
 import org.processmining.processtree.ptml.Ptml;
 import org.processmining.processtree.ptml.importing.PtmlImportTree;
-import org.processmining.processtree.visualization.tree.TreeVisualization;
 
 public class ProcessTreePortObject implements PortObject{
 	// if we put save and load codes at this place, then we save codes for reader and writer,

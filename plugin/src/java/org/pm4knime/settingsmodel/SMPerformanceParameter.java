@@ -23,9 +23,9 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  */
 public class SMPerformanceParameter extends SMAlignmentReplayParameter{
 
-	public final String CKF_KEY_TIMESTAMP = "Time stamp";
-	public final String CKF_KEY_WITH_SYN_MOVE = "Consider performance in syn moves";
-	public final String CKF_KEY_WITH_UNRELIABLE_RESULT = "Include unreliable replay results";
+	public final static String CKF_KEY_TIMESTAMP = "Time stamp";
+	public final static String CKF_KEY_WITH_SYN_MOVE = "Consider performance in syn moves";
+	public final static String CKF_KEY_WITH_UNRELIABLE_RESULT = "Include unreliable replay results";
 	
 	// this use to record the attribute name for time stamp
 	private SettingsModelString m_timeStamp;

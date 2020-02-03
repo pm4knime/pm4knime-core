@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -18,9 +16,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
-import org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeDialog;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.processmining.plugins.log.exporting.ExportLogMxml;

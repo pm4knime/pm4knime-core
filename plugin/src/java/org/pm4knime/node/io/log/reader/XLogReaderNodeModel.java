@@ -2,6 +2,7 @@ package org.pm4knime.node.io.log.reader;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;

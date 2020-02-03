@@ -203,7 +203,6 @@
 	<classpathentry kind="lib" path="lib/PetriNets-latest.jar"/>
 	<classpathentry kind="lib" path="lib/PNAnalysis-latest.jar"/>
 	<classpathentry kind="lib" path="lib/PNetAlignmentAnalysis-latest.jar"/>
-	<classpathentry kind="lib" path="lib/PNetReplayer-latest.jar"/>
 	<classpathentry kind="lib" path="lib/prefuse-core-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/ProcessTree-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ProM-Contexts-latest.jar"/>
@@ -250,5 +249,6 @@
 	<classpathentry kind="lib" path="lib/xstream-1.4.9.jar"/>
 	<classpathentry kind="lib" path="lib/YAWL-latest.jar"/>
 	<classpathentry kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
+	<classpathentry kind="lib" path="lib/PNetReplayer-PM4KNIME.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

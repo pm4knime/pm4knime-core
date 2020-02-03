@@ -1,6 +1,8 @@
 package org.pm4knime.node.conformance.performance;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,8 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.ModelContent;
+import org.knime.core.node.ModelContentRO;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
@@ -24,21 +28,24 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.portobject.ManifestWithSerializer;
 import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
 import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
 import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
 import org.processmining.plugins.manifestanalysis.visualization.performance.ReliablePerfCounter;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
+import org.processmining.plugins.petrinet.manifestreplayresult.ManifestEvClassPattern;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
-import org.processmining.plugins.petrinet.replayresult.StepTypes;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 
 /**
@@ -69,11 +76,17 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 public class PerformanceCheckerNodeModel extends NodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(PerformanceCheckerNodeModel.class);
 
+	private static final String CFG_MC_OTHERS = "Model Content for Other Data";
+
+	private static final String CFG_MC_MANIFEST = "Model Content for Manifest";
+
+
 	// we create a similar nodeSetting like Conformance Checking?
 	SMPerformanceParameter m_parameter;
 	RepResultPortObjectSpec m_rSpec;
 	private Manifest mResult;
 	private PerfCounter counter;
+	RepResultPortObject repResultPO;
 
 	protected PerformanceCheckerNodeModel() {
 
@@ -92,14 +105,12 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// TODO: Return a BufferedDataTable for each output port
 		logger.info("Start: ManifestReplayer Performance Checking");
 		
-		RepResultPortObject repResultPO = (RepResultPortObject) inData[0];
+		repResultPO = (RepResultPortObject) inData[0];
 		XLog log = repResultPO.getLog();
 		AcceptingPetriNet anet = repResultPO.getNet();
 
 		PNRepResult repResult = repResultPO.getRepResult();
-		// here to syn the transitions from replay result and accepting petri net
-//		
-		
+
 		// pass the values of specParameter to m_parameter
 		// we can do it when it is in configuration state, or here??
 		SMAlignmentReplayParameter specParameter = m_rSpec.getMParameter();
@@ -116,19 +127,18 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// important is the transitions in flattener and replayer result should be the
 		// same!!
 		// how to make this happen?? After the generation of flattener,
-		// it generates a new map during the building process. How to make the ones
+		// it generates a new map during the building process. 
 // check cancellation of node before sync
     	exec.checkCanceled();
 		sync(repResult, flattener);
 
-		// problem with mismatch of replay result and flattener.. How to change them??
-		// can't change the flattener, then change the ones in replayer result.
-		// it takes time, but it is what we need, so what!!
+		
 // check cancellation of node before replaying
     	exec.checkCanceled();
-		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
-				flattener.getFinalMarkings(), log, flattener, repResult, manifestParameters.getMapping());
-		// we need to set the classifier for the mResult here
+		mResult = ManifestFactory.construct(anet.getNet(), anet.getInitialMarking(),
+				anet.getFinalMarkings().toArray(new Marking[0]), log, flattener, repResult, manifestParameters.getMapping());
+//		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
+//				flattener.getFinalMarkings(), log, flattener, repResult, manifestParameters.getMapping());
 
 		// global statistics information. It includes all the performance info, the
 		// whole process
@@ -148,11 +158,11 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// create one for transition, one for place there
 		DataTableSpec tSpec = createElemenentStatsTableSpec("Transition");
 		BufferedDataContainer tBuf = exec.createDataContainer(tSpec);
-		infoAssistant.fillTransitionData(tBuf, flattener.getNet().getTransitions());
+		infoAssistant.fillTransitionData(tBuf, anet.getNet().getTransitions());
 
 		DataTableSpec pSpec = createElemenentStatsTableSpec("Place");
 		BufferedDataContainer pBuf = exec.createDataContainer(pSpec);
-		infoAssistant.fillPlaceData(pBuf, flattener.getNet().getPlaces());
+		infoAssistant.fillPlaceData(pBuf, anet.getNet().getPlaces());
 
 		gBuf.close();
 		tBuf.close();
@@ -179,7 +189,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 
 					if (!resToFlattenerMap.containsKey(tInResult)) {
 						Transition tValue = null;
-						for (Transition t : flattener.getNet().getTransitions()) {
+						for (Transition t : flattener.getNet().getTransitions()) { //flattener.getNet().getTransitions()
 							if (tInResult.getLabel().equals(t.getLabel())) {
 								tValue = t;
 								break;
@@ -256,10 +266,6 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 
 	}
 
-	public PerfCounter getCounter() {
-		return counter;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -281,16 +287,35 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 	@Override
 	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-
+		// TODO deserialize the manifest and other related data for view
+		try {
+			File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
+			manifestDir.mkdirs();
+			mResult = ManifestWithSerializer.loadFrom(manifestDir, exec);
+		} catch (InvalidSettingsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-
+		// TODO serialise the manifest and other related data for view
+		// manifest, reliableResultSymbol, timeAttribute, if with Synmove to generate counter.[pure one is ok]
+		
+		// to serialize manifest with a dir
+		File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
+		manifestDir.mkdirs();
+		ManifestWithSerializer.saveTo((ManifestEvClassPattern) mResult, manifestDir , exec);
+		
 	}
+	
+	public RepResultPortObject getRepResultPO() {
+		// TODO Auto-generated method stub
+		return repResultPO;
+	}
+	
 
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {

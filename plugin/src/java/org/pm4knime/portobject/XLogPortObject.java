@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
+
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.in.XParser;
 import org.deckfour.xes.in.XesXmlParser;

@@ -34,10 +34,10 @@ public class FitnessCheckerNodeView extends NodeView<FitnessCheckerNodeModel> {
     protected FitnessCheckerNodeView(final FitnessCheckerNodeModel nodeModel) {
         super(nodeModel);
         // TODO: show the conformance projection here 
-        RepResultPortObject reResultPO = nodeModel.getRepResultPO();
-        XLog log = reResultPO.getLog();
-        AcceptingPetriNet anet = reResultPO.getNet();
-        PNRepResult result = reResultPO.getRepResult();
+        RepResultPortObject repResultPO = nodeModel.getRepResultPO();
+        XLog log = repResultPO.getLog();
+        AcceptingPetriNet anet = repResultPO.getNet();
+        PNRepResult result = repResultPO.getRepResult();
         Map<String, Object> infoMap = result.getInfo();
         // how to get the eventclassifier?? We need more stuff to do in XLogUtil, but the evClassDummy?? What to do with this?
         // This is only one model from the replay. Do we need them so badly?? 

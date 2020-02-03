@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -20,13 +18,8 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
-import org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeModel;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.processmining.framework.plugin.PluginContext;
-import org.processmining.processtree.ptml.Ptml;
-import org.processmining.processtree.ptml.importing.PtmlImportTree;
 
 /**
  * This is the model implementation of ProcessTreeReader.
