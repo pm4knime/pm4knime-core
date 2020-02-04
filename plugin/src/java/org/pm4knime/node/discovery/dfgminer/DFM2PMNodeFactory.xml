@@ -3,14 +3,18 @@
     <name>DFM2PM Miner</name>
     
     <shortDescription>
-        This node  mines a process tree and Petri net from directly-follows model. 
+        This node  mines a process tree from directly-follows model with implicit Inductive Miner. 
     </shortDescription>
     
     <fullDescription>
-        <intro>With input of a Directly-Follows Model, this node discovers a Process Tree and a Petri net. </intro>
-        <option name="Event classifer">The event classifier chosen to classify the event log.</option>
-        <option name="Variant">The variant type used to mine one process tree from one directly-follows graph. There are three options. </option>
-         <option name="Noise Threshold">noise threshold to set the fitting trace percent with respect to the new model. 0.8 is as the default value.</option>
+        <intro>DFM2PM Miner discovers a process model in process tree from input of a directly-follows model. 
+        Inductive Miner is the mining algorithm.   
+         </intro>
+        <option name="Event classifer">The event classifier is chosen to classify the event log.</option>
+        <option name="Miner Variant">The variant type of Inductive Miner is used to mine one process tree from one directly-follows graph.
+          </option>
+        <option name="Noise Threshold">Noise threshold is used to set the fitting trace percent with respect to the new model. 
+        0.8 is as the default value.</option>
       	
       
     </fullDescription>

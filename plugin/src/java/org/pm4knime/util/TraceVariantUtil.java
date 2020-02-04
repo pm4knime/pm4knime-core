@@ -2,10 +2,9 @@ package org.pm4knime.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.deckfour.xes.model.XAttributeLiteral;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
@@ -30,7 +29,7 @@ public class TraceVariantUtil {
 	public static List<Integer> sampleTraceList(List<Double> percentList, int totalNum) {
 		int sum = totalNum; 
 		int count = 0;
-		List<Integer> numList = new ArrayList();
+		List<Integer> numList = new ArrayList<Integer>();
 		for(double percent : percentList) {
 			int num = (int) (totalNum * percent);
 			count++;
@@ -47,25 +46,29 @@ public class TraceVariantUtil {
 	
 	/**
 	 * Randomly assign label categories according to its percents.
+	 * because the number is calculated from the 0.5 to 0.8. 
+	 * if the number is only 1, how to judge them?? We need to rejudge the percentage again
+	 * 
 	 * @param traceList the trace list to be labelled with the values here
 	 * @param lMap The label value and percent to be assigned 
 	 */
 	public static void addLabelWithPercent(List<XTrace> traceList, Map<String, Double> lMap, String lName) {
-		// sample the list of values from the percents
-		List<Double> pList = new ArrayList();
-		// change the double percent to integer value for labeling trace
-		for(String key : lMap.keySet()) {
-			// round down strategy
-			pList.add(lMap.get(key));
-		}
-		List<Integer> numList = sampleTraceList(pList, traceList.size());
-		Map<String, Integer> nMap = new HashMap();
-		int i = 0;
-		for(String key : lMap.keySet()) {
-			nMap.put(key, numList.get(i++));
-		}
+		// sample the list of values from the percents, in descending order
+		Map<String, Integer> result = new LinkedHashMap<String, Integer>();	
+		
+		double tNum = traceList.size();
+		lMap.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.forEach(e -> result.put( e.getKey() , (int) (e.getValue() * tNum)));
+		
+		
+		
+		int sum = result.values().parallelStream().reduce(0,(a,b) -> a + b);
+		int diff = traceList.size() - sum;
+		String highKey = result.keySet().iterator().next();
+		result.put(highKey, result.get(highKey) + diff);
 		// create another map for it
-		addLabelWithNumber(traceList, nMap, lName);
+		addLabelWithNumber(traceList, result, lName);
 	}
 	
 	public static void addLabelWithNumber(List<XTrace> traceList, Map<String, Integer> lMap, String lName) {

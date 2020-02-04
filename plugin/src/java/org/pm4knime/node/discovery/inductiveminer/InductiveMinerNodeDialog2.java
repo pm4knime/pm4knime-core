@@ -18,7 +18,7 @@ public class InductiveMinerNodeDialog2 extends DefaultMinerNodeDialog{
 		// TODO put other parameters here except classifier
 		String[] defaultValue =  InductiveMinerNodeModel.defaultType;
         m_type = new SettingsModelString(InductiveMinerNodeModel.CFGKEY_METHOD_TYPE, defaultValue[1]);
-        addDialogComponent(new DialogComponentStringSelection(m_type, "Inductive Miner Type", defaultValue));
+        addDialogComponent(new DialogComponentStringSelection(m_type, "Inductive Miner Variant", defaultValue));
         
         m_noiseThreshold = new SettingsModelDoubleBounded(
         		InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.2, 0, 1);

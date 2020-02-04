@@ -89,6 +89,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	// one thing to remember, it is not so important to have order of timestamp. 
     	ToXLogConverter handler = new ToXLogConverter();
     	handler.setConfig(m_config);
+    	handler.setLogger(logger);
     	
     	handler.convertDataTable2Log(sortedTable);
     	XLog log = handler.getXLog();

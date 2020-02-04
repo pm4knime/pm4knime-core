@@ -6,54 +6,50 @@
 	<name>Heuristics Miner</name>
 
 	<shortDescription>
-		This nodes implements the HeuristicsMiner to discover process models.
+		This node implements the Heuristics Miner to discover a process model from an event log.
 	</shortDescription>
 
 	<fullDescription>
 		<intro>
-			This nodes implements the Heuristics Miner to discover process
-			models.
-			Heuristics Miner is an algorithm that acts on the Directly-Follows Graph,
+			This node implements the Heuristics Miner to discover a process
+			model.
+			Heuristics Miner is an algorithm that acts on the directly-follows Graph,
 			providing way to handle with noise and to find dependency between
 			activities. An heuristics net or causal
 			net is the output, which is a directed graph with activities as nodes,
 			dependency interpreted as arcs and bindings.
 			The Heuristics Net can be then converted into a Petri net.
 			<br />
-			The node Heuristics Miner shows the Heuristics Net as one internal
+			This node shows the Heuristics Net as one internal
 			result in View "Heuristic Net", while it
-			outputs a Petri net after implicit conversion.
+			outputs a Petri net after an implicit conversion.
 
 		</intro>
 
 
-		<option name="Event classifer">The event classifier chosen to classify the event
+		<option name="Event classifer">The event classifier is chosen to classify the event
 			log.</option>
 		<option name="All tasks connected">Every task needs to have at least one input and
-			output arc,
-			except one initial and one final activity.
+			output arc, except the initial and the final activity.
 		</option>
 		<option name="Long distance dependency">Show long distance relations in the model.
 		</option>
 
 
-		<option name="Threshold: Relative-to-best">"Admissable distance between directly follows
-			relations for an "
-			+ "activity and the activity's best one. At 0 only the best directly
-			follows "
-			+ "relation will be shown for every activity, at 100 all will be
-			shown."
+		<option name="Threshold: Relative-to-best">The admissible distance between directly follows
+			relations for an activity and the activity's best one. At 0 only the best directly
+			follows relation will be shown for every activity, at 100 all will be
+			shown.
 		</option>
-		<option name="Threshold: Dependency">Strength of the directly follows relations
-			determines when to
-			show arcs (based on how frequently one activity is followed by another).
+		<option name="Threshold: Dependency">The strength of the directly follows relations
+			determines when to show arcs (based on how frequently one activity is followed by another).
 		</option>
 		<option name="Threshold: Length-one-loops">Show arcs based on frequency of L1L observations
 		</option>
 		<option name="Threshold: Length-two-loops">Show arcs based on frequency of L2L observations
 		</option>
 		<option name="Threshold: Long distance">Show arcs based on how frequently one activity is
-			" + "eventually followed by another</option>
+			eventually followed by another</option>
 
 	</fullDescription>
 

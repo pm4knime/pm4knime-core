@@ -18,7 +18,8 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.processmining.incorporatenegativeinformation.help.EventLogUtilities;
+import org.pm4knime.util.XLogSpecUtil;
+import org.pm4knime.util.XLogUtil;
 
 /**
  * This is the model implementation of LogSplitter.
@@ -34,8 +35,8 @@ public class LogSplitterNodeModel extends NodeModel {
             .getLogger(LogSplitterNodeModel.class);
 	private XLogPortObjectSpec[] m_outSpecs = new XLogPortObjectSpec[getNrOutPorts()];
 	// one for the string, one for the value.. 
-	public static final String CFG_ATTRIBUTE_KEY = "split attribute key";
-	public static final String CFG_ATTRIBUTE_VALUE = "split attribute value";
+	public static final String CFG_ATTRIBUTE_KEY = "Attribute key";
+	public static final String CFG_ATTRIBUTE_VALUE = "Attribute value";
 	
 	SettingsModelString m_attributeKey = LogSplitterNodeModel.createSettingsModelAttributeKey();
 	SettingsModelString m_attributeValue = LogSplitterNodeModel.createSettingsModelAttributeValue();
@@ -69,13 +70,19 @@ public class LogSplitterNodeModel extends NodeModel {
     	XLogPortObject logPortObject = (XLogPortObject) inData[0];
 		XLog log = logPortObject.getLog();
 		
-		// make it simple, only filter the ones with positive label on it,
-		// we need to make sure of it.. Or we can even do it like this,
-		// at the randomClassifier part, we give the key and values range, 
-		// then it assigns randomly on it, so now, we need to know the data here
-		// with one String for key, and String for value
-		XLog[] logs = EventLogUtilities.splitLog(log, m_attributeKey.getStringValue(), 
-				m_attributeValue.getStringValue());
+		// change the trace attribute or event attribute
+		XLog[] logs = new XLog[2];
+		if(m_attributeKey.getStringValue().contains(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX)) {
+			String[] options = m_attributeKey.getStringValue().split(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX);
+			logs = XLogUtil.splitLogByTraceAttr(log, options[1], 
+					m_attributeValue.getStringValue());
+		}else if(m_attributeKey.getStringValue().contains(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)) {
+			String[] options = m_attributeKey.getStringValue().split(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX);
+			logs = XLogUtil.splitLogByEventAttr(log, options[1], 
+					m_attributeValue.getStringValue());
+		}
+		
+		
 		XLogPortObject lp2keep = new XLogPortObject();
     	lp2keep.setLog(logs[0]);
     	

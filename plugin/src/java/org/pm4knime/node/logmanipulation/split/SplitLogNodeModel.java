@@ -43,13 +43,13 @@ public class SplitLogNodeModel extends NodeModel {
 	private XLogPortObjectSpec[] m_outSpecs = new XLogPortObjectSpec[getNrOutPorts()];
 	
 	// one option to choose filterOn actions
-	public static final String CFG_FILTERON = "filterOn";
+	public static final String CFG_FILTERON = "Filter on";
 	public static final String [] filterOnSelection = new String [] {AttributeLogFilter.NONE, AttributeLogFilter.TRACE_ATTRIBUTE, AttributeLogFilter.EVENT_ATTRIBUTE};
 	// one option to choose attribute_key
-	public static final String CFG_ATTRIBUTE_KEY = "attribute-key";
+	public static final String CFG_ATTRIBUTE_KEY = "Attribute key";
 	
 	// one option to choose attribute_values
-	public static final String CFG_ATTRIBUTE_VALUE = "attribute-value";
+	public static final String CFG_ATTRIBUTE_VALUE = "Attribute value";
 	
 	
 	static SettingsModelString createSettingsModelFilterOn() {

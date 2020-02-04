@@ -66,14 +66,14 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
     	// add caseID choose to the panel
     	m_caseID = config.getMCaseID();
     	caseIDComp = new DialogComponentStringSelection(m_caseID, 
-    			"Choose CaseID Column", m_possibleColumns);
+    			"Case ID Column", m_possibleColumns);
     	addDialogComponent(caseIDComp);
     	
     	
     	// add eventID choose to the panel
     	m_eventClass = config.getMEventClass();
     	eventClassComp = new DialogComponentStringSelection(m_eventClass, 
-    			"Choose Eventclass Column", m_possibleColumns);
+    			"Eventclass Column", m_possibleColumns);
     	addDialogComponent(eventClassComp);
     	
     	
@@ -84,13 +84,13 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
     	// add eventID choose to the panel
     	// optional choices for them. They can be empty there
     	m_lifecycleName = config.getMLifecycle();
-    	lifecycleNameComp = new DialogComponentStringSelection(m_lifecycleName, "Life Cycle", m_possibleColumns);
+    	lifecycleNameComp = new DialogComponentStringSelection(m_lifecycleName, "Life Cycle Column", m_possibleColumns);
     	addDialogComponent(lifecycleNameComp);
         
         // in default, it is the complete time, but we don't assign it there until we have the clear lifecycle choose
     	m_timeStamp = config.getMTimeStamp();
     	timeStampComp = new DialogComponentStringSelection(m_timeStamp, 
-    			"Choose Time Stamp Column", m_possibleColumns);
+    			"Time Stamp Column", m_possibleColumns);
     	
     	addDialogComponent(timeStampComp);
     	// set the format to change string to date format
@@ -99,12 +99,12 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
         addDialogComponent(tsFormatComp);
         
     	// here we set another panel to set attributes for trace or events
-        createNewTab("Choose attributes set");
-        createNewGroup("Choose Columns as Trace Attributes: ");
+        createNewTab("Choose Attributes Set");
+        createNewGroup("Trace Attributes: ");
         m_traceAttrSet = config.getMTraceAttrSet();
         m_traceAttrFilterComp = new DialogComponentColumnFilter(m_traceAttrSet,0, true);
         addDialogComponent(m_traceAttrFilterComp);
-        createNewGroup("Choose Columns as Event Attributes: ");
+        createNewGroup("Event Attributes: ");
         m_eventAttrSet = config.getMEventAttrSet();
         m_eventAttrFilterComp = new DialogComponentColumnFilter(m_eventAttrSet,0, true);
         addDialogComponent(m_eventAttrFilterComp);

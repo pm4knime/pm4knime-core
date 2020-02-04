@@ -3,6 +3,7 @@ package org.pm4knime.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,9 @@ public class XLogSpecUtil {
 		// more attributes need to check in events, not just the global attributes there		
 		eMap = convertAttr2Str(attrs, EVENT_ATTRIBUTE_PREFIX);
 		// convert those attribtues to map in string
-
+		
+		// keep the order of classifier and event attribute
+		//TODO: with LinkedHashMap 
 		List<XEventClassifier> clfList  = log.getClassifiers();
 		cMap = convertClf2Str(clfList, CLASSIFIER_PREFIX);
 		// add the event attributes as classifiers here
@@ -73,7 +76,7 @@ public class XLogSpecUtil {
 	}
 	
 	public static Map<String, Class> convertClf2Str(Collection<XEventClassifier> clfSet, String prefix){
-		Map<String, Class> aMap =  new HashMap<String, Class>();
+		Map<String, Class> aMap =  new LinkedHashMap<String, Class>();
 		for(XEventClassifier clf : clfSet) {
 			aMap.put(prefix + clf.name(), clf.getClass());
 		}

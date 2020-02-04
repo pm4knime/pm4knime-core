@@ -7,23 +7,26 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>Current node classifies the event log based on trace variant. Trace Variant is a set of traces 
+        <intro>Current node classifies the event log based on trace variant. Trace variant is a set of traces 
         which have the same event classes sequence. The following inputs are required:
          a given label, a list of possible value and the corresponding percent. 
          <br/> For example, given one Label Name "kpi", it has the following distribution, 
          {"pos", 0.5} and {"neg", 0.5}. If there are 2 trace variants and each trace variant includes 10 traces, then
          the in each trace variant, 5 traces are assigned with  "pos" for label "kpi", 5 traces are assigned as "neg". 
+         If the sum doesn't match the total trace number, the one with the highest percent will be assigned to the difference value.
         </intro>
        
         <option name="Label Name">The category name for classification</option>
         <option name="Label Values">The possible label value.</option>
-        <option name="Label Value Percentage">The percentage of corresponding label value for one trace variant.</option>
+        <option name="Label Value Percentage">The percentage of corresponding label value for one trace variant. 
+        The value is between 0 - 1.0.  The sum of the all percentage values should be 1.
+        </option>
     </fullDescription>
     
     <ports>
         <inPort index="0" name="Event Log">Event Log to classify by randomly</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Event Log With Label">Event log with labels after classification</outPort>
+        <outPort index="0" name="Event Log with Label">Event log with labels after classification</outPort>
         <!-- possibly more output ports here-->
     </ports>    
    

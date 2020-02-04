@@ -36,8 +36,10 @@ import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
 import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
+import org.deckfour.xes.model.impl.XTraceImpl;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
+import org.processmining.incorporatenegativeinformation.help.EventLogUtilities;
 
 /*
  * this class is created  to include the utility used to deal with event log in XLog format
@@ -569,5 +571,68 @@ public class XLogUtil {
 			}
 		}
 		return map;
+	}
+	
+	public static XLog[] splitLogByTraceAttr(XLog log, String key, String value) {
+		XLog klog = EventLogUtilities.clonePureLog(log, " kept log");
+		XLog dlog = EventLogUtilities.clonePureLog(log, " disposed log");
+		
+		for (XTrace trace : log) {
+			if (trace.getAttributes().containsKey(key)) {
+				XAttribute attr = trace.getAttributes().get(key);
+				if(attr.toString().equals(value))
+					klog.add((XTrace) trace.clone());
+				else
+					dlog.add((XTrace) trace.clone());
+			}else {
+				klog.add((XTrace) trace.clone());
+			}
+			
+		}
+		
+		return new XLog[] { klog, dlog };
+	}
+	
+	/**
+	 * split event log by event attributes. If there is one event, we need to save trace there
+	 * @param log
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public static XLog[] splitLogByEventAttr(XLog log, String key, String value) {
+		XLog klog = EventLogUtilities.clonePureLog(log, " kept log");
+		XLog dlog = EventLogUtilities.clonePureLog(log, " disposed log");
+		
+		XTrace kTrace, dTrace ;
+		for (XTrace trace : log) {
+			kTrace = pureClone(trace);
+			dTrace = pureClone(trace);
+			for(XEvent event : trace) {
+				
+				if (event.getAttributes().containsKey(key)) {
+					XAttribute attr = event.getAttributes().get(key);
+					if(attr.toString().equals(value)) {
+						kTrace.add((XEvent) event.clone());
+						continue;
+					}
+				}
+				// one thing, to remove only according to index, the index changes
+				dTrace.add((XEvent) event.clone());
+			}
+			
+			if(kTrace.size() > 0)
+				klog.add(kTrace);
+			if(dTrace.size() > 0)
+				dlog.add(dTrace);
+		}
+		
+		return new XLog[] { klog, dlog };
+	}
+	private static XTrace pureClone(XTrace trace) {
+		// TODO Auto-generated method stub
+		XTrace cTrace = new XTraceImpl(trace.getAttributes());
+		
+		return cTrace;
 	}
 }

@@ -31,6 +31,7 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.NodeLogger;
 import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
@@ -64,7 +65,7 @@ public class ToXLogConverter {
 	DateTimeFormatter df ; //;
 	
 	SMTable2XLogConfig config = null;
-	
+	NodeLogger logger;
 	public void setConfig(SMTable2XLogConfig m_config) {
 		this.config = m_config;
 		factory = m_config.getFactory();
@@ -141,7 +142,7 @@ public class ToXLogConverter {
 				if(traceAttrMap.containsKey(traceColumns.get(traceColIndices[tIdx]))) {
 					// if contains value, compare if they are same 
 					if(!traceAttrMap.get(traceColumns.get(tIdx)).equals(row.getCell(traceColIndices[tIdx]))) {
-						System.out.println("Error happens with the trace Attributes here");
+//						System.out.println("Error happens with the trace Attributes here");
 						errorDetected = true;
 						break;
 					}
@@ -295,6 +296,7 @@ public class ToXLogConverter {
 	public void endTrace(String caseId) {
 		if (errorDetected && config.getErrorHandlingMode() == CSVErrorHandlingMode.OMIT_TRACE_ON_ERROR) {
 			// Skip the entire trace
+			logger.warn("Unmatch trace attribute values error is detected on the trace, therefore trace is omitted");
 			return;
 		}
 		
@@ -388,6 +390,12 @@ public class ToXLogConverter {
 		Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
 		return date;
 		// return Instant.parse(value).toDate();
+	}
+
+
+	public void setLogger(NodeLogger logger) {
+		// TODO Auto-generated method stub
+		this.logger = logger;
 	}
 
 	

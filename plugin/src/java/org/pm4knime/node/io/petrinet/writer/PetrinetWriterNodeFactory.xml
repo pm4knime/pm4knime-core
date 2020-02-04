@@ -9,7 +9,7 @@
     <fullDescription>
         
         <intro>
-        This nodes writes a PMML model from a petri net model port into a pnml 
+        This nodes writes a PMML model from a Petri net model into a pnml 
 file or to a remote location denoted by an URL.  <br />
         Note that if the destination location is a remote URL not all options are available because in general it's
 not possible to determine whether the remote location exists. In this case it will always be overwritten. </intro>
@@ -19,7 +19,7 @@ not possible to determine whether the remote location exists. In this case it wi
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Model">Petri net model to write to PNML file</inPort>
+        <inPort index="0" name="Petri net">Petri net to write in PNML file</inPort>
         
     </ports>      
 </knimeNode>

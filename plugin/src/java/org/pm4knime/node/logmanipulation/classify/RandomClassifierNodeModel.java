@@ -81,7 +81,6 @@ public class RandomClassifierNodeModel extends NodeModel {
     	}
 
     	// check if it uses the same traces
-//    	System.out.println("Check if the lModel and log has already changed ??");
     	XAttributeLiteral attr = new XAttributeLiteralImpl(m_config.getLabelName(), "");
     	log.getGlobalTraceAttributes().add(attr);
     	

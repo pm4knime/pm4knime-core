@@ -7,40 +7,50 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro> This node converts a Data Table from KNIME platform into an event log PortObject. 
+        CaseID, Event class, time stamp and format are mandatory to set up in the first table; 
+        In table "Choose Attribute Set", other attributes for traces and events are set optional due to the need. 
+        In Expert Choice, it lists the strategy to handle error, empty cells and the XFactory to create event log.</intro>
         
         <!--  still think sth options are not sol well defined -->
-        
-        <option name="Case ID">Choose one column as caseID for the event log</option>
-        <option name="Event ID">Choose one column as eventID for the event log</option>
-        <option name="Complete Time">Choose one column as complete time for event in the event log</option>
-        <option name="Complete Time Data Format">Set the format to parse String into Date</option>
-        <option name="With Start Time">Choose if we use start time; If start time column exists, we can set it.
-        When it is not checked, the options below is disabled. </option>
-        <option name="Start Time">Choose one column as start time for event in the event log</option>
-        <option name="Start Time Data Format">Set the format to parse String into Date</option>
-        
-        <!-- possibly more options that can also be grouped by tabs -->
-        <!--
         <tab name="Standard Options">
-            <option name="short name of first option (like in the dialog)">description of first option</option>
-            <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Case ID">Choose one column as caseID for the event log</option>
+        <option name="Eventclass">Choose one column as eventID for the event log</option>
+        <option name="Life Cycle">Choose one column as life cycle for the event log. If there is no such column, 
+        choose the option NO AVAILABLE.</option>
+        <option name="Time Stamp">Choose one column as time stamp for events in the event log.</option>
+        <option name="Date Format">Set the format to parse the time stamp. 
+         For example, if the date in "2009-12-31", to parse it, the Date format should be given "yyyy-MM-dd"</option>
+       </tab>
+       <tab name="Choose Attributes Set">
+            <option name="Trace Attributes">Choose table columns as trace attributes. For all events with in one trace, they are supposed to 
+            have the same values for each trace attributes. Else, it will omit this trace in the event log. Values from included columns
+            will be shown as the attributes for each trace. Please make sure the columns chosen in "Standard Options" are included; else, it 
+            will give the InvalidConfiguration Error. </option>
+            <option name="Event Attributes">Choose table columns as event attributes. Values from included columns 
+            will be shonw as the attributes for event. Please make sure the columns chosen in "Standard Options" are included; else, it 
+            will give the InvalidConfiguration Error.</option>
         </tab>
-        <tab name="Advanced Options">
-            <option name="short name of first advanced option (like in the dialog)">description of first advanced option</option>
-        </tab>
-        -->
+        
+         <tab name="Expert Choice">
+          <option name="XFactory">XFactory implementation that is used to create the log. Some implementations might be more memory efficient, 
+          consider changing this in case you import a huge log. Additional Conversion Options (Defaults are a good guess)</option>
+          <option name="Error Handling">The strategy to stop conversion upon malformed input or try to import as much as possible.</option>
+          <option name="Sparse / Dense Log">This affects how empty cells in the CSV are handled. 
+          Exclude (sparse) or include (dense) empty cells in the conversion. 
+						Some plug-ins require the log to be dense, i.e., all attributes are defined for each event.
+						In other cases it might be more efficient or even required to only add attributes to events if the attributes actually contain data.</option>
+		
+           
+         </tab>
+       
     </fullDescription>
     
     <ports>
         <inPort index="0" name="Data Table">A Data Table in KNIME</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Event Log">The event log converted from file. </outPort>
-        <!-- possibly more output ports here-->
+        <outPort index="0" name="Event Log">The event log converted from Data Table. </outPort>
+      
     </ports>    
-    <views>
-        <view index="0" name="Log Trace View">View trace variant in log</view>
-        <view index="1" name="Dotted Chart View">Dotted Chart for Log View</view>
-        <!--view index="1" name="name of second view">Description of second view...</view-->
-    </views>
+   
 </knimeNode>

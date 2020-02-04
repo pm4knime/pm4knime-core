@@ -21,7 +21,7 @@ public class AlphaMinerNodeDialog extends DefaultMinerNodeDialog {
 		String[] variantList =  AlphaMinerNodeModel.variantList;
         m_variant = new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
         // flowVariable is implicitly defined by saveModel 
-        addDialogComponent(new DialogComponentStringSelection(m_variant, "Select Algorithm", variantList));
+        addDialogComponent(new DialogComponentStringSelection(m_variant,"Alpha Miner Variant", variantList));
 		
 	}
 }

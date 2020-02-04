@@ -8,6 +8,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -30,7 +31,7 @@ import org.processmining.plugins.log.exporting.ExportLogXesGz;
  * @author Kefang
  */
 public class XLogWriterNodeModel extends NodeModel {
-    
+	private static final NodeLogger logger = NodeLogger.getLogger(XLogWriterNodeModel.class);
 	private final SettingsModelString m_format = XLogWriterNodeModel.createFormatModel();
 	private final SettingsModelString m_outfile = XLogWriterNodeModel.createFileNameModel();
 	
@@ -60,15 +61,18 @@ public class XLogWriterNodeModel extends NodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-
+    	logger.info("Begin: Write event Log");
         // TODO: As a sink, it has no output 
     	XLogPortObject logData = (XLogPortObject) inData[0];
     	
     	if(logData.getLog()!=null) {
+    		if(logData.getLog().size()<1) {
+    			logger.warn("The current event log has no trace.");
+    		}
     		File file = new File(m_outfile.getStringValue());
     		writeToFile(file, logData.getLog(), m_format.getStringValue());
     	}
-    	
+    	logger.info("End: Write XLog");
         return new PortObject[] {};
     }
 

@@ -10,7 +10,7 @@
 	</shortDescription>
 
 	<fullDescription>
-		<intro>This node imports an event log from disk. The allowed files are
+		<intro>This node imports an event log from the local file. The allowed files are
 			{"XES","XES_GZ","MXML","MXML_GZ"}.
 			The output is shown in a graphical view.
 		</intro>
@@ -18,7 +18,7 @@
 
 		<option name="Read Type">The file type of the event log</option>
 		<option name="Read Method ">
-			The methods to read an event log. There are two methods available:
+			The method to read an event log. There are two methods available:
 
 			<ul>
 				<li>
@@ -34,7 +34,6 @@
 					serialization.
 				</li>
 			</ul>
-
 		</option>
 		<option name="Selected File">The location of the event log</option>
 	</fullDescription>

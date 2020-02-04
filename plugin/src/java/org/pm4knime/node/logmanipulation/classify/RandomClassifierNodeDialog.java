@@ -14,15 +14,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
-import org.deckfour.xes.model.XLog;
-import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.port.PortObject;
-import org.pm4knime.portobject.XLogPortObject;
 
 /**
  * <code>NodeDialog</code> for the "RandomClassifier" Node.
@@ -46,9 +40,9 @@ import org.pm4knime.portobject.XLogPortObject;
  * Due to the later use, we will create one config to save all the values there. 
  * @author Kefang Ding
  */
-public class RandomClassifierNodeDialog extends DataAwareNodeDialogPane {
+public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 
-	private final JPanel m_mainPanel;
+	private final JPanel m_mainPanel = new JPanel();
 	DefaultTableModel tModel;
 	// there is another optional panel
 	JTextField nameField;
@@ -57,7 +51,7 @@ public class RandomClassifierNodeDialog extends DataAwareNodeDialogPane {
 	public RandomClassifierNodeDialog() {
 		Border blackline  = BorderFactory.createLineBorder(Color.black);
 		
-		m_mainPanel = new JPanel();
+//		m_mainPanel = new JPanel();
 		m_mainPanel.setLayout(new BoxLayout(m_mainPanel, BoxLayout.Y_AXIS));
 		m_mainPanel.setBorder(blackline);
 		
@@ -101,15 +95,18 @@ public class RandomClassifierNodeDialog extends DataAwareNodeDialogPane {
 			}
 			
 		});
+		// this is one default option already in tab. Now we need to delete it here
+		if (super.getTab("Options") != null) {
+			super.removeTab("Options");
+		}
 		
-		this.addTab("Options", m_mainPanel);
+		addTab("Options", m_mainPanel);
 	}
 	
 	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
+	public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
+            throws InvalidSettingsException {
 		// TODO assign the config from components
-		// how to connect them together and get the values for the nameFiled there.. 
-		// how to combine them together??
 		m_config.setLabelName(nameField.getText());
 		// secondly assign the values to m_config from the table
 		int rCount = tModel.getRowCount();
@@ -135,29 +132,6 @@ public class RandomClassifierNodeDialog extends DataAwareNodeDialogPane {
 	}
 	
 	
-	@Override
-	protected void loadSettingsFrom(final NodeSettingsRO settings,
-			final PortObject[] input) throws NotConfigurableException {
-		// if we can't find the config name, we load refreshed, else we use the log to load 
-		if(settings.containsKey(RandomClassifierNodeModel.CFG_KEY_CONFIG)) {
-			try {
-				m_config.loadValidatedSettingsFrom(settings);
-			} catch (InvalidSettingsException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else {
-		
-			if(input[0] instanceof XLogPortObject) {
-				// we can get the log object and then set all the choice of them, but at first, we need to put all the stuff here again
-				XLogPortObject logPortObject = (XLogPortObject) input[0];
-				XLog log = logPortObject.getLog();
-				
-				// here to create the optional panel for the xlog to show..
-				// but how to decide it here? We can at first only the common choices
-			}
-		}
-	}
 	
 }
 

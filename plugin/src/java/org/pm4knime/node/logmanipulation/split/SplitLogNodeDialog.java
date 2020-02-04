@@ -56,9 +56,9 @@ public class SplitLogNodeDialog extends DataAwareNodeDialogPane {
         // save the value from filter into m_***?
     	
     	attributePanel.getFilterValues(filter);
-    	System.out.println(filter.attribute_filterOn);
-    	System.out.println(filter.attribute_key);
-    	
+//    	System.out.println(filter.attribute_filterOn);
+//    	System.out.println(filter.attribute_key);
+//    	
     	m_filterOn.setStringValue(filter.attribute_filterOn);
     	m_attributeKey.setStringValue(filter.attribute_key);
     	String[] values = new String[filter.attribute_values.size()];

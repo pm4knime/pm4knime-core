@@ -39,7 +39,7 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 
 	private static final NodeLogger logger = NodeLogger.getLogger(AlphaMinerNodeModel.class);
 
-	public static final String CFGKEY_VARIANT_TYPE = "AlphaMiner Version";
+	public static final String CFGKEY_VARIANT_TYPE = "Alpha Miner Variant";
 	public static final String[] variantList = {AlphaVersion.CLASSIC.toString() , AlphaVersion.PLUS.toString()};
 	
 	private SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
