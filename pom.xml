@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.rwth-aachen.pads</groupId>
-	<artifactId>pm4knime</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<groupId>org.pm4knime</groupId>
+	<artifactId>parent</artifactId>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<scm>
-		<url>https://github.com/KFDing/pm4knime-maven/</url>
-		<connection>scm:git:https://github.com/KFDing/pm4knime-maven.git</connection>
-		<developerConnection>scm:git:git@github.com:KFDing/pm4knime-maven.git</developerConnection>
+		<url>https://github.com/pm4knime/pm4knime-development/</url>
+		<connection>scm:git:https://github.com/pm4knime/pm4knime-development.git</connection>
+		<developerConnection>scm:git:https://github.com/pm4knime/pm4knime-development.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/KFDing/pm4knime-maven/issues</url>
+		<url>https://github.com/pm4knime/pm4knime-development/issues</url>
 	</issueManagement>
-	<ciManagement>
-		<system>Travis CI</system>
-		<url>http://travis-ci.org/KFDing/pm4knime-maven</url>
-	</ciManagement>
 	<prerequisites>
 		<maven>3.0</maven>
 	</prerequisites>
@@ -26,12 +22,10 @@
 		<tycho.version>1.4.0</tycho.version>
 		<tycho.extras.version>1.4.0</tycho.extras.version>
 		<tycho.test.jvmArgs>-Xmx512m</tycho.test.jvmArgs>
-		<tycho.scmUrl>scm:git:https://github.com/KFDing/pm4knime-maven.git</tycho.scmUrl>
+		<tycho.scmUrl>scm:git:https://github.com/pm4knime/pm4knime-development.git</tycho.scmUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<tycho.scmUrl>scm:git:https://github.com/KFDing/pm4knime-maven.git</tycho.scmUrl>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.organization>pm4knime</sonar.organization>
+		<tycho.scmUrl>scm:git:https://github.com/pm4knime/pm4knime-development.git</tycho.scmUrl>
 		<target.file>KNIME-AP-4.0</target.file>
 	</properties>
 	<build>
@@ -79,8 +73,8 @@
 					</environments>
 					 <target>
 						<artifact>
-							<groupId>de.rwth-aachen.pads</groupId>
-							<artifactId>pm4knime.targetplatform</artifactId>
+							<groupId>org.pm4knime</groupId>
+							<artifactId>targetplatform</artifactId>
 							<version>${project.version}</version>
 							<classifier>${target.file}</classifier>
 						</artifact>

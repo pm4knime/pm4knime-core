@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="pm4knime.feature" version="0.0.2.qualifier">
+   <feature id="org.pm4knime.feature" version="1.0.0">
       <category name="Process Mining in KNIME"/>
    </feature>
-   <category-def name="Process Mining in KNIME" label="KNIME Kefang Ding Contributions"/>
+   <category-def name="Process Mining in KNIME" label="Process Mining KNIME Extension"/>
 </site>

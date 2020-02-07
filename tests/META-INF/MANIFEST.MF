@@ -1,14 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests
-Bundle-SymbolicName: pm4knime.tests
-Bundle-Version: 0.0.2.qualifier
+Bundle-SymbolicName: org.pm4knime.tests
+Bundle-Version: 1.0.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.12.0",
  org.knime.product;bundle-version="[4.0.0,5.0.0)",
  org.knime.core;bundle-version="[4.0.0,5.0.0)",
  org.knime.base;bundle-version="[4.0.0,5.0.0)",
- org.knime.testing;bundle-version="[4.0.0,5.0.0)",
- pm4knime.plugin
+ org.knime.testing;bundle-version="[4.0.0,5.0.0)"
 Bundle-Vendor: Kefang Ding
 Bundle-ClassPath: .

@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dummy
-Bundle-SymbolicName: pm4knime.plugin;singleton:=true
-Bundle-Version: 0.0.2.qualifier
+Bundle-SymbolicName: org.pm4knime.plugin;singleton:=true
+Bundle-Version: 1.0.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Vendor: Kefang Ding
+Bundle-Vendor: PADS RWTH Aachen
 Require-Bundle: org.eclipse.core.runtime,
  org.knime.workbench.core;bundle-version="[4.0.0,5.0.0)",
  org.knime.workbench.repository;bundle-version="[4.0.0,5.0.0)",

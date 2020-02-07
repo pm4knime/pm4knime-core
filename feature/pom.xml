@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>de.rwth-aachen.pads</groupId>
-		<artifactId>pm4knime</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<groupId>org.pm4knime</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>pm4knime.feature</artifactId>
+	<artifactId>feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 </project>

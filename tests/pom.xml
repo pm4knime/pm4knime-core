@@ -2,14 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
-		<groupId>de.rwth-aachen.pads</groupId>
-		<artifactId>pm4knime</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<groupId>org.pm4knime</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>pm4knime.tests</artifactId>
+	<artifactId>tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<build>
@@ -24,7 +23,7 @@
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
-							<include>de.rwth_aachen.pads.pm4knime.*</include>
+							<include>org.pm4knime.*</include>
 						</configuration>
 					</execution>
 				</executions>

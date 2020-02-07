@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="pm4knime.feature"
-      label="pm4knime Feature"
-      version="0.0.2.qualifier"
-      provider-name="Kefang Ding">
+      id="org.pm4knime.feature"
+      label="Process Mining Extension"
+      version="1.0.0"
+      provider-name="PADS RWTH Aachen">
 
-   <description url="https://github.com/KFDing/pm4knime-maven">
-      [Enter Feature Description here.]
+   <description url="https://github.com/pm4knime/pm4knime-document/wiki/Guideline-for-Normal-User">
+      PM4KNIME is developed by PADS group at University RWTH Aachen. As a community extension for KNIME, pm4knime integrates the Process Mining tools from ProM into KNIME platform. Classical plugins from ProM are wrapped as node extensions in KNIME. This PM4KNIME guideline is created for users who want to apply process mining techniques and accomplish their tasks with workflow management system KNIME. If you are not familiar with KNIME or process mining, those websites are recommended, e.g. KNIME, Process Mining, ProM. This page introduces at first the project pm4knime. The category of nodes is listed in this section, too. Next, guide is given to install KNIME and the community extension pm4knime. After this, sample workflows are presented to show the use of pm4knime with KNIME.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright url="https://github.com/pm4knime/pm4knime-document/wiki/PM4KNIME-Copyright">
+      Copyright © 2020 by PADS RWTH Aachen.
    </copyright>
 
    <license url="https://www.apache.org/licenses/LICENSE-2.0.txt">
@@ -218,7 +218,7 @@ http://www.apache.org/licenses/
    </license>
 
    <url>
-      <discovery label="Discovery site" url="https://github.com/KFDing/pm4knime-maven"/>
+      <discovery label="Project side" url="https://github.com/pm4knime"/>
    </url>
 
    <plugin
