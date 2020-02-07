@@ -24,7 +24,6 @@ import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
-import org.processmining.models.graphbased.directed.petrinet.impl.ResetInhibitorNetImpl;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;

@@ -67,9 +67,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     		throw new InvalidSettingsException("This event log is empty, reset a new event log");
     	}
     	
-    	
-    	
-    	// get the event classes/ After this?? 
+    	// get the event classes
     	XEventClasses eventClasses = LogViewVisualizer.createEventClasses(log);
     	
     	ImmutableListMultimap<TraceVariantByClassifier, XTrace> variantsMap = 

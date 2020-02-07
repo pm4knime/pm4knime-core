@@ -278,7 +278,6 @@ Export-Package: org.pm4knime.node.conformance.fitness,
  org.pm4knime.node.io.processtree.reader,
  org.pm4knime.node.io.processtree.writer,
  org.pm4knime.node.logmanipulation.classify,
+ org.pm4knime.node.logmanipulation.filter,
  org.pm4knime.node.logmanipulation.merge,
- org.pm4knime.node.logmanipulation.sample,
- org.pm4knime.node.logmanipulation.split,
- org.pm4knime.node.logmanipulation.split2
+ org.pm4knime.node.logmanipulation.sample

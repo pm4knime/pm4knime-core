@@ -635,4 +635,6 @@ public class XLogUtil {
 		
 		return cTrace;
 	}
+	// filter the traces in the range of event log. If isKeep is true, those traces are kept, else those traces are removed.
+	
 }

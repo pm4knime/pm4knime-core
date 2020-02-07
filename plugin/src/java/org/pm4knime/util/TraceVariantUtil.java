@@ -1,13 +1,20 @@
 package org.pm4knime.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.deckfour.xes.classification.XEventClasses;
+import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XAttributeLiteral;
+import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.processmining.log.utils.TraceVariantByClassifier;
+import org.processmining.log.utils.XUtils;
+
+import com.google.common.collect.ImmutableListMultimap;
 
 /**
  * this class provides utilities for trace variant of event log. Trace variant of one event log is the set of traces 
@@ -26,23 +33,7 @@ import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
  *
  */
 public class TraceVariantUtil {
-	public static List<Integer> sampleTraceList(List<Double> percentList, int totalNum) {
-		int sum = totalNum; 
-		int count = 0;
-		List<Integer> numList = new ArrayList<Integer>();
-		for(double percent : percentList) {
-			int num = (int) (totalNum * percent);
-			count++;
-			
-			// how to judge to come to the last step?? 
-			if(count == percentList.size() ) {
-				num =  sum;
-			}
-			numList.add(num);
-			sum -= num;
-		}
-		return numList;
-	}
+	
 	
 	/**
 	 * Randomly assign label categories according to its percents.
@@ -97,7 +88,9 @@ public class TraceVariantUtil {
 		// check if the global log doesn't include this attributes, we need to add it into global??
 	}
 	
-	// how to get all the traceVariants to add attributes on them??
-	// logViewModel.getTraceVariants().get(element.getElement());
+	public static ImmutableListMultimap<TraceVariantByClassifier, XTrace> getTraceVariant(XLog log) {
+		XEventClasses eventClasses = XUtils.createEventClasses(new XEventNameClassifier(), log);
+		return XUtils.getVariantsByClassifier(log, eventClasses);
+	}
 	
 }
