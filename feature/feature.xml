@@ -5,6 +5,17 @@
       version="1.0.0"
       provider-name="PADS RWTH Aachen">
 
+	<url>
+      <discovery label="Project side" url="https://github.com/pm4knime"/>
+   </url>
+
+   <plugin
+         id="org.pm4knime.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
    <description url="https://github.com/pm4knime/pm4knime-document/wiki/Guideline-for-Normal-User">
       PM4KNIME is developed by PADS group at University RWTH Aachen. As a community extension for KNIME, pm4knime integrates the Process Mining tools from ProM into KNIME platform. Classical plugins from ProM are wrapped as node extensions in KNIME. This PM4KNIME guideline is created for users who want to apply process mining techniques and accomplish their tasks with workflow management system KNIME. If you are not familiar with KNIME or process mining, those websites are recommended, e.g. KNIME, Process Mining, ProM. This page introduces at first the project pm4knime. The category of nodes is listed in this section, too. Next, guide is given to install KNIME and the community extension pm4knime. After this, sample workflows are presented to show the use of pm4knime with KNIME.
    </description>
@@ -217,15 +228,5 @@ http://www.apache.org/licenses/
    limitations under the License.
    </license>
 
-   <url>
-      <discovery label="Project side" url="https://github.com/pm4knime"/>
-   </url>
-
-   <plugin
-         id="pm4knime.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
+   
 </feature>
