@@ -8,7 +8,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>tests</artifactId>
+	<artifactId>org.pm4knime.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<build>
