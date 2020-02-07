@@ -8,6 +8,6 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>feature</artifactId>
+	<artifactId>org.pm4knime.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 </project>
