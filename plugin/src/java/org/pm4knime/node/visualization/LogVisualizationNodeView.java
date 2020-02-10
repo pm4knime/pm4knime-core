@@ -35,6 +35,7 @@ public class LogVisualizationNodeView extends NodeView<LogVisualizationNodeModel
 		// SettingsModelString m_fileName =  nodeModel.getParams().getFilePathSettingsModel();
 		
 		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
+		
 		// viewIdx = 0, dottedChart 
 		switch(viewIndex) {
 		case 0: // show the trace variance view

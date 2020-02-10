@@ -79,6 +79,7 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("Begin:  DFM Miner");
+		checkCanceled(exec);
 		
 		XEventClassifier activityClassifier = getEventClassifier();
 		XLifeCycleClassifier lifeCycleClassifier = getLifeCycleClassifier();
@@ -93,11 +94,11 @@ public class DFMMinerNodeModel extends DefaultMinerNodeModel {
 		}else {
 			throw new Exception("not found variant type");
 		}
-		
+		checkCanceled(exec);
 		
 		IMLog IM_log = new IMLogImpl(log, activityClassifier, lifeCycleClassifier);
 		Dfg dfg = logInfo.createLogInfo(IM_log).getDfg();
-		
+		checkCanceled(exec);
 		DFMPortObject dfmPO = new DFMPortObject(dfg);
 		logger.info("End:  DFM Miner");
 		return dfmPO;

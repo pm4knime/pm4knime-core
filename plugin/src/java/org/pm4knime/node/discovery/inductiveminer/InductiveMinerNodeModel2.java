@@ -62,9 +62,9 @@ public class InductiveMinerNodeModel2 extends DefaultMinerNodeModel {
 		// Now, it is just fine
 		// the same effort to use it
 		logger.info("Begin: Inductive Miner");
-
+		checkCanceled(exec);
 		ProcessTree pt = IMProcessTree.mineProcessTree(log, createParameters());
-
+		checkCanceled(exec);
 		ProcessTreePortObject pnPO = new ProcessTreePortObject(pt);
 		logger.info("End: Inductive Miner");
 		return pnPO;

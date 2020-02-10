@@ -6,12 +6,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -23,6 +20,7 @@ import org.knime.core.util.FileUtil;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 
 /**
@@ -33,7 +31,7 @@ import org.pm4knime.util.PetriNetUtil;
  *
  * @author DKF
  */
-public class PetrinetWriterNodeModel extends NodeModel {
+public class PetrinetWriterNodeModel extends DefaultNodeModel {
     
     // the logger instance
     private static final NodeLogger logger = NodeLogger
@@ -71,7 +69,7 @@ public class PetrinetWriterNodeModel extends NodeModel {
             Path localPath = FileUtil.resolveToPath(url);
             
         	File f =  createFile(localPath, url);
-        	
+        	checkCanceled(exec);
 			// we should also write the marking into disk
         	FileOutputStream out = new FileOutputStream(f);
         	PetriNetUtil.exportToStream(pnObj.getANet(), out);
@@ -89,12 +87,6 @@ public class PetrinetWriterNodeModel extends NodeModel {
             return new File(url.getPath());
         }
 }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-    }
 
     /**
      * {@inheritDoc}
@@ -140,27 +132,6 @@ public class PetrinetWriterNodeModel extends NodeModel {
     	m_outFileName.validateSettings(settings);
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        
-       
-
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-       
-    }
-
+   
 }
 

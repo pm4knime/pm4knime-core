@@ -1,14 +1,9 @@
 package org.pm4knime.node.discovery.dfgminer;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
@@ -20,6 +15,7 @@ import org.pm4knime.portobject.DFMPortObject;
 import org.pm4knime.portobject.DFMPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.dfgOnly.DfgMiningParameters;
@@ -34,7 +30,7 @@ import org.processmining.processtree.ProcessTree;
  *
  * @author Kefang Ding
  */
-public class DFM2PMNodeModel extends NodeModel {
+public class DFM2PMNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger
             .getLogger(DFM2PMNodeModel.class);
 	public static final String CFG_VARIANT_KEY= "Variant";
@@ -95,25 +91,22 @@ public class DFM2PMNodeModel extends NodeModel {
 		
     	ProcessTree pt = IMdProcessTree.mineProcessTree(dfm, params, new Canceller() {
 			public boolean isCancelled() {
-				// to make it accept the KNIME cancelation and make it cancled.
+				try {
+					checkCanceled(exec);
+				}catch (final CanceledExecutionException ce) {
+					return true;
+				}
 				return false;
-				
 			}
 		});
     	
+    	checkCanceled(exec);
     	ProcessTreePortObject ptPO = new ProcessTreePortObject(pt);
     	
 		logger.info("End:  DFM2PM Miner");
     	return new PortObject[]{ptPO};
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
 
     /**
      * {@inheritDoc}
@@ -162,25 +155,7 @@ public class DFM2PMNodeModel extends NodeModel {
         // TODO: generated method stub
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
+   
 
 }
 

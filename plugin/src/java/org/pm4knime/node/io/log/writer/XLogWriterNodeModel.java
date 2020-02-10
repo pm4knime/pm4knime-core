@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.deckfour.xes.model.XLog;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -19,6 +16,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.plugins.log.exporting.ExportLogMxml;
 import org.processmining.plugins.log.exporting.ExportLogMxmlGz;
 import org.processmining.plugins.log.exporting.ExportLogXes;
@@ -30,7 +28,7 @@ import org.processmining.plugins.log.exporting.ExportLogXesGz;
  *
  * @author Kefang
  */
-public class XLogWriterNodeModel extends NodeModel {
+public class XLogWriterNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(XLogWriterNodeModel.class);
 	private final SettingsModelString m_format = XLogWriterNodeModel.createFormatModel();
 	private final SettingsModelString m_outfile = XLogWriterNodeModel.createFileNameModel();
@@ -42,7 +40,7 @@ public class XLogWriterNodeModel extends NodeModel {
     protected XLogWriterNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
-    	super(new PortType[] {XLogPortObject.TYPE}, new PortType[] {});
+    	super(new PortType[] {XLogPortObject.TYPE}, null);
     }
 
     public static SettingsModelString createFormatModel() {
@@ -69,6 +67,7 @@ public class XLogWriterNodeModel extends NodeModel {
     		if(logData.getLog().size()<1) {
     			logger.warn("The current event log has no trace.");
     		}
+    		checkCanceled(exec);
     		File file = new File(m_outfile.getStringValue());
     		writeToFile(file, logData.getLog(), m_format.getStringValue());
     	}
@@ -95,13 +94,6 @@ public class XLogWriterNodeModel extends NodeModel {
     	
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
 
     /**
      * {@inheritDoc}
@@ -154,25 +146,5 @@ public class XLogWriterNodeModel extends NodeModel {
     	m_outfile.validateSettings(settings);
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-
 }
 

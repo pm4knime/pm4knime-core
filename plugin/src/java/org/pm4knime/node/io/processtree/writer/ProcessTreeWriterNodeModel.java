@@ -1,16 +1,11 @@
 package org.pm4knime.node.io.processtree.writer;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -21,6 +16,7 @@ import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 /**
  * This is the model implementation of ProcessTreeWriter.
@@ -28,7 +24,7 @@ import org.pm4knime.portobject.ProcessTreePortObjectSpec;
  *
  * @author DKF
  */
-public class ProcessTreeWriterNodeModel extends NodeModel {
+public class ProcessTreeWriterNodeModel extends DefaultNodeModel {
     
 	private static final NodeLogger logger = NodeLogger
             .getLogger(ProcessTreeWriterNodeModel.class);
@@ -54,25 +50,20 @@ public class ProcessTreeWriterNodeModel extends NodeModel {
         
     	URL url = FileUtil.toURL(m_fileName.getStringValue());
         Path localPath = FileUtil.resolveToPath(url);
-        
+        checkCanceled(exec);
         ProcessTreePortObject m_ptPort = (ProcessTreePortObject) inData[0];
         
         if(m_ptPort.getTree() != null) {
         	m_ptPort.save(localPath.toString());
         }
         
+        checkCanceled(exec);
         logger.info("End to write Process Tree into ptml file");
         
         return new PortObject[]{};
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
+    
 
     /**
      * {@inheritDoc}
@@ -123,25 +114,5 @@ public class ProcessTreeWriterNodeModel extends NodeModel {
     	m_fileName.validateSettings(settings);
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-
 }
 

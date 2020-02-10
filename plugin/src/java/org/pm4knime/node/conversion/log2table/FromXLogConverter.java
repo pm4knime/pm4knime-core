@@ -38,6 +38,8 @@ import org.knime.core.data.def.StringCell.StringCellFactory;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.node.BufferedDataContainer;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
 import org.pm4knime.util.XLogSpecUtil;
 /**
  * this class accepts an xlog file and convert it into a Datatable format, not in CSV format, please notice
@@ -69,7 +71,7 @@ public class FromXLogConverter {
 		}
 		return false; // they donot overlap their attributes, so what we need to do is just to create the spec there 
 	} 
-	static void convert(XLog log, BufferedDataContainer buf) {
+	static void convert(XLog log, BufferedDataContainer buf, ExecutionContext exec) throws CanceledExecutionException {
 		
 		DataTableSpec spec = buf.getTableSpec();
 		
@@ -77,7 +79,7 @@ public class FromXLogConverter {
 		int eventCount = 0;
 		DataCell[] tCells = new DataCell[colNum];
 		for (XTrace trace : log) {
-			
+			exec.checkCanceled();
 			for (String attrKey : trace.getAttributes().keySet()) {
 				int colIdx = spec.findColumnIndex(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX + attrKey);
 				if(colIdx >= 0) {

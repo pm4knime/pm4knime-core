@@ -1,17 +1,11 @@
 package org.pm4knime.node.conformance.replayer;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -28,6 +22,7 @@ import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedMoveModel;
@@ -68,7 +63,7 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
  *
  * @author 
  */
-public class DefaultPNReplayerNodeModel extends NodeModel{
+public class DefaultPNReplayerNodeModel extends DefaultNodeModel{
 	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerNodeModel.class);
 	private static final  String message  = "Replayer In Default";	
 	public static String CFG_PARAMETER_NAME = "Parameter In " + message;
@@ -118,7 +113,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
             final ExecutionContext exec, String strategyName) throws Exception{
       	// extract one method here to allow logger record its current class info
     	// check cancellation of node
-    	exec.checkCanceled();
+    	checkCanceled(exec);
     	
     	XLogPortObject logPO = (XLogPortObject) inData[INPORT_LOG];
     	PetriNetPortObject netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
@@ -150,7 +145,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     		PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
     				.getFutureResultAwarePluginContext(PNManifestReplayer.class);
     		// check cancellation of node before replaying the result
-        	exec.checkCanceled();
+    		checkCanceled(pluginContext, exec);
     		PNLogReplayer replayer = new PNLogReplayer();
     		repResult = replayer.replayLog(pluginContext, flattener.getNet(), log, flattener.getMap(),
     				replayAlgorithm, parameter);
@@ -168,7 +163,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 	    	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 					.getFutureResultAwarePluginContext(PNLogReplayer.class);
 	    	// check cancellation of node before replaying the result
-        	exec.checkCanceled();
+	    	checkCanceled(pluginContext, exec);
 	    	repResult = replayAlgorithm.replayLog(pluginContext, anet.getNet(), log, mapping, parameters);
     	}
     	
@@ -177,7 +172,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
     	repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, m_parameter.getMClassifierName().getStringValue());
     	
     	// check cancellation of node after replaying the result
-    	exec.checkCanceled();
+    	checkCanceled(exec);
     	
 		repResultPO = new RepResultPortObject(repResult, log, anet);
 		m_rSpec.setMParameter(m_parameter);
@@ -188,14 +183,7 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
 		return repResultPO;
 	}
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
-
+  
     /**
      * {@inheritDoc}
      */
@@ -241,23 +229,6 @@ public class DefaultPNReplayerNodeModel extends NodeModel{
             throws InvalidSettingsException {
         // TODO: generated method stub
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-		
-	}
     
 
 }

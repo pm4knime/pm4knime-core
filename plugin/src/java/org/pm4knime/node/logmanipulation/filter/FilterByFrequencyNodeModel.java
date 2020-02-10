@@ -1,15 +1,9 @@
 package org.pm4knime.node.logmanipulation.filter;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.deckfour.xes.model.XLog;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
@@ -19,6 +13,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 /**
  * <code>NodeModel</code> for the "FilterByFrequency" node.
@@ -41,7 +36,7 @@ import org.pm4knime.portobject.XLogPortObjectSpec;
  *   matches those criterias.  
  * @author Kefang Ding
  */
-public class FilterByFrequencyNodeModel extends NodeModel {
+public class FilterByFrequencyNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FilterByFrequencyNodeFactory.class);
 	
 	public static final String CFG_ISKEEP = "Keep traces";
@@ -77,7 +72,7 @@ public class FilterByFrequencyNodeModel extends NodeModel {
     		logger.warn("This event log is empty, the original log will be returned");
     		return new PortObject[]{inData[0]};
     	}
-    	
+    	checkCanceled(exec);
     	int iThreshold = 0;
     	if(m_threshold.getDoubleValue() < 1) {
     		iThreshold = (int) (m_threshold.getDoubleValue()  * log.size());
@@ -90,9 +85,9 @@ public class FilterByFrequencyNodeModel extends NodeModel {
     	XLog nlog ; 
     	// for SingleTV... we need to interpret the percentage into absolute value
     	if(m_isForSingleTV.getBooleanValue()) {
-    		nlog  = XLogFilterUtil.filterBySingleTVFreq(log, m_isKeep.getBooleanValue(), iThreshold);
+    		nlog  = XLogFilterUtil.filterBySingleTVFreq(log, m_isKeep.getBooleanValue(), iThreshold, exec);
     	}else {
-    		nlog = XLogFilterUtil.filterByWholeLogFreq(log, m_isKeep.getBooleanValue(), iThreshold);
+    		nlog = XLogFilterUtil.filterByWholeLogFreq(log, m_isKeep.getBooleanValue(), iThreshold, exec);
     	}
     	
     	XLogPortObject logPO = new XLogPortObject(nlog);
@@ -100,14 +95,7 @@ public class FilterByFrequencyNodeModel extends NodeModel {
         return new PortObject[]{logPO};
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
-
+   
     /**
      * {@inheritDoc}
      */
@@ -157,25 +145,6 @@ public class FilterByFrequencyNodeModel extends NodeModel {
             throws InvalidSettingsException {
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
 
 }
 

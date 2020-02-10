@@ -2,16 +2,12 @@ package org.pm4knime.node.io.petrinet.reader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -21,6 +17,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.util.PetriNetUtil;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 
 
@@ -30,7 +27,7 @@ import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
  *
  * @author KFDing
  */
-public class PetrinetReaderNodeModel extends NodeModel {
+public class PetrinetReaderNodeModel extends DefaultNodeModel {
     
     // the logger instance
     private static final NodeLogger logger = NodeLogger
@@ -66,9 +63,10 @@ public class PetrinetReaderNodeModel extends NodeModel {
         if(m_type.getStringValue().equals(defaultTypes[0])) {
             logger.info("Read Naive Petri net !");
             
+            checkCanceled(exec);
             // read the file and create fileInputStream
             AcceptingPetriNet anet = PetriNetUtil.importFromStream(new FileInputStream(m_fileName.getStringValue()));
-			
+            checkCanceled(exec);
         	m_netPort = new PetriNetPortObject(anet);
         }
 		
@@ -177,45 +175,6 @@ public class PetrinetReaderNodeModel extends NodeModel {
     	m_type.validateSettings(settings);
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        
-        // TODO load internal data. 
-        // Everything handed to output ports is loaded automatically (data
-        // returned by the execute method, models loaded in loadModelContent,
-        // and user settings set through loadSettingsFrom - is all taken care 
-        // of). Load here only the other internals that need to be restored
-        // (e.g. data used by the views).
-
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-       
-        // TODO save internal models. 
-        // Everything written to output ports is saved automatically (data
-        // returned by the execute method, models saved in the saveModelContent,
-        // and user settings saved through saveSettingsTo - is all taken care 
-        // of). Save here only the other internals that need to be preserved
-        // (e.g. data used by the views).
-
-    }
-
-	@Override
-	protected void reset() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
 

@@ -74,13 +74,16 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
     	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(FlexibleHeuristicsMinerPlugin.class);
-    	
+    	checkCanceled(pluginContext, exec);
     	HeuristicsMinerSettings heuristicsMinerSettings = getConfiguration();
     	hnet = FlexibleHeuristicsMinerPlugin.run(pluginContext, log, heuristicsMinerSettings);
     	
+    	checkCanceled(pluginContext, exec);
     	Object[] result = HeuristicsNetToPetriNetConverter.converter(pluginContext, hnet);
+    	
     	AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1]);
     	
+    	checkCanceled(exec);
     	PetriNetPortObject pnPO = new PetriNetPortObject(anet);
     	
     	logger.info("End: Heuristics miner");

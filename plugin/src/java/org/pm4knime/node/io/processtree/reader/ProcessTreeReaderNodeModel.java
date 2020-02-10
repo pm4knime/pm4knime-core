@@ -1,16 +1,12 @@
 package org.pm4knime.node.io.processtree.reader;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -20,6 +16,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 /**
  * This is the model implementation of ProcessTreeReader.
@@ -27,7 +24,7 @@ import org.pm4knime.portobject.ProcessTreePortObjectSpec;
  *
  * @author DKF
  */
-public class ProcessTreeReaderNodeModel extends NodeModel {
+public class ProcessTreeReaderNodeModel extends DefaultNodeModel {
 	
 	private static final NodeLogger logger = NodeLogger
             .getLogger(ProcessTreeReaderNodeModel.class);
@@ -55,19 +52,14 @@ public class ProcessTreeReaderNodeModel extends NodeModel {
     	ProcessTreePortObject m_ptPort = new ProcessTreePortObject();
     	// this is something different, becauser here we have in?? but how it this type now?
     	// m_ptPort.setSpec(m_spec);
+    	checkCanceled(exec);
     	m_ptPort.loadFrom(m_spec.getFileName());
-    	
+    	checkCanceled(exec);
     	logger.info("end of reading of Petri net");
         return new PortObject[]{m_ptPort};
     } 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
+    
 
     /**
      * {@inheritDoc}
@@ -160,25 +152,5 @@ public class ProcessTreeReaderNodeModel extends NodeModel {
     	m_fileName.validateSettings(settings);
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-
 }
 

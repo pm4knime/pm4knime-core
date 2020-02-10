@@ -1,18 +1,13 @@
 package org.pm4knime.node.logmanipulation.merge;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
@@ -23,6 +18,7 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogUtil;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 /**
  * <code>NodeModel</code> for the "MergeLog" node. This node accepts two event logs as input and merge them together as one event log. 
@@ -34,7 +30,7 @@ import org.pm4knime.util.XLogUtil;
  *
  * @author Kefang Ding
  */
-public class MergeLogNodeModel extends NodeModel {
+public class MergeLogNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(MergeLogNodeModel.class);
 	// check the m_strategy and m_string selection 
 	// here are three options
@@ -97,24 +93,24 @@ public class MergeLogNodeModel extends NodeModel {
 			tKeys.add(m_traceIDs[i].getStringValue().split(CFG_ATTRIBUTE_PREFIX + i)[1]);
 			eKeys.add(m_eventIDs[i].getStringValue().split(CFG_ATTRIBUTE_PREFIX + i)[1]);
 		}
-		
+		checkCanceled(exec);
 		XLog mlog = null;
     	// according to the strategy choice, we have different methods to merge
 		if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[0])) {
 			// the traces are separately merged， even if they have the same identifiers
 			// then global trace, they should have their different ones. To merge them
-			mlog = XLogUtil.mergeLogsSeparate(log0, log1);
+			mlog = XLogUtil.mergeLogsSeparate(log0, log1, exec);
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[1])) {
 			// ignore the traces with same identifier from the second event log
 			
-			mlog = XLogUtil.mergeLogsIgnoreTrace(log0, log1, tKeys);
+			mlog = XLogUtil.mergeLogsIgnoreTrace(log0, log1, tKeys, exec);
 			
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[2])) {
 			// need to merge according to its trace attributes
 			// for this choice, only trace attributes are availabel
 			List<XAttribute> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
 			List<XAttribute> inTraceAttrList1 = getInAttrs(1, tAttrList1, m_traceAttrSet.getIncludeList());
-			mlog = XLogUtil.mergeLogsSeparateEvent(log0, log1, tKeys, exTraceAttrList0, inTraceAttrList1);
+			mlog = XLogUtil.mergeLogsSeparateEvent(log0, log1, tKeys, exTraceAttrList0, inTraceAttrList1, exec);
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[3])) {
 			// need to merge according to its trace attributes and event attributes
 			List<XAttribute> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
@@ -125,7 +121,7 @@ public class MergeLogNodeModel extends NodeModel {
 			List<XAttribute> inEventAttrList1 = getInAttrs(1, eAttrList1, m_eventAttrSet.getIncludeList());
 			
 			mlog = XLogUtil.mergeLogsInternal(log0, log1, tKeys, eKeys, exTraceAttrList0, exEventAttrList0, 
-					inTraceAttrList1, inEventAttrList1);
+					inTraceAttrList1, inEventAttrList1, exec);
 		}else {
 			System.out.println("Not such strategy");
 		}
@@ -165,13 +161,6 @@ public class MergeLogNodeModel extends NodeModel {
 	   return exAttrs;
 	}
    
- /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
 
     /**
      * {@inheritDoc}
@@ -253,25 +242,6 @@ public class MergeLogNodeModel extends NodeModel {
     	}
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
 
 }
 

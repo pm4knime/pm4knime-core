@@ -24,6 +24,7 @@ import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.alphaminer.parameters.AlphaMinerParameters;
 import org.processmining.alphaminer.parameters.AlphaVersion;
 import org.processmining.alphaminer.plugins.AlphaMinerPlugin;
+import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 /**
@@ -60,15 +61,17 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 			alphaParams = new AlphaMinerParameters(AlphaVersion.CLASSIC);
 		else if(m_variant.getStringValue().equals(AlphaVersion.PLUS.toString()))
 			alphaParams = new AlphaMinerParameters(AlphaVersion.PLUS);
+		PluginContext context = PM4KNIMEGlobalContext.instance().getFutureResultAwarePluginContext(AlphaMinerPlugin.class);
 		
-		Object[] result = AlphaMinerPlugin.apply(PM4KNIMEGlobalContext.instance().getFutureResultAwarePluginContext(AlphaMinerPlugin.class), log,
+		checkCanceled(context, exec);
+		Object[] result = AlphaMinerPlugin.apply(context, log,
 				getEventClassifier(), alphaParams);
 		
 		// when there is no finalMarking available, we set the finalMarking automatically
 		Set<Marking> fmSet = PetriNetUtil.guessFinalMarking((Petrinet) result[0]); // new HashMap();
 		
 		AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1], fmSet);
-		
+		checkCanceled(exec);
 		PetriNetPortObject pnPO = new PetriNetPortObject(anet);
 		logger.info("End: Alpha Miner");
 		return pnPO;

@@ -84,6 +84,7 @@ public class Table2XLogConverterNodeModel extends NodeModel {
         sorter.setSortInMemory(m_sortInMemory);
         BufferedDataTable sortedTable = sorter.sort(exec);
     	
+        checkCanceled();
     	// convert the string to date and sort them according to caseID? So we can read them easier for rows
     	// it creates the corresponding column spec and create another DataTable for it.
     	// one thing to remember, it is not so important to have order of timestamp. 
@@ -91,15 +92,22 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	handler.setConfig(m_config);
     	handler.setLogger(logger);
     	
-    	handler.convertDataTable2Log(sortedTable);
+    	handler.convertDataTable2Log(sortedTable, exec);
     	XLog log = handler.getXLog();
+    	
+    	checkCanceled();
     	logPO = new XLogPortObject(log);
     	
     	logger.info("End : Convert DataTable to Event Log" );
         return new PortObject[]{logPO};
     }
 
-    /**
+    private void checkCanceled() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
      * {@inheritDoc}
      */
     @Override

@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.deckfour.xes.classification.XEventClass;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
@@ -110,11 +112,15 @@ public class ReplayerUtil {
 	
 	/**
 	 * to convert PNResult to PNMatchInstancesRepResult;
+	 * @param exec 
+	 * @throws CanceledExecutionException 
 	 */
-	public static PNMatchInstancesRepResult convert2MatchInstances(PNRepResult repResult) {
+	public static PNMatchInstancesRepResult convert2MatchInstances(PNRepResult repResult, ExecutionContext exec) 
+			throws CanceledExecutionException {
 		//Convert to n-alignments object
 		Collection<AllSyncReplayResult> col = new ArrayList<AllSyncReplayResult>();
 		for (SyncReplayResult rep : repResult) {
+			exec.checkCanceled();
 			List<List<Object>> nodes = new ArrayList<List<Object>>();
 			nodes.add(rep.getNodeInstance());
 

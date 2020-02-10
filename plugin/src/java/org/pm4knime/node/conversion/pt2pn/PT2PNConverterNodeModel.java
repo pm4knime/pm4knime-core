@@ -49,19 +49,25 @@ public class PT2PNConverterNodeModel extends NodeModel {
     	logger.info("Begin: Conversion from process tree to Petri net");
     	ProcessTreePortObject ptPO = (ProcessTreePortObject) inObjects[0];
     	ProcessTree tree = ptPO.getTree();
-    	
+    	checkCanceled(exec);
     	ProcessTree2Petrinet.PetrinetWithMarkings pn = ProcessTree2Petrinet.convert(tree, false);
 
 		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet(pn.petrinet, pn.initialMarking,
 				pn.finalMarking);
 
+		checkCanceled(exec);
 		PetriNetPortObject pnPO = new PetriNetPortObject(anet);
         
     	logger.info("End: Conversion from process tree to Petri net");
         return new PortObject[]{pnPO};
     }
 
-    /**
+    private void checkCanceled(ExecutionContext exec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
      * {@inheritDoc}
      */
     @Override

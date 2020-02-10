@@ -31,6 +31,8 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.XLogSpecUtil;
@@ -75,9 +77,11 @@ public class ToXLogConverter {
 	/**
 	 * convert CSV data table into xlog, but we need to know the column index,
 	 * so we know which one is which event?
+	 * @param exec 
 	 * @param logName
+	 * @throws CanceledExecutionException 
 	 */
-	public void convertDataTable2Log(BufferedDataTable csvData) {
+	public void convertDataTable2Log(BufferedDataTable csvData, ExecutionContext exec) throws CanceledExecutionException {
 		
 		// get trace and event attribute available sets here 
 		List<String> traceColumns= config.getMTraceAttrSet().getIncludeList();
@@ -121,6 +125,7 @@ public class ToXLogConverter {
 		startLog(logName + " event log");
 		
 		for(DataRow row : csvData) {
+			exec.checkCanceled();
 			// when it is a integer or string, not matter, right?? 
 			DataCell traceIDData = row.getCell(traceColIndices[caseIDIdx]);
 			

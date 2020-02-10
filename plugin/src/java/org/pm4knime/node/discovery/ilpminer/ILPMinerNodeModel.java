@@ -99,6 +99,7 @@ public class ILPMinerNodeModel extends DefaultMinerNodeModel {
 		XLog artifLog = XLogUtil.addArtificialStartAndEnd(log, startLabel, endLabel, classifier);
         
 		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
+		checkCanceled(context, exec);
         // create the parameter
 		XLogHybridILPMinerParametersImpl param = new XLogHybridILPMinerParametersImpl(context, artifLog);
 		// here put some values from m_parameter to param
@@ -111,18 +112,19 @@ public class ILPMinerNodeModel extends DefaultMinerNodeModel {
 		// set gParam according to the miner type
 		gParam.setMiner(m_parameter.getMalgorithm().getStringValue());
 		
-
+		checkCanceled(context, exec);
 		// discover the causal graph
 		DiscoverCausalActivityGraphAlgorithm algorithm = new DiscoverCausalActivityGraphAlgorithm();
 		CausalActivityGraph cag = algorithm.apply(context, artifLog, gParam);
 		param.getDiscoveryStrategy().setCausalActivityGraphParameters(gParam);
     	param.getDiscoveryStrategy().setCausalActivityGraph(cag);
         
-    	
+    	checkCanceled(context, exec);
     	Object[] result = HybridILPMinerPlugin.discoverWithArtificialStartEnd(context, log, artifLog, param);
         
     	// create the accepting Petri net and PortObject
     	AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1],  (Marking) result[2]);
+    	checkCanceled(exec);
         PetriNetPortObject pnPO = new PetriNetPortObject(anet);
         
     	logger.info("End : ILPMiner " );

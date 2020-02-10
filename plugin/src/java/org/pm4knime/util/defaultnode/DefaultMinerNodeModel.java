@@ -1,15 +1,9 @@
 package org.pm4knime.util.defaultnode;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -21,7 +15,7 @@ import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogUtil;
 
-public abstract class DefaultMinerNodeModel extends NodeModel {
+public abstract class DefaultMinerNodeModel extends DefaultNodeModel {
 	
 	protected DefaultMinerNodeModel(PortType[] inPortTypes, PortType[] outPortTypes) {
 		super(inPortTypes, outPortTypes);
@@ -46,14 +40,11 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 		// we always put the event log as the first input!! 
 		logPO = (XLogPortObject) inObjects[0];
 		
-		// get the classifier from the log, but how to get the values from it?? 
-		// without any parameter from us!!
-		// getEventClassifier(logPO.getLog());
 // check cancellation of node before mining
-    	exec.checkCanceled();
+    	checkCanceled(null, exec);
 		PortObject pmPO = mine(logPO.getLog(), exec);
 // check cancellation of node after mining
-    	exec.checkCanceled();
+		checkCanceled(null, exec);
 		return new PortObject[] { pmPO};
 	}
 	
@@ -83,20 +74,7 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 		
 	}
 	
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
 		// TODO save m_classifier into the settings
@@ -130,8 +108,4 @@ public abstract class DefaultMinerNodeModel extends NodeModel {
 
 	protected abstract void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException;
 	
-	@Override
-	protected void reset() {
-	}
-
 }

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
 import org.pm4knime.util.TraceVariantUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.log.utils.TraceVariantByClassifier;
@@ -15,11 +17,12 @@ import org.processmining.log.utils.TraceVariantByClassifier;
 import com.google.common.collect.ImmutableListMultimap;
 
 public class XLogFilterUtil {
-	public static XLog filterByTraceLength(XLog log, boolean isKeep, int minLen, int maxLen) {
+	public static XLog filterByTraceLength(XLog log, boolean isKeep, int minLen, int maxLen, ExecutionContext exec) throws CanceledExecutionException {
 		
 		XLog nlog = XLogUtil.clonePureLog(log, "event log filtered by trace length");
 		
 		for(XTrace trace : log) {
+			exec.checkCanceled();
 			if(trace.size() >= minLen && trace.size() <=maxLen) {
 				if(isKeep)
 					nlog.add(trace);
@@ -31,7 +34,7 @@ public class XLogFilterUtil {
 		return nlog;
 	}
 
-	public static XLog filterBySingleTVFreq(XLog log, boolean isKeep, int iThreshold) {
+	public static XLog filterBySingleTVFreq(XLog log, boolean isKeep, int iThreshold, ExecutionContext exec) throws CanceledExecutionException {
 		// TODO Auto-generated method stub
 		XLog nlog = XLogUtil.clonePureLog(log, "event log filtered by trace frequency");
 		
@@ -40,6 +43,7 @@ public class XLogFilterUtil {
 				TraceVariantUtil.getTraceVariant(log);
 		
     	for(TraceVariantByClassifier variant : variantsMap.keySet()) {
+    		exec.checkCanceled();
     		List<XTrace> traceList = variantsMap.get(variant);
     		if(traceList.size() >= iThreshold) {
     			if(isKeep)
@@ -62,21 +66,25 @@ public class XLogFilterUtil {
 	 * @param log
 	 * @param isKeep
 	 * @param iThreshold
+	 * @param exec 
 	 * @return
+	 * @throws CanceledExecutionException 
 	 */
-	public static XLog filterByWholeLogFreq(XLog log, boolean isKeep, int iThreshold) {
+	public static XLog filterByWholeLogFreq(XLog log, boolean isKeep, int iThreshold, ExecutionContext exec) throws CanceledExecutionException {
 		// TODO Auto-generated method stub
 		XLog nlog = XLogUtil.clonePureLog(log, "event log filtered by trace frequency");
 		
 		ImmutableListMultimap<TraceVariantByClassifier, XTrace> variantsMap = 
 				TraceVariantUtil.getTraceVariant(log);
 		// sort the trace variant  by frequency
+		exec.checkCanceled();
 		Map<TraceVariantByClassifier, Collection<XTrace>> sortedMap = variantsMap.asMap().entrySet().stream()
 				.sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size())
 				 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     	int sum = 0;
     	if(isKeep) {
     		for(TraceVariantByClassifier variant : sortedMap.keySet()) {
+    			exec.checkCanceled();
         		List<XTrace> traceList = variantsMap.get(variant);
         		if(sum <= iThreshold) {
         			nlog.addAll(traceList);
@@ -87,6 +95,7 @@ public class XLogFilterUtil {
     		
     	}else {
     		for(TraceVariantByClassifier variant : sortedMap.keySet()) {
+    			exec.checkCanceled();
         		List<XTrace> traceList = variantsMap.get(variant);
         		if(sum <= iThreshold) {
         			sum += traceList.size();

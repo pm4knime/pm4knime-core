@@ -23,6 +23,8 @@ import org.deckfour.xes.model.XAttributeList;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
 import org.xesstandard.model.XesAttribute;
 import org.xesstandard.model.XesClassifier;
 import org.xesstandard.model.XesComponent;
@@ -56,9 +58,11 @@ public class XesConvertToXLogAlgorithm {
 	/**
 	 * 
 	 * @param log The given Xes log.
+	 * @param exec 
 	 * @return The XLog that results from converting the given log.
+	 * @throws CanceledExecutionException 
 	 */
-	public XLog convertToLog(XesLog log) {
+	public XLog convertToLog(XesLog log, ExecutionContext exec) throws CanceledExecutionException {
 		// Create the factory.
 		factory = XFactoryRegistry.instance().currentDefault();
 		// Create an empty XLog.
@@ -82,10 +86,12 @@ public class XesConvertToXLogAlgorithm {
 		for (XesClassifier classifier : log.getEventClassifiers()) {
 			convertedLog.getClassifiers().add(convert(classifier));
 		}
+		exec.checkCanceled();
 		// Convert the log attributes.
 		convert(log, convertedLog);
 		// Convert the traces.
 		for (XesTrace trace : log.getTraces()) {
+			exec.checkCanceled();
 			convertedLog.add(convert(trace));
 		}
 		// Convert the trace-less events: add them to proper traces. We need a trace classifier to do this.
@@ -95,6 +101,7 @@ public class XesConvertToXLogAlgorithm {
 			// Create a map from trace names to traces.
 			Map<String, XTrace> name2Trace = new HashMap<String, XTrace>();
 			for (XTrace trace : convertedLog) {
+				exec.checkCanceled();
 				String name = XConceptExtension.instance().extractName(trace);
 				if (name != null) {
 					name2Trace.put(name, trace);
@@ -102,6 +109,7 @@ public class XesConvertToXLogAlgorithm {
 			}
 			// Now assign every event to a proper trace.
 			for (XesEvent event : log.getEvents()) {
+				exec.checkCanceled();
 				// Convert the event.
 				XEvent convertedEvent = convert(event);
 				// Get the trace name for this event, using the converted first trace classifier.

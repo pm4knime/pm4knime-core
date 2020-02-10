@@ -1,8 +1,6 @@
 package org.pm4knime.node.logmanipulation.classify;
 
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClasses;
@@ -10,11 +8,8 @@ import org.deckfour.xes.model.XAttributeLiteral;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -23,6 +18,7 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.TraceVariantUtil;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.log.utils.TraceVariantByClassifier;
 import org.processmining.log.utils.XUtils;
 import org.processmining.logenhancement.view.LogViewVisualizer;
@@ -35,7 +31,7 @@ import com.google.common.collect.ImmutableListMultimap;
  *
  * @author Kefang Ding
  */
-public class RandomClassifierNodeModel extends NodeModel {
+public class RandomClassifierNodeModel extends DefaultNodeModel {
 	
     public static final String CFG_KEY_CONFIG = "Classify config";
 
@@ -66,7 +62,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     	if(log.isEmpty()) {
     		throw new InvalidSettingsException("This event log is empty, reset a new event log");
     	}
-    	
+    	checkCanceled(exec);
     	// get the event classes
     	XEventClasses eventClasses = LogViewVisualizer.createEventClasses(log);
     	
@@ -74,6 +70,7 @@ public class RandomClassifierNodeModel extends NodeModel {
     			XUtils.getVariantsByClassifier(log, eventClasses);
     	
     	for(TraceVariantByClassifier variant : variantsMap.keySet()) {
+    		checkCanceled(exec);
     		List<XTrace> traceList = variantsMap.get(variant);
     		TraceVariantUtil.addLabelWithPercent(traceList, m_config.getValueMap(), m_config.getLabelName());
     	}
@@ -81,18 +78,11 @@ public class RandomClassifierNodeModel extends NodeModel {
     	// check if it uses the same traces
     	XAttributeLiteral attr = new XAttributeLiteralImpl(m_config.getLabelName(), "");
     	log.getGlobalTraceAttributes().add(attr);
-    	
+    	checkCanceled(exec);
 		return  new PortObject[]{logPortObject};
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    	
-    }
+   
 
     /**
      * {@inheritDoc}
@@ -136,25 +126,5 @@ public class RandomClassifierNodeModel extends NodeModel {
     	m_config.loadValidatedSettingsFrom(settings);
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-
 }
 

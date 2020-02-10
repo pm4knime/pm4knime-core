@@ -18,7 +18,6 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -30,6 +29,7 @@ import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogUtil;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
@@ -68,7 +68,7 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  *            +
  *            https://github.com/rapidprom/rapidprom-source/blob/master/src/main/java/org/rapidprom/operators/conformance/PerformanceConformanceAnalysisOperator.java
  */
-public class PerformanceCheckerNodeModel extends NodeModel {
+public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(PerformanceCheckerNodeModel.class);
 
 	private static final String CFG_MC_OTHERS = "Model Content for Other Data";
@@ -124,17 +124,17 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		// how to make this happen?? After the generation of flattener,
 		// it generates a new map during the building process. 
 // check cancellation of node before sync
-    	exec.checkCanceled();
-		sync(repResult, flattener);
+    	checkCanceled(null, exec);
+		sync(repResult, flattener, exec);
 
-		
 // check cancellation of node before replaying
-    	exec.checkCanceled();
+		checkCanceled(null, exec);
 		mResult = ManifestFactory.construct(anet.getNet(), anet.getInitialMarking(),
 				anet.getFinalMarkings().toArray(new Marking[0]), log, flattener, repResult, manifestParameters.getMapping());
+		
 //		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
 //				flattener.getFinalMarkings(), log, flattener, repResult, manifestParameters.getMapping());
-
+		checkCanceled(null, exec);
 		// global statistics information. It includes all the performance info, the
 		// whole process
 		// we need one view to show the result here
@@ -163,19 +163,20 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		tBuf.close();
 		pBuf.close();
 // check cancellation of node after replaying
-    	exec.checkCanceled();
+		
 		logger.info("End: ManifestReplayer Performance Evaluation");
 		return new PortObject[] { gBuf.getTable(), tBuf.getTable(), pBuf.getTable() };
 	}
 
-	private void sync(PNRepResult repResult, PNManifestFlattener flattener) {
+	private void sync(PNRepResult repResult, PNManifestFlattener flattener, ExecutionContext exec) throws CanceledExecutionException {
 		// TODO make the transition in the same transition ids here
 		// set a map here to record the connection?? Or, we can reload the nodes by
 		// making the transition the same
 		Map<Transition, Transition> resToFlattenerMap = new HashMap();
 
 		for (SyncReplayResult alignment : repResult) {
-
+			checkCanceled(null, exec);
+			
 			List<Object> nodeInstances = alignment.getNodeInstance();
 			for (int idx = 0; idx < nodeInstances.size(); idx++) {
 				Object node = nodeInstances.get(idx);
@@ -238,13 +239,7 @@ public class PerformanceCheckerNodeModel extends NodeModel {
 		return tSpec;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void reset() {
-		// TODO: generated method stub
-	}
+	
 
 	/**
 	 * {@inheritDoc}

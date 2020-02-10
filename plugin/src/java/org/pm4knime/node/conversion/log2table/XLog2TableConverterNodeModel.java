@@ -92,7 +92,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     	DataTableSpec outSpec = createSpec();
     	
     	BufferedDataContainer bufCon = exec.createDataContainer(outSpec);
-    	FromXLogConverter.convert(log, bufCon);
+    	FromXLogConverter.convert(log, bufCon, exec);
     	
     	bufCon.close();
     	logger.info("End : Convert Event log to DataTable" );

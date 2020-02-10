@@ -1,17 +1,11 @@
 package org.pm4knime.node.conformance.precision;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
@@ -22,6 +16,7 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.util.ReplayerUtil;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.plugins.multietc.reflected.ReflectedLog;
 import org.processmining.plugins.multietc.res.MultiETCResult;
@@ -76,7 +71,7 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 	 * 
  * @author Kefang Ding
  */
-public class PrecisionCheckerNodeModel extends NodeModel {
+public class PrecisionCheckerNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(PrecisionCheckerNodeModel.class);
 	
 	final static String ALIGN_1 = "1-Align Precision";
@@ -109,13 +104,13 @@ public class PrecisionCheckerNodeModel extends NodeModel {
             final ExecutionContext exec) throws Exception {
     	logger.info("Start: ETC Precision Checking");
     	// check cancellation of node
-    	exec.checkCanceled();
+    	checkCanceled(exec);
     	repResultPO = (RepResultPortObject) inData[0];
     	
     	PNRepResult repResult = repResultPO.getRepResult();
 		AcceptingPetriNet anet = repResultPO.getNet();
     	
-		PNMatchInstancesRepResult matchResult = ReplayerUtil.convert2MatchInstances(repResult);
+		PNMatchInstancesRepResult matchResult = ReplayerUtil.convert2MatchInstances(repResult, exec);
 		
 		// create reflected log. Due to loading Petri net will change its transition id, 
 		// so the new loaded version differs from the transitions from anet
@@ -123,7 +118,7 @@ public class PrecisionCheckerNodeModel extends NodeModel {
 		// make refLog with the corresponding version in anet
 		MultiETCSettings sett = getParameter();
 		// check cancellation of node before the precision checking
-    	exec.checkCanceled();
+    	checkCanceled(exec);
 		// based on match result, get the precision indication
 		Object[] result = ReplayerUtil.checkMultiETC(refLog, anet, sett);
 		MultiETCResult res = (MultiETCResult) result[0];
@@ -137,19 +132,13 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     	tBuf.close();
     	
     	// check cancellation of node
-    	exec.checkCanceled();
+    	checkCanceled(exec);
     	logger.info("End: ETC Precision Checking");
     
         return new PortObject[]{tBuf.getTable()};
     }
         
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
-    }
+    
 
     private MultiETCSettings getParameter() {
     	MultiETCSettings sett = new MultiETCSettings();
@@ -206,34 +195,6 @@ public class PrecisionCheckerNodeModel extends NodeModel {
     	m_algorithm.loadSettingsFrom(settings);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-
+ 
 }
 

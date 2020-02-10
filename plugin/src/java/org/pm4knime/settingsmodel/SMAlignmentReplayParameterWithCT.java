@@ -263,7 +263,21 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 	private static Map<Transition, Integer> buildTCostMap(Collection<Transition> transitions, TableModel tModel) {
 		
 		Map<Transition, Integer> mapTrans2Cost = new HashMap();
-		
+		for(Transition t : transitions) {
+			 
+			for(int i=0; i< tModel.getRowCount(); i++) {
+				String tNames = (String) tModel.getValueAt(i, 0);
+				String tName = tNames.split("[^a-zA-Z0-9\\s]")[0];
+				
+				if(tName.trim().equals(t.getLabel().trim())) {
+					int mCost = Integer.parseInt( (String) tModel.getValueAt(i, 1));
+					mapTrans2Cost.put(t, mCost);
+					break;
+				}
+			}
+			
+		}
+		/*
 		for(int i=0; i< tModel.getRowCount(); i++) {
 			String eventNames = (String) tModel.getValueAt(i, 0);
 			String[] splitStr = eventNames.split("[^a-zA-Z0-9\\s]");
@@ -273,6 +287,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 			int mCost = Integer.parseInt( (String) tModel.getValueAt(i, 1));
 			mapTrans2Cost.put(t, mCost);
 		}
+		*/
 		return mapTrans2Cost;
 	}
 

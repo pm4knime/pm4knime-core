@@ -1,7 +1,5 @@
 package org.pm4knime.node.conformance.fitness;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import org.knime.core.data.DataCell;
@@ -13,14 +11,9 @@ import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
@@ -28,13 +21,13 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.RepResultPortObject;
 import org.pm4knime.portobject.RepResultPortObjectSpec;
 import org.pm4knime.util.ReplayerUtil;
-
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 /**
  * <code>NodeModel</code> for the "ConformanceChecker" node.
  *
  * @author 
  */
-public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHolder{
+public class FitnessCheckerNodeModel extends DefaultNodeModel  implements PortObjectHolder{
 	private static final NodeLogger logger = NodeLogger.getLogger(FitnessCheckerNodeModel.class);
 	
 	private DataTableSpec m_tSpec;
@@ -59,7 +52,7 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
     	logger.info("Start: Unified PNReplayer Conformance Checking");
     	repResultPO = (RepResultPortObject) inData[0];
 // check cancellation of node before sync
-    	exec.checkCanceled();
+    	checkCanceled(null, exec);
     	// make the transitions in replay result and transitions corresponding!!
     	ReplayerUtil.adjustRepResult(repResultPO.getRepResult(), repResultPO.getNet());
     	
@@ -67,7 +60,7 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
     	// one warning here, if we could get the fitness information , or not.
     	// if the types are changed from this step, then exceptions happen.
 // check cancellation of node before writing
-    	exec.checkCanceled();
+    	checkCanceled(null, exec);
     	Map<String, Object> info = repResultPO.getRepResult().getInfo();
     	int i=0;
     	for(String key : info.keySet()) {
@@ -88,16 +81,8 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
     	buf.close();
     	BufferedDataTable bt = buf.getTable();
 // check cancellation of node before closing
-    	exec.checkCanceled();
+    	checkCanceled(null, exec);
         return new PortObject[]{bt};
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // TODO: generated method stub
     }
 
     /**
@@ -119,42 +104,6 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
         return new PortObjectSpec[]{m_tSpec};
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) {
-         // TODO: generated method stub
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        // TODO: generated method stub
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
 
 	public RepResultPortObject getRepResultPO() {
 		// TODO Auto-generated method stub
@@ -170,13 +119,6 @@ public class FitnessCheckerNodeModel extends NodeModel  implements PortObjectHol
 	public PortObject[] getInternalPortObjects() {
 		// TODO Auto-generated method stub
 		return new PortObject[] {repResultPO};
-	}
-
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

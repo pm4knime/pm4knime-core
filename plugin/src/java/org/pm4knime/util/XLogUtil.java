@@ -39,6 +39,8 @@ import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.deckfour.xes.model.impl.XTraceImpl;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
 import org.processmining.incorporatenegativeinformation.help.EventLogUtilities;
 
 /*
@@ -266,7 +268,7 @@ public class XLogUtil {
 	}
 	
 	// merge two event logs with separate strategy
-	public static XLog mergeLogsSeparate(XLog log0, XLog log1) {
+	public static XLog mergeLogsSeparate(XLog log0, XLog log1, ExecutionContext exec) throws CanceledExecutionException {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
 		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
@@ -274,11 +276,13 @@ public class XLogUtil {
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log0) {
+			exec.checkCanceled();
 			mlog.add((XTrace) trace.clone());
 		}
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
+			exec.checkCanceled();
 			mlog.add((XTrace) trace.clone());
 		}
 		
@@ -286,7 +290,7 @@ public class XLogUtil {
 	}
 	
 	// merge log with ignore second log strategy. But simple ignore the trace
-	public static XLog mergeLogsIgnoreTrace(XLog log0, XLog log1, List<String> tKeys) {
+	public static XLog mergeLogsIgnoreTrace(XLog log0, XLog log1, List<String> tKeys, ExecutionContext exec) throws CanceledExecutionException {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
 		mlog.getGlobalTraceAttributes().addAll(log1.getGlobalTraceAttributes());
@@ -296,6 +300,7 @@ public class XLogUtil {
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log0) {
+			exec.checkCanceled();
 			mlog.add((XTrace) trace.clone());
 			
 			// we need to get the values from it.. If we have string format
@@ -306,6 +311,7 @@ public class XLogUtil {
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
+			exec.checkCanceled();
 			String  attrValue = trace.getAttributes().get(tKeys.get(1)).toString();
 			if(!caseIDSet.contains(attrValue)) {
 				mlog.add((XTrace) trace.clone());
@@ -321,7 +327,7 @@ public class XLogUtil {
 	// by using with one, we need to do this??
 	// some attributes need change. 
 	public static XLog mergeLogsSeparateEvent(XLog log0, XLog log1, List<String> tKeys ,
-			List<XAttribute> exTraceAttrList0, List<XAttribute> traceAttrList1) {
+			List<XAttribute> exTraceAttrList0, List<XAttribute> traceAttrList1, ExecutionContext exec) throws CanceledExecutionException {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
 		
@@ -334,6 +340,7 @@ public class XLogUtil {
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log0) {
+			exec.checkCanceled();
 			XTrace nTrace = (XTrace) trace.clone();
 			String  attrValue = trace.getAttributes().get(tKeys.get(0)).toString();
 			tMap.put(attrValue, nTrace);
@@ -341,6 +348,7 @@ public class XLogUtil {
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
+			exec.checkCanceled();
 			String  attrValue = trace.getAttributes().get(tKeys.get(1)).toString();
 			
 			if(tMap.keySet().contains(attrValue)) {
@@ -417,7 +425,7 @@ public class XLogUtil {
 	// we think they are separate traces and with different IDs. 
 	// we can have one indicator for this. if separate, or not. IF they are separate, we insert all events there
 	public static XLog mergeLogsInternal(XLog log0, XLog log1, List<String> tKeys, List<String> eKeys , List<XAttribute> exTraceAttrList0, List<XAttribute> exEventAttrList0, 
-			List<XAttribute> traceAttrList1,  List<XAttribute> eventAttrList1) {
+			List<XAttribute> traceAttrList1,  List<XAttribute> eventAttrList1, ExecutionContext exec) throws CanceledExecutionException {
 		XLog mlog = XLogUtil.clonePureLog(log0, "Merged Log");
 		mlog.getAttributes().putAll(log1.getAttributes());
 		// the attributes we remove is only for the traces with the same caseID. So it means at end, we need to keep them all?? 
@@ -437,6 +445,7 @@ public class XLogUtil {
 		Map<String, XTrace> tMap = new HashMap();
 		
 		for(XTrace trace: log0) {
+			exec.checkCanceled();
 			XTrace nTrace = (XTrace) trace.clone();
 			String  attrValue = trace.getAttributes().get(tKeys.get(0)).toString();// delete the attributes here with the same names... But are we talking about
 			tMap.put(attrValue, nTrace);
@@ -445,6 +454,7 @@ public class XLogUtil {
 		
 		// put the first event log into the mlog
 		for(XTrace trace: log1) {
+			exec.checkCanceled();
 			XTrace nTrace = (XTrace) trace.clone();
 			String  attrValue = trace.getAttributes().get(tKeys.get(1)).toString();// delete the attributes here with the same names... But are we talking about
 			
