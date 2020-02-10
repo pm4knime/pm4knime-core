@@ -53,7 +53,9 @@ public class TraceVariantUtil {
 				.forEach(e -> result.put( e.getKey() , (int) (e.getValue() * tNum)));
 		
 		
-		
+		// how to differentiate if we should assign all the sum here, or just the one for them?? 
+		// we need to know the percentage amount here. 
+		// one condition to do this, is that we assign all the trace variant with labels!! 
 		int sum = result.values().parallelStream().reduce(0,(a,b) -> a + b);
 		int diff = traceList.size() - sum;
 		String highKey = result.keySet().iterator().next();

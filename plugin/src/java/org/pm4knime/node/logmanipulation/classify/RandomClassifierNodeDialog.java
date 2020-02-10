@@ -41,8 +41,9 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
  * @author Kefang Ding
  */
 public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
-
+	private final double THRESHOLD = .0001;
 	private final JPanel m_mainPanel = new JPanel();
+	LabelTablePanel tPanel;
 	DefaultTableModel tModel;
 	// there is another optional panel
 	JTextField nameField;
@@ -70,12 +71,13 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 		
 		// create add attributes button and remove one attribute botton there
 		JButton addValueBtn = new JButton("Add label value");
+		addValueBtn.setOpaque(true);
 		nameBox.add(addValueBtn);
 		
 		
 		m_mainPanel.add(nameBox);
 		// create a big box to contain the values here but allows to have boader
-		LabelTablePanel tPanel = new LabelTablePanel();
+		tPanel = new LabelTablePanel();
 		tModel = tPanel.getTableModel();
 		m_mainPanel.add(tPanel);
 		// after this, when the values changes, how to modify the value there, until the last step!! 
@@ -107,10 +109,14 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 	public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
 		// TODO assign the config from components
+		if(tPanel.getTable().isEditing()){
+			tPanel.getTable().getCellEditor().stopCellEditing();
+		}
+		
 		m_config.setLabelName(nameField.getText());
 		// secondly assign the values to m_config from the table
 		int rCount = tModel.getRowCount();
-		int sum = 0;
+		double sum = 0; // one bug here about the value in sum
 		for(int row = 0; row < rCount; row++) {
 			String labelValue = (String) tModel.getValueAt(row, 0);
 			String percentStr = (String) tModel.getValueAt(row, 1);
@@ -126,6 +132,13 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 			sum += percent;
 			m_config.addData(labelValue, percent);
 			
+		}
+		
+		// do we need to check the total sum of percent over 1.0?? 
+		// if it is under 1.0, we assign all the rest value to the last label?
+		// we give also warning about this to remind the sum should be 1.0
+		if(Math.abs(1 - sum) > THRESHOLD) {
+			throw new InvalidSettingsException("Sum is under 1.0, reassign value again");
 		}
 		
 		m_config.saveSettingsTo(settings);

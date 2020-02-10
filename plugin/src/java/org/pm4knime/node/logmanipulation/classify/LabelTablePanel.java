@@ -69,4 +69,8 @@ public class LabelTablePanel extends JPanel {
 	public DefaultTableModel getTableModel() {
 		return tModel;
 	}
+	
+	public JTable getTable() {
+		return table;
+	}
 }
