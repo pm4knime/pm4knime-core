@@ -80,7 +80,7 @@ public class FilterByFrequencyNodeModel extends NodeModel {
     	
     	int iThreshold = 0;
     	if(m_threshold.getDoubleValue() < 1) {
-    		iThreshold = (int) m_threshold.getDoubleValue()  * log.size();
+    		iThreshold = (int) (m_threshold.getDoubleValue()  * log.size());
     	}else {
     		// we can deal with it with the listener 
     		iThreshold = (int) m_threshold.getDoubleValue();
