@@ -106,6 +106,9 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 					tsAttrNameList.add(clfPlusClassArray[0]);
 			}
 		}
+		if(tsAttrNameList.isEmpty())
+			throw new NotConfigurableException("No time stamp is given!");
+		
 		if (!tsAttrNameList.contains(m_parameter.getMTimeStamp().getStringValue())) {
 			m_timestampComp.replaceListItems(tsAttrNameList, tsAttrNameList.get(0));
 			m_parameter.getMTimeStamp().setStringValue(tsAttrNameList.get(0));
