@@ -28,7 +28,7 @@ public class ProcessTreePortObject implements PortObject{
 	
 	// private ProcessTreePortObjectSpec m_spec ;
 	private ProcessTree tree;
-	
+	ProcessTreePortObjectSpec m_spec;
 	public ProcessTreePortObject(ProcessTree t) {
 		tree = t;
 	}
@@ -53,7 +53,16 @@ public class ProcessTreePortObject implements PortObject{
 	@Override
 	public PortObjectSpec getSpec() {
 		// TODO Auto-generated method stub
+		if(m_spec!=null)
+			return m_spec;
+		
 		return new ProcessTreePortObjectSpec();
+	}
+	
+	
+	public void setSpec(PortObjectSpec spec) {
+		// TODO Auto-generated method stub
+		m_spec = (ProcessTreePortObjectSpec) spec;
 	}
 
 	@Override
@@ -101,7 +110,7 @@ public class ProcessTreePortObject implements PortObject{
 		Ptml ptml = importer.importPtmlFromStream(context, in, spec.getFileName(), -1);
 		tree = new ProcessTreeImpl(ptml.getId(), ptml.getName());
 		ptml.unmarshall(tree);
-		
+		setSpec(spec);
 	}
 	
 	public void loadFrom(String fileName) throws Exception{

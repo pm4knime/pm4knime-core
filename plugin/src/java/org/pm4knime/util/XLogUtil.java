@@ -86,6 +86,9 @@ public class XLogUtil {
 	
 	public static XEventClassifier getEventClassifier(XLog log, String classifierName) {
  		// get the list of classifiers from the event log!!
+ 		if(classifierName.contains(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR)) {
+ 			classifierName = classifierName.split(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR)[1];
+ 		}
  		
  		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
  		classifiers.addAll( log.getClassifiers());
@@ -149,7 +152,8 @@ public class XLogUtil {
 		Collection<XEventClass> eventClasses =  summary.getEventClasses().getClasses();
 		SortedSet<String> ecSet = new TreeSet<>();
 		for(XEventClass ec : eventClasses) {
-			ecSet.add(ec.getId());
+			if(!ec.getId().isEmpty())
+				ecSet.add(ec.getId());
 		}
 		List<String> nameList = new ArrayList<String>();
 		nameList.addAll(ecSet);

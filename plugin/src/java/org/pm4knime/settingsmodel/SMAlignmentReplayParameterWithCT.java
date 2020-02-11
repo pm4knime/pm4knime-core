@@ -37,9 +37,9 @@ import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.
  *
  */
 public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter {
-	private final String delimiter = "::";
+	private static final String DELIMETER = "::";
 	private DefaultTableModel[] m_costTMs;
-	private boolean m_withTM = false;
+	
 	
 	public SMAlignmentReplayParameterWithCT(String configName) {
 		// TODO Auto-generated constructor stub
@@ -60,29 +60,18 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 		this.m_costTMs = m_costTMs;
 	}
 	
-	public boolean isMWithTM() {
-		return m_withTM;
-	}
-
-	public void setMWithTM(boolean m_withTM) {
-		this.m_withTM = m_withTM;
-	}
+	
 
 	@Override
 	protected void loadSettingsPure(NodeSettingsRO settings) throws InvalidSettingsException {
 		// super.loadSettingsForModel(settings);
 		// also load the cost values for the table, but at first to learn how to store
 		super.loadSettingsPure(settings);
-		m_withTM = settings.getBoolean("withTM");
-		if(!m_withTM) {
-			// System.out.println("There is no table model available!");
-			System.out.println("There is no table model available!");
-		}else {
-			
-			for (int i = 0; i < CFG_COST_TYPE_NUM; i++) {
-				loadTMFrom(i, settings);
-			}
+		
+		for (int i = 0; i < CFG_COST_TYPE_NUM; i++) {
+			loadTMFrom(i, settings);
 		}
+		
 	}
 
 	@Override
@@ -92,17 +81,16 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 		
 		// use one indicator to say, we have saved the value here
 		// on the contrast, we should also need to load the values from there
-		settings.addBoolean("withTM", m_withTM);
-		if(m_withTM) {
+		
 			for (int idx = 0; idx < CFG_COST_TYPE_NUM; idx++) {
 				TableModel tModel = m_costTMs[idx];
 				for (int i = 0; i < tModel.getRowCount(); i++) {
-					settings.addString("T" + idx + delimiter + i,
-							tModel.getValueAt(i, 0) + delimiter + tModel.getValueAt(i, 1));
+					settings.addString("T" + idx + DELIMETER + i,
+							tModel.getValueAt(i, 0) + DELIMETER + tModel.getValueAt(i, 1));
 					
 				}
 			}
-		}
+		
 	}
 
 	private DefaultTableModel createTM(int idx) {
@@ -134,7 +122,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 			}
 			
 		}
-		
+		m_costTMs[idx].fireTableDataChanged();
 	}
 	private void loadTMFrom(int idx, NodeSettingsRO settings) throws InvalidSettingsException {
 
@@ -147,7 +135,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 
 		// assign values to tables by adding rows there
 		for (String key : settings.keySet()) {
-			String[] splitStr = key.split(delimiter);
+			String[] splitStr = key.split(DELIMETER);
 			if (splitStr[0].equals("T" + idx)) {
 				// TODO: if settings save data in order or not
 				// we meet the first values there, is there a need to do this??
@@ -156,7 +144,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 				// even if we want to add them, but how to do this?? are they in order at
 				// first?? I don't think so
 				String value = settings.getString(key);
-				String[] sValues = value.split(delimiter);
+				String[] sValues = value.split(DELIMETER);
 				tModel.addRow(sValues);
 
 			}

@@ -75,8 +75,8 @@ public class PetriNetPortObject  implements PortObject{
 		return new PetriNetPortObjectSpec();
 	}
 
-	public void setSpec(PetriNetPortObjectSpec spec) {
-		m_spec = spec;
+	public void setSpec(PortObjectSpec spec) {
+		m_spec = (PetriNetPortObjectSpec) spec;
 	}
 	/**
 	 * If we show the Petri net as the AcceptingPetriNet, better to use AcceptingPetrinet as model.
@@ -128,7 +128,7 @@ public class PetriNetPortObject  implements PortObject{
 				// that's why there is context in portObject. If we also save the context, what can be done??
 				AcceptingPetriNet anet =PetriNetUtil.importFromStream(in);
 				result = new PetriNetPortObject(anet);
-				
+				result.setSpec(spec);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

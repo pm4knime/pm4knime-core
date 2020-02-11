@@ -114,9 +114,9 @@ public class XLogPortObject extends AbstractPortObject {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.setLog(log.get(0));
+		setLog(log.get(0));
 		// this is very important, if we want to have sth from spec!!
-		this.setSpec((XLogPortObjectSpec) spec);
+		setSpec((XLogPortObjectSpec) spec);
 		in.close();
 	}
 

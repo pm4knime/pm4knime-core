@@ -150,12 +150,12 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 	@Override
 	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
 			throws NotConfigurableException {
-		// not know the situation of m_parameter.loadSettingsFrom, what can we get??
-		// what's the values now in settings?? how to cooperate the values from
-		// PortObjectInput and current settings?
+		
 		try {
-			// before we need to consider the selected values here
-			m_parameter.loadSettingsFrom(settings);
+			// before we need to consider the selected values here, or we check if the spec is the same one
+			// with comparison to the input. If not, we will change it. But it requires that we need to
+			// know the spec information. WHich is not right!!
+ 			m_parameter.loadSettingsFrom(settings);
 
 //			String selectedItem = m_parameter.getMClassifierName().getStringValue();
 
@@ -169,7 +169,7 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 			PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerNodeModel.INPORT_PETRINET];
 
 			XLogPortObjectSpec logSpec = (XLogPortObjectSpec) logPO.getSpec();
-//			List<String> specClassifierSet = new ArrayList<String>(logSpec.getClassifiersMap().keySet());
+			
 			List<String> specClassifierSet = new ArrayList<String>(
 					XLogSpecUtil.getClassifierWithClsList(logSpec.getClassifiersMap()));
 			
@@ -177,60 +177,54 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 
 			if (!configClassifierSet.containsAll(specClassifierSet)
 					|| !specClassifierSet.containsAll(configClassifierSet)) {
-
 				m_parameter.getClassifierSet().setStringArrayValue(specClassifierSet.toArray(new String[0]));
-//				selectedItem = specClassifierSet.get(0);
+				
 			}
-//			m_classifierComp.replaceListItems(specClassifierSet, specClassifierSet.get(0));
+			// to avoid the split names there, but we save the classifier with 
 			classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), 
 					logSpec.getClassifiersMap().keySet().iterator().next());
 			m_parameter.getMClassifierName().loadSettingsFrom(settings);
-			
+			// if the classifier is the same, then we don't need to check the event log. because they are the same
 			SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
-			if (!tmp.isMWithTM()) {
-				// first time to initialize the value. Else just load all the values, it is
-				// enough
-				XLog log = logPO.getLog();
-				XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log, m_parameter.getMClassifierName().getStringValue());
-				// this is neglected because we have now the corresponding settings from
-				// classifier
-				List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
-//					ecNames.add(evClassDummy.getId());
+			
+			XLog log = logPO.getLog();
+			XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
+					m_parameter.getMClassifierName().getStringValue());
+			List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
+			List<String> ecModelNames = getColumnStrValueTM(m_parameter.getMCostTMs()[0], 0);
+			if(!ecNames.containsAll(ecModelNames) || !ecModelNames.containsAll(ecNames)) {
 				tmp.setCostTM(ecNames, 0);
-
-				AcceptingPetriNet anet = netPO.getANet();
-				List<String> tNames = PetriNetUtil.extractTransitionNames(anet.getNet());
-				tmp.setCostTM(tNames, 1);
-
-				// if only names from transition side are in need, show the transitions names
-				// for dialog
-				// no need to refer dummy event classes
-				tmp.setCostTM(tNames, 2);
-				tmp.setMWithTM(true);
-
 			}
-
+			
+			// how to exact the names of the net and compare it to the current values
+			AcceptingPetriNet anet = netPO.getANet();
+			List<String> tNames = PetriNetUtil.extractTransitionNames(anet.getNet());
+			List<String> tModelNames = getColumnStrValueTM(m_parameter.getMCostTMs()[1], 0);
+			if(!tNames.containsAll(tModelNames) || !tModelNames.containsAll(tNames)) {
+				// they are not the same, update the values in tModelNames there
+				tmp.setCostTM(tNames, 1);
+				tmp.setCostTM(tNames, 2);
+			}
+			
+			// when it works ?? 
 			m_parameter.getMClassifierName().addChangeListener(new ChangeListener() {
-				// here if we set the values here, but why there is value "" to this step??
-				// this is done because of the m_classiferComp still uses its empty selected
-				// item there
-				// update the classifier, it notifies the comp, which is nice, but why the
-				// selectedItem
-				// is still empty? Also, the old value and the new value, how to get it??
+				// to update the classifier according to the chosen transitions expression there
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					// TODO it implements the update if we change the event classifier in choice
 					SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
 
-					if (logPO != null && tmp.isMWithTM()) {
+					if (logPO != null) {
 						XLog log = logPO.getLog();
 						// here the value is still the old value,
-						System.out.println("the current value is " + m_parameter.getMClassifierName().getStringValue());
+//						System.out.println("the current value is " + m_parameter.getMClassifierName().getStringValue());
 						XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
 								m_parameter.getMClassifierName().getStringValue());
 
 						List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
 						tmp.setCostTM(ecNames, 0);
+						// need some update to the view? 
+						
 					}
 				}
 
@@ -274,6 +268,14 @@ public class PNReplayerNodeDialog extends DataAwareNodeDialogPane {
 		JScrollPane tPane = new JScrollPane(table);
 		tPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		return tPane;
+	}
+	
+	private List<String> getColumnStrValueTM(DefaultTableModel costTM, int colIdx){
+		List<String> colValueList = new ArrayList();
+		for(int i =0; i<costTM.getRowCount(); i++) {
+			colValueList.add(costTM.getValueAt(i, colIdx).toString());
+		}
+		return colValueList;
 	}
 
 }

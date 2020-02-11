@@ -55,6 +55,12 @@ public abstract class DefaultMinerNodeModel extends DefaultNodeModel {
 		if (!inSpecs[0].getClass().equals(XLogPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid Event Log!");
 		
+		// why m_classifier is empty?? Because NodeDialog is not called without opening the configuration
+		// to change it, we force it to configure the even log here
+		if(m_classifier.getStringValue().isEmpty())
+			throw new InvalidSettingsException("Classifier is not set");
+		
+		
 		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) inSpecs[0];
 		
 		return configureOutSpec(logSpec);

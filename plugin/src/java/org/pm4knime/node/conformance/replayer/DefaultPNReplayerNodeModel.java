@@ -197,6 +197,9 @@ public class DefaultPNReplayerNodeModel extends DefaultNodeModel{
 		if (!inSpecs[INPORT_PETRINET].getClass().equals(PetriNetPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid Petri net!");
 		
+		if(m_parameter.getMClassifierName().getStringValue().isEmpty())
+			throw new InvalidSettingsException("Event classifier is not set!");
+		
 		m_rSpec = new RepResultPortObjectSpec();
 		m_rSpec.setMParameter(m_parameter);
 		// one question, how to add the type information here to make them valid at first step??

@@ -28,11 +28,8 @@ public class DFMPortObject extends AbstractPortObject {
 
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(DFMPortObject.class);
 	private static final String ZIP_ENTRY_NAME = "DFMPortObject";
-	private static final String CFG_DFG_START_ACTIVITY_PREFIX = "Start Activity";
-	private static final String CFG_DFG_END_ACTIVITY_PREFIX = "End Activity";
-	private static final String CFG_DFG_EDGE_PREFIX = "DFG Edge";
 	Dfg dfm;
-
+	DFMPortObjectSpec m_spec;
 	public DFMPortObject() {
 	}
 
@@ -57,9 +54,14 @@ public class DFMPortObject extends AbstractPortObject {
 	@Override
 	public PortObjectSpec getSpec() {
 		// TODO Auto-generated method stub
+		if(m_spec!=null)
+			return m_spec;
 		return new DFMPortObjectSpec();
 	}
 
+	public void setSpec(PortObjectSpec spec) {
+		m_spec = (DFMPortObjectSpec) spec;
+	}
 	@Override
 	public JComponent[] getViews() {
 		// TODO it has view which is
@@ -102,13 +104,9 @@ public class DFMPortObject extends AbstractPortObject {
 			
 		}
 
-		// get the directlyfollows graph there
-		// here it is difficult to get the number of edges due to the format in iterable
-		// use the list to accept the values and save them later
-		int num = 0;
-		List<Long> edgeCardList = new ArrayList();
-		List<Integer> sourceIdxList  = new ArrayList();
-		List<Integer> targetIdxList  = new ArrayList();
+		List<Long> edgeCardList = new ArrayList<Long>();
+		List<Integer> sourceIdxList  = new ArrayList<Integer>();
+		List<Integer> targetIdxList  = new ArrayList<Integer>();
 		
 		for (long edgeIdx : dfm.getDirectlyFollowsEdges()) {
 			
@@ -116,7 +114,6 @@ public class DFMPortObject extends AbstractPortObject {
 			
 			sourceIdxList.add(dfm.getDirectlyFollowsEdgeSourceIndex(edgeIdx));
 			targetIdxList.add(dfm.getDirectlyFollowsEdgeTargetIndex(edgeIdx));
-			num++;
 		}
 //		objOut.writeObject(dfm.getDirectlyFollowsEdges());
 		objOut.writeObject(edgeCardList);
@@ -138,7 +135,7 @@ public class DFMPortObject extends AbstractPortObject {
 		if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NAME)) {
 			throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
 		}
-		
+		setSpec(spec);
 		ObjectInputStream objIn = new ObjectInputStream(in);
 		
 		// read all the activities at first 

@@ -175,6 +175,8 @@ public class MergeLogNodeModel extends DefaultNodeModel {
     	
     	if(!inSpecs[1].getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
+    	if(m_traceAttrSet.getIncludeList().isEmpty() || m_eventAttrSet.getIncludeList().isEmpty())
+    		throw new InvalidSettingsException("The Merge is not configured right");
     	// create new spec for output event log
     	XLogPortObjectSpec m_outSpec = new XLogPortObjectSpec();
         return new PortObjectSpec[]{m_outSpec};
