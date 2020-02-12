@@ -42,7 +42,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public class PetriNetUtil {
 
-	public static final String tauSuffix = "-tau";
+	public static final String TRANSITION_TAU_SUFFIX = "-tau";
 	
 	public static Set<Marking> guessFinalMarking(PetrinetGraph net) {
 		// TODO Auto-generated method stub
@@ -108,7 +108,7 @@ public class PetriNetUtil {
 		SortedSet<String> tauSet = new TreeSet();
 		for(Transition t: transitions) {
 			if(t.isInvisible())
-				tauSet.add(t.getLabel() + tauSuffix);
+				tauSet.add(t.getLabel() + TRANSITION_TAU_SUFFIX);
 			else
 				tSet.add(t.getLabel());
 		}
@@ -256,7 +256,7 @@ public class PetriNetUtil {
 	
 	// check one name is for tau transition 
 	public static boolean isTauName(String name) {
-		if(name.endsWith(tauSuffix))
+		if(name.endsWith(TRANSITION_TAU_SUFFIX))
 			return true;
 		return false;
 	}

@@ -54,10 +54,13 @@ import org.processmining.models.semantics.petrinet.Marking;
  * 			-- use dot to previw graph
  * 
  * Steps:
- * 	1. create dialog only with normal options
- * 	2. code in NodeModel make it work
- * 	4. code in NodeModel..
- * 
+ * 	
+ * Modifications: 2020-02-12 
+ *   Need to delete some options to avoid the flower model. 
+ *      Casual_E_Vereek + its corresponding algorithms
+ *      
+ *  SLACK_VAR is slow but will be kept. 
+ *   After this, we can merge the options in one Panel : Options. 
  * Notes: I wonder if I could put all the parameters into one big class and follow this strategy for other nodes, too. 
  * The reason for it is to reduce the codes in one nodes. Make it bettter to use this. Other reasons to use other steps for it.
  * All of them is in default mode. SO we can use it 
@@ -106,19 +109,7 @@ public class ILPMinerNodeModel extends DefaultMinerNodeModel {
 		m_parameter.setDefaultParameter(param);
 		
 		param.setEventClassifier(classifier);
-		
-		// set the miner for causality graph 
-		DiscoverCausalActivityGraphParameters gParam = new DiscoverCausalActivityGraphParameters(artifLog);
-		// set gParam according to the miner type
-		gParam.setMiner(m_parameter.getMalgorithm().getStringValue());
-		
-		checkCanceled(context, exec);
-		// discover the causal graph
-		DiscoverCausalActivityGraphAlgorithm algorithm = new DiscoverCausalActivityGraphAlgorithm();
-		CausalActivityGraph cag = algorithm.apply(context, artifLog, gParam);
-		param.getDiscoveryStrategy().setCausalActivityGraphParameters(gParam);
-    	param.getDiscoveryStrategy().setCausalActivityGraph(cag);
-        
+      
     	checkCanceled(context, exec);
     	Object[] result = HybridILPMinerPlugin.discoverWithArtificialStartEnd(context, log, artifLog, param);
         

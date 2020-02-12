@@ -54,23 +54,23 @@ public class SMILPMinerParameter extends SettingsModel
 	public static final String CFG_KEY_MINER_ALGORITHM = "Miner Algorithm";
 	
 	private String m_configName;
-	SettingsModelString m_filterType, m_algorithm;
+	SettingsModelString m_filterType; //, m_algorithm;
 	SettingsModelDoubleBounded m_filterThreshold;
 	
 	// advanced settings
 	// LP Objective
 	public static final String CFG_KEY_LPOBJ = "LP Objective";
 	public static final String[] CFG_LPOBJ_TYPES = { 
-			LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH.name(), LPObjectiveType.WEIGHTED_RELATIVE_PARIKH.name(),
-			LPObjectiveType.UNWEIGHTED_PARIKH.name(), LPObjectiveType.MINIMIZE_ARCS.name()};
+			LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH.toString(), LPObjectiveType.WEIGHTED_RELATIVE_PARIKH.toString(),
+			LPObjectiveType.UNWEIGHTED_PARIKH.toString(), LPObjectiveType.MINIMIZE_ARCS.toString()};
 	// LP Variables
 	public static final String CFG_KEY_LPVAR = "LP Variable";
-	public static final String[] CFG_LPVAR_TYPES = {LPVariableType.DUAL.name(), LPVariableType.HYBRID.name(),
-			LPVariableType.SINGLE.name()};
+	public static final String[] CFG_LPVAR_TYPES = {LPVariableType.DUAL.toString(), LPVariableType.HYBRID.toString(),
+			LPVariableType.SINGLE.toString()};
 	// Discovery strategy 
 	public static final String CFG_KEY_DS = "Discovery Strategy";
-	public static final String[] CFG_DS_TYPES = {DiscoveryStrategyType.CAUSAL_E_VERBEEK.name(), 
-			DiscoveryStrategyType.TRANSITION_PAIR.name(), DiscoveryStrategyType.CAUSAL_FLEX_HEUR.name()};
+	public static final String[] CFG_DS_TYPES = { // DiscoveryStrategyType.CAUSAL_E_VERBEEK.name(), 
+			DiscoveryStrategyType.TRANSITION_PAIR.toString(), DiscoveryStrategyType.CAUSAL_FLEX_HEUR.toString()};
 	
 	SettingsModelString m_lpObj, m_lpVar, m_ds;
 	
@@ -86,7 +86,7 @@ public class SMILPMinerParameter extends SettingsModel
 		m_filterType = new SettingsModelString(CFG_KEY_FILTER_TYPE, "");
 		m_filterThreshold = new SettingsModelDoubleBounded(CFG_KEY_FILTER_THRESHOLD, 0.25, 0, 1.0);
 		// add several choices to have the miner
-		m_algorithm = new SettingsModelString(CFG_KEY_MINER_ALGORITHM, "");
+//		m_algorithm = new SettingsModelString(CFG_KEY_MINER_ALGORITHM, "");
 		
 		// advanced settings
 		m_lpObj = new SettingsModelString(CFG_KEY_LPOBJ, CFG_LPOBJ_TYPES[0]);
@@ -134,7 +134,7 @@ public class SMILPMinerParameter extends SettingsModel
 	public void setMfilterType(SettingsModelString m_filterType) {
 		this.m_filterType = m_filterType;
 	}
-
+/*
 	public SettingsModelString getMalgorithm() {
 		return m_algorithm;
 	}
@@ -142,7 +142,7 @@ public class SMILPMinerParameter extends SettingsModel
 	public void setMalgorithm(SettingsModelString m_algorithm) {
 		this.m_algorithm = m_algorithm;
 	}
-
+*/
 	public SettingsModelDoubleBounded getMfilterThreshold() {
 		return m_filterThreshold;
 	}
@@ -193,7 +193,7 @@ public class SMILPMinerParameter extends SettingsModel
 //		clone.setMclf(m_clf);
 		clone.setMfilterType(m_filterType);
 		clone.setMfilterThreshold(m_filterThreshold);
-		clone.setMalgorithm(m_algorithm);
+//		clone.setMalgorithm(m_algorithm);
 		
 		clone.setMLPObj(m_lpObj);
 		clone.setMLPVar(m_lpVar);
@@ -234,7 +234,7 @@ public class SMILPMinerParameter extends SettingsModel
 //		m_clf.saveSettingsTo(subSettings);
 		m_filterType.saveSettingsTo(subSettings);
 		m_filterThreshold.saveSettingsTo(subSettings);
-		m_algorithm.saveSettingsTo(subSettings);
+//		m_algorithm.saveSettingsTo(subSettings);
 		
 		// advanced settings
 		m_lpObj.saveSettingsTo(subSettings);
@@ -258,7 +258,7 @@ public class SMILPMinerParameter extends SettingsModel
 //		m_clf.loadSettingsFrom(subSettings);
 		m_filterType.loadSettingsFrom(subSettings);
 		m_filterThreshold.loadSettingsFrom(subSettings);
-		m_algorithm.loadSettingsFrom(subSettings);
+//		m_algorithm.loadSettingsFrom(subSettings);
 		
 		// advanced settings
 		m_lpObj.loadSettingsFrom(subSettings);

@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.deckfour.xes.classification.XEventClass;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -361,5 +363,48 @@ public class ReplayerUtil {
 			}	
 		}
 		
+	}
+
+
+	public static Map<XEventClass, Integer> buildLMCostMap(Collection<XEventClass> eventClasses,
+			DefaultTableModel tModel) {
+		// TODO Assign the cost with customized cost table
+		Map<XEventClass, Integer> map= new HashMap<XEventClass, Integer>();
+		for (XEventClass c : eventClasses) {
+			// get its cost from the cost table
+			for(int i=0; i<tModel.getRowCount(); i++) {
+				String mName = (String) tModel.getValueAt(i, 0);
+				if(mName.equals(c.getId())) {
+					int cost = Integer.parseInt(tModel.getValueAt(i, 1).toString());
+					map.put(c, cost);
+					break;
+				}
+			}
+			
+		}
+		return map;
+	}
+	
+	public static Map<TransClass, Integer> buildTMCostMap(TransClasses tc,
+			DefaultTableModel tModel) {
+		// TODO Assign the cost with customized cost table
+		Map<TransClass, Integer> map= new HashMap<TransClass, Integer>();
+		
+		for (TransClass c : tc.getTransClasses()) {
+			
+			for(int i=0; i<tModel.getRowCount(); i++) {
+				String mName = (String) tModel.getValueAt(i, 0);
+				mName = mName.split(PetriNetUtil.TRANSITION_TAU_SUFFIX)[0];
+				// here we need to check if it is tau transition
+				// need to get rid of the tau suffix to get the value there
+				if(mName.equals(c.getId()) ) {
+					int cost = Integer.parseInt(tModel.getValueAt(i, 1).toString());
+					map.put(c, cost);
+					break;
+				}
+			}
+		}
+		
+		return map;
 	}
 }

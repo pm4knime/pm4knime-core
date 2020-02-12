@@ -25,7 +25,7 @@ import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedMoveModel;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerILPRestrictedMoveModel;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
 import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
@@ -128,7 +128,8 @@ public class DefaultPNReplayerNodeModel extends DefaultNodeModel{
     	
     	// for performance only
     	if(strategyName.equals(ReplayerUtil.strategyList[2])) {
-    		replayAlgorithm = new PetrinetReplayerNoILPRestrictedMoveModel();
+    		// change the calculation with ILP from nonILP mining.
+    		replayAlgorithm = new PetrinetReplayerILPRestrictedMoveModel();
     		
     		// different parameters need different get parameter methods. We need to go back to replayer node
     		PNManifestReplayerParameter manifestParameters = m_parameter.getPerfParameter(log, anet, eventClassifier);

@@ -163,7 +163,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 
 		PNManifestReplayerParameter parameters = new PNManifestReplayerParameter();
 		//TODO : assign a better value here
-		parameters.setMaxNumOfStates(1000);
+		parameters.setMaxNumOfStates(200000);
 		
 		// get the pattern map for transition & event classes 
 		TransClasses tc = new TransClasses(anet.getNet());
@@ -172,13 +172,11 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 		parameters.setMapping(mapping);
 		
 		// set the move cost
-		// TODO: if it is set by customized ?? We need to make it flexible
-		int lmCost = getMDefaultCosts()[0].getIntValue();
-		Map<XEventClass, Integer> mapLMCost = ReplayerUtil.buildLMCostMap(eventClasses, lmCost);
-		int mmCost = getMDefaultCosts()[1].getIntValue();
-		Map<TransClass, Integer> mapTMCost = ReplayerUtil.buildTMCostMap(tc, mmCost);
-		int smCost = getMDefaultCosts()[2].getIntValue();
-		Map<TransClass, Integer> mapSMCost = ReplayerUtil.buildTMCostMap(tc, smCost);
+		// TODO: flexible to accept different values given from the cost table
+		// given one table, how to set the values there
+		Map<XEventClass, Integer> mapLMCost = ReplayerUtil.buildLMCostMap(eventClasses, m_costTMs[0]);
+		Map<TransClass, Integer> mapTMCost = ReplayerUtil.buildTMCostMap(tc, m_costTMs[1]);
+		Map<TransClass, Integer> mapSMCost = ReplayerUtil.buildTMCostMap(tc, m_costTMs[2]);
 		
 		parameters.setMapEvClass2Cost(mapLMCost);
 		parameters.setTrans2Cost(mapTMCost);
@@ -252,12 +250,17 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 		
 		Map<Transition, Integer> mapTrans2Cost = new HashMap();
 		for(Transition t : transitions) {
-			 
+			
+			String tName = null;
+			if(t.isInvisible())
+				tName = t.getLabel() + PetriNetUtil.TRANSITION_TAU_SUFFIX;
+			else
+				tName = t.getLabel();
+			
 			for(int i=0; i< tModel.getRowCount(); i++) {
-				String tNames = (String) tModel.getValueAt(i, 0);
-				String tName = tNames.split("[^a-zA-Z0-9\\s]")[0];
+				String mName = (String) tModel.getValueAt(i, 0);
 				
-				if(tName.trim().equals(t.getLabel().trim())) {
+				if(tName.equals(mName)) {
 					int mCost = Integer.parseInt( (String) tModel.getValueAt(i, 1));
 					mapTrans2Cost.put(t, mCost);
 					break;
@@ -265,17 +268,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 			}
 			
 		}
-		/*
-		for(int i=0; i< tModel.getRowCount(); i++) {
-			String eventNames = (String) tModel.getValueAt(i, 0);
-			String[] splitStr = eventNames.split("[^a-zA-Z0-9\\s]");
-			// find its cost and add them into 
-			Transition t = PetriNetUtil.findTransition(splitStr[0], transitions);
-			// TODO: if the transition is invisible, the cost is zero there 
-			int mCost = Integer.parseInt( (String) tModel.getValueAt(i, 1));
-			mapTrans2Cost.put(t, mCost);
-		}
-		*/
+		
 		return mapTrans2Cost;
 	}
 

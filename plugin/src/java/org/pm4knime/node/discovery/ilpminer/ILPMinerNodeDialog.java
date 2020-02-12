@@ -50,7 +50,8 @@ public class ILPMinerNodeDialog extends DefaultMinerNodeDialog {
     	DialogComponentNumber m_noiseThresholdComp = new DialogComponentNumber(
     			 m_parameter.getMfilterThreshold(), "Noise Threshold", 0.25);
     	addDialogComponent(m_noiseThresholdComp); 
-
+/* delete one option of miner to add other together in one 
+    	
     	// add static initialization
 		List<String> miners = new ArrayList<String>();
 		for (MatrixMiner miner : MatrixMinerManager.getInstance().getMiners()) {
@@ -63,6 +64,7 @@ public class ILPMinerNodeDialog extends DefaultMinerNodeDialog {
     	
     	// from this point, to create advanced settings
     	createNewTabAt("Advanced Options", 1);
+*/    	
     	DialogComponentStringSelection m_lpObjComp = new DialogComponentStringSelection(
     			m_parameter.getMLPObj(), "Set Objective Function", SMILPMinerParameter.CFG_LPOBJ_TYPES);
     	addDialogComponent(m_lpObjComp);

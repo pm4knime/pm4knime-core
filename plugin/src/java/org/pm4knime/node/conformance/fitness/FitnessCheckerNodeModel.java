@@ -80,6 +80,7 @@ public class FitnessCheckerNodeModel extends DefaultNodeModel  implements PortOb
     	}
     	buf.close();
     	BufferedDataTable bt = buf.getTable();
+    	
 // check cancellation of node before closing
     	checkCanceled(null, exec);
         return new PortObject[]{bt};
@@ -99,7 +100,7 @@ public class FitnessCheckerNodeModel extends DefaultNodeModel  implements PortOb
     	cSpec[0] = new DataColumnSpecCreator("Type", StringCell.TYPE).createSpec();
     	cSpec[1] = new DataColumnSpecCreator("Value", DoubleCell.TYPE).createSpec();
     	
-    	m_tSpec = new DataTableSpec(cSpec);
+    	m_tSpec = new DataTableSpec("Fitness Statistic", cSpec);
 		
         return new PortObjectSpec[]{m_tSpec};
     }
