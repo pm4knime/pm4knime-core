@@ -8,6 +8,8 @@ import java.util.List;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.sort.BufferedDataTableSorter;
+import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -127,7 +129,14 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	if(!inSpecs[0].getClass().equals(DataTableSpec.class)) 
     		throw new InvalidSettingsException("Input is not a CSV File!");
     	// here check the options from the exlcuded list from traceAttrSet and event Attr set
-    	// to make sure, the columns in the first panel must be included in the lists 
+    	// to make sure, the columns in the first panel must be included in the lists
+    	// check if the type of this column is LocalDateTime or ZonedDateTime type
+    	String tsName = m_config.getMTimeStamp().getStringValue();
+    	DataTableSpec spec  = (DataTableSpec) inSpecs[0];
+    	if(!spec.getColumnSpec(tsName).getType().equals(LocalDateTimeCellFactory.TYPE) &&
+    			!spec.getColumnSpec(tsName).getType().equals(ZonedDateTimeCellFactory.TYPE))
+    		throw new InvalidSettingsException("The time stamp doesn't have the required format in LocalDateTime or ZonedDateTime");
+
     	if(m_config.getMTraceAttrSet().getIncludeList().contains(m_config.getMCaseID().getStringValue())) 
     		if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMEventClass().getStringValue()))
     			if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMLifecycle().getStringValue()) 
@@ -135,10 +144,8 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     				if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMTimeStamp().getStringValue()))
     					return new PortObjectSpec[]{new XLogPortObjectSpec()};
     	
-    	
     	throw new InvalidSettingsException("Make sure the attribute set choice panel includes all"
     			+ " the choices in the panel!");
-    	
     	
     }
 

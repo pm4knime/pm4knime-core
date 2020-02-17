@@ -3,19 +3,18 @@
     <name>Precision Checker</name>
     
     <shortDescription>
-       Based on the replayer result, the node performs the ETConformance analysis.
+       Based on the replayed result of the event log and Petri net, the node Precision Checker measures the precision.
     </shortDescription>
     
     <fullDescription>
         <intro>
-        ETConformance is a Process  Conformance evaluation between an Event Log and a Petri Net. 
-        The plug-in  returns the values for some metrics (and some other information) and the
+        Conceptually, the precision of a process model compared to one event log is supposed to be (1) high when the model 
+        allows for few traces not seen in the log; and (2) low when it allows for many traces not seen in the log.   
+        
+        This node implements the Escaping Edges Precision (ETC) Conformance plugin from ProM. 
+        It accepts the inputs of a Petri net and an event log, calculates the values for percision metrics and the
  Minimal Disconformant Traces [MDT] (traces that helps to identify the exact
- point where the model begins to allow more behavior than the log).  
-  In other words, for each trace 
-a1 …an in MDT, a1…an-1 is in the Petri Net and in the Log, but a1...an is only in the Petri 
-Net.
- 
+ point where the model begins to allow more behaviour than the log).  
  		<br />
 			More information seen in the :
 			<a href="https://link.springer.com/chapter/10.1007/978-3-642-15618-2_16">paper</a> and 
@@ -30,7 +29,12 @@ Net.
 				<li>1-Align Precision.</li>
 				<li>All-Align Precision.</li>
 				<li>Representative-Align Precision.</li>
-				<li>ETC Precision (no invisible/duplicates allowed).</li>
+				<li>ETC Precision (no invisible/duplicates allowed). Escaping Edges Precision (ETC) calculates precision 
+				between an event log and a Petri net by constructing a prefix automaton and computing the escaping edges. 
+				Escaping edges are activities that are allowed as next activities in the process model but that are never observed in the event log 
+				after this prefix. In order to improve the precision measure robust to non-fitting traces, alignments are used to
+				 calculate the prefix automation.
+				</li>
 			</ul>
  		</option>
     </fullDescription>
@@ -38,7 +42,6 @@ Net.
     <ports>
         <inPort index="0" name="Alignment">Replayed result in alignment as input. </inPort>
 		 
-        <!-- possibly more input ports here-->
         <outPort index="0" name="Precision Info">Precision Information</outPort>
         
     </ports>    

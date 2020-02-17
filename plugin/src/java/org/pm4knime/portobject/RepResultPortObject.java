@@ -26,8 +26,6 @@ import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
-import org.processmining.models.graphbased.directed.petrinet.ResetInhibitorNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.graphbased.directed.petrinet.impl.AbstractResetInhibitorNet;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;

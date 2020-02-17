@@ -18,9 +18,11 @@
         <option name="Eventclass">Choose one column as eventID for the event log</option>
         <option name="Life Cycle">Choose one column as life cycle for the event log. If there is no such column, 
         choose the option NO AVAILABLE.</option>
-        <option name="Time Stamp">Choose one column as time stamp for events in the event log.</option>
-        <option name="Date Format">Set the format to parse the time stamp. 
+        <option name="Time Stamp">Choose one column as time stamp for events in the event log. 
+        It should be in format of ZonedDateTime or DateTime format. Else, the configuration error is given. </option>
+       <!--   <option name="Date Format">Set the format to parse the time stamp. 
          For example, if the date in "2009-12-31", to parse it, the Date format should be given "yyyy-MM-dd"</option>
+        -->
        </tab>
        <tab name="Choose Attributes Set">
             <option name="Trace Attributes">Choose table columns as trace attributes. For all events with in one trace, they are supposed to 

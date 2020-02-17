@@ -88,7 +88,9 @@ public class PetriNetPortObject  implements PortObject{
 		if (m_anet != null) {
 			
 			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-			return new JComponent[] {VisualizeAcceptingPetriNetPlugin.visualize(context, m_anet)};
+			JComponent view = VisualizeAcceptingPetriNetPlugin.visualize(context, m_anet);
+			view.setName("Petri net");
+			return new JComponent[] {view};
 		}
 		
 		return new JComponent[] {};

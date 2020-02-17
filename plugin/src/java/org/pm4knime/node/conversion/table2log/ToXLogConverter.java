@@ -3,7 +3,6 @@ package org.pm4knime.node.conversion.table2log;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +29,8 @@ import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
 import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCell;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -64,7 +65,7 @@ public class ToXLogConverter {
 	// save trace attributes set
 	private Map<String, DataCell> traceAttrMap = new HashMap<String, DataCell>();
 	
-	DateTimeFormatter df ; //;
+//	DateTimeFormatter df ; //;
 	
 	SMTable2XLogConfig config = null;
 	NodeLogger logger;
@@ -99,8 +100,8 @@ public class ToXLogConverter {
 		eventClassIdx = eventColumns.indexOf(config.getMEventClass().getStringValue());
 		// complete time the time stamp here in default
 		tsIdx = eventColumns.indexOf(config.getMTimeStamp().getStringValue());
-		String tsFormat = config.getMTSFormat().getStringValue();
-		df = DateTimeFormatter.ofPattern(tsFormat);
+//		String tsFormat = config.getMTSFormat().getStringValue();
+//		df = DateTimeFormatter.ofPattern(tsFormat);
 		
 		// optional for lifecycle column, but there is no need to specify the event ID for it!!  Lifecycle is useful!!
 		boolean withLifecycle = false; 
@@ -166,8 +167,7 @@ public class ToXLogConverter {
 			try {
 				// if the values there are also like this, what to do?? 
 				// String cTime = ((StringCell) row.getCell(eventColIndices[cTimeIdx])).getStringValue();
-				String cTime = row.getCell(eventColIndices[tsIdx]).toString();
-				Date timeStamp = convertString2Date( cTime);
+				Date timeStamp = convertString2Date( row.getCell(eventColIndices[tsIdx]));
 				
 				// here we check the lifecycle transition and assign the values to it!! 
 				String lifecycle = null ;
@@ -388,13 +388,19 @@ public class ToXLogConverter {
 	}
 	
 	// convert string to DateTime there, one easy solution is to delete the zone in data and time
-	public Date convertString2Date(String value) throws ParseException {
-		// local time is ok now, use another simple format to process the date
-		// Error: with the parse, and also errors with the reloading process
-		LocalDateTime ldt = LocalDateTime.parse(value, df);
-		Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-		return date;
-		// return Instant.parse(value).toDate();
+	// here we assume the dataCell is in DataTime format in KNIME
+	public Date convertString2Date(DataCell dataCell) throws ParseException {
+		if(dataCell.getType().equals(LocalDateTimeCellFactory.TYPE)) {
+			// it is one local time cell
+			LocalDateTimeCell dataValue = (LocalDateTimeCell) dataCell;
+			return Date
+		      .from(dataValue.getLocalDateTime().atZone(ZoneId.systemDefault())
+		      .toInstant());
+		}else if(dataCell.getType().equals(ZonedDateTimeCellFactory.TYPE)) {
+			ZonedDateTimeCell dataValue = (ZonedDateTimeCell) dataCell;
+			return Date.from(dataValue.getZonedDateTime().toInstant());
+		}
+		return null;
 	}
 
 

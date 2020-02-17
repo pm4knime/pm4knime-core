@@ -92,8 +92,18 @@ public class XLogUtil {
  		
  		List<XEventClassifier> classifiers = new ArrayList<XEventClassifier>();// log.getClassifiers();
  		classifiers.addAll( log.getClassifiers());
- 		// check the attributes as classifier here //and assign them as the XEventAttributeClassifier
- 		for(XAttribute eAttr: log.getGlobalEventAttributes()) {
+ 		// check the attributes as classifier here 
+ 		// and assign them as the XEventAttributeClassifier
+ 		// if there is no global event attribute, we need to check the whole event log and find the one existing there
+ 		// the concept name is not used here then
+ 		List<XAttribute> eAttrs ; 
+ 		if(log.getGlobalEventAttributes().isEmpty())
+ 			eAttrs = XLogUtil.getEAttributes(log, 0.2);
+ 		else
+ 			eAttrs = log.getGlobalEventAttributes();
+		// more attributes need to check in events, not just the global attributes there		
+		
+ 		for(XAttribute eAttr: eAttrs) {
  			// create new classifier for the new eAttr here, given the name with prefix for it!!
  			XEventClassifier attrClf = new XEventAttributeClassifier(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX + 
  					eAttr.getKey(), eAttr.getKey());

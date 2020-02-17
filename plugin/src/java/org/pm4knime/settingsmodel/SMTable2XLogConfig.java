@@ -41,7 +41,7 @@ public class SMTable2XLogConfig extends SettingsModel{
 	public static final String CFG_KEY_EVENTCLASS = "Event Class";
 	public static final String CFG_KEY_LIFECYCLE = "Life Cycle";
 	public static final String CFG_KEY_TIMESTAMP = "Time stamp";
-	public static final String CFG_KEY_TS_FORMAT = "Time stamp format";
+//	public static final String CFG_KEY_TS_FORMAT = "Time stamp format";
 	public static final String CFG_NO_OPTION = "NO AVAILABLE";
 	
 	public static final String CFG_KEY_COLUMN_SET = "Column Set";
@@ -53,7 +53,7 @@ public class SMTable2XLogConfig extends SettingsModel{
 	private SettingsModelString m_lifecycle = new SettingsModelString(CFG_KEY_LIFECYCLE, "");
 	private SettingsModelString m_timeStamp = new SettingsModelString(CFG_KEY_TIMESTAMP, "");
 	// allow user self define one
-	private SettingsModelString m_tsFormat = new SettingsModelString(CFG_KEY_TS_FORMAT + " Date Format", "");
+//	private SettingsModelString m_tsFormat = new SettingsModelString(CFG_KEY_TS_FORMAT + " Date Format", "");
 	
 	private SettingsModelFilterString m_traceAttrSet = new SettingsModelFilterString(
 			XLogSpecUtil.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, false );
@@ -127,11 +127,11 @@ public class SMTable2XLogConfig extends SettingsModel{
 	public SettingsModelString getMTimeStamp() {
 		return m_timeStamp;
 	}
-
+/*
 	public SettingsModelString getMTSFormat() {
 		return m_tsFormat;
 	}
-
+*/
 	public SettingsModelString getMLifecycle() {
 		// TODO Auto-generated method stub
 		return m_lifecycle;
@@ -207,7 +207,7 @@ public class SMTable2XLogConfig extends SettingsModel{
 		m_lifecycle.loadSettingsFrom(settings);
 
 		m_timeStamp.loadSettingsFrom(settings);
-		m_tsFormat.loadSettingsFrom(settings);
+//		m_tsFormat.loadSettingsFrom(settings);
     	
     	m_traceAttrSet.loadSettingsFrom(settings);
     	m_eventAttrSet.loadSettingsFrom(settings);
@@ -248,7 +248,7 @@ public class SMTable2XLogConfig extends SettingsModel{
 		
 		m_lifecycle.saveSettingsTo(settings);
 		m_timeStamp.saveSettingsTo(settings);
-		m_tsFormat.saveSettingsTo(settings);
+//		m_tsFormat.saveSettingsTo(settings);
 
     	
     	m_traceAttrSet.saveSettingsTo(settings);

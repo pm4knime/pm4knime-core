@@ -12,7 +12,6 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentColumnFilter;
-import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -42,13 +41,13 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
 	private List<String> m_possibleColumns ;
 	private SettingsModelString m_caseID,  m_eventClass;
 	
-	private SettingsModelString m_lifecycleName, m_timeStamp,  m_tsFormat;
+	private SettingsModelString m_lifecycleName, m_timeStamp; //,  m_tsFormat
 	private SettingsModelFilterString m_traceAttrSet , m_eventAttrSet;
 	SMTable2XLogConfig config;
 	
 	DialogComponentStringSelection caseIDComp, eventClassComp, timeStampComp, lifecycleNameComp; 
 	DialogComponentBoolean withLifecycleComp;
-	DialogComponentString tsFormatComp;
+//	DialogComponentString tsFormatComp;
 	DialogComponentColumnFilter m_traceAttrFilterComp, m_eventAttrFilterComp;
     /**
      * New pane for configuring the CVS2XLogConverter node.
@@ -94,10 +93,10 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
     	
     	addDialogComponent(timeStampComp);
     	// set the format to change string to date format
-    	m_tsFormat = config.getMTSFormat();
+/*    	m_tsFormat = config.getMTSFormat();
         tsFormatComp = new DialogComponentString(m_tsFormat, "Date format: ");
         addDialogComponent(tsFormatComp);
-        
+ */       
     	// here we set another panel to set attributes for trace or events
         createNewTab("Choose Attributes Set");
         createNewGroup("Trace Attributes: ");

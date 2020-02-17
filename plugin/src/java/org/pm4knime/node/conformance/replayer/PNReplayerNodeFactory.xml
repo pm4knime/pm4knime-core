@@ -26,20 +26,20 @@
 				The classification of the current event corresponds to the
 					firing transitions in Petri net.
 					In this case, during replaying,
-					both the trace and process model move
+					both the trace and the process model move
 					to next comparison.
 				</li>
 
 				<li>Move on log<br/>
-				The classification of the current event don't have any
+				The classification of the current event doesn't have any
 					corresponding firing transitions in Petri net.
 					During replaying, the
-					trace moves forwards but the state of process model
+					trace moves forward but the state of process model
 					doesn't change.
 				</li>
 
 				<li>Move on model<br/>
-				The firing transitions in Petri net has no corresponding event
+				The firing transitions in Petri net have no corresponding event
 					in the trace.
 					During replaying, the model moves forwards but the
 					state of the event log
@@ -77,23 +77,23 @@
 
 		</option>
 
-		<option name="Move on log cost">The unified cost for move on log in non-negative
+		<option name="Move on log cost">The unified cost for the move on log in non-negative
 			integer. In default, it is 1.</option>
-		<option name="Move on model cost">The unified cost for move on model in non-negative
+		<option name="Move on model cost">The unified cost for the move on model in non-negative
 			integer. In default, it is 1.</option>
-		<option name="Sync move cost">The unified cost for sync move in non-negative
+		<option name="Sync move cost">The unified cost for the sync move in non-negative
 			integer. In default, it is 0.</option>
 
 		<option name="Move on log cost table">
-			The cost table for move on log with non-negative integer.
+			The cost table for the move on log with non-negative integer.
 			<br />
 			The cost table provides the ability to modify cost for each move.
 			The unified move cost can assign the same cost to all items in the
 			table.
 		</option>
-		<option name="Move on model cost table">The cost table for move on model in non-negative
+		<option name="Move on model cost table">The cost table for the move on model in non-negative
 			integer. </option>
-		<option name="Sync move cost table">The cost table for sync move in non-negative
+		<option name="Sync move cost table">The cost table for the sync move in non-negative
 			integer. </option>
 
 	</fullDescription>

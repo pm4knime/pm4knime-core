@@ -1,14 +1,9 @@
 package org.pm4knime.node.discovery.ilpminer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
-import org.processmining.causalactivitymatrixminer.miners.MatrixMiner;
-import org.processmining.causalactivitymatrixminer.miners.MatrixMinerManager;
 
 /**
  * <code>NodeDialog</code> for the "ILPMiner" node. Since in DefaultNodeSettingsPane, we can't override the methods 

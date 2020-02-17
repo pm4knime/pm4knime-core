@@ -1,8 +1,8 @@
 package org.pm4knime.node.conversion.log2table;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,7 +25,6 @@ import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
 import org.knime.core.data.MissingCell;
-import org.knime.core.data.container.ColumnRearranger;
 import org.knime.core.data.def.BooleanCell;
 import org.knime.core.data.def.BooleanCell.BooleanCellFactory;
 import org.knime.core.data.def.DefaultRow;
@@ -35,8 +34,8 @@ import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.IntCell.IntCellFactory;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.data.def.StringCell.StringCellFactory;
-import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
-import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCell;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -132,14 +131,10 @@ public class FromXLogConverter {
 			//TODO: convert the time format
 			Instant instant = tmp.getValue().toInstant();
 			
-			// what if there is zoned information in the event log? what can we do it??
-			/*
-			ZonedDateTime ztime = instant.atZone(ZoneId.systemDefault());
-			return ZonedDateTimeCellFactory.create(ztime);
-			*/
 			// to keep compatible with old formats, we use local time data here
-			LocalDateTime ldt = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-			return LocalDateTimeCellFactory.create(ldt);
+			ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+			
+			return ZonedDateTimeCellFactory.create(zonedDateTime);
 		}else
 			System.out.println("Unknown attribute type there");
 			
@@ -256,18 +251,11 @@ public class FromXLogConverter {
 		}else if(attr instanceof XAttributeContinuous) {
 			return DoubleCell.TYPE;
 		}else if(attr instanceof XAttributeTimestamp){
-			return DataType.getType(LocalDateTimeCell.class);
+			return DataType.getType(ZonedDateTimeCell.class);
 		}else
 			System.out.println("Unknown attribute type there");
 		
 		return null;
 	}
-	public static void convertWithColRearranger(XLog log, ColumnRearranger c) {
-		// this doesn't work, the reason is ColumnRearranger depends on input DataTable
-		// to append more columns into this table. But our input is an XLog. 
-		// to create an empty table for this, and then to create values from Xlog
-		// the creation method limits.  
-		// BufferedDataTable out = exec.createColumnRearrangeTable(in[0], c, exec);
-		
-	}
+
 }

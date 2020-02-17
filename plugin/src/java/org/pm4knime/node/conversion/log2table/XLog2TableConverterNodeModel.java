@@ -17,7 +17,7 @@ import org.knime.core.data.def.BooleanCell;
 import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.StringCell;
-import org.knime.core.data.time.localdatetime.LocalDateTimeCell;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -142,7 +142,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
 			return DoubleCell.TYPE;
 		}else  if(cls.equals(XAttributeTimestampImpl.class.getSimpleName())) {
 			// we don't care about the values here
-			return DataType.getType(LocalDateTimeCell.class);
+			return DataType.getType(ZonedDateTimeCell.class);
 		}else {
 			System.out.println("The attribute is not recognized");
 		} 
