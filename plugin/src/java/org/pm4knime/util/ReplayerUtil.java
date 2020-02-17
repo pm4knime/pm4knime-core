@@ -69,12 +69,16 @@ public class ReplayerUtil {
 	}
 	
     
-	public static Map<TransClass, Integer> buildTMCostMap(TransClasses tc, int cost) {
+	public static Map<TransClass, Integer> buildTMCostMap(TransClasses tc, int cost, Set<TransClass> tauTC) {
 		// TODO Auto-generated method stub
     	Map<TransClass, Integer> map= new HashMap<TransClass, Integer>();
-		
+		// how to judge if it is visible or not visible transitions?
+    	// only with help of the table there, we can have the invisible transitions..
 		for (TransClass c : tc.getTransClasses()) {
-			map.put(c, cost);
+			if(tauTC.contains(c))
+				map.put(c, 0);
+			else
+				map.put(c, cost);
 		}
 		return map;
 	}

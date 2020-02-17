@@ -1,6 +1,7 @@
 package org.pm4knime.settingsmodel;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
 import org.pm4knime.util.ReplayerUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
@@ -294,6 +296,7 @@ implements SettingsModelFlowVariableCompatible {
 		
     	return parameters;
     }
+    
 	
 	// add another conversion function to this parameter
     public PNManifestReplayerParameter getPerfParameter(XLog log, AcceptingPetriNet anet, XEventClassifier eventClassifier ) {
@@ -305,7 +308,7 @@ implements SettingsModelFlowVariableCompatible {
 
 		PNManifestReplayerParameter parameters = new PNManifestReplayerParameter();
 		//TODO : assign a better value here
-		parameters.setMaxNumOfStates(1000);
+		// parameters.setMaxNumOfStates(200000);
 		
 		// get the pattern map for transition & event classes 
 		TransClasses tc = new TransClasses(anet.getNet());
@@ -317,10 +320,16 @@ implements SettingsModelFlowVariableCompatible {
 		// set the move cost
 		int lmCost = getMDefaultCosts()[0].getIntValue();
 		Map<XEventClass, Integer> mapLMCost = ReplayerUtil.buildLMCostMap(eventClasses, lmCost);
+		
+		Set<TransClass> tauTC = new HashSet();
+		for(Transition t : anet.getNet().getTransitions()) {
+			if(t.isInvisible())
+				tauTC.add(mapping.getTransClassOf(t));
+		}
 		int mmCost = getMDefaultCosts()[1].getIntValue();
-		Map<TransClass, Integer> mapTMCost = ReplayerUtil.buildTMCostMap(tc, mmCost);
+		Map<TransClass, Integer> mapTMCost = ReplayerUtil.buildTMCostMap(tc, mmCost, tauTC);
 		int smCost = getMDefaultCosts()[2].getIntValue();
-		Map<TransClass, Integer> mapSMCost = ReplayerUtil.buildTMCostMap(tc, smCost);
+		Map<TransClass, Integer> mapSMCost = ReplayerUtil.buildTMCostMap(tc, smCost, tauTC);
 		
 		parameters.setMapEvClass2Cost(mapLMCost);
 		parameters.setTrans2Cost(mapTMCost);

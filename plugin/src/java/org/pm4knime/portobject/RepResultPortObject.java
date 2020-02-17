@@ -26,7 +26,10 @@ import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
+import org.processmining.models.graphbased.directed.petrinet.ResetInhibitorNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
+import org.processmining.models.graphbased.directed.petrinet.impl.AbstractResetInhibitorNet;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.PNRepResultImpl;
 import org.processmining.plugins.petrinet.replayresult.StepTypes;
@@ -158,6 +161,8 @@ public class RepResultPortObject implements PortObject {
 			objOut.writeObject(infoMap);
 			// to mark the end of the elements
 			objOut.writeInt(repResult.size());
+			Map<Transition, Integer> transOrderMap = new HashMap<Transition, Integer>();
+			
 			// Here begins to store the SyncReplayResult one by one 
 			for(SyncReplayResult alignment : repResult ) {
 				
@@ -176,10 +181,23 @@ public class RepResultPortObject implements PortObject {
 					}else if(node instanceof Transition) {
 						// transition in Petri net, we need to store a lot of object here
 						Transition t = (Transition) node;
-						// we get the attribute of t ?? But how to store them?? we need to relate so much
-						// we only store the label, id and related net here
+						// for the silent transition, only save the names are not enough
+						// we need to get the local ID of the transition 
+						// to create the right map to the net there
+						if(transOrderMap.isEmpty()) {
+							int tIdx = 0;
+							// if we use another ILPReplayer, it provides us a different result, So here
+							// we need to make it other way around here
+							AbstractResetInhibitorNet gnet =   (AbstractResetInhibitorNet) t.getGraph();
+							for(Transition trans : gnet.getTransitions()) {
+								transOrderMap.put(trans, tIdx++);
+							}
+							
+						}
 						objOut.writeUTF(t.getClass().getName());
-						objOut.writeUTF(t.getLabel());
+//						objOut.writeUTF(t.getLabel());
+						// save the order there
+						objOut.writeInt(transOrderMap.get(t));
 						
 					}
 				}
@@ -238,9 +256,10 @@ public class RepResultPortObject implements PortObject {
 			// AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
 			AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
 			// after this, we make a list of transitions ans refer to this transition in the reloading part
-			Map<String, Transition> transNameMap = new HashMap();
+			Map<Integer, Transition> transOrderMap = new HashMap();
+			int tIdx = 0;
 			for(Transition t : anet.getNet().getTransitions())
-				transNameMap.put(t.getLabel(), t);
+				transOrderMap.put(tIdx++, t);
 			
 			// firstly to get the entry name for replay result
 			nextEntry = in.getNextEntry();
@@ -279,9 +298,10 @@ public class RepResultPortObject implements PortObject {
 							ecls.setSize(esize);
 							nodeInstances.add(ecls);
 						}else if(classType.equals(Transition.class.getName())) {
-							String label = objIn.readUTF();
+//							String label = objIn.readUTF();
 							// get transitions from the anet by comparing its label and the name
-							Transition tInRes = transNameMap.get(label);
+							int gIdx = objIn.readInt();
+							Transition tInRes = transOrderMap.get(gIdx);
 							nodeInstances.add(tInRes);
 							
 						}

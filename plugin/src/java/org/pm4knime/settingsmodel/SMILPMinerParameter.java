@@ -61,16 +61,16 @@ public class SMILPMinerParameter extends SettingsModel
 	// LP Objective
 	public static final String CFG_KEY_LPOBJ = "LP Objective";
 	public static final String[] CFG_LPOBJ_TYPES = { 
-			LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH.toString(), LPObjectiveType.WEIGHTED_RELATIVE_PARIKH.toString(),
-			LPObjectiveType.UNWEIGHTED_PARIKH.toString(), LPObjectiveType.MINIMIZE_ARCS.toString()};
+			LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH.name(), LPObjectiveType.WEIGHTED_RELATIVE_PARIKH.name(),
+			LPObjectiveType.UNWEIGHTED_PARIKH.name(), LPObjectiveType.MINIMIZE_ARCS.name()};
 	// LP Variables
 	public static final String CFG_KEY_LPVAR = "LP Variable";
-	public static final String[] CFG_LPVAR_TYPES = {LPVariableType.DUAL.toString(), LPVariableType.HYBRID.toString(),
-			LPVariableType.SINGLE.toString()};
+	public static final String[] CFG_LPVAR_TYPES = {LPVariableType.DUAL.name(), LPVariableType.HYBRID.name(),
+			LPVariableType.SINGLE.name()};
 	// Discovery strategy 
 	public static final String CFG_KEY_DS = "Discovery Strategy";
 	public static final String[] CFG_DS_TYPES = { // DiscoveryStrategyType.CAUSAL_E_VERBEEK.name(), 
-			DiscoveryStrategyType.TRANSITION_PAIR.toString(), DiscoveryStrategyType.CAUSAL_FLEX_HEUR.toString()};
+			 DiscoveryStrategyType.CAUSAL_FLEX_HEUR.name(), DiscoveryStrategyType.TRANSITION_PAIR.name(),};
 	
 	SettingsModelString m_lpObj, m_lpVar, m_ds;
 	

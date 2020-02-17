@@ -119,10 +119,7 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 		
 		PNManifestReplayerParameter manifestParameters = specParameter.getPerfParameter(log, anet, eventClassifier);
 		PNManifestFlattener flattener = new PNManifestFlattener(anet.getNet(), manifestParameters);
-		// important is the transitions in flattener and replayer result should be the
-		// same!!
-		// how to make this happen?? After the generation of flattener,
-		// it generates a new map during the building process. 
+		
 // check cancellation of node before sync
     	checkCanceled(null, exec);
 		sync(repResult, flattener, exec);
@@ -172,8 +169,7 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 		// TODO make the transition in the same transition ids here
 		// set a map here to record the connection?? Or, we can reload the nodes by
 		// making the transition the same
-		Map<Transition, Transition> resToFlattenerMap = new HashMap();
-
+		
 		for (SyncReplayResult alignment : repResult) {
 			checkCanceled(null, exec);
 			
@@ -182,21 +178,17 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 				Object node = nodeInstances.get(idx);
 				if (node instanceof Transition) {
 					Transition tInResult = (Transition) node;
-
-					if (!resToFlattenerMap.containsKey(tInResult)) {
-						Transition tValue = null;
-						for (Transition t : flattener.getNet().getTransitions()) { //flattener.getNet().getTransitions()
-							if (tInResult.getLabel().equals(t.getLabel())) {
-								tValue = t;
-								break;
-							}
-
-						}
-						resToFlattenerMap.put(tInResult, tValue);
-					}
-
-					// node = resToFlattenerMap.get(tInResult);
-					nodeInstances.set(idx, resToFlattenerMap.get(tInResult));
+					// here make the wrong match for silent transition only with label
+					// to include silent transition, we need to have one order of the transition..
+					// because it is from the accpeting petri net, so there should be some order to match it 
+					// it can't work out because flattener net changes its structure by adding more transitions
+					// the thing is to convert the performance calculation information there. 
+					// so go to further about the structure there, no need to repeat the use of them.
+					
+					int tIdx = flattener.getOrigTrans2Int().get(tInResult);
+					Transition tValue = flattener.getFlatTransArr()[tIdx];
+					
+					nodeInstances.set(idx, tValue);
 				}
 			}
 		}

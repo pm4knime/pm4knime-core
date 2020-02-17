@@ -138,11 +138,6 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 			String[] splitStr = key.split(DELIMETER);
 			if (splitStr[0].equals("T" + idx)) {
 				// TODO: if settings save data in order or not
-				// we meet the first values there, is there a need to do this??
-				int rowIdx = Integer.valueOf(splitStr[1]);
-				// System.out.println("the current read row id is " + rowIdx);
-				// even if we want to add them, but how to do this?? are they in order at
-				// first?? I don't think so
 				String value = settings.getString(key);
 				String[] sValues = value.split(DELIMETER);
 				tModel.addRow(sValues);
@@ -163,7 +158,7 @@ public class SMAlignmentReplayParameterWithCT extends SMAlignmentReplayParameter
 
 		PNManifestReplayerParameter parameters = new PNManifestReplayerParameter();
 		//TODO : assign a better value here
-		parameters.setMaxNumOfStates(200000);
+		// parameters.setMaxNumOfStates(200000);
 		
 		// get the pattern map for transition & event classes 
 		TransClasses tc = new TransClasses(anet.getNet());
