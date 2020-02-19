@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./Precision-icon.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+<knimeNode icon="./Conformance-Precision-icon.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
     <name>Precision Checker</name>
     
     <shortDescription>
-       Based on the replayed result of the event log and Petri net, the node Precision Checker measures the precision.
+       Based on the replayed alignment result of the event log and Petri net, the node Precision Checker measures the precision.
     </shortDescription>
     
     <fullDescription>

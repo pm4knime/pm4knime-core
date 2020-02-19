@@ -59,15 +59,15 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 		SMPerformanceParameter tmp = (SMPerformanceParameter) m_parameter;
 		// 1. syn move strategy
 		DialogComponentBoolean m_withSynMoveComp = new DialogComponentBoolean(tmp.isMWithSynMove(),
-				tmp.CKF_KEY_WITH_SYN_MOVE);
+				SMPerformanceParameter.CKF_KEY_WITH_SYN_MOVE);
 		addDialogComponent(m_withSynMoveComp);
 		// 2. the attributes of time stamp...
-		m_timestampComp = new DialogComponentStringSelection(tmp.getMTimeStamp(), tmp.CKF_KEY_TIMESTAMP,
+		m_timestampComp = new DialogComponentStringSelection(tmp.getMTimeStamp(), SMPerformanceParameter.CKF_KEY_TIMESTAMP,
 				new String[] { "" });
 		addDialogComponent(m_timestampComp);
 
 		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(),
-				tmp.CKF_KEY_WITH_UNRELIABLE_RESULT);
+				SMPerformanceParameter.CKF_KEY_WITH_UNRELIABLE_RESULT);
 		addDialogComponent(m_withUnreliableResultComp);
 	}
 

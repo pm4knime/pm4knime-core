@@ -241,6 +241,9 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 			throw new InvalidSettingsException("Input is not a valid replay result!");
 
 		// TODO : assign the table spec here
+		if(m_parameter.getMTimeStamp().getStringValue().isEmpty())
+			throw new InvalidSettingsException("The timestamp attribute is not set!");
+		
 		m_rSpec = (RepResultPortObjectSpec) inSpecs[0];
 		return new PortObjectSpec[] { null, null, null };
 

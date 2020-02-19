@@ -29,12 +29,7 @@ import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 /**
  * <code>NodeModel</code> for the "CVS2XLogConverter" node. This node is coded without ProM plugin. 
  * The reasons are : 
- *    1. for a universal use of cvs files to read from and manipulated. 
- *    2. it is simpler than creating another PortObject of CVSFile, and save it here. 
- *       simpler than reading directly from a cvs file and convert it to an event log. 
- *       [In this direct way, we can't create an unified workflow in a loop]
- * 
- * Input: CVS in DataTable format
+ * Input:  DataTable 
  * Output: XLogPortObject
  * Parameters: a lot ! But in two kinds:
  *    1. to assign the caseId and eventID, timestamp according to the Spec from the cvs
