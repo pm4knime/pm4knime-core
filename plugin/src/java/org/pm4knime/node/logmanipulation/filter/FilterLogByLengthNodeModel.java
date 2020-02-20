@@ -27,11 +27,11 @@ public class FilterLogByLengthNodeModel extends DefaultNodeModel {
 	public static final String CFG_MININUM_LENGTH = "Minimum length";
 	public static final String CFG_MAXINUM_LENGTH = "Maximum length";
 	
-	SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
+	private SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	// how to set the maximum length for each event log?? How to find the values there, 
 	// to discover the max and set its threshold 
-	SettingsModelIntegerBounded m_minLength = new SettingsModelIntegerBounded(CFG_MININUM_LENGTH, 1, 1, Integer.MAX_VALUE);
-	SettingsModelIntegerBounded m_maxLength = new SettingsModelIntegerBounded(CFG_MAXINUM_LENGTH, 20, 1, Integer.MAX_VALUE);
+	private SettingsModelIntegerBounded m_minLength = new SettingsModelIntegerBounded(CFG_MININUM_LENGTH, 1, 1, Integer.MAX_VALUE);
+	private SettingsModelIntegerBounded m_maxLength = new SettingsModelIntegerBounded(CFG_MAXINUM_LENGTH, 20, 1, Integer.MAX_VALUE);
     /**
      * Constructor for the node model.
      */

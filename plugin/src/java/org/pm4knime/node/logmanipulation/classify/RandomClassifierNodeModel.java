@@ -18,6 +18,7 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.TraceVariantUtil;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.log.utils.TraceVariantByClassifier;
 import org.processmining.log.utils.XUtils;
@@ -78,6 +79,9 @@ public class RandomClassifierNodeModel extends DefaultNodeModel {
     	// check if it uses the same traces
     	XAttributeLiteral attr = new XAttributeLiteralImpl(m_config.getLabelName(), "");
     	log.getGlobalTraceAttributes().add(attr);
+    	
+    	// here spec needs changes, because the new added values here
+    	logPortObject.setSpec(XLogSpecUtil.extractSpec(log));
     	checkCanceled(exec);
 		return  new PortObject[]{logPortObject};
     }

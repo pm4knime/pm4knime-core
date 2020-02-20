@@ -13,6 +13,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 /**
@@ -49,7 +50,7 @@ public class FilterByFrequencyNodeModel extends DefaultNodeModel {
 	SettingsModelBoolean m_isForSingleTV = new SettingsModelBoolean(CFG_ISFOR_SINGLETRACE_VARIANT, true);
 	SettingsModelDoubleBounded m_threshold = new SettingsModelDoubleBounded(
 			CFG_THRESHOLD, 0.2, 0, Integer.MAX_VALUE);
-	
+	private XLogPortObjectSpec m_outSpec;
     /**
      * Constructor for the node model.
      */
@@ -65,7 +66,9 @@ public class FilterByFrequencyNodeModel extends DefaultNodeModel {
             final ExecutionContext exec) throws Exception {
     	logger.info("Begin: filter log by trace frequency");
     	// we need to interpret the percentage into absolute value for both sides
-    	// according to the whole log size
+    	// according to the whole log size This log forgets its global attributes there 
+    	// so we need to extract them again to have this values. 
+    	// now, if we copy the attributes from the original, we don't have that.
     	XLog log = ((XLogPortObject) inData[0]).getLog();
     	if(log.isEmpty()) {
     		// sth happens to the execution. we can give some warning here??
@@ -90,7 +93,10 @@ public class FilterByFrequencyNodeModel extends DefaultNodeModel {
     		nlog = XLogFilterUtil.filterByWholeLogFreq(log, m_isKeep.getBooleanValue(), iThreshold, exec);
     	}
     	
+    	m_outSpec.setSpec(XLogSpecUtil.extractSpec(nlog));
     	XLogPortObject logPO = new XLogPortObject(nlog);
+    	
+    	logPO.setSpec(m_outSpec);
     	logger.info("End: filter log by trace frequency");
         return new PortObject[]{logPO};
     }
@@ -110,7 +116,9 @@ public class FilterByFrequencyNodeModel extends DefaultNodeModel {
     	if(m_threshold.getDoubleValue() >= 1) {
     		m_threshold.setDoubleValue((int)m_threshold.getDoubleValue());
     	}
-    	XLogPortObjectSpec m_outSpec = new XLogPortObjectSpec();
+    	// here is a new spec for the event log... some of them might get lost
+    	// but others stay, like the global attributes stay here, others go away from it
+    	m_outSpec = new XLogPortObjectSpec();
         return new PortObjectSpec[]{m_outSpec};
     }
 

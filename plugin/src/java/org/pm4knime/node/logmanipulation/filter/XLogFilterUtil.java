@@ -20,17 +20,24 @@ public class XLogFilterUtil {
 	public static XLog filterByTraceLength(XLog log, boolean isKeep, int minLen, int maxLen, ExecutionContext exec) throws CanceledExecutionException {
 		
 		XLog nlog = XLogUtil.clonePureLog(log, "event log filtered by trace length");
-		
-		for(XTrace trace : log) {
-			exec.checkCanceled();
-			if(trace.size() >= minLen && trace.size() <=maxLen) {
-				if(isKeep)
+		if(isKeep) {
+			for(XTrace trace : log) {
+				exec.checkCanceled();
+				if(trace.size() >= minLen && trace.size() <=maxLen) {
 					nlog.add(trace);
-				else
+				}
+			}
+	
+		}else {
+			for(XTrace trace : log) {
+				exec.checkCanceled();
+				if(trace.size() >= minLen && trace.size() <=maxLen) {
+					continue;
+				}else {
 					nlog.add(trace);
+				}
 			}
 		}
-	
 		return nlog;
 	}
 
