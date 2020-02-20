@@ -17,6 +17,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
@@ -36,7 +37,7 @@ public class MergeLogNodeModel extends DefaultNodeModel {
 	// here are three options
 
 	public static final int CGF_INPUTS_NUM = 2;
-	public static final String CFG_ATTRIBUTE_PREFIX = "Log ";
+	public static final String CFG_ATTRIBUTE_PREFIX = "Log-";
 	public static final String CFG_KEY_TRACE_STRATEGY = "Merge Strategy";
 	public static final String[]  CFG_TRACE_STRATEGY = {"Separate Trace",  "Ignore Trace", "Internal Trace Merge", "Internal Event Merge"};
 	public static final String CFG_KEY_TRACE_ATTRSET = "Trace Attribute Set";
@@ -45,15 +46,13 @@ public class MergeLogNodeModel extends DefaultNodeModel {
 	public static final String[] CFG_KEY_CASE_ID = {"Case ID 0", "Case ID 1"};
 	public static final String[] CFG_KEY_EVENT_ID = {"Event ID 0", "Event ID 1"};
 	
-	SettingsModelString m_strategy =  new SettingsModelString(CFG_KEY_TRACE_STRATEGY, CFG_TRACE_STRATEGY[2]);
+	SettingsModelString m_strategy =  new SettingsModelString(CFG_KEY_TRACE_STRATEGY, CFG_TRACE_STRATEGY[0]);
 	// create attributes to store the caseID and eventID for those two logs
 	// then we use the keys for it !!
 	SettingsModelString[] m_traceIDs = new SettingsModelString[CGF_INPUTS_NUM];
 	SettingsModelString[] m_eventIDs = new SettingsModelString[CGF_INPUTS_NUM];
 	
-	SettingsModelFilterString m_traceAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
-	SettingsModelFilterString m_eventAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
-	
+	SettingsModelFilterString m_traceAttrSet, m_eventAttrSet;
     /**
      * Constructor for the node model.
      */
@@ -66,6 +65,20 @@ public class MergeLogNodeModel extends DefaultNodeModel {
     		m_traceIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_CASE_ID[i], "");
     		m_eventIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_EVENT_ID[i], "");	
         }
+        m_traceAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
+        m_eventAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
+    	
+        // due to strategy is 0
+        for(int i=0; i< MergeLogNodeModel.CGF_INPUTS_NUM; i++) {
+			m_traceIDs[i].setEnabled(false);
+		}
+		
+		for(int i=0; i< MergeLogNodeModel.CGF_INPUTS_NUM; i++) {
+			m_eventIDs[i].setEnabled(false);
+		}
+        m_traceAttrSet.setEnabled(false);
+        m_eventAttrSet.setEnabled(false);
+        
         
     }
 
@@ -90,8 +103,14 @@ public class MergeLogNodeModel extends DefaultNodeModel {
 		List<String> tKeys = new LinkedList();
 		List<String> eKeys = new LinkedList();
 		for(int i=0; i< CGF_INPUTS_NUM; i++) {
-			tKeys.add(m_traceIDs[i].getStringValue().split(CFG_ATTRIBUTE_PREFIX + i)[1]);
-			eKeys.add(m_eventIDs[i].getStringValue().split(CFG_ATTRIBUTE_PREFIX + i)[1]);
+			// here we need to split the prefix from the XLogSpec 
+			if(m_traceIDs[i].getStringValue().contains(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX)) {
+				tKeys.add(m_traceIDs[i].getStringValue().split(XLogSpecUtil.TRACE_ATTRIBUTE_PREFIX)[1]);
+			}
+			if(m_eventIDs[i].getStringValue().contains(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)) {
+				eKeys.add(m_eventIDs[i].getStringValue().split(XLogSpecUtil.EVENT_ATTRIBUTE_PREFIX)[1]);
+			}
+			
 		}
 		checkCanceled(exec);
 		XLog mlog = null;
@@ -175,8 +194,23 @@ public class MergeLogNodeModel extends DefaultNodeModel {
     	
     	if(!inSpecs[1].getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
-    	if(m_traceAttrSet.getIncludeList().isEmpty() || m_eventAttrSet.getIncludeList().isEmpty())
-    		throw new InvalidSettingsException("The Merge is not configured right");
+    	
+    	// only m_traceAttrSet is enabled, we can get the m_event and m_traceAttrSet. 
+    	
+    	for(int i=0; i< MergeLogNodeModel.CGF_INPUTS_NUM; i++) {
+    		if((m_traceIDs[i].isEnabled()&&m_traceIDs[i].getStringValue().isEmpty()) || 
+    				(m_traceIDs[i].isEnabled()&&m_eventIDs[i].getStringValue().isEmpty()))
+    			throw new InvalidSettingsException("Trace or event ID can't be empty");
+    	}
+    	
+    	if(m_traceAttrSet.isEnabled()) {
+    		if(m_traceAttrSet.getIncludeList().isEmpty())
+        		throw new InvalidSettingsException("The Merge is not configured right");
+    	}
+    	if(m_eventAttrSet.isEnabled()) {
+	    	if(m_eventAttrSet.getIncludeList().isEmpty())
+	    		throw new InvalidSettingsException("The Merge is not configured right");
+    	}
     	// create new spec for output event log
     	XLogPortObjectSpec m_outSpec = new XLogPortObjectSpec();
         return new PortObjectSpec[]{m_outSpec};
@@ -238,10 +272,7 @@ public class MergeLogNodeModel extends DefaultNodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // only m_traceAttrSet is enabled, we can get the m_event and m_traceAttrSet. Else no
-    	if(m_traceAttrSet.isEnabled()) {
-    		
-    	}
+       
     }
     
 

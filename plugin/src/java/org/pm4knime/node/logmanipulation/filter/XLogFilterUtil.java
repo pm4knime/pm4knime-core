@@ -42,16 +42,25 @@ public class XLogFilterUtil {
 		ImmutableListMultimap<TraceVariantByClassifier, XTrace> variantsMap = 
 				TraceVariantUtil.getTraceVariant(log);
 		
-    	for(TraceVariantByClassifier variant : variantsMap.keySet()) {
-    		exec.checkCanceled();
-    		List<XTrace> traceList = variantsMap.get(variant);
-    		if(traceList.size() >= iThreshold) {
-    			if(isKeep)
+		if(isKeep) {
+			for(TraceVariantByClassifier variant : variantsMap.keySet()) {
+	    		exec.checkCanceled();
+	    		List<XTrace> traceList = variantsMap.get(variant);
+	    		
+	    		if(traceList.size() >= iThreshold) {
 					nlog.addAll(traceList);
-				else
+	    		}
+	    	}
+		}else {
+			for(TraceVariantByClassifier variant : variantsMap.keySet()) {
+	    		exec.checkCanceled();
+	    		List<XTrace> traceList = variantsMap.get(variant);
+	    		
+	    		if(traceList.size() < iThreshold) {
 					nlog.addAll(traceList);
-    		}
-    	}
+	    		}
+	    	}
+		}
     	
 		return nlog;
 	}
