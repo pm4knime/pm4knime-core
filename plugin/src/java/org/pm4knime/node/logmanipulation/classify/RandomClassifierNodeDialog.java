@@ -3,6 +3,7 @@ package org.pm4knime.node.logmanipulation.classify;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,8 +16,11 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.port.PortObjectSpec;
 
 /**
  * <code>NodeDialog</code> for the "RandomClassifier" Node.
@@ -42,7 +46,7 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
  */
 public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 	private final double THRESHOLD = .0001;
-	private final JPanel m_mainPanel = new JPanel();
+	private JPanel m_mainPanel ;
 	LabelTablePanel tPanel;
 	DefaultTableModel tModel;
 	// there is another optional panel
@@ -52,7 +56,7 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 	public RandomClassifierNodeDialog() {
 		Border blackline  = BorderFactory.createLineBorder(Color.black);
 		
-//		m_mainPanel = new JPanel();
+		m_mainPanel = (JPanel) this.getTab("Options"); //new JPanel();
 		m_mainPanel.setLayout(new BoxLayout(m_mainPanel, BoxLayout.Y_AXIS));
 		m_mainPanel.setBorder(blackline);
 		
@@ -98,11 +102,12 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 			
 		});
 		// this is one default option already in tab. Now we need to delete it here
-		if (super.getTab("Options") != null) {
-			super.removeTab("Options");
-		}
+//		if (super.getTab("Options") != null) {
+//			super.removeTab("Options");
+//		}
+//		
 		
-		addTab("Options", m_mainPanel);
+//		addTab("Options", m_mainPanel);
 	}
 	
 	@Override
@@ -144,7 +149,26 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 		m_config.saveSettingsTo(settings);
 	}
 	
-	
+	@Override
+	public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
+            final PortObjectSpec[] specs) throws NotConfigurableException {
+		// to load the values from the settings
+		try {
+			m_config.loadValidatedSettingsFrom(settings);
+			nameField.setText(m_config.getLabelName());
+			// after this, get the table and assign the values there
+			if(tModel.getDataVector().isEmpty()) {
+				for(Entry e : m_config.getValueMap().entrySet()) {
+					tModel.addRow(new Object[] {e.getKey(), e.getValue(), "Delete"});
+				}
+			}
+			
+		} catch (InvalidSettingsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 }
 
