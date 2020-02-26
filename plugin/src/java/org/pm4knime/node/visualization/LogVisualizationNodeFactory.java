@@ -1,5 +1,7 @@
 package org.pm4knime.node.visualization;
 
+import javax.swing.JPanel;
+
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
@@ -38,7 +40,12 @@ public class LogVisualizationNodeFactory
     public NodeView<LogVisualizationNodeModel> createNodeView(final int viewIndex,
             final LogVisualizationNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-		return new LogVisualizationNodeView(viewIndex, nodeModel);
+    	JPanel[] viewPanels = new JPanel[getNrNodeViews()];
+    	for(int i= 0 ; i< getNrNodeViews(); i++ ) {
+    		viewPanels[i] = new JPanel();
+    		viewPanels[i].setName("Log View "+ i);
+    	}
+		return new LogVisualizationNodeView(viewIndex, nodeModel, viewPanels);
     }
 
     /**

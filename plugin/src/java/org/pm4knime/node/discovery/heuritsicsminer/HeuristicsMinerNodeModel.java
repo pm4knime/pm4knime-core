@@ -68,6 +68,7 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
         		new PortType[] { PetriNetPortObject.TYPE });
     }
 
+    
     @Override
 	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception{
     	logger.info("Begin: Heuristic Miner");
@@ -90,11 +91,14 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
     	return pnPO;
     }
 
+    // to use hnet, we need to make sure it is serialized there.. Else, it can't open it again
+    // when we reload the workflow there
     public HeuristicsNet getHNet() {
     	return hnet; 
     }
     
-    private HeuristicsMinerSettings getConfiguration() {
+    
+    HeuristicsMinerSettings getConfiguration() {
 		// TODO build setting parameter from node model
     	HeuristicsMinerSettings heuristicsMinerSettings = new HeuristicsMinerSettings();
     	
@@ -124,18 +128,19 @@ public class HeuristicsMinerNodeModel extends DefaultMinerNodeModel implements P
         return new PortObjectSpec[]{new PetriNetPortObjectSpec()};
     }
 
-   
+    // to create view after reloading, we need to save XLogPortObject as the internal PortObject
+    // which means, we need to override the execution method there
 	@Override
 	public PortObject[] getInternalPortObjects() {
 		// TODO Auto-generated method stub
-		return null;
+		return new PortObject[] {logPO};
 	}
 
 	@Override
 	public void setInternalPortObjects(PortObject[] portObjects) {
 		// TODO here is no use from portObjects, because what we need is the HNet, and we can't serialize it!!
 		// we can't save it from the portObject
-		
+		logPO = (XLogPortObject) portObjects[0];
 	}
 
 	@Override

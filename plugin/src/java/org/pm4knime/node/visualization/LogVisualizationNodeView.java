@@ -23,70 +23,70 @@ import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartInspect
  */
 public class LogVisualizationNodeView extends NodeView<LogVisualizationNodeModel> {
 
-    /**
-     * Creates a new view.
-     * 
-     * @param nodeModel The model (class: {@link LogVisualizationNodeModel})
-     */
-    protected LogVisualizationNodeView(int viewIndex, final LogVisualizationNodeModel nodeModel) {
-        super(nodeModel);
-        // if we want to have the view after reloading, we need to set the internal model clearly
-        XLog xlog = nodeModel.getLogPO().getLog();
-		// SettingsModelString m_fileName =  nodeModel.getParams().getFilePathSettingsModel();
-		
-		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-		
-		// viewIdx = 0, dottedChart 
-		switch(viewIndex) {
-		case 0: // show the trace variance view
+	JPanel[] m_viewPanels;
+
+	/**
+	 * Creates a new view.
+	 * 
+	 * @param nodeModel  The model (class: {@link LogVisualizationNodeModel})
+	 * @param viewPanels
+	 */
+	protected LogVisualizationNodeView(int viewIndex, final LogVisualizationNodeModel nodeModel, JPanel[] viewPanels) {
+		super(nodeModel);
+
+		m_viewPanels = viewPanels;
+		// viewIdx = 0, dottedChart
+		switch (viewIndex) {
+			case 0: // show the trace variance view
+				setComponent(m_viewPanels[0]);
+				break;
+			case 1:
+				// now set the dottedChart to show
+				setComponent(m_viewPanels[1]);
+				break;
+			}
+	}
+
+	@Override
+	protected void onClose() {
+		// TODO Auto-generated method stub
+//		System.out.println("Check the calling hierarchy in model close");
+	}
+
+	@Override
+	protected void onOpen() {
+
+//		System.out.println("Check the calling hierarchy in model open");
+	}
+
+	@Override
+	protected void modelChanged() {
+		// TODO following the same strategy to avoid view null exception
+		if (getNodeModel() != null) {
+			LogVisualizationNodeModel nodeModel = getNodeModel();
+			XLog xlog = nodeModel.getLogPO().getLog();
+			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
 			JComponent traceView = new LogViewVisualizer(new LogViewContextProM(context), xlog);
 			// setComponent(traceView);
 			JPanel tvPanel = new JPanel();
 			tvPanel.add(traceView);
 			tvPanel.setLayout(new BoxLayout(tvPanel, BoxLayout.Y_AXIS));
+
+			tvPanel.setPreferredSize(new Dimension(1400, 600));
+			m_viewPanels[0].add(tvPanel);
 			
-			tvPanel.setPreferredSize(new Dimension(1400,600));
-			// tvPanel.setName(m_fileName.getStringValue());
-			setComponent(tvPanel);
-			
-			break;
-		case 1:
-			// now set the dottedChart to show
-			
+			// add view to the second index
+			JPanel dottedView;
 			try {
-				JPanel dottedView = new DottedChartInspector(new LogView(xlog, context.getProgress()), context);
-				setComponent(dottedView);
+				dottedView = new DottedChartInspector(new LogView(xlog, context.getProgress()), context);
+				m_viewPanels[1].add(dottedView);
 			} catch (DottedChartException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			break;
-		
+			
+
 		}
-    }
-
-    @Override
-	protected void onClose() {
-		// TODO Auto-generated method stub
-		System.out.println("Check the calling hierarchy in model close");
 	}
-
-	@Override
-	protected void onOpen() {
-		// TODO Auto-generated method stub
-		// here we might need to check the nodeModel and other stuff, but how to do it??
-		// if we can have this value, we don't need to serialize the log and Petri net again
-		// we will refer to this value here, try it here 
-		// this.getNodeModel();
-		System.out.println("Check the calling hierarchy in model open");
-	}
-
-	@Override
-	protected void modelChanged() {
-		// TODO Auto-generated method stub
-		System.out.println("Check the calling hierarchy in model changed");
-	}
-
 
 }
-

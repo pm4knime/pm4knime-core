@@ -40,6 +40,7 @@ import org.processmining.plugins.petrinet.manifestreplayresult.ManifestEvClassPa
 public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeModel> {
 	// zoom-related properties
 	// The maximal zoom factor for the primary view on the transition system.
+	private JPanel m_viewPanel;
 	public static final int MAX_ZOOM = 1200;
 		
 	ScalableComponent scalable ;
@@ -49,33 +50,20 @@ public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeM
      * Creates a new view to show performance projected on model
      * 
      * @param nodeModel The model (class: {@link PerformanceCheckerNodeModel})
+     * @param viewPanel 
      */
-    protected PerformanceCheckerNodeView(final PerformanceCheckerNodeModel nodeModel) {
+    protected PerformanceCheckerNodeView(final PerformanceCheckerNodeModel nodeModel, JPanel viewPanel) {
         super(nodeModel);
         // TODO: to show the performance log information
         // two situation, one is the one directly from execution 
-        JComponent viewPanel;
-        /*
-        if(nodeModel.getMainfestResult()!= null) {
-        	viewPanel = createPanelAfterExecution(nodeModel);
-        }else {
-        	// create the nodeModel after reloading
-        	viewPanel = createPanelAfterReload(nodeModel);
-        }
-        */
-        viewPanel = createPanelAfterExecution(nodeModel);
-        viewPanel.setName("Performance Projection Panel");
-        setComponent(viewPanel);
+        
+        m_viewPanel = viewPanel; 
+        setComponent(m_viewPanel);
     }
 
-    private JComponent createPanelAfterReload(PerformanceCheckerNodeModel nodeModel) {
-		// TODO with the manifest nodes, we need to assign the values of parameters?? 
-    	// if we can have the values of parameter, we don't need to do this!! Let us try for this
-    	return null;
-	}
     
     
-	private JPanel createPanelAfterExecution(final PerformanceCheckerNodeModel nodeModel) {
+	private JPanel createProjectionPanel(final PerformanceCheckerNodeModel nodeModel) {
     	 
     	 
     	 Manifest mResult = nodeModel.getMainfestResult();
@@ -118,6 +106,11 @@ public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeM
     @Override
     protected void modelChanged() {
         // TODO: generated method stub
+    	 if(getNodeModel() != null) {
+    		 PerformanceCheckerNodeModel nodeModel = getNodeModel() ;
+    		 m_viewPanel.add(createProjectionPanel(nodeModel));
+    		 
+    	 }
     }
 
     /**

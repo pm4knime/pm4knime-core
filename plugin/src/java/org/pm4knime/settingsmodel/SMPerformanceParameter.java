@@ -36,7 +36,7 @@ public class SMPerformanceParameter extends SMAlignmentReplayParameter{
 	public SMPerformanceParameter(String configName) {
 		super(configName);
 		// TODO Auto-generated constructor stub
-		m_timeStamp = new SettingsModelString(CKF_KEY_TIMESTAMP, "timestamp");
+		m_timeStamp = new SettingsModelString(CKF_KEY_TIMESTAMP, "");
 		m_withSynMove = new SettingsModelBoolean(CKF_KEY_WITH_SYN_MOVE, true);
 		m_withUnreliableResult = new SettingsModelBoolean(CKF_KEY_WITH_UNRELIABLE_RESULT, true);
 	}

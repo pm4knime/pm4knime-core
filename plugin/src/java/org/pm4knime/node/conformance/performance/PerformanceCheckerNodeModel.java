@@ -19,6 +19,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.ManifestWithSerializer;
@@ -66,10 +67,8 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  *            +
  *            https://github.com/rapidprom/rapidprom-source/blob/master/src/main/java/org/rapidprom/operators/conformance/PerformanceConformanceAnalysisOperator.java
  */
-public class PerformanceCheckerNodeModel extends DefaultNodeModel {
+public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 	private static final NodeLogger logger = NodeLogger.getLogger(PerformanceCheckerNodeModel.class);
-
-	private static final String CFG_MC_OTHERS = "Model Content for Other Data";
 
 	private static final String CFG_MC_MANIFEST = "Model Content for Manifest";
 
@@ -273,7 +272,6 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 		// TODO deserialize the manifest and other related data for view
 		try {
 			File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
-			manifestDir.mkdirs();
 			mResult = ManifestWithSerializer.loadFrom(manifestDir, exec);
 		} catch (InvalidSettingsException e) {
 			// TODO Auto-generated catch block
@@ -294,11 +292,6 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 		
 	}
 	
-	public RepResultPortObject getRepResultPO() {
-		// TODO Auto-generated method stub
-		return repResultPO;
-	}
-	
 
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
@@ -306,4 +299,5 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel {
 		m_parameter.validateSettings(settings);
 	}
 
+	
 }

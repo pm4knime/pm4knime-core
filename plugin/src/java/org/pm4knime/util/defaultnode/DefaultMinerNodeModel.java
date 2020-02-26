@@ -31,7 +31,7 @@ public abstract class DefaultMinerNodeModel extends DefaultNodeModel {
 	SettingsModelStringArray classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
 			new String[] {""}) ;
 	
-	XLogPortObject logPO = null;
+	protected XLogPortObject logPO = null;
 	
 
 	@Override
@@ -114,4 +114,8 @@ public abstract class DefaultMinerNodeModel extends DefaultNodeModel {
 
 	protected abstract void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException;
 	
+	
+	public XLogPortObject getXLogPO() {
+    	return logPO; 
+    }
 }

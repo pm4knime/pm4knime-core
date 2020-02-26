@@ -1,5 +1,10 @@
 package org.pm4knime.node.discovery.heuritsicsminer;
 
+import java.awt.Dimension;
+
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
@@ -38,7 +43,11 @@ public class HeuristicsMinerNodeFactory
     public NodeView<HeuristicsMinerNodeModel> createNodeView(final int viewIndex,
             final HeuristicsMinerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-    	return new HeuristicsMinerNodeView(nodeModel);
+    	JPanel viewPanel = new JPanel();
+		viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
+		viewPanel.setPreferredSize(new Dimension(1000,600));
+		viewPanel.setName("Heuristics Net");
+    	return new HeuristicsMinerNodeView(nodeModel, viewPanel);
 		
     }
 
