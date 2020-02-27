@@ -278,13 +278,13 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 			e.printStackTrace();
 		}
 	}
+	
 
 	@Override
 	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 		// TODO serialise the manifest and other related data for view
 		// manifest, reliableResultSymbol, timeAttribute, if with Synmove to generate counter.[pure one is ok]
-		
 		// to serialize manifest with a dir
 		File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
 		manifestDir.mkdirs();

@@ -56,7 +56,6 @@ public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeM
         super(nodeModel);
         // TODO: to show the performance log information
         // two situation, one is the one directly from execution 
-        
         m_viewPanel = viewPanel; 
         setComponent(m_viewPanel);
     }
@@ -105,11 +104,11 @@ public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeM
      */
     @Override
     protected void modelChanged() {
-        // TODO: generated method stub
+        // TODO: if it is the first time to get this node model??
     	 if(getNodeModel() != null) {
     		 PerformanceCheckerNodeModel nodeModel = getNodeModel() ;
-    		 m_viewPanel.add(createProjectionPanel(nodeModel));
-    		 
+    		 if(nodeModel.getMainfestResult() != null)
+    			 m_viewPanel.add(createProjectionPanel(nodeModel));
     	 }
     }
 

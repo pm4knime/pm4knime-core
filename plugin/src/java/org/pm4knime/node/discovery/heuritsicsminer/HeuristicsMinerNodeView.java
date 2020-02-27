@@ -50,7 +50,10 @@ public class HeuristicsMinerNodeView extends NodeView<HeuristicsMinerNodeModel> 
         // TODO: check if the nodeModel is not null, generate the hnet view.
     	if(getNodeModel() !=null) {
     		HeuristicsMinerNodeModel nodeModel = getNodeModel();
-    		
+    		if(nodeModel.getXLogPO() == null) {
+    			// view is initialized at first step
+    			return ;
+    		}
     		
     		HeuristicsNet hnet =  nodeModel.getHNet();
     		if(hnet == null) {

@@ -50,6 +50,9 @@ public class FitnessCheckerNodeView extends NodeView<FitnessCheckerNodeModel> {
         	
         	FitnessCheckerNodeModel nodeModel = getNodeModel();
         	RepResultPortObject repResultPO = nodeModel.getRepResultPO();
+        	if(repResultPO == null) {
+        		return ;
+        	}
             XLog log = repResultPO.getLog();
             AcceptingPetriNet anet = repResultPO.getNet();
             PNRepResult result = repResultPO.getRepResult();
