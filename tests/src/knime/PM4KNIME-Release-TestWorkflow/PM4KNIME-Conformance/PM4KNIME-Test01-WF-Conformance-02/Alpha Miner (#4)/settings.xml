@@ -6,26 +6,36 @@
 <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
 </config>
 <config key="model">
-<config key="Read Type_Internals">
+<config key="Event Classifier_Internals">
 <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
 <entry key="EnabledStatus" type="xboolean" value="true"/>
 </config>
-<entry key="Read Type" type="xstring" value="XES"/>
-<config key="Read Method_Internals">
+<entry key="Event Classifier" type="xstring" value="Activity"/>
+<config key="Event Classifier Set_Internals">
+<entry key="SettingsModelID" type="xstring" value="SMID_stringarray"/>
+<entry key="EnabledStatus" type="xboolean" value="true"/>
+</config>
+<config key="Event Classifier Set">
+<entry key="array-size" type="xint" value="8"/>
+<entry key="0" type="xstring" value="Activity###class org.deckfour.xes.classification.XEventAttributeClassifier"/>
+<entry key="1" type="xstring" value="activity classifier###class org.deckfour.xes.classification.XEventAttributeClassifier"/>
+<entry key="2" type="xstring" value="#Event Attribute#time:timestamp###class org.deckfour.xes.model.impl.XAttributeTimestampImpl"/>
+<entry key="3" type="xstring" value="#Event Attribute#org:resource###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+<entry key="4" type="xstring" value="#Event Attribute#Activity###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+<entry key="5" type="xstring" value="#Event Attribute#Costs###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+<entry key="6" type="xstring" value="#Event Attribute#Resource###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+<entry key="7" type="xstring" value="#Event Attribute#concept:name###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+</config>
+<config key="Alpha Miner Variant_Internals">
 <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
 <entry key="EnabledStatus" type="xboolean" value="true"/>
 </config>
-<entry key="Read Method" type="xstring" value="OPEN NAIVE"/>
-<config key="File Name_Internals">
-<entry key="SettingsModelID" type="xstring" value="SMID_string"/>
-<entry key="EnabledStatus" type="xboolean" value="true"/>
-</config>
-<entry key="File Name" type="xstring" value="E:\Datasets\PM4KNIME\Dataset\Chapter_1\running-example.xes"/>
+<entry key="Alpha Miner Variant" type="xstring" value="Alpha"/>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
 <entry key="state" type="xstring" value="EXECUTED"/>
-<entry key="factory" type="xstring" value="org.pm4knime.node.io.log.reader.XLogReaderNodeFactory"/>
-<entry key="node-name" type="xstring" value="Event Log Reader"/>
+<entry key="factory" type="xstring" value="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory"/>
+<entry key="node-name" type="xstring" value="Alpha Miner"/>
 <entry key="node-bundle-name" type="xstring" value="Dummy"/>
 <entry key="node-bundle-symbolic-name" type="xstring" value="org.pm4knime.plugin"/>
 <entry key="node-bundle-vendor" type="xstring" value="PADS RWTH Aachen"/>
@@ -35,15 +45,15 @@
 <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
 <entry key="node-feature-version" type="xstring" value="0.0.0"/>
 <config key="factory_settings"/>
-<entry key="name" type="xstring" value="Event Log Reader"/>
+<entry key="name" type="xstring" value="Alpha Miner"/>
 <entry key="hasContent" type="xboolean" value="true"/>
 <entry key="isInactive" type="xboolean" value="false"/>
 <config key="ports">
 <config key="port_1">
 <entry key="index" type="xint" value="1"/>
-<entry key="port_spec_class" type="xstring" value="org.pm4knime.portobject.XLogPortObjectSpec"/>
-<entry key="port_object_class" type="xstring" value="org.pm4knime.portobject.XLogPortObject"/>
-<entry key="port_object_summary" type="xstring" value="This port represents an event log object (XLog)"/>
+<entry key="port_spec_class" type="xstring" value="org.pm4knime.portobject.PetriNetPortObjectSpec"/>
+<entry key="port_object_class" type="xstring" value="org.pm4knime.portobject.PetriNetPortObject"/>
+<entry key="port_object_summary" type="xstring" value="This port contains a Petri net object"/>
 <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
 <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
 <entry key="port_dir_location" type="xstring" value="port_1"/>
@@ -51,6 +61,6 @@
 </config>
 <config key="filestores">
 <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-<entry key="file_store_id" type="xstring" value="1670336c-2281-4291-b384-6b634e4923f1"/>
+<entry key="file_store_id" type="xstring" value="7a7e3a70-2d10-4de0-8a91-e44c3ca99426"/>
 </config>
 </config>

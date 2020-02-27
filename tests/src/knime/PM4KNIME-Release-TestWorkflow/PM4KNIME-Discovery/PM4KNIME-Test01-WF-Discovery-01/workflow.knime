@@ -8,7 +8,7 @@
 <entry key="authored-by" type="xstring" value="kefang-pads"/>
 <entry key="authored-when" type="xstring" value="2020-02-20 22:36:58 +0100"/>
 <entry key="lastEdited-by" type="xstring" value="kefang-pads"/>
-<entry key="lastEdited-when" type="xstring" value="2020-02-21 13:24:20 +0100"/>
+<entry key="lastEdited-when" type="xstring" value="2020-02-27 12:11:53 +0100"/>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
 <entry key="state" type="xstring" value="CONFIGURED"/>
@@ -94,22 +94,6 @@
 </config>
 </config>
 </config>
-<config key="node_9">
-<entry key="id" type="xint" value="9"/>
-<entry key="node_settings_file" type="xstring" value="Heuristics Miner (#9)/settings.xml"/>
-<entry key="node_is_meta" type="xboolean" value="false"/>
-<entry key="node_type" type="xstring" value="NativeNode"/>
-<entry key="ui_classname" type="xstring" value="org.knime.core.node.workflow.NodeUIInformation"/>
-<config key="ui_settings">
-<config key="extrainfo.node.bounds">
-<entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="464"/>
-<entry key="1" type="xint" value="657"/>
-<entry key="2" type="xint" value="156"/>
-<entry key="3" type="xint" value="84"/>
-</config>
-</config>
-</config>
 <config key="node_10">
 <entry key="id" type="xint" value="10"/>
 <entry key="node_settings_file" type="xstring" value="ILP Miner (#10)/settings.xml"/>
@@ -158,6 +142,22 @@
 </config>
 </config>
 </config>
+<config key="node_13">
+<entry key="id" type="xint" value="13"/>
+<entry key="node_settings_file" type="xstring" value="Heuristics Miner (#13)/settings.xml"/>
+<entry key="node_is_meta" type="xboolean" value="false"/>
+<entry key="node_type" type="xstring" value="NativeNode"/>
+<entry key="ui_classname" type="xstring" value="org.knime.core.node.workflow.NodeUIInformation"/>
+<config key="ui_settings">
+<config key="extrainfo.node.bounds">
+<entry key="array-size" type="xint" value="4"/>
+<entry key="0" type="xint" value="564"/>
+<entry key="1" type="xint" value="657"/>
+<entry key="2" type="xint" value="156"/>
+<entry key="3" type="xint" value="84"/>
+</config>
+</config>
+</config>
 </config>
 <config key="connections">
 <config key="connection_0">
@@ -192,7 +192,7 @@
 </config>
 <config key="connection_3">
 <entry key="sourceID" type="xint" value="4"/>
-<entry key="destID" type="xint" value="9"/>
+<entry key="destID" type="xint" value="13"/>
 <entry key="sourcePort" type="xint" value="1"/>
 <entry key="destPort" type="xint" value="1"/>
 <entry key="ui_classname" type="xstring" value="org.knime.core.node.workflow.ConnectionUIInformation"/>
