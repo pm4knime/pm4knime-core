@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse version="3.0"?><plugin>
- <extension point="org.knime.workbench.repository.categories">
-      <category level-id="processmining" name="Process Mining" path="/"/>
-	<category level-id="io" name="IO" path="/processmining"/>
-	<category level-id="manipulation" name="Manipulation" path="/processmining"/>
-	<category level-id="conversion" name="Conversion" path="/processmining"/>
-	<category level-id="visualization" name="Visualization" path="/processmining"/>
+ <extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
+      <category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
+	<category level-id="io" name="IO" path="/community/processmining" icon="icon/category-io.png"/>
+	<category after="io" level-id="conversion" name="Conversion" path="/community/processmining" icon="icon/category-conversion.png"/>
+	<category after="conversion" level-id="manipulation" name="Manipulation" path="/community/processmining" icon="icon/category-manipulation.png"/>
 	
-	<category level-id="discovery" name="Discovery" path="/processmining"/>
-	<category level-id="conformance" name="Conformance" path="/processmining"/>
-
+	<category after="manipulation" level-id="discovery" name="Discovery" path="/community/processmining" icon="icon/category-discovery.png"/>
+	<category after="discovery" level-id="conformance" name="Conformance" path="/community/processmining" icon="icon/category-conformance.png"/>
+	<category after="conformance" level-id="visualization" name="Visualization" path="/community/processmining" icon="icon/category-visualization.png"/>
+	
    </extension>
    
    <extension point="org.knime.workbench.repository.nodes">
      
      <!-- nodes in io-->
-	<node category-path="/processmining/io" factory-class="org.pm4knime.node.io.log.reader.XLogReaderNodeFactory"/>
-        <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory"/>
-       <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>  
-      <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory"/>  
+	<node category-path="/community/processmining/io" factory-class="org.pm4knime.node.io.log.reader.XLogReaderNodeFactory"/>
+        <node category-path="/community/processmining/io" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory"/>
+       <node category-path="/community/processmining/io" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>  
+      <node category-path="/community/processmining/io" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory"/>  
      
-      <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory"/>
-       <node category-path="/processmining/io" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory"/>
+      <node category-path="/community/processmining/io" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory"/>
+       <node category-path="/community/processmining/io" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory"/>
        
        <!-- nodes in manipulation-->
-	   <node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory"/>
-		<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.classify.RandomClassifierNodeFactory"/>
-		<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory"/>
-	<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" id="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory"/>
-	<node category-path="/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" id="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory"/>
+	   <node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory"/>
+		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.classify.RandomClassifierNodeFactory"/>
+		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory"/>
+	<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
+	<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
 	
 	<!-- nodes visualization-->
-	<node category-path="/processmining/visualization" factory-class="org.pm4knime.node.visualization.LogVisualizationNodeFactory"/>
+	<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualization.LogVisualizationNodeFactory"/>
 	
 		<!-- nodes in conversion-->
-		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory"/>
-		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory"/>
-		<node category-path="/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory"/>
+		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory"/>
+		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory"/>
+		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory"/>
 
 		<!-- nodes in discovery-->
-       <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory"/>
-      <node category-path="/processmining/discovery" deprecated="true" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory"/>
-      <node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2"/>
-		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory"/>
-		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory"/>
-		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory"/>
-		<node category-path="/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory"/>
+       <node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory"/>
+      <node category-path="/community/processmining/discovery" deprecated="true" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory"/>
+      <node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2"/>
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory"/>
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory"/>
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory"/>
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory"/>
 
 
 		<!-- nodes in conformance-->
-		<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory"/>
+		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory"/>
 	
 	   <!-- nodes in performance-->
-	  	<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory"/>
+	  	<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory"/>
 	  
-	     <node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory"/>
+	     <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory"/>
 	
-		<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeFactory"/>
-		<node category-path="/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory"/>
+		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeFactory"/>
+		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory"/>
 	</extension>
 
 	<extension point="org.knime.core.PortType">
