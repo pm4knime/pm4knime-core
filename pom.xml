@@ -157,6 +157,7 @@
 							<generate>true</generate>
 						</sourceReferences>
 						<format>'v'yyyyMMddHHmm</format>
+						<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
 						<!-- 
 						 <jgit.ignore> pom.xml </jgit.ignore>
 						-->
