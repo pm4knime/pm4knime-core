@@ -145,7 +145,7 @@ public class ToXLogConverter {
 			for(int tIdx = 0; tIdx< traceColIndices.length ; tIdx++) {
 				if(traceColVisited[tIdx])
 					continue; 
-				if(traceAttrMap.containsKey(traceColumns.get(traceColIndices[tIdx]))) {
+				if(traceAttrMap.containsKey(traceColumns.get(tIdx))) {
 					// if contains value, compare if they are same 
 					if(!traceAttrMap.get(traceColumns.get(tIdx)).equals(row.getCell(traceColIndices[tIdx]))) {
 //						System.out.println("Error happens with the trace Attributes here");
