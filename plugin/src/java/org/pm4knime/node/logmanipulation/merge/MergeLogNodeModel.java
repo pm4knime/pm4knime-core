@@ -118,18 +118,18 @@ public class MergeLogNodeModel extends DefaultNodeModel {
 		if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[0])) {
 			// the traces are separately merged， even if they have the same identifiers
 			// then global trace, they should have their different ones. To merge them
-			mlog = XLogUtil.mergeLogsSeparate(log0, log1, exec);
+			mlog = MergeUtil.mergeLogsSeparate(log0, log1, exec);
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[1])) {
 			// ignore the traces with same identifier from the second event log
 			
-			mlog = XLogUtil.mergeLogsIgnoreTrace(log0, log1, tKeys, exec);
+			mlog = MergeUtil.mergeLogsIgnoreTrace(log0, log1, tKeys, exec);
 			
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[2])) {
 			// need to merge according to its trace attributes
 			// for this choice, only trace attributes are availabel
 			List<XAttribute> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
 			List<XAttribute> inTraceAttrList1 = getInAttrs(1, tAttrList1, m_traceAttrSet.getIncludeList());
-			mlog = XLogUtil.mergeLogsSeparateEvent(log0, log1, tKeys, exTraceAttrList0, inTraceAttrList1, exec);
+			mlog = MergeUtil.mergeLogsSeparateEvent(log0, log1, tKeys, exTraceAttrList0, inTraceAttrList1, exec);
 		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[3])) {
 			// need to merge according to its trace attributes and event attributes
 			List<XAttribute> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
@@ -139,7 +139,7 @@ public class MergeLogNodeModel extends DefaultNodeModel {
 			List<XAttribute> inTraceAttrList1 = getInAttrs(1, tAttrList1, m_traceAttrSet.getIncludeList());
 			List<XAttribute> inEventAttrList1 = getInAttrs(1, eAttrList1, m_eventAttrSet.getIncludeList());
 			
-			mlog = XLogUtil.mergeLogsInternal(log0, log1, tKeys, eKeys, exTraceAttrList0, exEventAttrList0, 
+			mlog = MergeUtil.mergeLogsInternal(log0, log1, tKeys, eKeys, exTraceAttrList0, exEventAttrList0, 
 					inTraceAttrList1, inEventAttrList1, exec);
 		}else {
 			System.out.println("Not such strategy");

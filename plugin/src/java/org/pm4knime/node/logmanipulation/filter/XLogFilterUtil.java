@@ -10,7 +10,7 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.pm4knime.util.TraceVariantUtil;
+import org.pm4knime.node.logmanipulation.classify.ClassifyUtil;
 import org.pm4knime.util.XLogUtil;
 import org.processmining.log.utils.TraceVariantByClassifier;
 
@@ -47,7 +47,7 @@ public class XLogFilterUtil {
 		
 		
 		ImmutableListMultimap<TraceVariantByClassifier, XTrace> variantsMap = 
-				TraceVariantUtil.getTraceVariant(log);
+				ClassifyUtil.getTraceVariant(log);
 		
 		if(isKeep) {
 			for(TraceVariantByClassifier variant : variantsMap.keySet()) {
@@ -91,7 +91,7 @@ public class XLogFilterUtil {
 		XLog nlog = XLogUtil.clonePureLog(log, "event log filtered by trace frequency");
 		
 		ImmutableListMultimap<TraceVariantByClassifier, XTrace> variantsMap = 
-				TraceVariantUtil.getTraceVariant(log);
+				ClassifyUtil.getTraceVariant(log);
 		// sort the trace variant  by frequency
 		exec.checkCanceled();
 		Map<TraceVariantByClassifier, Collection<XTrace>> sortedMap = variantsMap.asMap().entrySet().stream()

@@ -112,7 +112,6 @@
 	<classpathentry kind="lib" path="lib/httpcore-4.4.6.jar"/>
 	<classpathentry kind="lib" path="lib/HybridILPMiner-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ILPMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/IncorporateNegativeInformation-latest.jar"/>
 	<classpathentry kind="lib" path="lib/InductiveMiner-latest.jar"/>
 	<classpathentry kind="lib" path="lib/InductiveMinerDeprecated-latest.jar"/>
 	<classpathentry kind="lib" path="lib/InductiveVisualMiner-latest.jar"/>

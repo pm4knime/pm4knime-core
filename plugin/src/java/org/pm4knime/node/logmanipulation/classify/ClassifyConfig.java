@@ -33,17 +33,13 @@ public class ClassifyConfig {
 	
 	private String m_labelName;
 	private Map<String, Double> vMap;
-//	private List<String> m_valueList;
-//	private List<Double> m_percentageList;
-	
-	// optional later
+
 	
 	public ClassifyConfig(final String configName) {
 		m_configName = configName;
+		m_labelName = "";
 		vMap = new HashMap();
 		// here is no labelName yet,  but we need to wait for this
-//		m_valueList = new ArrayList<String>();
-//		m_percentageList = new ArrayList<Double>();
 	}
 	
 	public void saveSettingsTo(final NodeSettingsWO settings) {

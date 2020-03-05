@@ -17,7 +17,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.util.TraceVariantUtil;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.log.utils.TraceVariantByClassifier;
@@ -66,14 +65,17 @@ public class RandomClassifierNodeModel extends DefaultNodeModel {
     	checkCanceled(exec);
     	// get the event classes
     	XEventClasses eventClasses = LogViewVisualizer.createEventClasses(log);
+    	// change the current distribution to integer map 
+    	
     	
     	ImmutableListMultimap<TraceVariantByClassifier, XTrace> variantsMap = 
     			XUtils.getVariantsByClassifier(log, eventClasses);
     	
+    	
     	for(TraceVariantByClassifier variant : variantsMap.keySet()) {
     		checkCanceled(exec);
     		List<XTrace> traceList = variantsMap.get(variant);
-    		TraceVariantUtil.addLabelWithPercent(traceList, m_config.getValueMap(), m_config.getLabelName());
+    		ClassifyUtil.addLabelWithPercent(traceList, m_config.getValueMap(), m_config.getLabelName());
     	}
 
     	// check if it uses the same traces
@@ -98,7 +100,10 @@ public class RandomClassifierNodeModel extends DefaultNodeModel {
         // TODO: check if the inport object is XLOgPortObject
     	if(! (inSpecs[0] instanceof XLogPortObjectSpec))
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
-    	
+    	// check if there are some data available to use 
+    	if(m_config.getLabelName().isEmpty() || m_config.getValueMap().isEmpty()) {
+    		throw new InvalidSettingsException("Please give valid classification distribution!");
+    	}
         return new PortObjectSpec[]{new XLogPortObjectSpec()};
     }
 

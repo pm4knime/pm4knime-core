@@ -14,7 +14,6 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
-import org.processmining.incorporatenegativeinformation.help.EventLogUtilities;
 
 /**
  * This is the model implementation of SampleLog.
@@ -71,7 +70,7 @@ public class SampleLogNodeModel extends DefaultNodeModel {
 		if(m_samplePref.getBooleanValue()) {
 			// if use the percentage, we need to do what ??
 			double percentage = m_samplePercentage.getDoubleValue();
-			logs = EventLogUtilities.sampleLog(log, percentage);
+			logs = SampleUtil.sampleLog(log, percentage);
 			
 		}else {
 			// conver the double value into the number 
@@ -81,7 +80,7 @@ public class SampleLogNodeModel extends DefaultNodeModel {
 				logger.warn("The chosen sample number is bigger than the log, will only output the whole log");
 				num = log.size();
 			}
-			logs = EventLogUtilities.sampleLog(log, num);
+			logs = SampleUtil.sampleLog(log, num);
 		}
 		checkCanceled(exec);
 		// create the out port object

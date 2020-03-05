@@ -1,7 +1,8 @@
-package org.pm4knime.util;
+package org.pm4knime.node.logmanipulation.classify;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.deckfour.xes.model.XAttributeLiteral;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.pm4knime.node.logmanipulation.sample.SampleUtil;
 import org.processmining.log.utils.TraceVariantByClassifier;
 import org.processmining.log.utils.XUtils;
 
@@ -32,8 +34,7 @@ import com.google.common.collect.ImmutableListMultimap;
  * @author kefang-pads
  *
  */
-public class TraceVariantUtil {
-	
+public class ClassifyUtil {
 	
 	/**
 	 * Randomly assign label categories according to its percents.
@@ -65,18 +66,18 @@ public class TraceVariantUtil {
 	}
 	
 	public static void addLabelWithNumber(List<XTrace> traceList, Map<String, Integer> lMap, String lName) {
-		// shuffle the index and get the random assignment for it. 
-		// however, we can say that when we create the traceVariant, it might has no order, but for sure, 
-		// we order them randomly again
-		Collections.shuffle(traceList);
-		int fromIndex = 0;
 		
 		// for each item in lMap, create the sub traceList for it.
 		for(String key : lMap.keySet()) {
 			int num = lMap.get(key);
-			// get the subTraceList for the 
-			List<XTrace> subList = traceList.subList(fromIndex, fromIndex + num);
-			fromIndex += num;
+			// we random the index list been used 
+			List<Integer> subIndex= SampleUtil.sample(traceList.size(), num);
+			
+			List<XTrace> subList = new LinkedList<XTrace>();
+			for(int idx : subIndex) {
+				subList.add(traceList.get(idx));
+			}
+			
 			addLabelWithList(subList, key, lName);
 		}
 	}

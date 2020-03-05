@@ -95,19 +95,18 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 				// TODO here to add data to the Panel there
 				// before adding a new value, we need to calculate the possible values 
 				// left there. If it is the first one, we assign it as the 1.0
+//				if(nameField.getText().isEmpty()) {
+					// we force the label name not empty to add its value 
+					// throw one dialog to make sure values are assigned there..
+					// not so necessary at end, we have configuration 
+//				}
+				
 				tModel.addRow(new Object[] {"", "", "Delete"});
 				m_mainPanel.revalidate();
 				m_mainPanel.repaint();
 			}
 			
 		});
-		// this is one default option already in tab. Now we need to delete it here
-//		if (super.getTab("Options") != null) {
-//			super.removeTab("Options");
-//		}
-//		
-		
-//		addTab("Options", m_mainPanel);
 	}
 	
 	@Override
@@ -118,13 +117,15 @@ public class RandomClassifierNodeDialog extends DefaultNodeSettingsPane {
 			tPanel.getTable().getCellEditor().stopCellEditing();
 		}
 		
+		
 		m_config.setLabelName(nameField.getText());
 		// secondly assign the values to m_config from the table
 		int rCount = tModel.getRowCount();
 		double sum = 0; // one bug here about the value in sum
 		for(int row = 0; row < rCount; row++) {
-			String labelValue = (String) tModel.getValueAt(row, 0);
-			String percentStr = (String) tModel.getValueAt(row, 1);
+			String labelValue = tModel.getValueAt(row, 0).toString();
+			
+			String percentStr = tModel.getValueAt(row, 1).toString();
 			if(labelValue.length()<1 || percentStr.length() < 1)
 				throw new InvalidSettingsException("Label Value or percent can't be empty!!");
 						
