@@ -1,6 +1,8 @@
 package org.pm4knime.node.visualization;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -24,6 +26,7 @@ import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartInspect
 public class LogVisualizationNodeView extends NodeView<LogVisualizationNodeModel> {
 
 	JPanel[] m_viewPanels;
+	int currentViewIdx ;
 
 	/**
 	 * Creates a new view.
@@ -35,8 +38,8 @@ public class LogVisualizationNodeView extends NodeView<LogVisualizationNodeModel
 		super(nodeModel);
 
 		m_viewPanels = viewPanels;
-		// viewIdx = 0, dottedChart
-		switch (viewIndex) {
+		currentViewIdx = viewIndex;
+		switch (currentViewIdx) {
 			case 0: // show the trace variance view
 				setComponent(m_viewPanels[0]);
 				break;
@@ -66,26 +69,31 @@ public class LogVisualizationNodeView extends NodeView<LogVisualizationNodeModel
 			LogVisualizationNodeModel nodeModel = getNodeModel();
 			XLog xlog = nodeModel.getLogPO().getLog();
 			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-			JComponent traceView = new LogViewVisualizer(new LogViewContextProM(context), xlog);
-			// setComponent(traceView);
-			JPanel tvPanel = new JPanel();
-			tvPanel.add(traceView);
-			tvPanel.setLayout(new BoxLayout(tvPanel, BoxLayout.Y_AXIS));
-
-			tvPanel.setPreferredSize(new Dimension(1400, 600));
-			m_viewPanels[0].add(tvPanel);
 			
-			// add view to the second index
-			JPanel dottedView;
-			try {
-				dottedView = new DottedChartInspector(new LogView(xlog, context.getProgress()), context);
-				m_viewPanels[1].add(dottedView);
-			} catch (DottedChartException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			switch (currentViewIdx) {
+			case 0: // traceView 
+				JPanel traceView = new LogViewVisualizer(new LogViewContextProM(context), xlog);
+				// m_viewPanels[0].setLayout(new BoxLayout(m_viewPanels[0], BoxLayout.Y_AXIS));
+				
+//				m_viewPanels[0].setLayout(new BoxLayout(m_viewPanels[0], BoxLayout.Y_AXIS));
+				m_viewPanels[0].setLayout(new BorderLayout());
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				m_viewPanels[0].setPreferredSize(new Dimension(dim.width/2, dim.height/2));
+				m_viewPanels[0].add(traceView);
+				
+				break;
+			case 1: 
+				try {
+					JPanel dottedView = new DottedChartInspector(new LogView(xlog, context.getProgress()), context);
+					m_viewPanels[1].setLayout(new BorderLayout());
+					m_viewPanels[1].add(dottedView);
+				} catch (DottedChartException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
 			}
 			
-
 		}
 	}
 
