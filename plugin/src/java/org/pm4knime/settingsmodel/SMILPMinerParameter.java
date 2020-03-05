@@ -1,5 +1,8 @@
 package org.pm4knime.settingsmodel;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -14,6 +17,7 @@ import org.knime.core.node.workflow.FlowVariable.Type;
 import org.processmining.hybridilpminer.parameters.DiscoveryStrategy;
 import org.processmining.hybridilpminer.parameters.DiscoveryStrategyType;
 import org.processmining.hybridilpminer.parameters.LPConstraintType;
+import org.processmining.hybridilpminer.parameters.LPFilter;
 import org.processmining.hybridilpminer.parameters.LPFilterType;
 import org.processmining.hybridilpminer.parameters.LPObjectiveType;
 import org.processmining.hybridilpminer.parameters.LPVariableType;
@@ -69,7 +73,7 @@ public class SMILPMinerParameter extends SettingsModel
 			LPVariableType.SINGLE.name()};
 	// Discovery strategy 
 	public static final String CFG_KEY_DS = "Discovery Strategy";
-	public static final String[] CFG_DS_TYPES = { // DiscoveryStrategyType.CAUSAL_E_VERBEEK.name(), 
+	public static final String[] CFG_DS_TYPES = {
 			 DiscoveryStrategyType.CAUSAL_FLEX_HEUR.name(), DiscoveryStrategyType.TRANSITION_PAIR.name(),};
 	
 	SettingsModelString m_lpObj, m_lpVar, m_ds;
@@ -83,10 +87,22 @@ public class SMILPMinerParameter extends SettingsModel
 		m_configName = configName;
 		
 //		m_clf = new SettingsModelString(CFG_KEY_CLASSIFIER, "");
-		m_filterType = new SettingsModelString(CFG_KEY_FILTER_TYPE, "");
+		m_filterType = new SettingsModelString(CFG_KEY_FILTER_TYPE, CFG_FILTER_TYPES[0]);
 		m_filterThreshold = new SettingsModelDoubleBounded(CFG_KEY_FILTER_THRESHOLD, 0.25, 0, 1.0);
-		// add several choices to have the miner
-//		m_algorithm = new SettingsModelString(CFG_KEY_MINER_ALGORITHM, "");
+		m_filterThreshold.setEnabled(false);
+		
+		m_filterType.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				if(m_filterType.getStringValue().equals(CFG_FILTER_TYPES[0])) {
+					m_filterThreshold.setEnabled(false);
+				}else
+					m_filterThreshold.setEnabled(true);
+			}
+			
+		});
 		
 		// advanced settings
 		m_lpObj = new SettingsModelString(CFG_KEY_LPOBJ, CFG_LPOBJ_TYPES[0]);
@@ -156,13 +172,15 @@ public class SMILPMinerParameter extends SettingsModel
 	// some parameters are decided by the advanced settings. Still there are sth one are for the advanced ones
 	// due to the default values are already there, so we can have it directly..But need to distinguish if we 
 	// use the advanced settings, or not 
-	public XLogHybridILPMinerParametersImpl setDefaultParameter(XLogHybridILPMinerParametersImpl param) {
+	public XLogHybridILPMinerParametersImpl updateParameter(XLogHybridILPMinerParametersImpl param) {
 		// set default values to param here, others we need to count it later
-		// this discovery strategy is for miner, not simply like this.
-		// advanced settings 
 		param.setDiscoveryStrategy(new DiscoveryStrategy(DiscoveryStrategyType.valueOf(m_ds.getStringValue())));
 		param.setObjectiveType(LPObjectiveType.valueOf(m_lpObj.getStringValue()));
 		param.setVariableType(LPVariableType.valueOf(m_lpVar.getStringValue()));
+		// set the filter type
+		LPFilter filter = new LPFilter(LPFilterType.valueOf(m_filterType.getStringValue()),
+				m_filterThreshold.getDoubleValue());
+		param.setFilter(filter);
 		
 		// in default settings
 		param.setNetClass(NetClass.PT_NET);

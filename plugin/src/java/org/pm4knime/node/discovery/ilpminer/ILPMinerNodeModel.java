@@ -103,7 +103,7 @@ public class ILPMinerNodeModel extends DefaultMinerNodeModel {
         // create the parameter
 		XLogHybridILPMinerParametersImpl param = new XLogHybridILPMinerParametersImpl(context, artifLog);
 		// here put some values from m_parameter to param
-		m_parameter.setDefaultParameter(param);
+		m_parameter.updateParameter(param);
 		
 		param.setEventClassifier(classifier);
       
