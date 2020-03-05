@@ -3,15 +3,10 @@ package org.pm4knime.portobject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
 
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.in.XParser;
-import org.deckfour.xes.in.XesXmlParser;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
@@ -23,9 +18,12 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.node.io.log.reader.XesConvertToXLogAlgorithm;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
+import org.xesstandard.model.XesLog;
+import org.xesstandard.xml.XesXmlParserLenient;
 
 
 public class XLogPortObject extends AbstractPortObject {
@@ -106,17 +104,21 @@ public class XLogPortObject extends AbstractPortObject {
 			throw new IOException("Failed to load XLog port object. " + "Invalid zip entry name '" + entry.getName()
 					+ "', expected '" + ZIP_ENTRY_NAME + "'.");
 		}
-		XParser parser = new XesXmlParser(XFactoryRegistry.instance().currentDefault());
+		// modification: load all the information in the xml file by using the Leneit read
+		// XParser parser = new XesXmlParser(XFactoryRegistry.instance().currentDefault());
+		XesXmlParserLenient parser = new XesXmlParserLenient();
+		
 		final ObjectInputStream objIn = new ObjectInputStream(in);
-		List<XLog> log = new ArrayList<>();
 		try {
-			log = parser.parse(objIn);
+			XesLog xeslog  = parser.parse(objIn);
+			XesConvertToXLogAlgorithm convertor = new XesConvertToXLogAlgorithm();
+			XLog log = convertor.convertToLog(xeslog, exec);
+			setLog(log);
+			setSpec((XLogPortObjectSpec) spec);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setLog(log.get(0));
-		// this is very important, if we want to have sth from spec!!
-		setSpec((XLogPortObjectSpec) spec);
+		
 		in.close();
 	}
 

@@ -24,7 +24,7 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
 import org.xesstandard.model.XesAttribute;
 import org.xesstandard.model.XesClassifier;
 import org.xesstandard.model.XesComponent;
@@ -62,7 +62,7 @@ public class XesConvertToXLogAlgorithm {
 	 * @return The XLog that results from converting the given log.
 	 * @throws CanceledExecutionException 
 	 */
-	public XLog convertToLog(XesLog log, ExecutionContext exec) throws CanceledExecutionException {
+	public XLog convertToLog(XesLog log, ExecutionMonitor exec) throws CanceledExecutionException {
 		// Create the factory.
 		factory = XFactoryRegistry.instance().currentDefault();
 		// Create an empty XLog.
