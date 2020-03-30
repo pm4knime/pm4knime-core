@@ -2,7 +2,7 @@
 <feature
       id="org.pm4knime.feature"
       label="Process Mining Extension"
-      version="1.0.0.qualifier"
+      version="1.0.1.qualifier"
       provider-name="PADS RWTH Aachen">
 
 	<url>
