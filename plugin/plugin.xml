@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?><plugin>
  <extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
       <category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
-	<category level-id="io" name="IO" path="/community/processmining" icon="icon/category-io.png"/>
+	<category level-id="io" name="IO" path="/community/processmining" icon="icon/category-io2.png"/>
 	<category after="io" level-id="conversion" name="Conversion" path="/community/processmining" icon="icon/category-conversion.png"/>
 	<category after="conversion" level-id="manipulation" name="Manipulation" path="/community/processmining" icon="icon/category-manipulation.png"/>
 	
