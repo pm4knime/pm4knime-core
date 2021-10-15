@@ -7,7 +7,7 @@
 	<category after="conversion" level-id="manipulation" name="Manipulation" path="/community/processmining" icon="icon/category-manipulation.png"/>
 	
 	<category after="manipulation" level-id="discovery" name="Discovery" path="/community/processmining" icon="icon/category-discovery.png"/>
-	<category after="discovery" level-id="conformance" name="Conformance" path="/community/processmining" icon="icon/category-conformance.png"/>
+	<category after="discovery" level-id="conformance" name="Evaluation" path="/community/processmining" icon="icon/category-conformance.png"/>
 	<category after="conformance" level-id="visualization" name="Visualization" path="/community/processmining" icon="icon/category-visualization.png"/>
 	
    </extension>
