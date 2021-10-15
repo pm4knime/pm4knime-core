@@ -1,11 +1,16 @@
 package org.pm4knime.portobject;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.zip.ZipEntry;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.out.XSerializer;
@@ -21,6 +26,12 @@ import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.node.io.log.reader.XesConvertToXLogAlgorithm;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.processmining.framework.plugin.PluginContext;
+import org.processmining.logenhancement.view.LogViewContextProM;
+import org.processmining.logenhancement.view.LogViewVisualizer;
+import org.processmining.logprojection.LogView;
+import org.processmining.logprojection.plugins.dottedchart.DottedChart.DottedChartException;
+import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartInspector;
 import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
 import org.xesstandard.model.XesLog;
 import org.xesstandard.xml.XesXmlParserLenient;
@@ -79,10 +90,34 @@ public class XLogPortObject extends AbstractPortObject {
 		if (this.log == null) {
 			return new JComponent[] {};
 		} else {
+			
+			try {
+			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
 			SlickerOpenLogSettings defViz = new SlickerOpenLogSettings();
-			JComponent logPanel = defViz.showLogVis(PM4KNIMEGlobalContext.instance().getPluginContext(), this.log);
+			JComponent logPanel = defViz.showLogVis(context, this.log);
 			logPanel.setName("Event Log");
-			return new JComponent[] {logPanel};
+	
+			
+			JComponent tracePanel = new LogViewVisualizer(new LogViewContextProM(context), this.log);
+			tracePanel.setName("Variant Explorer");
+			
+		
+			JComponent dottedchartPanel = new DottedChartInspector(new LogView(this.log, context.getProgress()), context);
+		    dottedchartPanel.setName("Dotted Chart");
+		    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		    dottedchartPanel.setPreferredSize(new Dimension(dim.width/2, dim.height/2));
+				
+			return new JComponent[] {dottedchartPanel, logPanel, tracePanel };
+				
+			} catch (DottedChartException e) {
+				e.printStackTrace();
+				return null;
+			}
+			
+			
+			
+			
+			
 		}
 	}
 
