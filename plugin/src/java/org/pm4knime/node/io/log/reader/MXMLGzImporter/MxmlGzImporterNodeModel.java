@@ -1,11 +1,17 @@
-package org.pm4knime.node.io.log.reader;
+package org.pm4knime.node.io.log.reader.MXMLGzImporter;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.deckfour.xes.model.XLog;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -13,6 +19,8 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.node.io.log.reader.XesConvertToXLogAlgorithm;
+import org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeModel;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
@@ -22,42 +30,49 @@ import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
 import org.xesstandard.model.XesLog;
 import org.xesstandard.xml.XesXmlParserLenient;
 
-public class XLogReaderNodeModel extends DefaultNodeModel {
+/**
+ * <code>NodeModel</code> for the "MxmlGzImporter" node.
+ *
+ * @author tbd
+ */
+public class MxmlGzImporterNodeModel extends DefaultNodeModel {
+	 /**
+	 * The logger is used to print info/warning/error messages to the KNIME console
+	 * and to the KNIME log file. Retrieve it via 'NodeLogger.getLogger' providing
+	 * the class of this node model.
+	 */
+	private static final NodeLogger LOGGER = NodeLogger.getLogger(MxmlGzImporterNodeModel.class);
 
-	// the logger instance
-	private static final NodeLogger logger = NodeLogger.getLogger(XLogReaderNodeModel.class);
-	public static String[] CFG_TYPES = {"XES","XES_GZ","MXML","MXML_GZ"};
-	 // if we choose the xes, the possible values are limited in the xes , is that true?? Later deal with it 
-	public static String[] CFG_METHODS = {"OPEN NAIVE", "IEEE Lenient"};
-	
-	SettingsModelString m_format = createFormatModel();
-	SettingsModelString m_method = createMethodModel();
-	SettingsModelString m_fileName = createFileNameModel(); 
-	
-	public static SettingsModelString createFormatModel() {
-		// TODO assign the type value from one string array
-		return new SettingsModelString("Read Type", CFG_TYPES[0]);
-	}
+
+
+	private final static String[] CFG_METHODS = {"OPEN NAIVE", "IEEE Lenient"};
+	private SettingsModelString m_method = createMethodModel();
+	private SettingsModelString m_fileName = createFileNameModel(); 
+	/**
+	 * Constructor for the node model.
+	 */
+	protected MxmlGzImporterNodeModel() {
+		/**
+		 * Here we specify how many data input and output tables the node should have.
+		 * In this case its one input and one output table.
+		 */
+		super(new PortType[] {},
+				new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) });
+		}
+
+
 	
 	public static SettingsModelString createMethodModel() {
-		// TODO assign the method value from one string array
-		// if we have multiple reading method, one class is enough to contain them all. 
 		return new SettingsModelString("Read Method", CFG_METHODS[0]);
 	}
 
 	public static SettingsModelString createFileNameModel() {
-		
 		return new SettingsModelString("File Name","");
-	}
-	
-	protected XLogReaderNodeModel() {
-		super(new PortType[] {},
-				new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) });
 	}
 
 	@Override
 	protected PortObject[] execute(final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
-		logger.info("start: import event log");
+		LOGGER.info("start: import event log");
 		// check the reading type and method for it?? 
 		// Are they 1-1 relation?? One method only corresponds to one reading methods?? 
 		// if there is 1 -n , we can choose them!!
@@ -88,7 +103,7 @@ public class XLogReaderNodeModel extends DefaultNodeModel {
 		logPO.setLog(result);
 		
 		// how to use this classifiers?? 
-		logger.info("end: import event log");
+		LOGGER.info("end: import event log");
 		return new PortObject[] { logPO };
 	}
 
@@ -103,14 +118,12 @@ public class XLogReaderNodeModel extends DefaultNodeModel {
 	
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		m_format.saveSettingsTo(settings);
 		m_method.saveSettingsTo(settings);
 		m_fileName.saveSettingsTo(settings);
 	}
 
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		m_format.validateSettings(settings);
 		m_method.validateSettings(settings);
 		m_fileName.validateSettings(settings);
 
@@ -118,8 +131,13 @@ public class XLogReaderNodeModel extends DefaultNodeModel {
 
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		m_format.loadSettingsFrom(settings);
 		m_method.loadSettingsFrom(settings);
 		m_fileName.loadSettingsFrom(settings);
 	}
+
+	public static String[] getCFG_METHODS() {
+		return CFG_METHODS;
+	}
+
 }
+
