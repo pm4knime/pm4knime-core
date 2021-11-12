@@ -17,6 +17,7 @@ import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 public class PetriNetPortObjectSpec implements PortObjectSpec   {
 	
 	private static final String ZIP_ENTRY_NAME = "PetriNetPortObjectSpec";
+	String fileName = "PetrinetSpec.txt";
 	
 	public PetriNetPortObjectSpec() {}
 
@@ -47,6 +48,15 @@ public class PetriNetPortObjectSpec implements PortObjectSpec   {
 			return new PetriNetPortObjectSpec();
 		}
 		
+	}
+	
+	public String getFileName() {
+		// TODO Auto-generated method stub
+		return fileName;
+	}
+	
+	public void setFileName(String name) {
+		fileName = name;
 	}
 	
 	
