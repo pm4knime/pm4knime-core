@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./Eventlog-Reader-icon.png" type="Source"
+<knimeNode icon="./../Eventlog-Reader-icon.png" type="Source"
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Event Log Reader</name>
-
+	<name>XES Reader</name>
 	<shortDescription>
 		This node imports an event log from disk.
 	</shortDescription>
 
 	<fullDescription>
-		<intro>This node imports an event log from the local file. The allowed files are
-			{"XES","XES_GZ","MXML","MXML_GZ"}.
-			The output is shown in a graphical view.
+		<intro>This node imports a XES event log from the local file. The
+			output is shown in a graphical view.
 		</intro>
-
-
-		<option name="Read Type">The file type of the event log</option>
 		<option name="Read Method ">
 			The method to read an event log. There are two methods available:
 
@@ -44,5 +39,5 @@
 		<outPort index="0" name="Event Log">The imported event Log</outPort>
 		<!-- possibly more output ports here -->
 	</ports>
-	
+
 </knimeNode>
