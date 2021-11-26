@@ -208,54 +208,54 @@
 	<classpathentry exported="true" kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry exported="true" kind="lib" path="lib/XESStandard-latest.jar"/>
-	<classpathentry kind="lib" path="lib/arpack_combined_all-0.1.jar"/>
-	<classpathentry kind="lib" path="lib/FastInfoset-1.2.12.jar"/>
-	<classpathentry kind="lib" path="lib/Flex-latest.jar"/>
-	<classpathentry kind="lib" path="lib/IncorporateNegativeInformation-latest.jar"/>
-	<classpathentry kind="lib" path="lib/istack-commons-runtime-3.0.11.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta.activation-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta.activation-api-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta.xml.bind-api-2.3.3.jar"/>
-	<classpathentry kind="lib" path="lib/java-cup-11b-20160615.jar"/>
-	<classpathentry kind="lib" path="lib/java-cup-runtime-11b-20160615.jar"/>
-	<classpathentry kind="lib" path="lib/javax.activation-api-1.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359-javadoc.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359-sources.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-impl-2.1.17.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-runtime-2.3.3.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-xjc-2.1.17.jar"/>
-	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/jclipboardhelper-0.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jfilechooser-bookmarks-0.1.6.jar"/>
-	<classpathentry kind="lib" path="lib/jsr173_api-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-linux-armhf-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-linux-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-linux-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-win-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-win-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-linux-armhf-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-linux-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-linux-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-win-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-win-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/OpenXES-20211004.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.emf.common-2.7.0.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi-2.5.0.v20100521-1846.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore-2.8.3.v20130125-0546.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.uml2.uml-3.1.2.v201010261927.jar"/>
-	<classpathentry kind="lib" path="lib/PNetReplayer-latest.jar"/>
-	<classpathentry kind="lib" path="lib/txw2-2.3.3.jar"/>
-	<classpathentry kind="lib" path="lib/XESStandardConnector-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ActivityClusterArrayCreator-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ActivityClusterArray-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityGraphCreator-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityGraph-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityMatrix-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityMatrixMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/DataAwareCNetMinerHCG-latest.jar"/>
-	<classpathentry kind="lib" path="lib/Fuzzy-latest.jar"/>
-	<classpathentry kind="lib" path="lib/GraphVisualizers-latest.jar"/>
-	<classpathentry kind="lib" path="lib/HybridILPMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/arpack_combined_all-0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/FastInfoset-1.2.12.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Flex-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/IncorporateNegativeInformation-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/istack-commons-runtime-3.0.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jakarta.activation-1.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jakarta.activation-api-1.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jakarta.xml.bind-api-2.3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java-cup-11b-20160615.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java-cup-runtime-11b-20160615.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javax.activation-api-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-impl-2.1.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-runtime-2.3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-xjc-2.1.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcalendar-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jclipboardhelper-0.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfilechooser-bookmarks-0.1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jsr173_api-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_ref-linux-armhf-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_ref-linux-i686-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_ref-linux-x86_64-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_ref-win-i686-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_ref-win-x86_64-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_system-linux-armhf-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_system-linux-i686-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_system-linux-x86_64-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_system-win-i686-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_system-win-x86_64-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.emf.common-2.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.emf.ecore.xmi-2.5.0.v20100521-1846.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.emf.ecore-2.8.3.v20130125-0546.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.uml2.uml-3.1.2.v201010261927.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/txw2-2.3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/XESStandardConnector-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ActivityClusterArrayCreator-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ActivityClusterArray-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityGraphCreator-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityGraph-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityMatrix-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityMatrixMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataAwareCNetMinerHCG-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Fuzzy-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/GraphVisualizers-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/HybridILPMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/OpenXES-20211004.jar"/>
+	<classpathentry kind="lib" path="lib/PNetReplayer-PM4KNIME.jar.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
