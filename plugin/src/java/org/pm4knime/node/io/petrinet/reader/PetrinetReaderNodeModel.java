@@ -16,6 +16,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
@@ -46,6 +47,7 @@ public class PetrinetReaderNodeModel extends DefaultNodeModel {
 	private final SettingsModelString m_fileName = new SettingsModelString(PetrinetReaderNodeModel.CFG_FILE_NAME, "");
 	private final SettingsModelString m_type = new SettingsModelString(GFG_PETRINET_TYPE, "");
 	
+	PetriNetPortObjectSpec m_spec = new PetriNetPortObjectSpec();
 	
     public PetrinetReaderNodeModel() {
     
@@ -65,7 +67,7 @@ public class PetrinetReaderNodeModel extends DefaultNodeModel {
             
             checkCanceled(exec);
             // read the file and create fileInputStream
-            AcceptingPetriNet anet = PetriNetUtil.importFromStream(new FileInputStream(m_fileName.getStringValue()));
+            AcceptingPetriNet anet = PetriNetUtil.importFromStream(new FileInputStream(m_spec.getFileName()));
             checkCanceled(exec);
         	m_netPort = new PetriNetPortObject(anet);
         }
@@ -105,8 +107,9 @@ public class PetrinetReaderNodeModel extends DefaultNodeModel {
     	}else {
     		url2String = url.toString();
     	}
+    	m_spec.setFileName(url2String);
     	
-        return new PortObjectSpec[]{null};
+        return new PortObjectSpec[]{m_spec};
     }
 
     /** Convert argument string to a URL.
