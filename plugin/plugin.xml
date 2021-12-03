@@ -2,7 +2,10 @@
 <?eclipse version="3.0"?><plugin>
  <extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
       <category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
-	<category level-id="io" name="IO" path="/community/processmining" icon="icon/category-io.png"/>
+	  <category icon="icon/category-io.png" level-id="io" name="IO" path="/community/processmining"/>
+        <category icon ="icon/category-eventlog.png" level-id="eventLogIo" name ="Event Log" path="/community/processmining/io"/>
+        <category after ="eventLogIo" icon="icon/category-model.png" level-id="modelIo" name ="Model" path="/community/processmining/io"/>
+        
 	<category after="io" level-id="conversion" name="Conversion" path="/community/processmining" icon="icon/category-conversion.png"/>
 	<category after="conversion" level-id="manipulation" name="Manipulation" path="/community/processmining" icon="icon/category-manipulation.png"/>
 	
@@ -27,119 +30,16 @@
     
     
     <extension point="org.knime.workbench.repository.nodes">
-                                                                                                                             
-     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                                                                                                                                 
         <!-- nodes in io-->
-                                                                                                                        	
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-                                                                                                                                    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <node category-path="/community/processmining/io/eventLogIo" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory"/>
-                                                                                                                               
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                                                                                                                        	 
+        <node category-path="/community/processmining/io/eventLogIo" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory"/>    
         <node category-path="/community/processmining/io/modelIo" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>
-                                                                                                                          
-      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <node category-path="/community/processmining/io/modelIo" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory"/>
-                                                                                                                          
      
-      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        <node category-path="/community/processmining/io/modelIo" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory"/>
+   
         <node category-path="/community/processmining/io/modelIo" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory"/>
-                                                                                                                               
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    
         <node category-path="/community/processmining/io/modelIo" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory"/>
                                                                                                                                
        
