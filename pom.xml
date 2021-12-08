@@ -172,6 +172,7 @@
 		</pluginManagement>
 	</build>
   <modules>
+    <module>prom-wrapper</module>
     <module>plugin</module>
     <module>feature</module>
     <module>p2</module>
