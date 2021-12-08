@@ -1,0 +1,62 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="prom-wrapper" default="main">
+	<property name="ivy.home" value="${user.home}\.ivy2" />
+	<!--  we could also store the values from lib into another folder
+	1. get working space directory
+	2. to get the pm4knime-maven directory
+	3. set the library  -->
+	<property name="lib.dir" value="reg-lib" />			
+	
+	<target name="lib-retrieve" description="retrieve jars only from prom, prom-libs">
+		<ivy:retrieve pattern="reg-lib/[artifact]-[revision].[ext]">
+			<mapper>
+				<chainedmapper>
+					<regexpmapper from="prom\\(.*)" to="\1" />
+					<regexpmapper from="prom-libs\\(.*)" to="\1" />
+				</chainedmapper>
+			</mapper>
+		</ivy:retrieve>
+	</target>
+
+ 
+	<target name="lib-resolve" description="resolve jars only from the specific organization">
+		<ivy:settings file="ivysettings.xml" />
+		<ivy:retrieve file="${lib.project.dir}\ivy.xml" />
+		<ivy:resolve />
+	</target>
+
+	<target name="print">
+		<echo>Second try for ${ivy.home}</echo>
+		<echo>the current lib project dir is ${lib.project.dir}</echo>
+		<echo>the current project dir is ${project.dir}</echo>
+		<echo>the current project dir is ${plugin.lib.dir}</echo>
+	</target>
+
+	<target name="set" description="set the basic requirement for the task">
+		<dirname file="${lib.dir}" property="lib.project.dir"/>
+		<dirname file="${lib.project.dir}" property="project.dir"/>
+		<property name="plugin.lib.dir" value="${plugin.project.dir}\..\..\plugin\lib"/>
+		
+		<dirname property="dirPro" file="${lib.dir}" />
+		<!-- <delete dir="reg-lib" /> -->
+		<mkdir dir="${dirPro}" />
+	</target>
+
+	<target name="copy-deps" description="no idea now to fix by using retrieve there">
+		<copy todir="${plugin.lib.dir}" overwrite="false" flatten="true">
+			<fileset dir="${ivy.home}\cache\prom" includes="**\*.jar">
+			</fileset>
+			<fileset dir="${ivy.home}\cache\prom-libs" includes="**\*.jar">
+			</fileset>
+			<fileset dir = "${lib.project.dir}\lib" includes="**\*.jar"> </fileset>
+		</copy>
+	</target>
+
+	<target name="clean-lib" description="clean the current lib directory ">
+		<echo>=== CLEAN ===</echo>
+		<delete failonerror="false">
+			<fileset dir="${plugin.lib.dir}" includes="**/*" />
+		</delete>
+
+	</target>
+	<target name="main" depends="set ,lib-resolve, copy-deps" /> 
+</project>
