@@ -18,7 +18,6 @@ public class JSGraphVizViewRepresentation extends JSONViewContent {
 
 	public final int pseudoIdentifier = (new Random()).nextInt();
 	
-	private SVGDiagram m_svg;
 	private String m_dotstr;
 
 	@Override
@@ -51,14 +50,6 @@ public class JSGraphVizViewRepresentation extends JSONViewContent {
 	public int hashCode() {
 		 return new HashCodeBuilder().append(m_dotstr)
 				 .toHashCode();
-	}
-
-	public SVGDiagram getSVG() {
-		return m_svg;
-	}
-
-	public void setSVG(SVGDiagram svg) {
-		this.m_svg = svg;
 	}
 
 	public String getDotstr() {

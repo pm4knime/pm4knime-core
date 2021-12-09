@@ -60,10 +60,10 @@ public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewR
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {ProcessTreePortObject.TYPE};
-	private static final PortType[] OUT_TYPES = { FlowVariablePortObject.TYPE, FlowVariablePortObject.TYPE };
+	private static final PortType[] OUT_TYPES = {};
 
 	public JSGraphVizNodeModel() {
-		super(IN_TYPES, OUT_TYPES, "JSGraphViz");
+		super(IN_TYPES, OUT_TYPES, "JSGraphVizPT");
 	}
 
 	@Override
@@ -101,13 +101,11 @@ public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewR
 
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { FlowVariablePortObjectSpec.INSTANCE, FlowVariablePortObjectSpec.INSTANCE };
+		return new PortObjectSpec[] {};
 	}
 
 	@Override
 	protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-		final String firstName;
-		final String lastName;
 		final String dotstr;
 		
 		JSGraphVizViewRepresentation representation = getViewRepresentation();
@@ -121,13 +119,10 @@ public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewR
 			
 			
 			JSGraphVizViewValue value = getViewValue();
-			firstName = value.firstName;
-			lastName = value.lastName;
+
 		}
 		
 		representation.setDotstr(dotstr);
-		pushFlowVariableString("firstName", firstName);
-		pushFlowVariableString("lastName", lastName);
 
 		// The FlowVariablePortObject ports are a mockup. They are not actually
 		// necessary as the flow
