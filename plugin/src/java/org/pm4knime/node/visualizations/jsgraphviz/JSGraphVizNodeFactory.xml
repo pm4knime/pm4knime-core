@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./default.png" type="Source" deprecated="false"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+   
+    <name>JSGraphViz</name>
+    
+    <shortDescription>
+        JS GraphViz
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Insert long description here...</intro>
+    </fullDescription>
+    
+    <interactiveView name="JSGraphViz"></interactiveView>
+    
+   <ports>
+        <inPort name="Process Tree" index="0">Input Process Tree</inPort>
+		<outPort name="First name" index="0">First name</outPort>
+		<outPort name="Last name" index="1">Last name</outPort>
+	</ports>
+
+</knimeNode>
