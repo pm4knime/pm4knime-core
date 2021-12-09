@@ -1,6 +1,28 @@
-# Change Log
-All notable changes to this project will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/).
-The file is formatted as described on http://keepachangelog.com/.
+# PM4KNIME Changelog
 
-## [Unreleased]
+## PM4KNIME 1.1.0 (2021.10.01)
+
+### Fixed
+
+### Removed
+* 63784acb
+	* removed all the vizualizer nodes
+* 715e818c
+  * remove the default replayer	
+
+### Deprecated
+
+### Changed
+* a07485c0
+  * renamed conformance category to evaluation
+
+### Added
+* 993057e8
+	* added several versions of the alpha miner
+* 63784acb
+  * added visualizers to the port object
+
+### Other
+
+
+---

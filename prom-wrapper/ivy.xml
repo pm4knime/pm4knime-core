@@ -1,0 +1,38 @@
+<ivy-module version="2.0">
+    <info organisation="prom" module="antivy-practice" revision="latest">
+    	<description>
+    		Version VERSION
+    	</description>
+    </info>
+
+    <dependencies>
+    	<!-- ProM dependencies. -->
+    	<!-- Please put every ProM dependency on a single line. -->
+    	<!-- ProM framework. -->
+    	<!-- category : diccovery -->
+    	<dependency org="prom" name="AlphaMiner" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="HeuristicsMiner" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="InductiveMiner" rev="latest" changing="true" transitive="true" />    
+    	<dependency org="prom" name="DirectlyFollowsModelMiner" rev="latest" changing="true" transitive="true" />   
+    	<dependency org="prom" name="HybridILPMiner" rev="latest" changing="true" transitive="true" />    
+    	 
+    	
+    	<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359"/>
+				
+    	
+    	<!-- category: manipulation -->
+    	<dependency org="prom" name="LogEnhancement" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="LogProjection" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="IncorporateNegativeInformation" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="XESStandard" rev="latest" changing="true" transitive="true"/>
+    	 <dependency org="prom" name="XESStandardConnector" rev="latest" changing="true" transitive="true"/>
+    	
+    	
+    	<!-- category: conformance and performance -->
+    	<dependency org="prom" name="PNetReplayer" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="PNetAlignmentAnalysis" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="Performance" rev="latest" changing="true" transitive="true" />	
+    	<dependency org="prom" name="ETConformance" rev="latest" changing="true" transitive="true" />	
+    </dependencies>
+</ivy-module>

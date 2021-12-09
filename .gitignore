@@ -9,5 +9,10 @@ hs_err_pid*
 
 # Eclipse project
 .settings/
-target
+target/
+
+#Ignoring jar files except one
+
+lib/*
+!lib/PNetReplayer-PM4KNIME.jar.zip
 

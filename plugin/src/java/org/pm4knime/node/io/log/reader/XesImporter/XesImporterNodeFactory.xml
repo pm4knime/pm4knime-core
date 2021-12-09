@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./../Eventlog-Reader-icon.png" type="Source"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>XES Reader</name>
+	<shortDescription>
+		This node imports an event log from disk.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>This node imports a XES event log from the local file. The
+			output is shown in a graphical view.
+		</intro>
+		<option name="Read Method ">
+			The method to read an event log. There are two methods available:
+
+			<ul>
+				<li>
+					OPEN NAIVE:
+					<br />
+					Open XES standard reading method. Only XES Standard extensions can
+					be read from the xml file.
+				</li>
+				<li>
+					IEEE Lenient:
+					<br />
+					IEEE XES can read a lenient IEEE XES log from a plain XML
+					serialization.
+				</li>
+			</ul>
+		</option>
+		<option name="Selected File">The location of the event log</option>
+	</fullDescription>
+
+	<ports>
+		<!-- inPort index="0" name="In-Port name">Description of first input port...</inPort -->
+		<!-- possibly more input ports here -->
+		<outPort index="0" name="Event Log">The imported event Log</outPort>
+		<!-- possibly more output ports here -->
+	</ports>
+
+</knimeNode>
