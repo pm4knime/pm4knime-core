@@ -16,3 +16,4 @@ target/
 lib/*
 !lib/PNetReplayer-PM4KNIME.jar.zip
 
+ivy-2.5.0.jar

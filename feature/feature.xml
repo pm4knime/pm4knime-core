@@ -2,7 +2,7 @@
 <feature
       id="org.pm4knime.feature"
       label="Process Mining Extension"
-      version="1.1.0"
+      version="1.1.0.qualifier"
       provider-name="Fraunhofer Institute for Applied Information Technology">
 
 	<url>
