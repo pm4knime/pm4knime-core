@@ -6,6 +6,8 @@
         <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
     </config>
     <config key="model">
+        <entry key="add_folder_identifier_column" type="xboolean" value="false"/>
+        <entry key="include_root_folder" type="xboolean" value="false"/>
         <config key="file_chooser_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_ReaderFileChooser"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
@@ -51,11 +53,9 @@
                 </config>
             </config>
         </config>
-        <entry key="add_folder_identifier_column" type="xboolean" value="false"/>
-        <entry key="include_root_folder" type="xboolean" value="false"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="state" type="xstring" value="CONFIGURED"/>
     <entry key="factory" type="xstring" value="org.knime.filehandling.utility.nodes.listpaths.ListFilesAndFoldersNodeFactory"/>
     <entry key="node-name" type="xstring" value="List Files/Folders"/>
     <entry key="node-bundle-name" type="xstring" value="KNIME Filehandling Nodes"/>
@@ -72,19 +72,16 @@
         <config key="table"/>
     </config>
     <entry key="name" type="xstring" value="List Files/Folders"/>
-    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="hasContent" type="xboolean" value="false"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_spec_class" type="xstring" value="org.knime.core.data.DataTableSpec"/>
-            <entry key="port_object_class" type="xstring" value="org.knime.core.node.BufferedDataTable"/>
-            <entry key="port_object_summary" type="xstring" value="Rows: 1, Cols: 1"/>
-            <entry key="port_dir_location" type="xstring" value="port_1"/>
+            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
         </config>
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="91edc085-6467-49b3-97d4-f69c8fc64df5"/>
+        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
     </config>
 </config>

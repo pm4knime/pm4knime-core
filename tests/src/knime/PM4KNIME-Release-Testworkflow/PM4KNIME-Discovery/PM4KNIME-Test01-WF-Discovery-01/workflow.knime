@@ -8,10 +8,10 @@
         <entry key="authored-by" type="xstring" value="kefang-pads"/>
         <entry key="authored-when" type="xstring" value="2020-02-20 22:36:58 +0100"/>
         <entry key="lastEdited-by" type="xstring" value="Ralf"/>
-        <entry key="lastEdited-when" type="xstring" value="2021-12-18 23:23:13 +0100"/>
+        <entry key="lastEdited-when" type="xstring" value="2021-12-19 00:23:48 +0100"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
     <config key="workflow_credentials"/>
     <config key="nodes">
         <config key="node_5">

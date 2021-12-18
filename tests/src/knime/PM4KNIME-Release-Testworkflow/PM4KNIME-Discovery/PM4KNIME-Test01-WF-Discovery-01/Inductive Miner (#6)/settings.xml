@@ -38,7 +38,7 @@
         <entry key="NoiseThreshold" type="xdouble" value="0.0"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
     <entry key="factory" type="xstring" value="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2"/>
     <entry key="node-name" type="xstring" value="Inductive Miner"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>

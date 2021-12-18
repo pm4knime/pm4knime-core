@@ -18,7 +18,7 @@
         <entry key="Algorithm" type="xstring" value="ETC Precision (no invisible/duplicates allowed)"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
     <entry key="factory" type="xstring" value="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory"/>
     <entry key="node-name" type="xstring" value="Precision Checker"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>

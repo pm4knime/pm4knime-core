@@ -15,7 +15,7 @@
             <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="File Name" type="xstring" value="/Users/Ralf/Desktop/Fraunhofer/Knime/running-example.xes"/>
+        <entry key="File Name" type="xstring" value=""/>
     </config>
     <config key="variables">
         <entry key="version" type="xstring" value="V_2019_09_13"/>
@@ -27,7 +27,11 @@
         </config>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="EXECUTED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
+    <config key="nodecontainer_message">
+        <entry key="type" type="xstring" value="WARNING"/>
+        <entry key="message" type="xstring" value="Errors overwriting node settings with flow variables: Unknown variable &quot;running-example.xes&quot;"/>
+    </config>
     <entry key="factory" type="xstring" value="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory"/>
     <entry key="node-name" type="xstring" value="XES Reader"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>
@@ -40,21 +44,16 @@
     <entry key="node-feature-version" type="xstring" value="0.0.0"/>
     <config key="factory_settings"/>
     <entry key="name" type="xstring" value="XES Reader"/>
-    <entry key="hasContent" type="xboolean" value="true"/>
+    <entry key="hasContent" type="xboolean" value="false"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_spec_class" type="xstring" value="org.pm4knime.portobject.XLogPortObjectSpec"/>
-            <entry key="port_object_class" type="xstring" value="org.pm4knime.portobject.XLogPortObject"/>
-            <entry key="port_object_summary" type="xstring" value="This port represents an event log object (XLog)"/>
-            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
-            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
-            <entry key="port_dir_location" type="xstring" value="port_1"/>
+            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
         </config>
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="59ed2eee-b2d0-4410-9488-205febab4499"/>
+        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
     </config>
 </config>

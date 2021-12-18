@@ -42,7 +42,7 @@
         </config>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
     <entry key="factory" type="xstring" value="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory"/>
     <entry key="node-name" type="xstring" value="XLog to Table Converter"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>

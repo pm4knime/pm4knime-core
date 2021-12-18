@@ -18,7 +18,7 @@
         <entry key="Variant" type="xstring" value="Inductive Miner - directly follows (IMd)"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
     <entry key="factory" type="xstring" value="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory"/>
     <entry key="node-name" type="xstring" value="DFM to PT Miner"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>

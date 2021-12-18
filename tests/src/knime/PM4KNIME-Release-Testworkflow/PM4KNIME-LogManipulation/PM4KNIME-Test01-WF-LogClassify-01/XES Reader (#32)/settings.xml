@@ -15,7 +15,7 @@
             <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="File Name" type="xstring" value="/Users/Ralf/Desktop/Fraunhofer/Knime/running-example.xes"/>
+        <entry key="File Name" type="xstring" value=""/>
     </config>
     <config key="variables">
         <entry key="version" type="xstring" value="V_2019_09_13"/>
@@ -27,7 +27,11 @@
         </config>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="state" type="xstring" value="IDLE"/>
+    <config key="nodecontainer_message">
+        <entry key="type" type="xstring" value="WARNING"/>
+        <entry key="message" type="xstring" value="Errors overwriting node settings with flow variables: Unknown variable &quot;running-example.xes&quot;"/>
+    </config>
     <entry key="factory" type="xstring" value="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory"/>
     <entry key="node-name" type="xstring" value="XES Reader"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>
