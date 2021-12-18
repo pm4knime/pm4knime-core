@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+    <entry key="node_file" type="xstring" value="settings.xml"/>
+    <config key="flow_stack"/>
+    <config key="internal_node_subsettings">
+        <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+    </config>
+    <config key="model">
+        <config key="Event Classifier_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
+        <entry key="Event Classifier" type="xstring" value="Activity"/>
+        <config key="Event Classifier Set_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_stringarray"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
+        <config key="Event Classifier Set">
+            <entry key="array-size" type="xint" value="8"/>
+            <entry key="0" type="xstring" value="Activity###class org.deckfour.xes.classification.XEventAttributeClassifier"/>
+            <entry key="1" type="xstring" value="activity classifier###class org.deckfour.xes.classification.XEventAttributeClassifier"/>
+            <entry key="2" type="xstring" value="#Event Attribute#time:timestamp###class org.deckfour.xes.model.impl.XAttributeTimestampImpl"/>
+            <entry key="3" type="xstring" value="#Event Attribute#org:resource###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+            <entry key="4" type="xstring" value="#Event Attribute#Activity###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+            <entry key="5" type="xstring" value="#Event Attribute#Costs###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+            <entry key="6" type="xstring" value="#Event Attribute#Resource###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+            <entry key="7" type="xstring" value="#Event Attribute#concept:name###class org.deckfour.xes.model.impl.XAttributeLiteralImpl"/>
+        </config>
+        <config key="Alpha Miner Variant_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
+        <entry key="Alpha Miner Variant" type="xstring" value="Alpha"/>
+        <config key="Noise threshhold for least frequency_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_double"/>
+            <entry key="EnabledStatus" type="xboolean" value="false"/>
+        </config>
+        <entry key="Noise threshhold for least frequency" type="xdouble" value="0.0"/>
+        <config key="Noise threshhold for most frequency_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_double"/>
+            <entry key="EnabledStatus" type="xboolean" value="false"/>
+        </config>
+        <entry key="Noise threshhold for most frequency" type="xdouble" value="0.0"/>
+        <config key="Casual threshhold_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_double"/>
+            <entry key="EnabledStatus" type="xboolean" value="false"/>
+        </config>
+        <entry key="Casual threshhold" type="xdouble" value="0.0"/>
+        <config key="Ignore the lenght of the loops_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_boolean"/>
+            <entry key="EnabledStatus" type="xboolean" value="false"/>
+        </config>
+        <entry key="Ignore the lenght of the loops" type="xboolean" value="false"/>
+    </config>
+    <entry key="customDescription" type="xstring" isnull="true" value=""/>
+    <entry key="state" type="xstring" value="CONFIGURED"/>
+    <entry key="factory" type="xstring" value="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory"/>
+    <entry key="node-name" type="xstring" value="Alpha Miner"/>
+    <entry key="node-bundle-name" type="xstring" value="Development Build"/>
+    <entry key="node-bundle-symbolic-name" type="xstring" value="org.pm4knime.plugin"/>
+    <entry key="node-bundle-vendor" type="xstring" value="Fraunhofer Institute for Applied Information Technology"/>
+    <entry key="node-bundle-version" type="xstring" value="1.1.0.qualifier"/>
+    <entry key="node-feature-name" type="xstring" isnull="true" value=""/>
+    <entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
+    <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
+    <entry key="node-feature-version" type="xstring" value="0.0.0"/>
+    <config key="factory_settings"/>
+    <entry key="name" type="xstring" value="Alpha Miner"/>
+    <entry key="hasContent" type="xboolean" value="false"/>
+    <entry key="isInactive" type="xboolean" value="false"/>
+    <config key="ports">
+        <config key="port_1">
+            <entry key="index" type="xint" value="1"/>
+            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+        </config>
+    </config>
+    <config key="filestores">
+        <entry key="file_store_location" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
+    </config>
+</config>
