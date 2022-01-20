@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./DFM-icon.png" type="Visualizer" deprecated="false"
+<knimeNode icon="./PN-icon.png" type="Visualizer" deprecated="false"
 	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
    
-    <name>JSGraphVizDFM</name>
+    <name>JSGraphVizPN</name>
     
     <shortDescription>
-        JS GraphViz Directly Follows Miner Visualization
+        JS GraphViz Petri Net Visualization
     </shortDescription>
     
     <fullDescription>
@@ -16,7 +16,7 @@
     <interactiveView name="JSGraphViz"></interactiveView>
     
    <ports>
-        <inPort name="Directly Follows Model" index="0">Input Directly Follows Miner</inPort>
+        <inPort name="Petri Net" index="0">Input Petri Net</inPort>
 	</ports>
 
 </knimeNode>
