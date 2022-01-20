@@ -5,7 +5,7 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 
 
 
-public class JSGraphVizNodeDialog extends DefaultNodeSettingsPane {
+public class JSGraphVizPTNodeDialog extends DefaultNodeSettingsPane {
 
 	public void init() {
 		

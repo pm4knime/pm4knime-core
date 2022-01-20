@@ -122,7 +122,7 @@
         <!-- nodes visualization-->
                                 	
             	
-		 <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizNodeFactory"/>
+		 <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
         
         
         

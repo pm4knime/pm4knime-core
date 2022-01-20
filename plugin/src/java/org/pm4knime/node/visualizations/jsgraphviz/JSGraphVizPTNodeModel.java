@@ -58,13 +58,13 @@ import org.knime.core.node.port.PortType;
  *
  * @author 
  */
-public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSGraphVizPTNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {ProcessTreePortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
 
-	public JSGraphVizNodeModel() {
+	public JSGraphVizPTNodeModel() {
 		super(new PortType[] {PortObject.TYPE}, OUT_TYPES, "JSGraphVizPT");
 	}
 
