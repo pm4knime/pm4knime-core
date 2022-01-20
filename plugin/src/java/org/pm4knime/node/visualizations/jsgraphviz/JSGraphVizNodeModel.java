@@ -44,6 +44,8 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortType;
 
 
 /**
@@ -63,7 +65,7 @@ public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewR
 	private static final PortType[] OUT_TYPES = {};
 
 	public JSGraphVizNodeModel() {
-		super(IN_TYPES, OUT_TYPES, "JSGraphVizPT");
+		super(new PortType[] {PortObject.TYPE}, OUT_TYPES, "JSGraphVizPT");
 	}
 
 	@Override
@@ -113,7 +115,7 @@ public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewR
 		synchronized (getLock()) {
 			
 			ProcessTreePortObject processtree = (ProcessTreePortObject) inObjects[0];
-			System.out.println(processtree.getSummary());
+			//System.out.println(processtree.getSummary());
 			Dot dot =  processtree.getDotPanel().getDot();
 			dotstr = dot.toString();
 			
@@ -127,7 +129,7 @@ public class JSGraphVizNodeModel extends AbstractWizardNodeModel<JSGraphVizViewR
 		// The FlowVariablePortObject ports are a mockup. They are not actually
 		// necessary as the flow
 		// variables are shared across the workflow.
-		return new PortObject[] { FlowVariablePortObject.INSTANCE, FlowVariablePortObject.INSTANCE };
+		return new PortObject[] {};
 	}
 
 	@Override
