@@ -11,6 +11,7 @@ import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
 import org.knime.core.node.port.flowvariable.FlowVariablePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.pm4knime.portobject.DFMPortObject;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
@@ -58,14 +59,14 @@ import org.knime.core.node.port.PortType;
  *
  * @author 
  */
-public class JSGraphVizPTNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSGraphVizDFMNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	// Input and output port types
-	private static final PortType[] IN_TYPES = {ProcessTreePortObject.TYPE};
+	private static final PortType[] IN_TYPES = {DFMPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
 
-	public JSGraphVizPTNodeModel() {
-		super(IN_TYPES, OUT_TYPES, "JSGraphVizPT");
+	public JSGraphVizDFMNodeModel() {
+		super(IN_TYPES, OUT_TYPES, "JSGraphVizDFM");
 	}
 
 	@Override
@@ -114,9 +115,9 @@ public class JSGraphVizPTNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 		synchronized (getLock()) {
 			
-			ProcessTreePortObject processtree = (ProcessTreePortObject) inObjects[0];
+			DFMPortObject dfm = (DFMPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
-			Dot dot =  processtree.getDotPanel().getDot();
+			Dot dot =  dfm.getDotPanel().getDot();
 			dotstr = dot.toString();
 			
 			
