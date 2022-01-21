@@ -31,8 +31,6 @@
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
-		<!-- nodes visualization-->
-		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualization.LogVisualizationNodeFactory" />
 		<!-- nodes in conversion-->
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory" />
@@ -50,7 +48,6 @@
 		<!-- nodes in performance-->
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory" />
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory" />
-		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeFactory" />
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory" />
 		<!-- nodes visualization-->
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
