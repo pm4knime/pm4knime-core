@@ -18,11 +18,11 @@ public class PM4KNIMEPackageDescriptor extends PackageDescriptor {
 
 	private static final String NAME = "pm4knime";
 	// TODO: read this from some properties file
-	private static final String VERSION = "0.0.2";
+	private static final String VERSION = "1.1.0";
 	// TODO: use a util function that returns the appropriate value here
 	private static final OS OS_VAR = OS.ALL;
 	private static final String DESCRIPTION = "Placeholder package for pm4knime";
-	private static final String ORGANISATION = "RWTH / Fraunhofer FIT";
+	private static final String ORGANISATION = "Fraunhofer FIT";
 	private static final String AUTHOR = "S.J. van Zelst";
 	private static final String MAINTAINER = "S.J. van Zelst";
 	private static final String LICENSE = "Apache 2.0";
