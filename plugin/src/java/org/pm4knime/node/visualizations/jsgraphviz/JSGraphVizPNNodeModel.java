@@ -115,9 +115,9 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 		synchronized (getLock()) {
 			
-			ProcessTreePortObject processtree = (ProcessTreePortObject) inObjects[0];
+			PetriNetPortObject petrinet = (PetriNetPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
-			Dot dot =  processtree.getDotPanel().getDot();
+			Dot dot =  petrinet.getDotPanel().getDot();
 			dotstr = dot.toString();
 			
 			
