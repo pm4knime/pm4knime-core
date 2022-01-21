@@ -18,14 +18,25 @@ public class JSGraphVizViewRepresentation extends JSONViewContent {
 
 	public final int pseudoIdentifier = (new Random()).nextInt();
 	
+	private static final String DOT_DATA = "dotstr";
 	private String m_dotstr;
 
 	@Override
 	public void saveToNodeSettings(NodeSettingsWO settings) {
+		try {
+			settings.addString(DOT_DATA, m_dotstr);
+	    } catch (Exception ex) {
+	        // do nothing
+	    }   
 	}
 
 	@Override
 	public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+		try {
+			m_dotstr = settings.getString(DOT_DATA);
+	    } catch (Exception ex) {
+	        // do nothing
+	    }   
 	}
 
 	@Override
