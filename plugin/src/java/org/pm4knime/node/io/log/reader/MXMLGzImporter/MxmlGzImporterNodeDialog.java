@@ -2,12 +2,15 @@ package org.pm4knime.node.io.log.reader.MXMLGzImporter;
 
 import java.awt.Component;
 
+import org.knime.core.node.context.ports.PortsConfiguration;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.util.FilesHistoryPanel;
-import org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeModel;
+import org.knime.filehandling.core.data.location.variable.FSLocationVariableType;
+import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.DialogComponentReaderFileChooser;
+import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.SettingsModelReaderFileChooser;
+import org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeModel;
 
 /**
  * <code>NodeDialog</code> for the "MxmlGzImporter" node.
@@ -16,31 +19,30 @@ import org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeModel;
  */
 public class MxmlGzImporterNodeDialog extends DefaultNodeSettingsPane {
 
-    /**
-     * New pane for configuring the MxmlGzImporter node.
-     */
-    protected MxmlGzImporterNodeDialog() {
-     	final String format = "MXML.GZ";
-    	SettingsModelString m_method = MxmlGzImporterNodeModel.createMethodModel();
-    	SettingsModelString m_fileName = MxmlGzImporterNodeModel.createFileNameModel();
-    	this.setHorizontalPlacement(true);
-    	addDialogComponent(new DialogComponentStringSelection(m_method,"Read Method",
-    			XesGzImporterNodeModel.getCFG_METHODS()));
+	/**
+	 * New pane for configuring the MxmlGzImporter node.
+	 */
+	protected MxmlGzImporterNodeDialog(PortsConfiguration portsConfiguration) {
+		SettingsModelReaderFileChooser m_source = MxmlGzImporterNodeModel.createSourceModel(portsConfiguration);
+		SettingsModelString m_method = MxmlGzImporterNodeModel.createMethodModel();
+		this.setHorizontalPlacement(true);
+		addDialogComponent(
+				new DialogComponentStringSelection(m_method, "Read Method", XesImporterNodeModel.getCFG_METHODS()));
 		this.setHorizontalPlacement(false);
-
-		DialogComponentFileChooser fileComp = new DialogComponentFileChooser(m_fileName, 
-												"File Name", format);
-		Component[] compArray = fileComp.getComponentPanel().getComponents();
+		DialogComponentReaderFileChooser fileCompAdvanced = new DialogComponentReaderFileChooser(m_source,
+				"copy-source",
+				createFlowVariableModel(m_source.getKeysForFSLocation(), FSLocationVariableType.INSTANCE));
+		Component[] compArray = fileCompAdvanced.getComponentPanel().getComponents();
 		Component tmp = null;
-		for(Component c : compArray) {
-			if(c instanceof FilesHistoryPanel) {
+
+		for (Component c : compArray) {
+			if (c instanceof FilesHistoryPanel) {
 				tmp = c;
 				break;
 			}
 		}
 		final FilesHistoryPanel filePanel = (FilesHistoryPanel) tmp;
-		addDialogComponent(fileComp);
+		addDialogComponent(fileCompAdvanced);
 
-    }
+	}
 }
-

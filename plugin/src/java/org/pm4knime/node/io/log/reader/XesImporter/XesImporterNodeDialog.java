@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import org.knime.core.node.context.ports.PortsConfiguration;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.util.FilesHistoryPanel;
@@ -32,14 +31,10 @@ public class XesImporterNodeDialog extends DefaultNodeSettingsPane {
 	 * New dialog pane for configuring the node. The dialog created here will show
 	 * up when double clicking on a node in KNIME Analytics Platform.
 	 */
-	private SettingsModelReaderFileChooser m_source;
 
 	protected XesImporterNodeDialog(PortsConfiguration portsConfiguration) {
-		final String format = "XES";
-		m_source = XesImporterNodeModel.createSourceModel(portsConfiguration);
-
+		SettingsModelReaderFileChooser m_source = XesImporterNodeModel.createSourceModel(portsConfiguration);
 		SettingsModelString m_method = XesImporterNodeModel.createMethodModel();
-		SettingsModelString m_fileName = XesImporterNodeModel.createFileNameModel();
 		this.setHorizontalPlacement(true);
 		addDialogComponent(
 				new DialogComponentStringSelection(m_method, "Read Method", XesImporterNodeModel.getCFG_METHODS()));
@@ -47,10 +42,9 @@ public class XesImporterNodeDialog extends DefaultNodeSettingsPane {
 		DialogComponentReaderFileChooser fileCompAdvanced = new DialogComponentReaderFileChooser(m_source,
 				"copy-source",
 				createFlowVariableModel(m_source.getKeysForFSLocation(), FSLocationVariableType.INSTANCE));
-
-		DialogComponentFileChooser fileComp = new DialogComponentFileChooser(m_fileName, "File Name", format);
-		Component[] compArray = fileComp.getComponentPanel().getComponents();
+		Component[] compArray = fileCompAdvanced.getComponentPanel().getComponents();
 		Component tmp = null;
+
 		for (Component c : compArray) {
 			if (c instanceof FilesHistoryPanel) {
 				tmp = c;
@@ -58,7 +52,6 @@ public class XesImporterNodeDialog extends DefaultNodeSettingsPane {
 			}
 		}
 		final FilesHistoryPanel filePanel = (FilesHistoryPanel) tmp;
-		// addDialogComponent(fileComp);
 		addDialogComponent(fileCompAdvanced);
 	}
 }

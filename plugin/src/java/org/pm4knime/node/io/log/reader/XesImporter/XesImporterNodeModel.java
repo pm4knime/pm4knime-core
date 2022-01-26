@@ -1,6 +1,7 @@
 package org.pm4knime.node.io.log.reader.XesImporter;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.EnumSet;
 
 import org.deckfour.xes.model.XLog;
@@ -24,6 +25,7 @@ import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.Settin
 import org.knime.filehandling.core.defaultnodesettings.filtermode.SettingsModelFilterMode.FilterMode;
 import org.knime.filehandling.core.defaultnodesettings.status.NodeModelStatusConsumer;
 import org.knime.filehandling.core.defaultnodesettings.status.StatusMessage.MessageType;
+import org.pm4knime.node.io.log.reader.StreamImport;
 import org.pm4knime.node.io.log.reader.XesConvertToXLogAlgorithm;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
@@ -78,9 +80,6 @@ public class XesImporterNodeModel extends DefaultNodeModel {
 				new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) });
 		m_sourceModel = createSourceModel(portsConfig);
 
-		// super(portsConfig.getInputPorts(), portsConfig.getOutputPorts());
-		// m_sourceModel = createSourceModel(portsConfig);
-
 	}
 
 	public static SettingsModelString createMethodModel() {
@@ -98,28 +97,25 @@ public class XesImporterNodeModel extends DefaultNodeModel {
 		// Are they 1-1 relation?? One method only corresponds to one reading methods??
 		// if there is 1 -n , we can choose them!!
 		final ReadPathAccessor readAccessor = m_sourceModel.createReadPathAccessor();
-		final String paths2 = readAccessor.getPaths(m_statusConsumer).get(0).toAbsolutePath().toString();
 		final File file = readAccessor.getFSPaths(m_statusConsumer).get(0).toFile();
 		final FSPath inputPath = readAccessor.getFSPaths(m_statusConsumer).get(0);
-		String selectionText = m_sourceModel.getPath();
 		m_statusConsumer.setWarningsIfRequired(this::setWarningMessage);
-
+		StreamImport streams = new StreamImport();
+		InputStream inputStream = FSFiles.newInputStream(inputPath);
 		// the difference of format and then later the read plugin should also change
 		XLog result = null;
 		if (m_method.getStringValue().equals(CFG_METHODS[0])) {
 			// Open Naive can read multiple types of event log!!
-			OpenNaiveLogFilePlugin plugin = new OpenNaiveLogFilePlugin();
 			PluginContext context = PM4KNIMEGlobalContext.instance()
 					.getFutureResultAwarePluginContext(OpenNaiveLogFilePlugin.class);
 			checkCanceled(context, exec);
-			result = (XLog) plugin.importFromStream(context, FSFiles.newInputStream(inputPath), file.getName(),
-					file.length());
+			result = (XLog) streams.importFileStream(context, inputStream, file.getName(), file.length(), file);
 
 		} else if (m_method.getStringValue().equals(CFG_METHODS[1])) {
 			// this parser imports all extensions in event log.
 			XesXmlParserLenient lenientParser = new XesXmlParserLenient();
 			if (lenientParser.canParse(file)) {
-				XesLog xlog = lenientParser.parse(file);
+				XesLog xlog = lenientParser.parse(inputStream);
 				XesConvertToXLogAlgorithm convertor = new XesConvertToXLogAlgorithm();
 				result = convertor.convertToLog(xlog, exec);
 			}
