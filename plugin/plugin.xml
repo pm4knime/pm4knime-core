@@ -89,7 +89,6 @@
         <!-- nodes visualization-->
                 		
         
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualization.LogVisualizationNodeFactory"/>
                 		
         
         <!-- nodes in conversion-->
@@ -143,15 +142,12 @@
         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory"/>
                 		
         
-        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeFactory"/>
                 		
         
         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory"/>
                 	
         
-        <node category-path="/" factory-class="org.pm4knime.node.test.TestInputNodeFactory" id="org.pm4knime.node.test.TestInputNodeFactory"/>
             
-        <node category-path="/" factory-class="org.pm4knime.node.test.CopyNodeNodeFactory" id="org.pm4knime.node.test.CopyNodeNodeFactory"/>
     </extension>
         	
     
