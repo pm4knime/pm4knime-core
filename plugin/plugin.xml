@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?eclipse version="3.0"?>
-<plugin>
+<?eclipse version="3.0"?><plugin>
+        	
+    
 	<extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
 		<category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
 		<category icon="icon/category-io.png" level-id="io" name="IO" path="/community/processmining" />
@@ -12,7 +13,6 @@
 		<category after="discovery" level-id="conformance" name="Evaluation" path="/community/processmining" icon="icon/category-conformance.png" />
 		<category after="conformance" level-id="visualization" name="Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
 	</extension>
-
 
 	<extension point="org.knime.workbench.repository.nodes">
 		<!-- nodes in io-->
