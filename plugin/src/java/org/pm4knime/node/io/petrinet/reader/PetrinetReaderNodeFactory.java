@@ -5,37 +5,36 @@ import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
 /**
- * <code>NodeFactory</code> for the "PetrinetReader" Node.
- * read Petri net from pnml file
+ * <code>NodeFactory</code> for the "PetrinetReader" Node. read Petri net from
+ * pnml file
  *
  * @author KFDing
  */
-public class PetrinetReaderNodeFactory 
-        extends NodeFactory<PetrinetReaderNodeModel> {
+public class PetrinetReaderNodeFactory extends NodeFactory<PetrinetReaderNodeModel> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PetrinetReaderNodeModel createNodeModel() {
-        return new PetrinetReaderNodeModel();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PetrinetReaderNodeModel createNodeModel() {
+		return new PetrinetReaderNodeModel();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasDialog() {
-        return true;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasDialog() {
+		return true;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public NodeDialogPane createNodeDialogPane() {
-        return new PetrinetReaderNodeDialog();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public NodeDialogPane createNodeDialogPane() {
+		return new PetrinetReaderNodeDialog();
+	}
 
 	@Override
 	protected int getNrNodeViews() {
@@ -50,4 +49,3 @@ public class PetrinetReaderNodeFactory
 	}
 
 }
-
