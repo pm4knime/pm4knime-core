@@ -7,8 +7,8 @@
     </shortDescription>
     
     <fullDescription>
-        <intro> This node is created to discover a directly-follows model. It accepts an event log as input and generates a directly-follows model as output.
-        In this package without notification, directly-follows model  is abbreviated as DFM. A DFM is composed of activities in rectangles, 
+        <intro> This node is created to discover a directly-follows graph. It accepts an event log as input and generates a directly-follows graph as output.
+        In this package without notification, directly-follows graph  is abbreviated as DFG. A DFG is composed of activities in rectangles, 
         which are connected by arcs for directly-follows relation. The green rectangles represent the start activities, while the red
         ones are for the end activities.   
         </intro>
