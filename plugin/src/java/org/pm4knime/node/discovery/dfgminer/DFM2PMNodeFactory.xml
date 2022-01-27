@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./DFM-ProcessTree-icon.png" type="Learner" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>DFM to PT Miner</name>
+    <name>Inductive Miner (DFG)</name>
     
     <shortDescription>
-        This node  mines a process tree from directly-follows model with implicit Inductive Miner. 
+        This node mines a process tree from directly-follows model with implicit Inductive Miner. 
     </shortDescription>
     
     <fullDescription>
-        <intro>DFM2PM Miner discovers a process model in process tree from input of a directly-follows model. 
+        <intro>Inductive Miner (DFG) discovers a process model in process tree from input of a directly-follows model. 
         Inductive Miner is the mining algorithm.   
          </intro>
         <option name="Event classifer">The event classifier is chosen to classify the event log.</option>
