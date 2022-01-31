@@ -70,8 +70,7 @@ public class MXMLImporterNodeModel extends DefaultNodeModel {
 		 * Here we specify how many data input and output tables the node should have.
 		 * In this case its one input and one output table.
 		 */
-		super(new PortType[] {},
-				new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) });
+		super(portsConfig.getInputPorts(), portsConfig.getOutputPorts());
 		m_sourceModel = createSourceModel(portsConfig);
 
 	}
@@ -128,12 +127,14 @@ public class MXMLImporterNodeModel extends DefaultNodeModel {
 	 * Create source model
 	 */
 	static final SettingsModelReaderFileChooser createSourceModel(final PortsConfiguration portsConfig) {
-		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, "", mode, DEFAULT_FS, "mxml");
+		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, MXMLImporterNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS, "mxml");
 	}
 
 	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) {
+	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 		XLogPortObjectSpec outSpec = new XLogPortObjectSpec();
+		m_sourceModel.configureInModel(inSpecs, m_statusConsumer);
+
 		return new PortObjectSpec[] { outSpec };
 	}
 

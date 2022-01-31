@@ -25,8 +25,7 @@ import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.Settin
  */
 public class XesImporterNodeDialog extends DefaultNodeSettingsPane {
 
-	// private Optional<SettingsModelString> m_method = Optional.ofNullable(null);
-	// private Optional<SettingsModelString> m_fileName = Optional.ofNullable(null);
+
 	/**
 	 * New dialog pane for configuring the node. The dialog created here will show
 	 * up when double clicking on a node in KNIME Analytics Platform.
