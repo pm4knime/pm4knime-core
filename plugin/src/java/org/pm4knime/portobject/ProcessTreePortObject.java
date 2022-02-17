@@ -21,6 +21,8 @@ import org.processmining.processtree.impl.ProcessTreeImpl;
 import org.processmining.processtree.ptml.Ptml;
 import org.processmining.processtree.ptml.importing.PtmlImportTree;
 
+import com.kitfox.svg.SVGDiagram;
+
 public class ProcessTreePortObject implements PortObject{
 	// if we put save and load codes at this place, then we save codes for reader and writer,
 	// because we can use them directly.. so we put the save and load here
@@ -83,6 +85,27 @@ public class ProcessTreePortObject implements PortObject{
 		}
 		
 		return new JComponent[] {};
+	}
+	
+	public DotPanel getDotPanel() {
+		
+	if(tree != null) {
+			
+			DotPanel navDot;
+			try {
+				navDot = new DotPanel(GraphvizProcessTree.convert(tree));
+				navDot.setName("Generated process tree");
+				return navDot;
+			} catch (NotYetImplementedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		return null;
+		
 	}
 	
 	public String toText() {

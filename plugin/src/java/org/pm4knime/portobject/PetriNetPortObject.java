@@ -19,6 +19,8 @@ import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.plugins.VisualizeAcceptingPetriNetPlugin;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizPetriNet;
 
 /**
  * this class defines PetriNetPortObject. It includes models as Petrinet + InitialMarking, FinalMarking, FinalMarkings[].
@@ -94,6 +96,20 @@ public class PetriNetPortObject  implements PortObject{
 		}
 		
 		return new JComponent[] {};
+	}
+	
+	public DotPanel getDotPanel() {
+		
+	if(m_anet != null) {
+			
+			DotPanel navDot;
+			navDot = new DotPanel(GraphvizPetriNet.convert(m_anet));
+			navDot.setName("Generated petri net");
+			return navDot;
+			
+		}
+		return null;
+		
 	}
 
 	

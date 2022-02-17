@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./PT-icon.png" type="Visualizer" deprecated="false"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+   
+    <name>Visualize PT (GraphViz)</name>
+    
+    <shortDescription>
+        JS GraphViz Process Tree Visualization
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Insert long description here...</intro>
+    </fullDescription>
+    
+    <interactiveView name="JSGraphViz"></interactiveView>
+    
+   <ports>
+        <inPort name="Process Tree" index="0">Input Process Tree</inPort>
+	</ports>
+
+</knimeNode>

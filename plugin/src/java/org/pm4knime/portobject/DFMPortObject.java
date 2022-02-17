@@ -22,7 +22,10 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.dfgOnly.DfgImpl;
+import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizDirectlyFollowsGraph;
+import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizProcessTree;
+import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizProcessTree.NotYetImplementedException;
 
 public class DFMPortObject extends AbstractPortObject {
 
@@ -70,6 +73,22 @@ public class DFMPortObject extends AbstractPortObject {
 		viewPanel.setName("Directly Follows Model");
 		return new JComponent[] { viewPanel };
 	}
+	
+	public DotPanel getDotPanel() {
+		
+		if(dfm != null) {
+				
+				DotPanel navDot;
+				navDot = GraphvizDirectlyFollowsGraph.visualise(dfm);
+				navDot.setName("Generated process tree");
+				return navDot;
+				
+			}
+			
+			
+			return null;
+			
+		}
 
 	@Override
 	protected void save(PortObjectZipOutputStream out, ExecutionMonitor exec)
