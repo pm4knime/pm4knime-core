@@ -6,7 +6,11 @@ import org.knime.core.node.ConfigurableNodeFactory;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.context.NodeCreationConfiguration;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
+import org.knime.filehandling.core.port.FileSystemPortObject;
+import org.pm4knime.portobject.XLogPortObject;
 
 /**
  * This is an example implementation of the node factory of the "XesImporter"
@@ -16,9 +20,9 @@ import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
  */
 public class XesImporterNodeFactory extends ConfigurableNodeFactory<XesImporterNodeModel> {
 
-	private static final String VARIABLE_INPUT_PORT_GRP_NAME = "Variable Input Port";
 
 	private static final String VARIABLE_OUTPUT_PORT_GRP_NAME = "Variable Output Port";
+    static final String CONNECTION_INPUT_PORT_GRP_NAME = "File System Connection";
 
 	/**
 	 * {@inheritDoc}
@@ -67,8 +71,8 @@ public class XesImporterNodeFactory extends ConfigurableNodeFactory<XesImporterN
 	@Override
 	protected Optional<PortsConfigurationBuilder> createPortsConfigBuilder() {
 		final PortsConfigurationBuilder builder = new PortsConfigurationBuilder();
-		builder.addFixedInputPortGroup(VARIABLE_INPUT_PORT_GRP_NAME, FlowVariablePortObject.TYPE_OPTIONAL);
-		builder.addFixedOutputPortGroup(VARIABLE_OUTPUT_PORT_GRP_NAME, FlowVariablePortObject.TYPE);
+        builder.addOptionalInputPortGroup(CONNECTION_INPUT_PORT_GRP_NAME, FileSystemPortObject.TYPE);
+		builder.addFixedOutputPortGroup(VARIABLE_OUTPUT_PORT_GRP_NAME, new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) });
 		return Optional.of(builder);
 	}
 

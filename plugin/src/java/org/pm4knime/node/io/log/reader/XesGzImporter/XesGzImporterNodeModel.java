@@ -50,7 +50,6 @@ public class XesGzImporterNodeModel extends DefaultNodeModel {
 
 	private final static String[] CFG_METHODS = { "OPEN NAIVE", "IEEE Lenient" };
 	private SettingsModelString m_method = createMethodModel();
-	private SettingsModelString m_fileName = createFileNameModel();
 	private static final String SOURCE_FILE = "sourcefile";
 	private final SettingsModelReaderFileChooser m_sourceModel;
 	// transport errors / warning to node
@@ -70,8 +69,8 @@ public class XesGzImporterNodeModel extends DefaultNodeModel {
 	 */
 	protected XesGzImporterNodeModel(final PortsConfiguration portsConfig) {
 
-		super(new PortType[] {},
-				new PortType[] { PortTypeRegistry.getInstance().getPortType(XLogPortObject.class, false) });
+
+		super(portsConfig.getInputPorts(), portsConfig.getOutputPorts());
 		m_sourceModel = createSourceModel(portsConfig);
 
 	}
@@ -117,8 +116,9 @@ public class XesGzImporterNodeModel extends DefaultNodeModel {
 	}
 
 	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) {
+	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 		XLogPortObjectSpec outSpec = new XLogPortObjectSpec();
+		m_sourceModel.configureInModel(inSpecs, m_statusConsumer);
 		return new PortObjectSpec[] { outSpec };
 	}
 
@@ -126,7 +126,7 @@ public class XesGzImporterNodeModel extends DefaultNodeModel {
 	 * Create source model
 	 */
 	static final SettingsModelReaderFileChooser createSourceModel(final PortsConfiguration portsConfig) {
-		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, "", mode, DEFAULT_FS, "xes.gz");
+		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, XesGzImporterNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS, "xes.gz");
 	}
 
 	@Override
