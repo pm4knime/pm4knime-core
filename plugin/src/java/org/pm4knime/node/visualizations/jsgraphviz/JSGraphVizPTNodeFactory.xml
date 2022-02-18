@@ -12,15 +12,19 @@
     <fullDescription>
         <intro>
     This node implements a JavaScript Visualization of a Process Tree.
+    <br />
     A Process Tree is a representation of all possible traces (order of activities) of a process.
     We have four operators (seq, xor loop, xor, and) that are always inner or root nodes. 
     Leaf nodes are activities that can be silent if they have no label.
     A Process tree starts by executing the root node. Each operator behaves differently on execution:
-     
-     
+    <br />
+    <br /> 
     The "seq" operator executes its children from right to left.
+    <br />
     The "xor" operator executes one of its children.
+    <br />
     The "and" operator executes the children in parallel.
+    <br />
     The "xor loop" operator executes one of its children and after this child is 
     fully executed the loop operator is allowed to execute another of its children.
     This goes on until the silent leaf is chosen. After this action, the operator is considered fully executed.

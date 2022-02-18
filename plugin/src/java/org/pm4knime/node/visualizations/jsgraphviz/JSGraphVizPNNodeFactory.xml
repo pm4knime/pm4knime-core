@@ -13,8 +13,8 @@
         <intro>
     This node implements a JavaScript Visualization of a Petri Net.
     A Petri Net in the context of process mining is a directed bipartite graph that visualizes all possible traces (order of executed activities)
-     
-    A Petri Net consists of places, transitions, and arcs that connect them. 
+    <br/>
+    A Petri Net consists of places, transitions, and arcs that connect them.  
     Input arcs connect places with transitions, while output arcs start at a transition 
     and end at a place. Places can contain tokens. The placement of tokens defines the state of the Petri net. There is a start and a goal state.
     The start state has only a token in the green place (source). The goal state has all tokens in the double margin place (goal).
