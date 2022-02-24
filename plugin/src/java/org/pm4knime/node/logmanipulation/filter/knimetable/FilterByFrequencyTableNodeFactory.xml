@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./Eventlog-FilterFrequency-icon.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>Filter Log By Frequency (KNIME Table)</name>
+    
+    <shortDescription>
+        This node filters the traces with certain frequency from an event log. 
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>This node filters the traces with certain frequency from an event log. It has two strategies to filter. 
+        One is on trace variant. Trace variant is a collection of traces with the same event classes sequence. 
+        If the size of trace variant meets the condition, the trace collection will be added to the filtered event log; Else, the
+        trace collection is disposed. 
+        The other filter type is on the whole event log. The filter criteria is applied to the sum of trace variant. 
+        Firstly, the traces in event log is sorted according to trace variant frequency in the descending order. 
+        For example, given the threshold 0.8, and isKeep = true, the trace variants with higher frequency are summed to meet 0.8. 
+        Their traces will be added to the generated event log.        
+         </intro>
+        
+         <option name="Keep trace">The filer strategy. If keep is chosen, the traces that match the following conditions
+        will be kept. Else, the traces matching the conditions will be removed.</option>
+        <option name="isForSingleTV">Define the filter type. If isForSingleTV is checked, the filter will be on the trace variant. 
+        Else, it works on the whole event log.</option>
+        <option name="Threshold">Define the threshold to filter. It accepts both percentage and absolute value. With value 0-1.0,
+        it means the percentage in the whole event log size. When it is equal or greater than 1, it represents the absolute integer threshold.
+        After configuration, it will be casted down into an integer value.  
+        The trace with equal or greater size than the threshold will be filtered. </option>
+      
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Event Log">The event log to be filtered</inPort>
+        <outPort index="0" name="Filted Event Log">The filtered event log</outPort>
+       
+    </ports>    
+    
+</knimeNode>
