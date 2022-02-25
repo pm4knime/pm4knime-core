@@ -2,23 +2,12 @@
 <feature
       id="org.pm4knime.feature"
       label="Process Mining Extension"
-      version="1.1.0.qualifier"
+      version="1.1.1.qualifier"
       provider-name="Fraunhofer Institute for Applied Information Technology">
-
-	<url>
-      <discovery label="Project side" url="https://https://pm4knime.github.io/"/>
-   </url>
-
-   <plugin
-         id="org.pm4knime.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <description url="https://github.com/pm4knime/pm4knime-document/wiki/Guideline-for-Normal-User">
       PM4KNIME is developed by the Fraunhofer Institute for Applied Information Technology, in close collaboration with KNIME AG. 
-      As a community extension for KNIME, PM4KNIME integrates Process Mining algorithms into the KNIME platform. 
+      As a community extension for KNIME, PM4KNIME integrates Process Mining algorithms into the KNIME platform.
    </description>
 
    <copyright url="https://github.com/pm4knime/pm4knime-document/wiki/PM4KNIME-Copyright">
@@ -229,5 +218,15 @@ http://www.apache.org/licenses/
    limitations under the License.
    </license>
 
-   
+   <url>
+      <discovery label="Project side" url="https://https://pm4knime.github.io/"/>
+   </url>
+
+   <plugin
+         id="org.pm4knime.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
