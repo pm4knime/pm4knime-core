@@ -11,49 +11,64 @@
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
         <entry key="Read Method" type="xstring" value="OPEN NAIVE"/>
-        <config key="File Name_Internals">
-            <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
+        <config key="sourcefile_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_ReaderFileChooser"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="File Name" type="xstring" value=""/>
-    </config>
-    <config key="variables">
-        <entry key="version" type="xstring" value="V_2019_09_13"/>
-        <config key="tree">
-            <config key="File Name">
-                <entry key="used_variable" type="xstring" value="running-example.xes"/>
-                <entry key="exposed_variable" type="xstring" isnull="true" value=""/>
+        <config key="sourcefile">
+            <config key="file_system_chooser__Internals">
+                <entry key="has_fs_port" type="xboolean" value="false"/>
+                <entry key="overwritten_by_variable" type="xboolean" value="false"/>
+                <entry key="convenience_fs_category" type="xstring" value="MOUNTPOINT"/>
+                <entry key="relative_to" type="xstring" value="knime.workflow.data"/>
+                <entry key="mountpoint" type="xstring" value="LOCAL"/>
+                <entry key="connected_fs" type="xboolean" value="true"/>
+            </config>
+            <config key="path">
+                <entry key="location_present" type="xboolean" value="true"/>
+                <entry key="file_system_type" type="xstring" value="MOUNTPOINT"/>
+                <entry key="file_system_specifier" type="xstring" value="LOCAL"/>
+                <entry key="path" type="xstring" value="/PM4KNIME-Conformance/data/running-example.xes"/>
+            </config>
+            <config key="filter_mode_Internals">
+                <entry key="SettingsModelID" type="xstring" value="SMID_FilterMode"/>
+                <entry key="EnabledStatus" type="xboolean" value="true"/>
             </config>
         </config>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
-    <entry key="state" type="xstring" value="IDLE"/>
-    <config key="nodecontainer_message">
-        <entry key="type" type="xstring" value="WARNING"/>
-        <entry key="message" type="xstring" value="Errors overwriting node settings with flow variables: Unknown variable &quot;running-example.xes&quot;"/>
-    </config>
+    <entry key="state" type="xstring" value="EXECUTED"/>
     <entry key="factory" type="xstring" value="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory"/>
     <entry key="node-name" type="xstring" value="XES Reader"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>
     <entry key="node-bundle-symbolic-name" type="xstring" value="org.pm4knime.plugin"/>
     <entry key="node-bundle-vendor" type="xstring" value="Fraunhofer Institute for Applied Information Technology"/>
-    <entry key="node-bundle-version" type="xstring" value="1.1.0.qualifier"/>
+    <entry key="node-bundle-version" type="xstring" value="1.1.1.qualifier"/>
     <entry key="node-feature-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-version" type="xstring" value="0.0.0"/>
     <config key="factory_settings"/>
+    <config key="node_creation_config">
+        <config key="File System Connection"/>
+        <config key="Variable Output Port"/>
+    </config>
     <entry key="name" type="xstring" value="XES Reader"/>
-    <entry key="hasContent" type="xboolean" value="false"/>
+    <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
         <config key="port_1">
             <entry key="index" type="xint" value="1"/>
-            <entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+            <entry key="port_spec_class" type="xstring" value="org.pm4knime.portobject.XLogPortObjectSpec"/>
+            <entry key="port_object_class" type="xstring" value="org.pm4knime.portobject.XLogPortObject"/>
+            <entry key="port_object_summary" type="xstring" value="This port represents an event log object (XLog)"/>
+            <entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+            <entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+            <entry key="port_dir_location" type="xstring" value="port_1"/>
         </config>
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
+        <entry key="file_store_id" type="xstring" value="43a90b0e-af12-431d-8c4c-b82c3d06816a"/>
     </config>
 </config>
