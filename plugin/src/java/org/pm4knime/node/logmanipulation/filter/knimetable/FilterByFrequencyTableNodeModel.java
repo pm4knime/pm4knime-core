@@ -1,10 +1,12 @@
 package org.pm4knime.node.logmanipulation.filter.knimetable;
 
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.sort.BufferedDataTableSorter;
+import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -13,16 +15,23 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.node.discovery.alpha.AlphaMinerNodeModel;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.processmining.alphaminer.parameters.AlphaVersion;
+import org.processmining.log.utils.TraceVariantByClassifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -54,7 +63,16 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
 	// when it is below 1, we think it is the percentage, else, we use the absolute number 
 	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "For single trace variant";
 	public static final String CFG_THRESHOLD = "Threshold";
+	public static final String CFGKEY_VARIANT_CASE = "CaseId";
+	public static final String CFGKEY_VARIANT_TIME = "Timestamp";
+	public static final String CFGKEY_VARIANT_ACTIVITY = "Activity";
 	
+	public static final String[] variantListCase = {"#Trace Attribute#concept:name"};
+	public static final String[] variantListTime = {"#Event Attribute#time:timestamp"};
+	public static final String[] variantListActivity = {"#Event Attribute#concept:name"};
+	private SettingsModelString m_variantCase =  new SettingsModelString(FilterByFrequencyTableNodeModel.CFGKEY_VARIANT_CASE, variantListCase[0]);
+	private SettingsModelString m_variantTime =  new SettingsModelString(FilterByFrequencyTableNodeModel.CFGKEY_VARIANT_TIME, variantListTime[0]);
+	private SettingsModelString m_variantActivity =  new SettingsModelString(FilterByFrequencyTableNodeModel.CFGKEY_VARIANT_ACTIVITY, variantListActivity[0]);
 	SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	SettingsModelBoolean m_isForSingleTV = new SettingsModelBoolean(CFG_ISFOR_SINGLETRACE_VARIANT, true);
 	SettingsModelDoubleBounded m_threshold = new SettingsModelDoubleBounded(
@@ -85,6 +103,7 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
     		return new BufferedDataTable[]{(BufferedDataTable) inData[0]};
     	}
     	checkCanceled(exec);
+    	
     	int iThreshold = 0;
     	if(m_threshold.getDoubleValue() < 1) {
     		iThreshold = (int) (m_threshold.getDoubleValue()  * log.size());
@@ -94,7 +113,7 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
     		
     	}
     	
-    	List<String> idAndTime =  Arrays.asList("#Trace Attribute#concept:name", "#Event Attribute#time:timestamp");
+    	List<String> idAndTime =  Arrays.asList(m_variantCase.getStringValue(), m_variantTime.getStringValue());
     	boolean[] sort_asc = new boolean[2];
     	sort_asc[0] = true;
     	sort_asc[1] = true;
@@ -112,32 +131,180 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
     		System.out.println(arr_NumColumns[i]);
     	}
     	
+    	
+		String curr_traceID = "";
+		String trace = "";
+		int totalTraces = 0;
+		HashMap<String, Integer> freq = new HashMap<String, Integer>(); // activity sequence to freq 
+		HashMap<String, ArrayList<String>> trace_array = new HashMap<String, ArrayList<String>>(); // id to activities
+		HashMap<String, ArrayList<String>> tracetoIds = new HashMap<String, ArrayList<String>>(); // activity sequence to ids
+		
+		
+		// Create Mappings
     	for (DataRow row : log) {
-    		// and columns
-    		System.out.println(row.getKey());
-    		String str_row = "";
-	    	for (int i = 0; i < row.getNumCells(); i++) {
-	    		DataCell cell = row.getCell(i); 
-	    		str_row += cell.toString();
+	    	
+	    	DataCell activity = row.getCell(log.getDataTableSpec().findColumnIndex(m_variantActivity.getStringValue()));
+	    	DataCell traceID = row.getCell(log.getDataTableSpec().findColumnIndex(m_variantCase.getStringValue()));
+	
+	    	String traceIDStr = traceID.toString();
+	    	if (!traceIDStr.equals(curr_traceID)) {
 	    		
-	    	 }
-	    	System.out.println(str_row);
+	    		if(!curr_traceID.equals("")) {
+		    		
+		    		if (freq.containsKey(trace)) {
+		    			totalTraces++;
+		    			freq.put(trace, freq.get(trace) + 1);
+		    		}else {
+		    			freq.put(trace, 1);
+		    			totalTraces++;
+		    		}
+		    		
+		    		if (tracetoIds.containsKey(trace)) {
+		    			
+		    			tracetoIds.get(trace).add(curr_traceID);
+		    		}else {
+		    			ArrayList<String> traceid_list = new ArrayList<String>();
+			    		traceid_list.add(curr_traceID);
+			    		tracetoIds.put(trace, traceid_list);
+		    		}
+	    		}
+	    		
+	    		
+	    		curr_traceID = traceIDStr;
+	    		System.out.println(trace);
+	    		
+	    		
+	    		ArrayList<String> activity_list = new ArrayList<String>();
+	    		activity_list.add(activity.toString());
+	    		trace_array.put(curr_traceID, activity_list);
+	    		trace = activity.toString();
+	    	} else {
+	    		//freq.put(curr_traceID, freq.get(curr_traceID) + 1);
+	    		trace_array.get(curr_traceID).add(activity.toString());
+	    		trace = trace + "," + activity.toString();
+	    	}
+	    	
     	}
     	
-    	XLog nlog ; 
-    	// for SingleTV... we need to interpret the percentage into absolute value
-    	/*if(m_isForSingleTV.getBooleanValue()) {
-    		nlog  = XLogFilterUtil.filterBySingleTVFreq(log, m_isKeep.getBooleanValue(), iThreshold, exec);
-    	}else {
-    		nlog = XLogFilterUtil.filterByWholeLogFreq(log, m_isKeep.getBooleanValue(), iThreshold, exec);
-    	} */
+    	if (freq.containsKey(trace)) {
+			totalTraces++;
+			freq.put(trace, freq.get(trace) + 1);
+		}else {
+			freq.put(trace, 1);
+			totalTraces++;
+		}
+		
+		if (tracetoIds.containsKey(trace)) {
+			
+			tracetoIds.get(trace).add(curr_traceID);
+		}else {
+			ArrayList<String> traceid_list = new ArrayList<String>();
+    		traceid_list.add(curr_traceID);
+    		tracetoIds.put(trace, traceid_list);
+		}
     	
-    	//m_outSpec.setSpec(XLogSpecUtil.extractSpec(nlog));
-    	//DataTable logPO = new DataTable(nlog);
-    	
-    	//logPO.setSpec(m_outSpec);
+		System.out.println("Total traces " +totalTraces);
+		System.out.println("Maps:");
+		System.out.println(freq.toString());
+		System.out.println(tracetoIds.toString());
+		
+		//Sort 
+		ArrayList<ArrayList<String>> listOfCaseId = new ArrayList<ArrayList<String>>(tracetoIds.values());
+		Comparator<ArrayList<String>> sizeComparator = new Comparator<ArrayList<String>>()
+	    {
+	        @Override
+	        public int compare(ArrayList<String> o1, ArrayList<String> o2)
+	        {
+	            return Integer.compare(o1.size(), o2.size());
+	        }
+	    };
+		
+	    Collections.sort(listOfCaseId, sizeComparator);
+	    Collections.reverse(listOfCaseId);
+	    
+	    System.out.println("Sorted Arraylist ");
+	    for (ArrayList<String> out : listOfCaseId) { 		      
+	           System.out.println(out.toString()); 		
+	    }
+
+	    
+	    // Create new BufferedDataTable without filtered rows
+	    
+	    ArrayList<String> containIDs = getContainedCases(listOfCaseId, iThreshold, trace_array);
+	    
+	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec());
+	    
+
+	    for (DataRow row : log) {
+	    	
+	    	DataCell traceID = row.getCell(log.getDataTableSpec().findColumnIndex(m_variantCase.getStringValue()));
+
+	    	if (containIDs.contains(traceID.toString())) {
+		    	buf.addRowToTable(row);
+
+	    	}
+	  
+	    }
+	    buf.close();
+	    
+
     	logger.info("End: filter log by trace frequency");
-        return new BufferedDataTable[]{log};
+        return new BufferedDataTable[]{buf.getTable()};
+    }
+    
+    
+    protected ArrayList<String> getContainedCases(ArrayList<ArrayList<String>> listOfValues, int iThreshold, 
+    														HashMap<String, ArrayList<String>> trace_array) {
+    	
+	    ArrayList<String> containIDs = new ArrayList<String>();
+	    
+	    
+	    if (m_isForSingleTV.getBooleanValue()){
+	    	
+			if(m_isKeep.getBooleanValue()) {
+				for(ArrayList<String> variant : listOfValues) {
+		    		
+		    		if(variant.size() * trace_array.get(variant.get(0)).size()  >= iThreshold) {
+		    			containIDs.addAll(variant);
+		    		}
+		    	}
+			}else {
+				for(ArrayList<String> variant : listOfValues) {
+		    		
+		    		if(variant.size() * trace_array.get(variant.get(0)).size() < iThreshold) {
+		    			containIDs.addAll(variant);
+		    		}
+		    	}
+			}
+	    	
+	    }else {
+	    	
+	    	
+	    	int sum = 0;
+	    	if(m_isKeep.getBooleanValue()) {
+	    		for(ArrayList<String> variant : listOfValues) {
+
+	        		if(sum <= iThreshold) {
+	        			containIDs.addAll(variant);
+	        		}else
+	        			break;
+	        		sum += variant.size() * trace_array.get(variant.get(0)).size();
+	    		}
+	    		
+	    	}else {
+	    		for(ArrayList<String> variant : listOfValues) {
+
+	        		if(sum <= iThreshold) {
+	        			sum += variant.size() * trace_array.get(variant.get(0)).size();
+	        			continue ;
+	        		}else
+	        			containIDs.addAll(variant);
+	    		}
+	    	}
+	    	 
+	    }
+    	
+	    return containIDs;
     }
 
    
