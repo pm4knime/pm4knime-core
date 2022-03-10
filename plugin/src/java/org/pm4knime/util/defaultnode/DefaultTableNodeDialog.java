@@ -96,50 +96,29 @@ public abstract class DefaultTableNodeDialog extends DefaultNodeSettingsPane {
  
     	try {
     		
-    		System.out.println("95");
     		columnSet.loadSettingsFrom(settings);
-    		columnSet = new SettingsModelStringArray(DefaultTableNodeModel.CFG_KEY_COLUMN_SET, new String[] {""});
     		List<String> configColumnSet = Arrays.asList(columnSet.getStringArrayValue());
     		
-    		System.out.print("99");
     		DataTableSpec tableSpec = (DataTableSpec) specs[0];
-    		
-    		//test
-    		System.out.println(tableSpec.getNumColumns());
-        	String[] arr_NumColumns = tableSpec.getColumnNames();
-        	for(int i=0 ; i < arr_NumColumns.length ; i++ ) { 
-        		System.out.println(arr_NumColumns[i]);
-        	}
-        	//test ende
-        	
-        	System.out.println("109");
-    		
 			List<String> specColumnSet = new ArrayList<String>(Arrays.asList(tableSpec.getColumnNames()));
-			System.out.println("12");
+
 			if(! configColumnSet.containsAll(specColumnSet) 
 		    		 ||	!specColumnSet.containsAll(configColumnSet)){
 				
 				columnSet.setStringArrayValue(specColumnSet.toArray(new String[0]));
-				System.out.println("Reset in Dialog spec Column");
 			}
-			System.out.println("119");
+	
 
 			columnCompCase.replaceListItems(specColumnSet, specColumnSet.iterator().next());
 			columnCompTime.replaceListItems(specColumnSet, specColumnSet.iterator().next());
 			columnCompActivity.replaceListItems(specColumnSet, specColumnSet.iterator().next());
 			
-			
-			System.out.println("120");
-			
-			System.out.println(settings.toString());			
 			m_variantCase.loadSettingsFrom(settings);
 			m_variantTime.loadSettingsFrom(settings);
 			m_variantActivity.loadSettingsFrom(settings);
 			
 		} catch (NullPointerException | InvalidSettingsException e) {
 			// TODO Auto-generated catch block
-			System.out.print(e);
-			System.out.print(e.getStackTrace());
 			throw new NotConfigurableException("Please make sure the connected event log is in excution state");
 			
 		}

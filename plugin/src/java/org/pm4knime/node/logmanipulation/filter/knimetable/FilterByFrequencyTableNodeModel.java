@@ -190,11 +190,7 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
     		traceid_list.add(curr_traceID);
     		tracetoIds.put(trace, traceid_list);
 		}
-    	
-		System.out.println("Total traces " +totalTraces);
-		System.out.println("Maps:");
-		System.out.println(freq.toString());
-		System.out.println(tracetoIds.toString());
+   
 		
 		//Sort 
 		ArrayList<ArrayList<String>> listOfCaseId = new ArrayList<ArrayList<String>>(tracetoIds.values());
@@ -210,10 +206,6 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	    Collections.sort(listOfCaseId, sizeComparator);
 	    Collections.reverse(listOfCaseId);
 	    
-	    System.out.println("Sorted Arraylist ");
-	    for (ArrayList<String> out : listOfCaseId) { 		      
-	           System.out.println(out.toString()); 		
-	    }
 
 	    
 	    // Create new BufferedDataTable without filtered rows
