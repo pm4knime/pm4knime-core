@@ -24,6 +24,7 @@ import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.XLogSpecUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.pm4knime.util.defaultnode.DefaultTableNodeModel;
 import org.processmining.alphaminer.parameters.AlphaVersion;
 import org.processmining.log.utils.TraceVariantByClassifier;
 
@@ -55,7 +56,7 @@ import java.util.List;
  *   matches those criterias.  
  * @author Kefang Ding
  */
-public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
+public class FilterByFrequencyTableNodeModel extends DefaultTableNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FilterByFrequencyTableNodeFactory.class);
 	
 	public static final String CFG_ISKEEP = "Keep traces";
@@ -63,17 +64,7 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
 	// when it is below 1, we think it is the percentage, else, we use the absolute number 
 	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "For single trace variant";
 	public static final String CFG_THRESHOLD = "Threshold";
-	public static final String CFGKEY_VARIANT_CASE = "CaseId";
-	public static final String CFGKEY_VARIANT_TIME = "Timestamp";
-	public static final String CFGKEY_VARIANT_ACTIVITY = "Activity";
-	
-	public static final String[] variantListCase = {"#Trace Attribute#concept:name"};
-	public static final String[] variantListTime = {"#Event Attribute#time:timestamp"};
-	public static final String[] variantListActivity = {"#Event Attribute#concept:name"};
-	private SettingsModelString m_variantCase =  new SettingsModelString(FilterByFrequencyTableNodeModel.CFGKEY_VARIANT_CASE, variantListCase[0]);
-	private SettingsModelString m_variantTime =  new SettingsModelString(FilterByFrequencyTableNodeModel.CFGKEY_VARIANT_TIME, variantListTime[0]);
-	private SettingsModelString m_variantActivity =  new SettingsModelString(FilterByFrequencyTableNodeModel.CFGKEY_VARIANT_ACTIVITY, variantListActivity[0]);
-	SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
+SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	SettingsModelBoolean m_isForSingleTV = new SettingsModelBoolean(CFG_ISFOR_SINGLETRACE_VARIANT, true);
 	SettingsModelDoubleBounded m_threshold = new SettingsModelDoubleBounded(
 			CFG_THRESHOLD, 0.2, 0, Integer.MAX_VALUE);
@@ -118,9 +109,6 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
     	sort_asc[0] = true;
     	sort_asc[1] = true;
     	BufferedDataTableSorter sorted_log = new BufferedDataTableSorter(log, idAndTime , sort_asc);
-    	
-    	//private ExecutionContext m_execContext = new ExecutionContext();
-    	//log = sorted_log.sort(m_execContext);
     	
     	log = sorted_log.sort(exec);
     	
@@ -312,27 +300,24 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configureOutSpec(DataTableSpec tableSpecs) {
         
-    	if(!inSpecs[0].getClass().equals(DataTableSpec.class)) 
-    		throw new InvalidSettingsException("Input is not a valid Event Log!");
-    	// create new spec for output event log
     	
     	if(m_threshold.getDoubleValue() >= 1) {
     		m_threshold.setDoubleValue((int)m_threshold.getDoubleValue());
     	}
-    	// here is a new spec for the event log... some of them might get lost
-    	// but others stay, like the global attributes stay here, others go away from it
-    	m_outSpec = new DataTableSpec();
-        return new PortObjectSpec[]{inSpecs[0]};
+
+        return new PortObjectSpec[]{tableSpecs};
     }
+    
+    
+    
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) {
+    protected void saveSpecificSettingsTo(final NodeSettingsWO settings) {
     	 m_isKeep.saveSettingsTo(settings);
     	 m_isForSingleTV.saveSettingsTo(settings);
     	 m_threshold.saveSettingsTo(settings);
@@ -342,7 +327,7 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+    protected void loadSpecificValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
      
     	 m_isKeep.loadSettingsFrom(settings);
@@ -351,13 +336,14 @@ public class FilterByFrequencyTableNodeModel extends DefaultNodeModel {
     	 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-    }
+
+	@Override
+	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
     
 
 }

@@ -29,7 +29,7 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Event Log">The event log to be filtered</inPort>
+        <inPort index="0" name="KNIME Table">The event log to be filtered</inPort>
         <outPort index="0" name="Filted Event Log">The filtered event log</outPort>
        
     </ports>    
