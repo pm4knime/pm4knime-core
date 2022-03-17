@@ -84,28 +84,20 @@ public class FilterByLengthTableNodeModel extends DefaultTableNodeModel {
     		return new BufferedDataTable[]{(BufferedDataTable) inData[0]};
     	}
     	checkCanceled(exec);
-    	
-    	
-    	List<String> idAndTime =  Arrays.asList(m_variantCase.getStringValue(), m_variantTime.getStringValue());
-    	boolean[] sort_asc = new boolean[2];
+
+    
+    	// Sorting
+    	List<String> idAndTime =  Arrays.asList(m_variantCase.getStringValue());
+    	boolean[] sort_asc = new boolean[1];
     	sort_asc[0] = true;
-    	sort_asc[1] = true;
     	BufferedDataTableSorter sorted_log = new BufferedDataTableSorter(log, idAndTime , sort_asc);
-    	
     	log = sorted_log.sort(exec);
-    	
-    	
-    	System.out.println(log.getDataTableSpec().getNumColumns());
-    	String[] arr_NumColumns = log.getDataTableSpec().getColumnNames();
-    	for(int i=0 ; i < arr_NumColumns.length ; i++ ) { 
-    		System.out.println(arr_NumColumns[i]);
-    	}
     	
     	
 		String curr_traceID = "";
 		int trace_length = 0;
-		ArrayList<String> containIDs = new ArrayList<String>();
-		
+		ArrayList<DataRow> trace_datarow = new ArrayList<DataRow>();
+	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec());	
 		
     	for (DataRow row : log) {
 	    	
@@ -113,20 +105,26 @@ public class FilterByLengthTableNodeModel extends DefaultTableNodeModel {
 	
 	    	String traceIDStr = traceID.toString();
 	    	if (!traceIDStr.equals(curr_traceID)) {
+	    		exec.checkCanceled();
 	    		
 	    		if(!curr_traceID.equals("")) {
 	    			if(m_isKeep.getBooleanValue() == 
 	    					(trace_length >= m_minLength.getIntValue() 
 	    						&& trace_length <= m_maxLength.getIntValue())) {
-	    							containIDs.add(curr_traceID.toString());
+	    							for (DataRow trace_row : trace_datarow) {
+	    								buf.addRowToTable(trace_row);
+	    							}
 	    			}
 	    		}
 	    		
 	    		curr_traceID = traceIDStr;
 	    		trace_length = 1;
+	    		trace_datarow = new ArrayList<DataRow>();
 	    	} else {
 	    		trace_length++;
 	    	}
+	    	
+	    	trace_datarow.add(row);
 	    	
     	}
     	
@@ -134,28 +132,12 @@ public class FilterByLengthTableNodeModel extends DefaultTableNodeModel {
 			if(m_isKeep.getBooleanValue() == 
 					(trace_length >= m_minLength.getIntValue() 
 						&& trace_length <= m_maxLength.getIntValue())) {
-							containIDs.add(curr_traceID.toString());
+							for (DataRow trace_row : trace_datarow) {
+								buf.addRowToTable(trace_row);
+							}
 			}
 		}
-
-	    
-	    // Create new BufferedDataTable without filtered rows
-	    
-	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec());
-	    
-
-	    for (DataRow row : log) {
-	    	
-	    	DataCell traceID = row.getCell(log.getDataTableSpec().findColumnIndex(m_variantCase.getStringValue()));
-
-	    	if (containIDs.contains(traceID.toString())) {
-		    	buf.addRowToTable(row);
-
-	    	}
-	  
-	    }
-	    buf.close();
-	    
+    	buf.close();
 
     	logger.info("End: filter log by trace frequency");
         return new BufferedDataTable[]{buf.getTable()};
