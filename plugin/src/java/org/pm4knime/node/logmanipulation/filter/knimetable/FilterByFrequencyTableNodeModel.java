@@ -95,14 +95,14 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
     	}
     	checkCanceled(exec);
     	
-    	int iThreshold = 0;
-    	if(m_threshold.getDoubleValue() < 1) {
-    		iThreshold = (int) (m_threshold.getDoubleValue()  * log.size());
-    	}else {
-    		// we can deal with it with the listener 
-    		iThreshold = (int) m_threshold.getDoubleValue();
-    		
-    	}
+
+    	
+    	
+    	System.out.print("Threshold - Knime - ");
+    	System.out.println(m_threshold.getDoubleValue());
+    	
+    	System.out.print("LogSize - Knime - ");
+    	System.out.println(log.size());
     	
     	List<String> idAndTime =  Arrays.asList(m_variantCase.getStringValue(), m_variantTime.getStringValue());
     	boolean[] sort_asc = new boolean[2];
@@ -113,12 +113,7 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
     	log = sorted_log.sort(exec);
     	
     	
-    	System.out.println(log.getDataTableSpec().getNumColumns());
-    	String[] arr_NumColumns = log.getDataTableSpec().getColumnNames();
-    	for(int i=0 ; i < arr_NumColumns.length ; i++ ) { 
-    		System.out.println(arr_NumColumns[i]);
-    	}
-    	
+   
     	
 		String curr_traceID = "";
 		String trace = "";
@@ -127,7 +122,7 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 		HashMap<String, ArrayList<String>> trace_array = new HashMap<String, ArrayList<String>>(); // id to activities
 		HashMap<String, ArrayList<String>> tracetoIds = new HashMap<String, ArrayList<String>>(); // activity sequence to ids
 		
-		
+		System.out.println("Start mapping");
 		// Create Mappings
     	for (DataRow row : log) {
 	    	
@@ -159,7 +154,6 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	    		
 	    		
 	    		curr_traceID = traceIDStr;
-	    		System.out.println(trace);
 	    		
 	    		
 	    		ArrayList<String> activity_list = new ArrayList<String>();
@@ -190,8 +184,10 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
     		traceid_list.add(curr_traceID);
     		tracetoIds.put(trace, traceid_list);
 		}
-   
 		
+		System.out.println("End mapping");
+		
+		System.out.println("Start freq");
 		//Sort 
 		ArrayList<ArrayList<String>> listOfCaseId = new ArrayList<ArrayList<String>>(tracetoIds.values());
 		Comparator<ArrayList<String>> sizeComparator = new Comparator<ArrayList<String>>()
@@ -210,7 +206,8 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	    
 	    // Create new BufferedDataTable without filtered rows
 	    
-	    ArrayList<String> containIDs = getContainedCases(listOfCaseId, iThreshold, trace_array);
+	    HashMap<String, Boolean> containIDs = getContainedCases(listOfCaseId, trace_array, totalTraces);
+
 	    
 	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec());
 	    
@@ -219,24 +216,39 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	    	
 	    	DataCell traceID = row.getCell(log.getDataTableSpec().findColumnIndex(m_variantCase.getStringValue()));
 
-	    	if (containIDs.contains(traceID.toString())) {
+	    	if (containIDs.containsKey(traceID.toString())) {
 		    	buf.addRowToTable(row);
 
 	    	}
 	  
 	    }
 	    buf.close();
-	    
+
+
 
     	logger.info("End: filter log by trace frequency");
         return new BufferedDataTable[]{buf.getTable()};
     }
     
-    
-    protected ArrayList<String> getContainedCases(ArrayList<ArrayList<String>> listOfValues, int iThreshold, 
-    														HashMap<String, ArrayList<String>> trace_array) {
+     
+    protected HashMap<String, Boolean> getContainedCases(ArrayList<ArrayList<String>> listOfValues, 
+    														HashMap<String, ArrayList<String>> trace_array, int totalTraces) {
     	
-	    ArrayList<String> containIDs = new ArrayList<String>();
+    
+    	
+    	int iThreshold = 0;
+    	if(m_threshold.getDoubleValue() < 1) {
+    		iThreshold = (int) (m_threshold.getDoubleValue() * totalTraces);
+    	}else {
+    		// we can deal with it with the listener 
+    		iThreshold = (int) m_threshold.getDoubleValue();
+    		
+    	}
+    	
+    	System.out.print("2Threshold - Knime - ");
+    	System.out.println(iThreshold);
+    	
+    	HashMap<String, Boolean> containIDs = new HashMap<String, Boolean>();
 	    
 	    
 	    if (m_isForSingleTV.getBooleanValue()){
@@ -244,15 +256,19 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 			if(m_isKeep.getBooleanValue()) {
 				for(ArrayList<String> variant : listOfValues) {
 		    		
-		    		if(variant.size() * trace_array.get(variant.get(0)).size()  >= iThreshold) {
-		    			containIDs.addAll(variant);
+		    		if(variant.size() >= iThreshold) {
+		    			for(String event : variant) {
+		    				containIDs.put(event, true);
+		    			}
+		    			
 		    		}
 		    	}
 			}else {
 				for(ArrayList<String> variant : listOfValues) {
-		    		
-		    		if(variant.size() * trace_array.get(variant.get(0)).size() < iThreshold) {
-		    			containIDs.addAll(variant);
+		    		if(variant.size() < iThreshold) {
+		    			for(String event : variant) {
+		    				containIDs.put(event, true);
+		    			}
 		    		}
 		    	}
 			}
@@ -265,20 +281,24 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	    		for(ArrayList<String> variant : listOfValues) {
 
 	        		if(sum <= iThreshold) {
-	        			containIDs.addAll(variant);
+		    			for(String event : variant) {
+		    				containIDs.put(event, true);
+		    			}
 	        		}else
 	        			break;
-	        		sum += variant.size() * trace_array.get(variant.get(0)).size();
+	        		sum += variant.size();
 	    		}
 	    		
 	    	}else {
 	    		for(ArrayList<String> variant : listOfValues) {
 
 	        		if(sum <= iThreshold) {
-	        			sum += variant.size() * trace_array.get(variant.get(0)).size();
+	        			sum += variant.size();
 	        			continue ;
 	        		}else
-	        			containIDs.addAll(variant);
+		    			for(String event : variant) {
+		    				containIDs.put(event, true);
+		    			}
 	    		}
 	    	}
 	    	 
