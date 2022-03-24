@@ -97,7 +97,7 @@ public class FilterByLengthTableNodeModel extends DefaultTableNodeModel {
 		String curr_traceID = "";
 		int trace_length = 0;
 		ArrayList<DataRow> trace_datarow = new ArrayList<DataRow>();
-	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec());	
+	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec(), false);	
 		
     	for (DataRow row : log) {
 	    	
