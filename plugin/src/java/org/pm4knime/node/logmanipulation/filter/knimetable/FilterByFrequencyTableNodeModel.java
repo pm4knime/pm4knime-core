@@ -209,7 +209,7 @@ SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	    HashMap<String, Boolean> containIDs = getContainedCases(listOfCaseId, trace_array, totalTraces);
 
 	    
-	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec());
+	    BufferedDataContainer buf = exec.createDataContainer(log.getDataTableSpec(), false);
 	    
 
 	    for (DataRow row : log) {
