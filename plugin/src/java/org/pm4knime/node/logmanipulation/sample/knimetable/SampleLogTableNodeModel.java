@@ -98,12 +98,12 @@ public class SampleLogTableNodeModel extends DefaultTableNodeModel {
      */
     @Override
     protected PortObjectSpec[] configureOutSpec(final DataTableSpec inSpecs) {
-    	// but here we need to validate the value of num and percentage, but how to choose them??
-    	// choose either of them, it is totally fine, but how to make them into the code??
+
     	DataTableSpec[] m_outSpecs = new DataTableSpec[getNrOutPorts()];
-    	m_outSpecs[0] = new DataTableSpec();
-		m_outSpecs[1] = new DataTableSpec();
-		return new PortObjectSpec[] { m_outSpecs[0], m_outSpecs[1]};
+    	m_outSpecs[0] = inSpecs;
+		m_outSpecs[1] = inSpecs;
+		
+		return new PortObjectSpec[] {m_outSpecs[0], m_outSpecs[1]};
         
     }
 

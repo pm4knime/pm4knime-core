@@ -6,6 +6,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
+import org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeModel;
 import org.pm4knime.util.defaultnode.DefaultTableNodeDialog;
 
 /**
@@ -29,9 +30,12 @@ public class SampleLogTableNodeDialog extends DefaultTableNodeDialog {
 	@Override
 	public void init() {
 	   	// create one checkbox for the m_samplePref 
-    	DialogComponentBoolean prefrenceComp = new DialogComponentBoolean(m_samplePref, "Use Percentage to Sample");
-    	
+
+		m_samplePref  = SampleLogTableNodeModel.createSamplePerference();
+  	    DialogComponentBoolean prefrenceComp = new DialogComponentBoolean(m_samplePref, "Use Percentage to Sample");
     	addDialogComponent(prefrenceComp);
+    	
+    	m_samplePercentage = SampleLogTableNodeModel.createSamplePercentage();
     	DialogComponentNumber percentageComp = new DialogComponentNumber(m_samplePercentage,
                 "Sample Number:", 0.1);
     	
