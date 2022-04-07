@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse version="3.0"?><plugin>
-        	
+                	
     
+	
+   
 	<extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
 		<category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
 		<category icon="icon/category-io.png" level-id="io" name="IO" path="/community/processmining" />
@@ -36,6 +38,7 @@
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
 		<!-- nodes in discovery-->
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery" deprecated="true" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2" />
@@ -53,55 +56,88 @@
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPMNodeFactory"/>
+                    
+    </extension>
+        	
+    
+    <extension point="org.knime.core.PortType">
+                		
         
-	</extension>
-
-
-	<extension point="org.knime.core.PortType">
-		<portType hidden="false" name="Event Log" objectClass="org.pm4knime.portobject.XLogPortObject" objectSerializer="org.pm4knime.portobject.XLogPortObject$XLogPortObjectSerializer" specClass="org.pm4knime.portobject.XLogPortObjectSpec" specSerializer="org.pm4knime.portobject.XLogPortObjectSpec$XLogPortObjectSpecSerializer"></portType>
-		<portType hidden="false" name="Petri Net" objectClass="org.pm4knime.portobject.PetriNetPortObject" objectSerializer="org.pm4knime.portobject.PetriNetPortObject$PetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.PetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.PetriNetPortObjectSpec$PetriNetPortObjectSpecSerializer"></portType>
-		<portType hidden="false" name="Process Tree" objectClass="org.pm4knime.portobject.ProcessTreePortObject" objectSerializer="org.pm4knime.portobject.ProcessTreePortObjectSerializer" specClass="org.pm4knime.portobject.ProcessTreePortObjectSpec" specSerializer="org.pm4knime.portobject.ProcessTreePortObjectSpecSerializer"></portType>
-		<portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObject" objectSerializer="org.pm4knime.portobject.RepResultPortObject$RepResultPortObjectSerializer" specClass="org.pm4knime.portobject.RepResultPortObjectSpec" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpec$RepResultPortObjectSpecSerializer"></portType>
-		<portType hidden="false" name="Directly Follows Model" objectClass="org.pm4knime.portobject.DFMPortObject" objectSerializer="org.pm4knime.portobject.DFMPortObject$DFMPortObjectSerializer" specClass="org.pm4knime.portobject.DFMPortObjectSpec" specSerializer="org.pm4knime.portobject.DFMPortObjectSpec$DFMPortObjectSpecSerializer"></portType>
-	</extension>
-	<extension point="org.knime.js.core.javascriptComponents">
-        <javascriptComponent 
-        	getComponentValue-method-name="getComponentValue" 
-        	implementationBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle" 
-        	init-method-name="init" 
-        	javascriptComponentID="org.pm4knime.node.visualizations.jsgraphviz.component" 
-        	name="Java Script GraphViz Visualizer" 
-        	namespace="jsgraphviz">
+        <portType hidden="false" name="Event Log" objectClass="org.pm4knime.portobject.XLogPortObject" objectSerializer="org.pm4knime.portobject.XLogPortObject$XLogPortObjectSerializer" specClass="org.pm4knime.portobject.XLogPortObjectSpec" specSerializer="org.pm4knime.portobject.XLogPortObjectSpec$XLogPortObjectSpecSerializer"/>
+                		
+        
+        <portType hidden="false" name="Petri Net" objectClass="org.pm4knime.portobject.PetriNetPortObject" objectSerializer="org.pm4knime.portobject.PetriNetPortObject$PetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.PetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.PetriNetPortObjectSpec$PetriNetPortObjectSpecSerializer"/>
+                		
+        
+        <portType hidden="false" name="Process Tree" objectClass="org.pm4knime.portobject.ProcessTreePortObject" objectSerializer="org.pm4knime.portobject.ProcessTreePortObjectSerializer" specClass="org.pm4knime.portobject.ProcessTreePortObjectSpec" specSerializer="org.pm4knime.portobject.ProcessTreePortObjectSpecSerializer"/>
+                		
+        
+        <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObject" objectSerializer="org.pm4knime.portobject.RepResultPortObject$RepResultPortObjectSerializer" specClass="org.pm4knime.portobject.RepResultPortObjectSpec" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpec$RepResultPortObjectSpecSerializer"/>
+                		
+        
+        <portType hidden="false" name="Directly Follows Model" objectClass="org.pm4knime.portobject.DFMPortObject" objectSerializer="org.pm4knime.portobject.DFMPortObject$DFMPortObjectSerializer" specClass="org.pm4knime.portobject.DFMPortObjectSpec" specSerializer="org.pm4knime.portobject.DFMPortObjectSpec$DFMPortObjectSpecSerializer"/>
+        <portType hidden="false" name="Directly Follows Model" objectClass="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2" objectSerializer="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2$DFMPortObject2Serializer" specClass="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2Spec" specSerializer="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObjectSpec2$DFMPortObjectSpec2Serializer"/>
+                	
+    
+    </extension>
+        	
+    
+    <extension point="org.knime.js.core.javascriptComponents">
+                        
+        
+        <javascriptComponent getComponentValue-method-name="getComponentValue" implementationBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle" init-method-name="init" javascriptComponentID="org.pm4knime.node.visualizations.jsgraphviz.component" name="Java Script GraphViz Visualizer" namespace="jsgraphviz">
          </javascriptComponent>
+                    
+    
     </extension>
+            
+    
     <extension point="org.knime.js.core.webResources">
-
-    	<webResourceBundle 
-        	debug="true" 
-        	name="Java Script GraphViz Visualizer" 
-        	usesDefine="false" 
-        	version="1.0.0" 
-        	webResourceBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle">
-            <webResource 
-            	relativePathSource="src/java/org/pm4knime/node/visualizations/jsgraphviz/" 
-            	relativePathTarget="src/java/org/pm4knime/node/visualizations/jsgraphviz/">
+                    	
+        
+        <webResourceBundle debug="true" name="Java Script GraphViz Visualizer" usesDefine="false" version="1.0.0" webResourceBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle">
+                                    
+            
+            <webResource relativePathSource="src/java/org/pm4knime/node/visualizations/jsgraphviz/" relativePathTarget="src/java/org/pm4knime/node/visualizations/jsgraphviz/">
        		</webResource>
-       		<importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.js" type="JAVASCRIPT" />
-            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.css" type="CSS" />
+                               		
+            
+            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.js" type="JAVASCRIPT"/>
+                                    
+            
+            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.css" type="CSS"/>
+                                    
+            
             <webDependency webResourceBundleID="bootstrap_3.3.6"> </webDependency>
+                                    
+            
             <webDependency webResourceBundleID="Viz"> </webDependency>
+                                    
+            
             <webDependency webResourceBundleID="RequireJS_2.3.3"> </webDependency>
+                                
+        
         </webResourceBundle>
-        <webResourceBundle
-              debug="true"
-              name="Graphviz JS"
-              usesDefine="false"
-              version="2.1.2"
-              webResourceBundleID="Viz">
-           <webResource relativePathSource="js-libs/viz/" relativePathTarget="js-libs/viz/"> </webResource>
-           <importResource relativePath="js-libs/viz/viz.js" type="JAVASCRIPT"> </importResource>
-           <importResource relativePath="js-libs/viz/full.render.js" type="JAVASCRIPT"> </importResource>
-        </webResourceBundle>                
+                        
+        
+        <webResourceBundle debug="true" name="Graphviz JS" usesDefine="false" version="2.1.2" webResourceBundleID="Viz">
+                                   
+            
+            <webResource relativePathSource="js-libs/viz/" relativePathTarget="js-libs/viz/"> </webResource>
+                                   
+            
+            <importResource relativePath="js-libs/viz/viz.js" type="JAVASCRIPT"> </importResource>
+                                   
+            
+            <importResource relativePath="js-libs/viz/full.render.js" type="JAVASCRIPT"> </importResource>
+                                
+        
+        </webResourceBundle>
+                                
+    
+    
     </extension>
-                
+                        
+
+
 </plugin>
