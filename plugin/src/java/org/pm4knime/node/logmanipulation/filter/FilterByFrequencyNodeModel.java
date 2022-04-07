@@ -86,6 +86,16 @@ public class FilterByFrequencyNodeModel extends DefaultNodeModel {
     	}
     	
     	XLog nlog ; 
+    	
+    	
+    	System.out.print("iThreshold - XES - ");
+    	System.out.println(iThreshold);
+    	
+    	System.out.print("Threshold - XES - ");
+    	System.out.println(m_threshold.getDoubleValue());
+    	
+    	System.out.print("LogSize - XES - ");
+    	System.out.println(log.size());
     	// for SingleTV... we need to interpret the percentage into absolute value
     	if(m_isForSingleTV.getBooleanValue()) {
     		nlog  = XLogFilterUtil.filterBySingleTVFreq(log, m_isKeep.getBooleanValue(), iThreshold, exec);
