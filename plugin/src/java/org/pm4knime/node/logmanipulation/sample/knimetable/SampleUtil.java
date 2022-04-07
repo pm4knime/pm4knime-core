@@ -17,13 +17,13 @@ import org.pm4knime.util.XLogUtil;
 
 public class SampleUtil {
 	
-	public static List<DataCell> sample(long bound, double prob, Set<DataCell> traceIds) {
+	public static HashSet<DataCell> sample(long bound, double prob, Set<DataCell> traceIds) {
 
 		int num = (int) (prob * bound);
 		return sample(bound, num, traceIds);
 	}
 
-	public static List<DataCell> sample(long bound, int num, Set<DataCell> traceIds) {
+	public static HashSet<DataCell> sample(long bound, int num, Set<DataCell> traceIds) {
 		ArrayList<DataCell> idx_list = new ArrayList<>();
 		ArrayList<DataCell> trace_list = new ArrayList<DataCell>();
 		trace_list.addAll(traceIds);
@@ -39,7 +39,7 @@ public class SampleUtil {
 
 			
 		}
-		return idx_list;
+		return new HashSet<DataCell>(idx_list);
 	}
 
 	public static BufferedDataTable[] sampleLog(BufferedDataTable log, int number, 
@@ -47,23 +47,26 @@ public class SampleUtil {
 
 		BufferedDataContainer slog = exec.createDataContainer(log.getDataTableSpec(), false);
 		BufferedDataContainer dlog = exec.createDataContainer(log.getDataTableSpec(), false);
-
+		
+		
 
 		// sample the index for the traces
     	Set<DataCell> traceIds = log.getDataTableSpec().getColumnSpec(traceIdString).getDomain().getValues();
     	if (traceIds == null){
 			traceIds =  getUniqueValues(log, traceIdString);
 		}
-		if(number > traceIds.size()) {
+    	
+
+    	if(number > traceIds.size()) {
 			System.out.println("The chosen sample number is bigger than the log, will only output the whole log");
 			number = (int) traceIds.size();
 		}
 
-		List<DataCell> sIdx = SampleUtil.sample(traceIds.size(), number, traceIds);
+    	HashSet<DataCell> sIdx = SampleUtil.sample(traceIds.size(), number, traceIds);
+
 		for (DataRow row : log) {
 			
 	    	DataCell traceIDData = row.getCell(log.getDataTableSpec().findColumnIndex(traceIdString));
-
 			if (sIdx.contains(traceIDData)) {
 				slog.addRowToTable(row); // TODO: is that a deep copy?
 			} else {
@@ -73,6 +76,7 @@ public class SampleUtil {
 		
 		slog.close();
 		dlog.close();
+		
 		return new BufferedDataTable[] { slog.getTable(), dlog.getTable() };
 	}
 
@@ -86,17 +90,20 @@ public class SampleUtil {
 	 */
 	public static BufferedDataTable[] sampleLog(BufferedDataTable log, double percentage, 
 			String traceIdString, ExecutionContext exec) {
+		
 		// convert percentage to num
 		Set<DataCell> traceIds = log.getDataTableSpec().getColumnSpec(traceIdString).getDomain().getValues();
 		if (traceIds == null){
 			traceIds =  getUniqueValues(log, traceIdString);
 		}
 		int num = (int) (traceIds.size() * percentage);
+
 		return sampleLog(log, num, traceIdString, exec);
 	}
 	
 	
 	public static Set<DataCell> getUniqueValues(BufferedDataTable log, String traceIdString) {
+		
 		Set<DataCell> traceIds = new HashSet<DataCell>();
 		for (DataRow row : log) {
 	    	
