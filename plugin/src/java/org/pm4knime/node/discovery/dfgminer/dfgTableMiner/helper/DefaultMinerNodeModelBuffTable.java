@@ -1,7 +1,5 @@
-package org.pm4knime.test;
+package org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper;
 
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -39,11 +37,11 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 	protected PortObject[] execute(final PortObject[] inObjects,
 	            final ExecutionContext exec) throws Exception {
 		// we always put the event log as the first input!! 
-		BufferedDataTable tData = (BufferedDataTable)inObjects[0];
+		logPO = (BufferedDataTable)inObjects[0];
 		
 // check cancellation of node before mining
     	checkCanceled(null, exec);
-		PortObject pmPO = mine(tData, exec);
+		PortObject pmPO = mine(logPO, exec);
 // check cancellation of node after mining
 		checkCanceled(null, exec);
 		return new PortObject[] { pmPO};
@@ -64,6 +62,7 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 		// to change it, we force it to configure the even log here
 		if(m_classifier.getStringValue().isEmpty())
 			throw new InvalidSettingsException("Classifier is not set");
+			
 		
 		
 		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];
@@ -76,11 +75,11 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 	
 	
 	// get the classifier parameters from it 
-	public XEventClassifier getEventClassifier() {
+	public String getEventClassifier() {
 		// get the list of classifiers from the event log!!
 		//XLog log = logPO.getLog();
 		//return XLogUtil.getEventClassifier(log, m_classifier.getStringValue());
-		return null;
+		return m_classifier.getStringValue();
 		
 	}
 	
