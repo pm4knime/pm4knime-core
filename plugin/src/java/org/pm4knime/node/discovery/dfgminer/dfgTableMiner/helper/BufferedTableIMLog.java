@@ -91,8 +91,6 @@ public class BufferedTableIMLog implements IMLog {
 
 		}
 		finalise();
-		System.out.println("Index to Activity List:" + Arrays.toString(index2activity));
-
 	}
 
 	public static long getEvent(int activityIndex, int lifeCycleTransitionIndex) {
