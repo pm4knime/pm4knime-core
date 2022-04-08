@@ -29,9 +29,11 @@
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" />
 		<!-- nodes in manipulation-->
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory" />
+		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
+		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
 		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
 		<!-- nodes in conversion-->
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory" />
