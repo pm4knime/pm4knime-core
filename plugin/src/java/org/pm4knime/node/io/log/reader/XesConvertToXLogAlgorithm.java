@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
@@ -39,7 +38,6 @@ import org.xesstandard.model.attributes.XesIntegerNumberAttribute;
 import org.xesstandard.model.attributes.XesListAttribute;
 import org.xesstandard.model.attributes.XesRealNumberAttribute;
 import org.xesstandard.model.attributes.XesStringAttribute;
-import org.xml.sax.SAXException;
 
 /**
  * Converts a Xes log to an Xlog.
@@ -141,7 +139,7 @@ public class XesConvertToXLogAlgorithm {
 		if (convertedExtension == null) {
 			try {
 				convertedExtension = XExtensionParser.instance().parse(extension.getURI());
-			} catch (IOException | ParserConfigurationException | SAXException e) {
+			} catch (Exception e) {
 				// Cannot convert extension.
 			}
 		}

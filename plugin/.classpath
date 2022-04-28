@@ -1,263 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/AcceptingPetriNet-latest.jar"/>
-	<classpathentry kind="lib" path="lib/AccessCPN-unknown.jar"/>
-	<classpathentry kind="lib" path="lib/ActivityClusterArrayCreator-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ActivityClusterArray-latest.jar"/>
-	<classpathentry kind="lib" path="lib/AlphaMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/Animation-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ant-1.9.4.jar"/>
-	<classpathentry kind="lib" path="lib/antlr4-runtime-4.5.jar"/>
-	<classpathentry kind="lib" path="lib/ApacheUtils-latest.jar"/>
-	<classpathentry kind="lib" path="lib/arpack_combined_all-0.1.jar"/>
-	<classpathentry kind="lib" path="lib/asm-5.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/autocomplete-2.5.8.jar"/>
-	<classpathentry kind="lib" path="lib/axis-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/BasicUtils-latest.jar"/>
-	<classpathentry kind="lib" path="lib/batik-anim-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-awt-util-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-bridge-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-codec-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-css-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-dom-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-ext-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-extension-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-gui-util-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-gvt-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-parser-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-rasterizer-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-script-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-svg-dom-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-svggen-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-swing-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-transcoder-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-util-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/batik-xml-1.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/bounce-0.18.jar"/>
-	<classpathentry kind="lib" path="lib/bsh-2.0b4.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityGraphCreator-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityGraph-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityMatrix-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CausalActivityMatrixMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CNet-latest.jar"/>
-	<classpathentry kind="lib" path="lib/CNetReplayer-latest.jar"/>
-	<classpathentry kind="lib" path="lib/collections-generic-4.01.jar"/>
-	<classpathentry kind="lib" path="lib/colt-1.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/commons-beanutils-1.8.3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-cli-1.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-compress-1.13.jar"/>
-	<classpathentry kind="lib" path="lib/commons-digester-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-math3-3.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/compress-lzf-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/concurrent-trees-2.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/core-1.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/CPNet-latest.jar"/>
-	<classpathentry kind="lib" path="lib/cqengine-2.7.1.jar"/>
-	<classpathentry kind="lib" path="lib/DataAwareCNetMinerHCG-latest.jar"/>
-	<classpathentry kind="lib" path="lib/DataAwareReplayer-latest.jar"/>
-	<classpathentry kind="lib" path="lib/DataAwareReplayerLGPL-latest.jar"/>
-	<classpathentry kind="lib" path="lib/DataExpression-latest.jar"/>
-	<classpathentry kind="lib" path="lib/DataPetriNets-latest.jar"/>
-	<classpathentry kind="lib" path="lib/DataPetriNetsLGPL-latest.jar"/>
-	<classpathentry kind="lib" path="lib/dictomaton-1.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/DirectlyFollowsModelMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/EfficientStorage-latest.jar"/>
-	<classpathentry kind="lib" path="lib/EMF-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ETConformance-latest.jar"/>
-	<classpathentry kind="lib" path="lib/exp4j-0.3.8.jar"/>
-	<classpathentry kind="lib" path="lib/FastInfoset-1.2.12.jar"/>
-	<classpathentry kind="lib" path="lib/fastutil-7.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/FilterableSortableTablePanel-latest.jar"/>
-	<classpathentry kind="lib" path="lib/flanagan-0.9alpha.jar"/>
-	<classpathentry kind="lib" path="lib/flatlaf-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/Flex-latest.jar"/>
-	<classpathentry kind="lib" path="lib/fop-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphics2d-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsbase-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-emf-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-java-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-pdf-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-ps-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-svg-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-swf-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-graphicsio-tests-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/freehep-io-2.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/Fuzzy-latest.jar"/>
-	<classpathentry kind="lib" path="lib/google-analytics-java-1.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/GraphVisualizers-latest.jar"/>
-	<classpathentry kind="lib" path="lib/GraphViz-latest.jar"/>
-	<classpathentry kind="lib" path="lib/gson-2.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/guava-16.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/GuideTreeMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/gurobi-6.5.jar"/>
-	<classpathentry kind="lib" path="lib/HeuristicsMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/high-scale-lib-1.1.4.jar"/>
-	<classpathentry kind="lib" path="lib/httpclient-4.5.3.jar"/>
-	<classpathentry kind="lib" path="lib/httpcore-4.4.6.jar"/>
-	<classpathentry kind="lib" path="lib/HybridILPMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/IncorporateNegativeInformation-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InductiveMinerDeprecated-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InductiveMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InductiveVisualMiner-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InteractiveLocalizedPlaceAnalysis-latest.jar"/>
-	<classpathentry kind="lib" path="lib/InteractiveVisualization-latest.jar"/>
-	<classpathentry kind="lib" path="lib/istack-commons-runtime-3.0.12.jar"/>
-	<classpathentry kind="lib" path="lib/itextpdf-5.5.11.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-annotations-2.8.0.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-core-2.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-databind-2.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta.activation-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta.activation-api-1.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta.xml.bind-api-2.3.3.jar"/>
-	<classpathentry kind="lib" path="lib/jama-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/japura-1.12.3.jar"/>
-	<classpathentry kind="lib" path="lib/jargs-latest.jar"/>
-	<classpathentry kind="lib" path="lib/jas-plotter-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/javabdd-1.0b2.jar"/>
-	<classpathentry kind="lib" path="lib/javacsv-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/java-cup-11b-2015.03.26.jar"/>
-	<classpathentry kind="lib" path="lib/java-cup-11b-20160615.jar"/>
-	<classpathentry kind="lib" path="lib/java-cup-11b-runtime-2015.03.26.jar"/>
-	<classpathentry kind="lib" path="lib/java-cup-runtime-11b-20160615.jar"/>
-	<classpathentry kind="lib" path="lib/javailp-1.2a.jar"/>
-	<classpathentry kind="lib" path="lib/java-merge-sort-1.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/java-sizeof-0.0.5.jar"/>
-	<classpathentry kind="lib" path="lib/javassist-3.18.2-GA.jar"/>
-	<classpathentry kind="lib" path="lib/javax.activation-api-1.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359-javadoc.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359-sources.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-impl-2.1.17.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-runtime-2.3.5.jar"/>
-	<classpathentry kind="lib" path="lib/jaxb-xjc-2.1.17.jar"/>
-	<classpathentry kind="lib" path="lib/jbpt-0.2.429.1.jar"/>
-	<classpathentry kind="lib" path="lib/jbpt-0.2.429.jar"/>
-	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/jclipboardhelper-0.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jcommon-1.0.24.jar"/>
-	<classpathentry kind="lib" path="lib/jdom-legacy-1.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/jep-2.4.2.jar"/>
-	<classpathentry kind="lib" path="lib/jfilechooser-bookmarks-0.1.6.jar"/>
-	<classpathentry kind="lib" path="lib/jfreechart-1.0.19.jar"/>
-	<classpathentry kind="lib" path="lib/jgraph-5.13.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/jgrapht-jdk1.6.jar"/>
-	<classpathentry kind="lib" path="lib/jlfgr-1_0.jar"/>
-	<classpathentry kind="lib" path="lib/jmathplot-unknown.jar"/>
-	<classpathentry kind="lib" path="lib/jniloader-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/joda-time-2.9.4.jar"/>
-	<classpathentry kind="lib" path="lib/jsr173_api-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jung-algorithms-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jung-api-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jung-graph-impl-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jung-io-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jung-visualization-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.12.jar"/>
-	<classpathentry kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/jython-standalone-2.7.0.jar"/>
-	<classpathentry kind="lib" path="lib/KitFox-latest.jar"/>
-	<classpathentry kind="lib" path="lib/kryo-3.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/kryo-serializers-0.37.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-api-2.16.0.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-core-2.16.0.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-slf4j-impl-2.16.0.jar"/>
-	<classpathentry kind="lib" path="lib/LogAbstractions-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LogDialog-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LogEnhancement-latest.jar"/>
-	<classpathentry kind="lib" path="lib/Log-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LogProjection-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LPEngine-latest.jar"/>
-	<classpathentry kind="lib" path="lib/LpSolve-latest.jar"/>
-	<classpathentry kind="lib" path="lib/lz4-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/mapdb-2.0-beta13.jar"/>
-	<classpathentry kind="lib" path="lib/minlog-1.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/mtj-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/Murata-latest.jar"/>
-	<classpathentry kind="lib" path="lib/native_ref-java-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/native_system-java-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-java-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-linux-armhf-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-linux-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-linux-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-osx-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-win-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_ref-win-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-linux-armhf-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-linux-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-linux-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-osx-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-win-i686-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/netlib-native_system-win-x86_64-1.1-natives.jar"/>
-	<classpathentry kind="lib" path="lib/objenesis-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/opencsv-2.4-patched.jar"/>
-	<classpathentry kind="lib" path="lib/openide-lookup-1.9-patched-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/OpenXES-20211004.jar"/>
-	<classpathentry kind="lib" path="lib/optics_dbScan-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.emf.common-2.7.0.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi-2.5.0.v20100521-1846.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore-2.8.3.v20130125-0546.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.uml2.common-1.5.0.v201005031530.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.uml2.uml-3.1.2.v201010261927.jar"/>
-	<classpathentry kind="lib" path="lib/org.mozilla.javascript-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/OSService-latest.jar"/>
-	<classpathentry kind="lib" path="lib/Performance-latest.jar"/>
-	<classpathentry kind="lib" path="lib/PetriNets-latest.jar"/>
-	<classpathentry kind="lib" path="lib/PNAnalysis-latest.jar"/>
-	<classpathentry kind="lib" path="lib/PNetAlignmentAnalysis-latest.jar"/>
-	<classpathentry kind="lib" path="lib/prefuse-core-1.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/ProcessTree-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ProM-Contexts-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ProM-Framework-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ProM-Models-latest.jar"/>
-	<classpathentry kind="lib" path="lib/ProM-Plugins-latest.jar"/>
-	<classpathentry kind="lib" path="lib/Properties-latest.jar"/>
-	<classpathentry kind="lib" path="lib/protobuf-java-2.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/reflectasm-1.10.1.jar"/>
-	<classpathentry kind="lib" path="lib/reflections-0.9.10.jar"/>
-	<classpathentry kind="lib" path="lib/rhino-1.7.7.jar"/>
-	<classpathentry kind="lib" path="lib/rsyntaxtextarea-2.5.8.jar"/>
-	<classpathentry kind="lib" path="lib/Sat4j-latest.jar"/>
-	<classpathentry kind="lib" path="lib/saxon-9he.jar"/>
-	<classpathentry kind="lib" path="lib/Saxon-latest.jar"/>
-	<classpathentry kind="lib" path="lib/simmetrics-latest.jar"/>
-	<classpathentry kind="lib" path="lib/simpleEducationalLearningSchemes-1.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.7.25.jar"/>
-	<classpathentry kind="lib" path="lib/slickerbox-1.0rc1.jar"/>
-	<classpathentry kind="lib" path="lib/Spex-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.15.1.jar"/>
-	<classpathentry kind="lib" path="lib/TableLayout-20050920.jar"/>
-	<classpathentry kind="lib" path="lib/TraceAlignmentWithGuideTree-latest.jar"/>
-	<classpathentry kind="lib" path="lib/TransitionSystems-latest.jar"/>
-	<classpathentry kind="lib" path="lib/trove4j-3.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/txw2-2.3.5.jar"/>
-	<classpathentry kind="lib" path="lib/Uitopia-0.6-20190913.jar"/>
-	<classpathentry kind="lib" path="lib/UITopiaResources-0.6-20190913.jar"/>
-	<classpathentry kind="lib" path="lib/ujmp-complete-0.2.5.jar"/>
-	<classpathentry kind="lib" path="lib/uncommons-maths-1.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/univocity-parsers-2.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/Weka-latest.jar"/>
-	<classpathentry kind="lib" path="lib/weka-stable-3.8.0.jar"/>
-	<classpathentry kind="lib" path="lib/Widgets-latest.jar"/>
-	<classpathentry kind="lib" path="lib/XESAlignmentExtension-latest.jar"/>
-	<classpathentry kind="lib" path="lib/XESLite-latest.jar"/>
-	<classpathentry kind="lib" path="lib/XESStandardConnector-latest.jar"/>
-	<classpathentry kind="lib" path="lib/XESStandard-latest.jar"/>
-	<classpathentry kind="lib" path="lib/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="lib/xstream-1.4.9.jar"/>
-	<classpathentry kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
-	<classpathentry kind="lib" path="lib/YAWL-latest.jar"/>
-	<classpathentry kind="lib" path="lib/PNetReplayer-PM4KNIME.jar.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/AcceptingPetriNet-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/AccessCPN-unknown.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ActivityClusterArray-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ActivityClusterArrayCreator-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/AlphaMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Animation-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ant-1.9.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/antlr4-runtime-4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ApacheUtils-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/asm-5.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/autocomplete-2.5.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/axis-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/BasicUtils-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-anim-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-awt-util-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-bridge-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-codec-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-css-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-dom-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-ext-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-extension-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-gui-util-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-gvt-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-parser-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-rasterizer-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-script-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-svg-dom-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-svggen-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-swing-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-transcoder-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-util-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-xml-1.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bounce-0.18.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bsh-2.0b4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityGraph-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityGraphCreator-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityMatrix-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CausalActivityMatrixMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CNet-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CNetReplayer-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/collections-generic-4.01.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/colt-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-cli-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-compress-1.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-digester-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-math3-3.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compress-lzf-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/concurrent-trees-2.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/core-1.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/CPNet-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cqengine-2.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataAwareCNetMinerHCG-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataAwareReplayer-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataAwareReplayerLGPL-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataExpression-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataPetriNets-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DataPetriNetsLGPL-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/dictomaton-1.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/DirectlyFollowsModelMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/EfficientStorage-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/EMF-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ETConformance-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/exp4j-0.3.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/fastutil-7.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/FilterableSortableTablePanel-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/flanagan-0.9alpha.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/fop-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphics2d-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsbase-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-emf-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-java-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-pdf-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-ps-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-svg-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-swf-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-graphicsio-tests-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freehep-io-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Fuzzy-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/google-analytics-java-1.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/GraphVisualizers-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/GraphViz-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gson-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/guava-16.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/GuideTreeMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gurobi-6.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/HeuristicsMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/high-scale-lib-1.1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.5.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.4.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/HybridILPMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/InductiveMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/InductiveMinerDeprecated-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/InductiveVisualMiner-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/InteractiveLocalizedPlaceAnalysis-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/InteractiveVisualization-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/itextpdf-5.5.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.8.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.8.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.8.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jama-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/japura-1.12.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jargs-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jas-plotter-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java-cup-11b-2015.03.26.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java-cup-11b-runtime-2015.03.26.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java-merge-sort-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/java-sizeof-0.0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javabdd-1.0b2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javacsv-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javailp-1.2a.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javassist-3.18.2-GA.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.24.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jdom-legacy-1.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jep-2.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgraph-5.13.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgrapht-jdk1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jlfgr-1_0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jmathplot-unknown.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jniloader-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/joda-time-2.9.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jung-algorithms-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jung-api-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jung-graph-impl-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jung-io-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jung-visualization-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.12.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jython-standalone-2.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/KitFox-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kryo-3.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kryo-serializers-0.37.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Log-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LogAbstractions-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LogDialog-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LogEnhancement-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LogProjection-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LPEngine-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LpSolve-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lz4-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mapdb-2.0-beta13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/minlog-1.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mtj-1.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Murata-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/native_ref-java-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/native_system-java-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-java-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_ref-osx-x86_64-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/netlib-native_system-osx-x86_64-1.1-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/objenesis-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/opencsv-2.4-patched.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/openide-lookup-1.9-patched-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/OpenXES-20211004.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/optics_dbScan-1.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.uml2.common-1.5.0.v201005031530.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.mozilla.javascript-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/OSService-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Performance-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PetriNets-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PNAnalysis-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PNetAlignmentAnalysis-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/prefuse-core-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ProcessTree-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ProM-Contexts-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ProM-Framework-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ProM-Models-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ProM-Plugins-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Properties-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/protobuf-java-2.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/reflectasm-1.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/reflections-0.9.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rhino-1.7.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rsyntaxtextarea-2.5.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Sat4j-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon-9he.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Saxon-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/simmetrics-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/simpleEducationalLearningSchemes-1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.25.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slickerbox-1.0rc1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Spex-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sqlite-jdbc-3.15.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/TableLayout-20050920.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/TraceAlignmentWithGuideTree-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/TransitionSystems-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/trove4j-3.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Uitopia-0.6-20190913.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/UITopiaResources-0.6-20190913.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ujmp-complete-0.2.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/uncommons-maths-1.2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/univocity-parsers-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Weka-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/weka-stable-3.8.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Widgets-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/XESAlignmentExtension-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/XESLite-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xpp3-1.1.4c.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xstream-1.4.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/YAWL-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
+	<classpathentry kind="src" path="src/java/"/>
+	<classpathentry exported="true" kind="lib" path="lib/XESStandard-latest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PNetReplayer-PM4KNIME.jar.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
