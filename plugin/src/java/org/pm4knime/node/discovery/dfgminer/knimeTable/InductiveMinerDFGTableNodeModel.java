@@ -16,11 +16,18 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.dfgminer.DFM2PMNodeModel;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2;
 import org.pm4knime.portobject.DFMPortObject;
+import org.pm4knime.portobject.DFMPortObjectSpec;
+import org.pm4knime.portobject.DfgMsdPortObject;
+import org.pm4knime.portobject.DfgMsdPortObjectSpec;
+import org.pm4knime.portobject.EfficientTreePortObject;
+import org.pm4knime.portobject.EfficientTreePortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
+import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
@@ -29,6 +36,11 @@ import org.processmining.plugins.InductiveMiner.dfgOnly.DfgMiningParametersIMcd;
 import org.processmining.plugins.InductiveMiner.dfgOnly.DfgMiningParametersIMd;
 import org.processmining.plugins.InductiveMiner.dfgOnly.DfgMiningParametersIMfd;
 import org.processmining.plugins.InductiveMiner.dfgOnly.plugins.IMdProcessTree;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
+import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerWithoutLogPlugin;
+import org.processmining.plugins.inductiveminer2.withoutlog.MiningParametersWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
+import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMWithoutLog;
 import org.processmining.processtree.ProcessTree;
 
 /**
@@ -54,31 +66,26 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
      */
     protected InductiveMinerDFGTableNodeModel() {
     
-    	super(new PortType[] { DFMPortObject2.TYPE }, new PortType[] {ProcessTreePortObject.TYPE} );
+    	super(new PortType[] { DfgMsdPortObject.TYPE }, new PortType[] {EfficientTreePortObject.TYPE} );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected BufferedDataTable[] execute(final PortObject[] inData,
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-  	logger.info("Begin:  DFM2PM Miner");
+  	logger.info("Begin:  Inductive miner Miner");
     	
-  	DFMPortObject2 dfmPO = null ;
-    	for(PortObject obj: inData)
-        	if(obj instanceof DFMPortObject2) {
-        		dfmPO = (DFMPortObject2)obj;
-        		break;
-        	}
+  	DfgMsdPortObject dfgMsdPO = (DfgMsdPortObject) inData[0] ;
         
-    	Dfg dfm = dfmPO.getDfm();
+    	DfgMsd dfmMsd = dfgMsdPO.getDfgMsd();
     	
     	
     	
 		// here we have parameter to be set: noiseThrehold, do we still need to reset this threshold? 
 		// or not like this?? we set noise threshold for further filtering
-		DfgMiningParameters params = null;
+		/*DfgMiningParameters params = null;
 		if(m_variant.getStringValue().equals(CFG_VARIANT_VALUES[0])) {
 			params = new DfgMiningParametersIMd();
 		}else if(m_variant.getStringValue().equals(CFG_VARIANT_VALUES[1])) {
@@ -89,9 +96,9 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 			throw new Exception("not found variant type");
 		}
 		
-		params.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
+		params.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());*/
 		
-    	ProcessTree pt = IMdProcessTree.mineProcessTree(dfm, params, new Canceller() {
+		EfficientTree ptEff = InductiveMinerWithoutLogPlugin.mineTree(dfmMsd, new MiningParametersIMWithoutLog(), new Canceller() {
 			public boolean isCancelled() {
 				try {
 					checkCanceled(exec);
@@ -101,12 +108,12 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 				return false;
 			}
 		});
+
     	
     	checkCanceled(exec);
-    	ProcessTreePortObject ptPO = new ProcessTreePortObject(pt);
-    	
-		logger.info("End:  DFM2PM Miner");
-    	return null;
+    	EfficientTreePortObject effObj = new EfficientTreePortObject(ptEff);
+		logger.info("End:  Inductive Miner");
+    	return new PortObject[] {effObj};
     }
 
     /**
@@ -121,11 +128,16 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
-        return new DataTableSpec[]{null};
+       	if(!inSpecs[0].getClass().equals(DfgMsdPortObjectSpec.class)) 
+    		throw new InvalidSettingsException("Input is not a valid DfgMsd  model!");
+    	
+    	
+       	EfficientTreePortObjectSpec ptPOSpec = new EfficientTreePortObjectSpec();
+    	
+    	return new EfficientTreePortObjectSpec[]{ ptPOSpec};
     }
 
     /**

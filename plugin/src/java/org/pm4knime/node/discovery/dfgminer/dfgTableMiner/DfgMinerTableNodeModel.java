@@ -34,9 +34,14 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
+import org.pm4knime.portobject.DFMPortObjectSpec;
+import org.pm4knime.portobject.DfgMsdPortObject;
+import org.pm4knime.portobject.DfgMsdPortObjectSpec;
+import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.processmining.directlyfollowsmodelminer.mining.DFMMiner;
 import org.processmining.directlyfollowsmodelminer.mining.DfgMsd2Dfm;
 import org.processmining.directlyfollowsmodelminer.model.DirectlyFollowsModel;
+import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
@@ -101,7 +106,7 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 	    protected DfgMinerTableNodeModel() {
 	    
 	        // TODO: Specify the amount of input and output ports needed.
-	    	super( new PortType[]{BufferedDataTable.TYPE }, new PortType[] { DFMPortObject2.TYPE }); 
+	    	super( new PortType[]{BufferedDataTable.TYPE }, new PortType[] { DfgMsdPortObject.TYPE }); 
 	    	}
 
 		@Override
@@ -122,13 +127,13 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 			}
 			checkCanceled(exec);
 			IMLog IM_log = new BufferedTableIMLog(log,activityClassifier);
-			DfgMsd dfg2 = convert(IM_log);
-			DirectlyFollowsModel dfg3 = DfgMsd2Dfm.convert(dfg2);
+			DfgMsd dfgmsd = convert(IM_log);
 			checkCanceled(exec);
-			DFMPortObject2 dfmPO = new DFMPortObject2(dfg3);
 			logger.info("End:  DFM Miner");
-			return dfmPO;
+			return new DfgMsdPortObject(dfgmsd);
 		}
+		
+
 		
 		public static DfgMsd convert(IMLog log) {
 			DfgMsdImpl dfg = new DfgMsdImpl(log.getActivities());
@@ -246,7 +251,8 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 		@Override
 		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 			// TODO Auto-generated method stub
-			return null;
+				return new PortObjectSpec[] { new DfgMsdPortObjectSpec() };
+			
 		}
 }
 
