@@ -21,11 +21,6 @@ public class InductiveMinerDFGTableNodeDialog extends DefaultNodeSettingsPane {
      * New pane for configuring the InductiveMinerDFGTable node.
      */
     protected InductiveMinerDFGTableNodeDialog() {
-		m_variant = new SettingsModelString(InductiveMinerDFGTableNodeModel.CFG_VARIANT_KEY, "");
-		DialogComponentStringSelection variantComp = new DialogComponentStringSelection(m_variant, "Variant",
-				InductiveMinerDFGTableNodeModel.CFG_VARIANT_VALUES);
-		addDialogComponent(variantComp);
-
 		m_noiseThreshold = new SettingsModelDoubleBounded(InductiveMinerDFGTableNodeModel.CFGKEY_NOISE_THRESHOLD, 0.8, 0, 1.0);
 		DialogComponentNumber noiseThresholdComp = new DialogComponentNumber(m_noiseThreshold,
 				"Write the Noise Threshold", 0);

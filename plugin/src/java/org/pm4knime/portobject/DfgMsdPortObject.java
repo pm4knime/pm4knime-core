@@ -1,8 +1,14 @@
 package org.pm4knime.portobject;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 
@@ -18,7 +24,8 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.node.port.AbstractPortObject.AbstractPortObjectSerializer;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2;
+import org.pm4knime.util.PetriNetUtil;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.directlyfollowsmodelminer.mining.plugins.DirectlyFollowsModelVisualisationPlugin;
 import org.processmining.directlyfollowsmodelminer.model.DirectlyFollowsModel;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
@@ -26,6 +33,8 @@ import org.processmining.plugins.directlyfollowsgraph.DirectlyFollowsGraph;
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizDirectlyFollowsGraph;
+import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraph;
+import org.processmining.plugins.inductiveminer2.plugins.DfgMsdImportPlugin;
 import org.processmining.plugins.inductiveminer2.plugins.DfgMsdVisualisationPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsdImpl;
@@ -34,6 +43,8 @@ public class DfgMsdPortObject extends AbstractPortObject {
 
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(DfgMsdPortObject.class);
 	private static final String ZIP_ENTRY_NAME = "DfgMsdPortObject";
+	private static final int BUFFER_SIZE = 8192 * 4;
+	private static final String CHARSET = Charset.defaultCharset().name();
 	DfgMsd dfm;
 	DfgMsdPortObjectSpec m_spec;
 	public DfgMsdPortObject() {
@@ -98,132 +109,151 @@ public class DfgMsdPortObject extends AbstractPortObject {
 			throws IOException, CanceledExecutionException {
 		// TODO create own way to save the PortObject due to simplicity
 		// we use ObjectOutputStream to save this object
-	//	out.putNextEntry(new ZipEntry(ZIP_ENTRY_NAME));
-		//ObjectOutputStream objOut = new ObjectOutputStream(out);
-		/*
-		// write the activities. The number to separate the activities 
-		objOut.writeInt(dfm.getNumberOfActivities());
-		for(XEventClass ecls : dfm.getActivities()) {
-			objOut.writeInt(dfm.getIndexOfActivity(ecls));
-			objOut.writeUTF(ecls.getId());
-			objOut.writeInt(ecls.getIndex());
-			objOut.writeInt(ecls.size());
+		out.putNextEntry(new ZipEntry(ZIP_ENTRY_NAME));
+		/*result.writeInt(dfm.getNumberOfActivities());
+		for (String e : dfm.getAllActivities()) {
+			result.writeUTF(e + "\n");
 		}
 
-		// write start activities
-		objOut.writeLong(dfm.getStartActivityIndices().length);
-		for(int saIdx : dfm.getStartActivityIndices()) {
-			objOut.writeInt(saIdx);
-			objOut.writeLong(dfm.getStartActivityCardinality(saIdx));
+		result.writeInt(dfm.getStartActivities().setSize());
+		for (int activityIndex : dfm.getStartActivities()) {
+			result.writeUTF(activityIndex + "x" + dfm.getStartActivities().getCardinalityOf(activityIndex) + "\n");
 		}
 
-		
-		// output end activities
-		objOut.writeLong(dfm.getEndActivityIndices().length);
-		for(int eaIdx : dfm.getEndActivityIndices()) {
-			objOut.writeInt(eaIdx);
-			objOut.writeLong(dfm.getEndActivityCardinality(eaIdx));
-			
+		result.writeInt(dfm.getEndActivities().setSize());
+		for (int activityIndex : dfm.getEndActivities()) {
+			result.writeUTF(activityIndex + "x" + dfm.getEndActivities().getCardinalityOf(activityIndex) + "\n");
 		}
 
-		List<Long> edgeCardList = new ArrayList<Long>();
-		List<Integer> sourceIdxList  = new ArrayList<Integer>();
-		List<Integer> targetIdxList  = new ArrayList<Integer>();
-		
-		for (long edgeIdx : dfm.getDirectlyFollowsEdges()) {
-			
-			edgeCardList.add(dfm.getDirectlyFollowsEdgeCardinality(edgeIdx));
-			
-			sourceIdxList.add(dfm.getDirectlyFollowsEdgeSourceIndex(edgeIdx));
-			targetIdxList.add(dfm.getDirectlyFollowsEdgeTargetIndex(edgeIdx));
+		//dfg-edges
+		{
+			IntGraph g = dfm.getDirectlyFollowsGraph();
+			long edges = 0;
+			for (Iterator<Long> iterator = g.getEdges().iterator(); iterator.hasNext();) {
+				iterator.next();
+				edges++;
+			}
+			result.writeLong(edges);
+			for (long edge : g.getEdges()) {
+				long v = g.getEdgeWeight(edge);
+				if (v > 0) {
+					int source = g.getEdgeSource(edge);
+					int target = g.getEdgeTarget(edge);
+					result.writeUTF(source + ">");
+					result.writeUTF(target + "x");
+					result.writeLong(v);
+				}
+			}
 		}
-//		objOut.writeObject(dfm.getDirectlyFollowsEdges());
-		objOut.writeObject(edgeCardList);
-		objOut.writeObject(sourceIdxList);
-		objOut.writeObject(targetIdxList);
-		
-		
-		objOut.close();
-		
-*/		
+
+		//msd-edges
+		if (dfm instanceof DfgMsd) {
+			IntGraph g = ((DfgMsd) dfm).getMinimumSelfDistanceGraph();
+			long edges = 0;
+			for (Iterator<Long> iterator = g.getEdges().iterator(); iterator.hasNext();) {
+				iterator.next();
+				edges++;
+			}
+			result.writeLong(edges);
+			for (long edge : g.getEdges()) {
+				long v = g.getEdgeWeight(edge);
+				if (v > 0) {
+					int source = g.getEdgeSource(edge);
+					int target = g.getEdgeTarget(edge);
+					result.writeUTF(source + ">");
+					result.writeUTF(target + "x");
+					result.writeLong(v);
+				}
+			}
+		}
+		result.close();*/
+		BufferedWriter result = new BufferedWriter(new OutputStreamWriter(out, CHARSET), BUFFER_SIZE);
+		result.append(dfm.getNumberOfActivities() + "\n");
+		for (String e : dfm.getAllActivities()) {
+			result.append(e + "\n");
+		}
+
+		result.append(dfm.getStartActivities().setSize() + "\n");
+		for (int activityIndex : dfm.getStartActivities()) {
+			result.append(activityIndex + "x" + dfm.getStartActivities().getCardinalityOf(activityIndex) + "\n");
+		}
+
+		result.append(dfm.getEndActivities().setSize() + "\n");
+		for (int activityIndex : dfm.getEndActivities()) {
+			result.append(activityIndex + "x" + dfm.getEndActivities().getCardinalityOf(activityIndex) + "\n");
+		}
+
+		//dfg-edges
+		{
+			IntGraph g = dfm.getDirectlyFollowsGraph();
+			long edges = 0;
+			for (Iterator<Long> iterator = g.getEdges().iterator(); iterator.hasNext();) {
+				iterator.next();
+				edges++;
+			}
+			result.append(edges + "\n");
+			for (long edge : g.getEdges()) {
+				long v = g.getEdgeWeight(edge);
+				if (v > 0) {
+					int source = g.getEdgeSource(edge);
+					int target = g.getEdgeTarget(edge);
+					result.append(source + ">");
+					result.append(target + "x");
+					result.append(v + "\n");
+				}
+			}
+		}
+
+		//msd-edges
+		if (dfm instanceof DfgMsd) {
+			IntGraph g = ((DfgMsd) dfm).getMinimumSelfDistanceGraph();
+			long edges = 0;
+			for (Iterator<Long> iterator = g.getEdges().iterator(); iterator.hasNext();) {
+				iterator.next();
+				edges++;
+			}
+			result.append(edges + "\n");
+			for (long edge : g.getEdges()) {
+				long v = g.getEdgeWeight(edge);
+				if (v > 0) {
+					int source = g.getEdgeSource(edge);
+					int target = g.getEdgeTarget(edge);
+					result.append(source + ">");
+					result.append(target + "x");
+					result.append(v + "\n");
+				}
+			}
+		}
+
+		result.flush();
+		result.close();
 	}
 
 	@Override
 	protected void load(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
-		// TODO load dfm from the saved workdflow
-		/*ZipEntry nextEntry = in.getNextEntry();
+		ZipEntry nextEntry = in.getNextEntry();
 		if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NAME)) {
 			throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
 		}
-		setSpec(spec);
-		ObjectInputStream objIn = new ObjectInputStream(in);
-		
-		// read all the activities at first 
-		Map<Integer, Integer> aOld2NewIdxMap = new HashMap<Integer, Integer>();
-		dfm = new DfgMsdImpl(dfm.getAllActivities());
-		
+		 
+		DfgMsdPortObject result = null;
 		try {
-			int numberOfActivities = objIn.readInt();
-			for(int aIdx =0; aIdx < numberOfActivities; aIdx++ ) {
-				int actIdx = objIn.readInt();
-				String Id = objIn.readUTF();
-				int nIdx = objIn.readInt();
-				int esize = objIn.readInt();
-				XEventClass ecls = new XEventClass(Id, nIdx);
-				ecls.setSize(esize);
-				
-				// after we add this, we will have a new idx due to the code
-				// int index = directlyFollowsGraph.addVertex(activity);
-				int newIdx = dfm.addActivity(ecls);
-				aOld2NewIdxMap.put(actIdx, newIdx);
-				
-			}
-			
-			int idx;
-			long cardinality;
-			// read start activities
-			long numOfStartActivities = objIn.readLong();
-			for(int sIdx =0; sIdx <numOfStartActivities; sIdx++ ) {
-				idx = objIn.readInt();
-				cardinality = objIn.readLong();
-				dfm.addStartActivity(aOld2NewIdxMap.get(idx), cardinality);
-			}
-			
-			
-			long numOfEndActivities = objIn.readLong();
-			for(int eIdx =0; eIdx <numOfEndActivities; eIdx++ ) {
-				idx = objIn.readInt();
-				cardinality = objIn.readLong();
-				dfm.addEndActivity(aOld2NewIdxMap.get(idx), cardinality);
-			}
-			
-			// read edges from graph
-//			long[] edgeIndices = (long[]) objIn.readObject();
-			List<Long> cList = (List<Long>) objIn.readObject();
-			List<Integer> sourceList = (List<Integer>) objIn.readObject();
-			List<Integer> targetList = (List<Integer>) objIn.readObject();
-			
-			
-			for (int i=0 ; i< cList.size(); i++) {
-				// no need to store the same edge here, I think.. That's the reason we don't use it
-				long card = cList.get(i);
-				int sOldIdx = sourceList.get(i);
-				int tOldIdx = targetList.get(i);
-				
-				dfm.addDirectlyFollowsEdge(aOld2NewIdxMap.get(sOldIdx), aOld2NewIdxMap.get(tOldIdx), card);
-				
-			}
-			
-			// for DfgMsd it is the same, so don't bother about this.
-
-		} catch (ClassNotFoundException e) {
+			// they put layout information into context, if we want to show the them, 
+			// we need to keep the context the same in load and save program. But how to do this??
+			// that's why there is context in portObject. If we also save the context, what can be done??
+			DfgMsd dfg = DfgMsdImportPlugin.readFile(in);
+			//result = new DfgMsdPortObject(dfg);
+			//result.setSpec(spec);
+			dfm = dfg;
+			setSpec(spec);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		objIn.close();*/
-	}
+		 in.close();
+		
+		}
 
 	public static final class DfgMsdPortObjectSerializer extends AbstractPortObjectSerializer<DfgMsdPortObject> {
 	}

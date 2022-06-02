@@ -32,7 +32,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
 import org.pm4knime.portobject.DFMPortObjectSpec;
 import org.pm4knime.portobject.DfgMsdPortObject;
@@ -130,7 +129,8 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 			DfgMsd dfgmsd = convert(IM_log);
 			checkCanceled(exec);
 			logger.info("End:  DFM Miner");
-			return new DfgMsdPortObject(dfgmsd);
+			DfgMsdPortObject dfgMsdObj = new DfgMsdPortObject(dfgmsd);
+			return dfgMsdObj;
 		}
 		
 

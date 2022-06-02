@@ -1,14 +1,23 @@
 package org.pm4knime.portobject;
 
+import javax.swing.JComponent;
+
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.ModelContentRO;
 import org.knime.core.node.ModelContentWO;
 import org.knime.core.node.port.AbstractSimplePortObjectSpec;
-import org.knime.core.node.port.AbstractSimplePortObjectSpec.AbstractSimplePortObjectSpecSerializer;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObjectSpec2;
 
 public class DfgMsdPortObjectSpec extends AbstractSimplePortObjectSpec  {
 
+
+	
+	public static final class DfgMsdPortObjectSpecSerializer extends AbstractSimplePortObjectSpecSerializer<DfgMsdPortObjectSpec> {
+    }
+
+	public DfgMsdPortObjectSpec() {
+		
+	}
+	
 	@Override
 	protected void save(ModelContentWO model) {
 		// TODO Auto-generated method stub
@@ -20,8 +29,11 @@ public class DfgMsdPortObjectSpec extends AbstractSimplePortObjectSpec  {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public static final class DfgMsdPortObjectSpecSerializer extends AbstractSimplePortObjectSpecSerializer<DfgMsdPortObjectSpec> {
-    }
+	@Override
+	public JComponent[] getViews() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
