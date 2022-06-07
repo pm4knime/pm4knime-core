@@ -40,12 +40,17 @@ import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIM
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel2;
+import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersEKS;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMf;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMflc;
 import org.processmining.processtree.ProcessTree;
 import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
@@ -53,6 +58,8 @@ import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
 import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
+import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequent;
+import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMLifeCycle;
 
 
 /**
@@ -73,7 +80,6 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 		public static final String[] defaultType = { "Inductive Miner", //
 				"Inductive Miner - Infrequent", //
 				"Inductive Miner - Incompleteness", //
-				"Inductive Miner - exhaustive K-successor", //
 				"Inductive Miner - Life cycle" };
 
 		public static final String CFG_KEY_METHOD_TYPE = "Method";
@@ -85,7 +91,7 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 				InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.0, 0, 1.0);
 
 		protected InductiveMinerTableNodeModel() {
-			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { ProcessTreePortObject.TYPE });
+			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
 		}
 
 		@Override
@@ -106,7 +112,7 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 			checkCanceled(exec);
 			String activityClassifier = getEventClassifier();
 			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier);
-			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, new MiningParametersIM(),  new Canceller() {
+			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, createParameters(),  new Canceller() {
 				public boolean isCancelled() {
 					try {
 						checkCanceled(exec);
@@ -116,27 +122,40 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 					return false;
 				}
 			});
+			
+			AcceptingPetriNet net = InductiveMinerPlugin.postProcessTree2PetriNet(ptE, new Canceller() {
+				public boolean isCancelled() {
+					try {
+						checkCanceled(exec);
+					} catch (final CanceledExecutionException ce) {
+						return true;
+					}
+					return false;
+				}
+			});
+
 			checkCanceled(exec);
-			EfficientTreePortObject pnPO = new EfficientTreePortObject(ptE);
-			logger.info("End: Inductive Miner");
-			return pnPO;
+			PetriNetPortObject petriObj = new PetriNetPortObject(net, ptE);
+			logger.info("End:  Inductive Miner");
+			return  petriObj;
+
 		}
 
-		private MiningParameters createParameters() throws InvalidSettingsException {
-			MiningParameters param;
+		private MiningParametersIM createParameters() throws InvalidSettingsException {
+			MiningParametersIM param;
 
 			if (m_type.getStringValue().equals(defaultType[0]))
 				param = new MiningParametersIM();
+			else if (m_type.getStringValue().equals(defaultType[1]))
+				param = new MiningParametersIMInfrequent();
+			else if (m_type.getStringValue().equals(defaultType[2]))
+				param = new MiningParametersIMInfrequent();
+			else if (m_type.getStringValue().equals(defaultType[4]))
+				param = new MiningParametersIMLifeCycle();
 			else
 				throw new InvalidSettingsException("unknown inductive miner type " + m_type.getStringValue());
 
-			((MiningParametersAbstract) param).setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
-
-			String classifier = getEventClassifier();
-			XEventClassifier classi = new XEventAttributeClassifier(classifier, classifier); 
-			((MiningParametersAbstract) param).setClassifier(classi);
-
-			param.getLifeCycleClassifier();
+			param.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
 			return param;
 		}
 
