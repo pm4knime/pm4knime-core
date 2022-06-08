@@ -41,6 +41,7 @@ import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNod
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel2;
 import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
@@ -81,11 +82,12 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 				"Inductive Miner - Infrequent", //
 				"Inductive Miner - Incompleteness", //
 				"Inductive Miner - Life cycle" };
-
+		
+		public static final String CFGKEY_METHOD_TYPE = "InductiveMinerMethod";
 		public static final String CFG_KEY_METHOD_TYPE = "Method";
 		public static final String CFG_KEY_NOISE_THRESHOLD = "Noise Threshold";
 
-		private SettingsModelString m_type = new SettingsModelString(InductiveMinerNodeModel.CFGKEY_METHOD_TYPE,
+		private SettingsModelString m_type = new SettingsModelString(InductiveMinerTableNodeModel.CFGKEY_METHOD_TYPE,
 				defaultType[1]);
 		private SettingsModelDoubleBounded m_noiseThreshold = new SettingsModelDoubleBounded(
 				InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.0, 0, 1.0);
@@ -97,7 +99,7 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 		@Override
 		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 			// TODO Auto-generated method stub
-			ProcessTreePortObjectSpec ptSpec = new ProcessTreePortObjectSpec();
+			PetriNetPortObjectSpec ptSpec = new PetriNetPortObjectSpec();
 			return new PortObjectSpec[] { ptSpec };
 		}
 		
@@ -153,8 +155,8 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 			else if (m_type.getStringValue().equals(defaultType[4]))
 				param = new MiningParametersIMLifeCycle();
 			else
-				throw new InvalidSettingsException("unknown inductive miner type " + m_type.getStringValue());
-
+				throw new InvalidSettingsException("unknown inductive miner type ");
+			System.out.println("noiseThreshold is currenlt"+ m_noiseThreshold.getDoubleValue() + m_type.getStringValue()+m_type.getStringValue());
 			param.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
 			return param;
 		}
