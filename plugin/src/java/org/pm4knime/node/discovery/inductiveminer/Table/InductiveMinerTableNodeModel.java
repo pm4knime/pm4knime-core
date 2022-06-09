@@ -1,34 +1,16 @@
 package org.pm4knime.node.discovery.inductiveminer.Table;
 
-import java.io.File;
-import java.io.IOException;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.IllegalFormatException;
-import java.util.List;
 
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataCell;
-import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
-import org.knime.core.data.DataRow;
+
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.container.CloseableRowIterator;
-import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.DoubleCell;
-import org.knime.core.data.def.StringCell;
-import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
@@ -114,7 +96,10 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 			checkCanceled(exec);
 			String activityClassifier = getEventClassifier();
 			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier);
-			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, createParameters(),  new Canceller() {
+			MiningParametersIM param =  createParameters();
+			XEventClassifier classifi = new XEventAttributeClassifier(activityClassifier);
+			param.setClassifier(classifi);
+			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, param,  new Canceller() {
 				public boolean isCancelled() {
 					try {
 						checkCanceled(exec);

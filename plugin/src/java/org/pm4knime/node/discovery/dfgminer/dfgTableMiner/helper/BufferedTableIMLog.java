@@ -20,9 +20,7 @@ import org.processmining.plugins.inductiveminer2.logs.IMLogImpl;
 import org.processmining.plugins.inductiveminer2.logs.IMTrace;
 import org.processmining.plugins.inductiveminer2.logs.IMTraceIterator;
 
-import cern.colt.Arrays;
 
-import org.processmining.plugins.inductiveminer2.logs.IMLogImpl.IMTraceImpl;
 
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
@@ -165,17 +163,11 @@ public class BufferedTableIMLog implements IMLog {
 		activity2index = new TObjectIntCustomHashMap<String>(strategy, 10, 0.5f, -1);
 	}
 
-	@Override
 	public int size() {
-		String traceName = log.getDataTableSpec().getColumnNames()[0];
-		Set<DataCell> distinctTraces = log.getDataTableSpec().getColumnSpec(traceName).getDomain().getValues();
-		if (distinctTraces != null) {
-			return distinctTraces.size();
-		}
-		return getTraceSize();
+	return events.length;
 	}
 
-	@Override
+	
 	public IMTraceIterator iterator() {
 		return new IMTraceIterator() {
 
@@ -234,7 +226,7 @@ public class BufferedTableIMLog implements IMLog {
 			}
 
 			public Transition itEventGetLifeCycleTransition() {
-				return Transition.complete;
+				return getLifeCycleTransition(events[now][nowEvent]);
 			}
 
 			public boolean isEmpty() {
@@ -264,7 +256,7 @@ public class BufferedTableIMLog implements IMLog {
 			}
 
 			public void itEventSetActivityIndex(int activity) {
-				events[now][nowEvent] = getEvent(activity, Transition.complete.ordinal());
+				events[now][nowEvent] = getEvent(activity, getLifeCycleTransition(events[now][nowEvent]).ordinal());
 			}
 
 			public void itEventSetLifeCycleTransition(Transition transition) {
@@ -275,6 +267,10 @@ public class BufferedTableIMLog implements IMLog {
 				return nowEvent;
 			}
 		};
+	}
+	
+	public static Transition getLifeCycleTransition(long event) {
+		return Transition.values()[(int) event];
 	}
 
 	public class IMTraceImpl implements IMTrace {
@@ -299,11 +295,11 @@ public class BufferedTableIMLog implements IMLog {
 				}
 
 				public int getActivityIndex() {
-					return BufferedTableIMLog.getActivityIndex(events[traceIndex][now]);
+					return IMLogImpl.getActivityIndex(events[traceIndex][now]);
 				}
 
 				public Transition getLifeCycleTransition() {
-					return Transition.complete;
+					return IMLogImpl.getLifeCycleTransition(events[traceIndex][now]);
 				}
 
 				public void nextFast() {
@@ -334,35 +330,34 @@ public class BufferedTableIMLog implements IMLog {
 		}
 
 		public int getActivityIndex(int eventIndex) {
-			return BufferedTableIMLog.getActivityIndex(events[traceIndex][eventIndex]);
+			return IMLogImpl.getActivityIndex(events[traceIndex][eventIndex]);
 		}
 
 		public boolean isEmpty() {
 			return events[traceIndex].length == 0;
 		}
-
 	}
 
 	public static int getActivityIndex(long event) {
 		return (int) (event >> 32);
 	}
 
-	@Override
+	
 	public int getNumberOfActivities() {
 		return activities.size();
 	}
 
-	@Override
+	
 	public String getActivity(int index) {
 		return this.activtiesString[index];
 	}
 
-	@Override
+	
 	public String[] getActivities() {
 		return activtiesString;
 	}
 
-	@Override
+	
 	public int addActivity(String activityName) {
 		int activityIndex = activity2index.putIfAbsent(activityName, activity2index.size());
 		if (activityIndex == activity2index.getNoEntryValue()) {
@@ -397,7 +392,6 @@ public class BufferedTableIMLog implements IMLog {
 		return result;
 	}
 
-	@Override
 	public void removeTrace(int traceIndex) {
 		long[][] copied = new long[events.length - 1][];
 		System.arraycopy(events, 0, copied, 0, traceIndex);
@@ -405,7 +399,7 @@ public class BufferedTableIMLog implements IMLog {
 		events = copied;
 	}
 
-	@Override
+	
 	public void removeEvent(int traceIndex, int eventIndex) {
 		long[] copied = new long[events[traceIndex].length - 1];
 		System.arraycopy(events[traceIndex], 0, copied, 0, eventIndex);
@@ -414,7 +408,7 @@ public class BufferedTableIMLog implements IMLog {
 		events[traceIndex] = copied;
 	}
 
-	@Override
+	
 	public int splitTrace(int traceIndex, int eventIndex) {
 		// create an extra trace
 		long[][] copied = new long[events.length + 1][];
