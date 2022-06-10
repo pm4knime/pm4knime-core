@@ -108,6 +108,7 @@
         
         <!-- nodes in discovery-->
                 		
+        <node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory" id="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory"/>
         
         <node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
                 		
