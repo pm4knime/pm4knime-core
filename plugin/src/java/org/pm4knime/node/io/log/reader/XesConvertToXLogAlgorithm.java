@@ -37,7 +37,6 @@ import org.xesstandard.model.attributes.XesIntegerNumberAttribute;
 import org.xesstandard.model.attributes.XesListAttribute;
 import org.xesstandard.model.attributes.XesRealNumberAttribute;
 import org.xesstandard.model.attributes.XesStringAttribute;
-import org.xml.sax.SAXException;
 
 
 /**
