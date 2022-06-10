@@ -18,8 +18,6 @@ variables:
     --errors
     --fail-at-end
     --show-version
-    -DinstallAtEnd=true
-    -DdeployAtEnd=true
 
 java-build:
   # select the most appropriate image for your project
