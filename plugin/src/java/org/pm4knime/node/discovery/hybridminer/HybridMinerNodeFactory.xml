@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./hm-icon.png" type="Learner"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Hybrid Petri Net Miner</name>
+
+	<shortDescription>This node implements the Hybrid Miner to discover a hybrid Petri net from a causal graph.</shortDescription>
+
+	<fullDescription>
+		<intro>
+			This node implements the Heuristics Miner to discover a process
+			model.
+			Heuristics Miner is an algorithm that acts on the directly-follows Graph,
+			providing way to handle with noise and to find dependency between
+			activities. An heuristics net or causal
+			net is the output, which is a directed graph with activities as nodes,
+			dependency interpreted as arcs and bindings.
+			The Heuristics Net can be then converted into a Petri net.
+			<br />
+			This node shows the Heuristics Net as one internal
+			result in View "Heuristic Net", while it
+			outputs a Petri net after an implicit conversion.
+
+		</intro>
+
+
+		<option name="Event classifer">The event classifier is chosen to classify the event
+			log.</option>
+		<option name="All tasks connected">Every task needs to have at least one input and
+			output arc, except the initial and the final activity.
+		</option>
+		<option name="Long distance dependency">Show long distance relations in the model.
+		</option>
+
+
+		<option name="Threshold: Relative-to-best">The admissible distance between directly follows
+			relations for an activity and the activity's best one. At 0 only the best directly
+			follows relation will be shown for every activity, at 100 all will be
+			shown.
+		</option>
+		<option name="Threshold: Dependency">The strength of the directly follows relations
+			determines when to show arcs (based on how frequently one activity is followed by another).
+		</option>
+		<option name="Threshold: Length-one-loops">Show arcs based on frequency of L1L observations
+		</option>
+		<option name="Threshold: Length-two-loops">Show arcs based on frequency of L2L observations
+		</option>
+		<option name="Threshold: Long distance">Show arcs based on how frequently one activity is
+			eventually followed by another</option>
+
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Event Log">An event log as input</inPort>
+		<outPort index="0" name="Hybrid Petri Net">A hybrid Petri net as output</outPort>
+	</ports>
+	<views>
+		<view index="0" name="Hybrid Petri Net">Hybrid Petri Net Visualization</view>
+
+	</views>
+</knimeNode>
