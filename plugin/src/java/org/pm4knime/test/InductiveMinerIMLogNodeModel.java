@@ -1,19 +1,21 @@
-package org.pm4knime.node.discovery.inductiveminer.Table;
+package org.pm4knime.test;
 
-
-
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
-
+import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
@@ -22,7 +24,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel2;
 import org.pm4knime.portobject.PetriNetPortObject;
@@ -31,58 +32,48 @@ import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.mining.MiningParametersEKS;
-import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMf;
-import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMflc;
-import org.processmining.processtree.ProcessTree;
-import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
+
+import org.processmining.plugins.InductiveMiner.plugins.IMProcessTree;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
-import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
-import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract;
+import org.processmining.plugins.inductiveminer2.logs.IMLogImpl;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
-import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequent;
-import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMLifeCycle;
-
+import org.processmining.processtree.ProcessTree;
 
 /**
- * This is an example implementation of the node model of the
- * "InductiveMinerTable" node.
- * 
- * This example node performs simple number formatting
- * ({@link String#format(String, Object...)}) using a user defined format string
- * on all double columns of its input table.
+ * <code>NodeModel</code> for the "InductiveMinerIMLog" node.
  *
  * @author 
  */
-public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
+public class InductiveMinerIMLogNodeModel extends DefaultMinerNodeModel {
     
 	// the logger instance
-		private static final NodeLogger logger = NodeLogger.getLogger(InductiveMinerTableNodeModel.class);
+		private static final NodeLogger logger = NodeLogger.getLogger(InductiveMinerIMLogNodeModel.class);
 
 		public static final String[] defaultType = { "Inductive Miner", //
 				"Inductive Miner - Infrequent", //
 				"Inductive Miner - Incompleteness", //
+				"Inductive Miner - exhaustive K-successor", //
 				"Inductive Miner - Life cycle" };
-		
-		public static final String CFGKEY_METHOD_TYPE = "InductiveMinerMethod";
+
 		public static final String CFG_KEY_METHOD_TYPE = "Method";
 		public static final String CFG_KEY_NOISE_THRESHOLD = "Noise Threshold";
 
-		private SettingsModelString m_type = new SettingsModelString(InductiveMinerTableNodeModel.CFGKEY_METHOD_TYPE,
+		private SettingsModelString m_type = new SettingsModelString(InductiveMinerNodeModel.CFGKEY_METHOD_TYPE,
 				defaultType[1]);
 		private SettingsModelDoubleBounded m_noiseThreshold = new SettingsModelDoubleBounded(
 				InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.0, 0, 1.0);
 
-		protected InductiveMinerTableNodeModel() {
-			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
+		protected InductiveMinerIMLogNodeModel() {
+			super(new PortType[] { XLogPortObject.TYPE }, new PortType[] { PetriNetPortObject.TYPE  });
 		}
 
 		@Override
-		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
+		protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
 			// TODO Auto-generated method stub
 			PetriNetPortObjectSpec ptSpec = new PetriNetPortObjectSpec();
 			return new PortObjectSpec[] { ptSpec };
@@ -90,20 +81,17 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 		
 
 		@Override
-		protected PortObject mine(BufferedDataTable log, final ExecutionContext exec) throws Exception {
+		protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
 			// TODO the most important part, however, should we set the classifier
 			// as one parameter, and no need to explicitly infer the classifier from it ??
 			// Now, it is just fine
 			// the same effort to use it
 			logger.info("Begin: Inductive Miner");
 			checkCanceled(exec);
-			String activityClassifier = getEventClassifier();
-			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier);
-			System.out.println("End of Generating Log");
+
 			MiningParametersIM param =  createParameters();
-			XEventClassifier classifi = new XEventAttributeClassifier(activityClassifier);
-			param.setClassifier(classifi);
 			Instant start = Instant.now();
+			IMLog imlog = new IMLogImpl(log, param.getClassifier(), param.getLifeCycleClassifier());
 			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, param,  new Canceller() {
 				public boolean isCancelled() {
 					try {
@@ -130,9 +118,8 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 
 			checkCanceled(exec);
 			PetriNetPortObject petriObj = new PetriNetPortObject(net, ptE);
-			logger.info("End:  Inductive Miner");
-			return  petriObj;
-
+			logger.info("End: Inductive Miner");
+			return petriObj;
 		}
 
 		private MiningParametersIM createParameters() throws InvalidSettingsException {
@@ -140,16 +127,15 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 
 			if (m_type.getStringValue().equals(defaultType[0]))
 				param = new MiningParametersIM();
-			else if (m_type.getStringValue().equals(defaultType[1]))
-				param = new MiningParametersIMInfrequent();
-			else if (m_type.getStringValue().equals(defaultType[2]))
-				param = new MiningParametersIMInfrequent();
-			else if (m_type.getStringValue().equals(defaultType[4]))
-				param = new MiningParametersIMLifeCycle();
 			else
-				throw new InvalidSettingsException("unknown inductive miner type ");
-			System.out.println("noiseThreshold is currenlt"+ m_noiseThreshold.getDoubleValue() + m_type.getStringValue()+m_type.getStringValue());
+				throw new InvalidSettingsException("unknown inductive miner type " + m_type.getStringValue());
+
 			param.setNoiseThreshold((float) m_noiseThreshold.getDoubleValue());
+
+			XEventClassifier classifier = getEventClassifier();
+			param.setClassifier(classifier);
+
+			param.getLifeCycleClassifier();
 			return param;
 		}
 
