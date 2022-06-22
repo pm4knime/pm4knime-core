@@ -48,6 +48,8 @@
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" />
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.cgminer.CGMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.hybridminer.HybridMinerNodeFactory" />
 		<!-- nodes in conformance-->
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />
 		<!-- nodes in performance-->
@@ -69,7 +71,9 @@
                 		
         
         <portType hidden="false" name="Petri Net" objectClass="org.pm4knime.portobject.PetriNetPortObject" objectSerializer="org.pm4knime.portobject.PetriNetPortObject$PetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.PetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.PetriNetPortObjectSpec$PetriNetPortObjectSpecSerializer"/>
-                		
+        <portType hidden="false" name="Causal Graph" objectClass="org.pm4knime.portobject.CausalGraphPortObject" objectSerializer="org.pm4knime.portobject.CausalGraphPortObject$CausalGraphPortObjectSerializer" specClass="org.pm4knime.portobject.CausalGraphPortObjectSpec" specSerializer="org.pm4knime.portobject.CausalGraphPortObjectSpec$CausalGraphPortObjectSpecSerializer"/>
+        <portType hidden="false" name="Hybrid Petri Net" objectClass="org.pm4knime.portobject.HybridPetriNetPortObject" objectSerializer="org.pm4knime.portobject.HybridPetriNetPortObject$HybridPetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.HybridPetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.HybridPetriNetPortObjectSpec$HybridPetriNetPortObjectSpecSerializer"/>
+               		
         
         <portType hidden="false" name="Process Tree" objectClass="org.pm4knime.portobject.ProcessTreePortObject" objectSerializer="org.pm4knime.portobject.ProcessTreePortObjectSerializer" specClass="org.pm4knime.portobject.ProcessTreePortObjectSpec" specSerializer="org.pm4knime.portobject.ProcessTreePortObjectSpecSerializer"/>
                 		
