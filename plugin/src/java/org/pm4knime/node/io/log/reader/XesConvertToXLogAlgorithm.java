@@ -141,12 +141,10 @@ public class XesConvertToXLogAlgorithm {
 		if (convertedExtension == null) {
 			try {
 				convertedExtension = XExtensionParser.instance().parse(extension.getURI());
-//			} catch (IOException | ParserConfigurationException | SAXException e) {
-//				// Cannot convert extension.
 			} catch (Exception e) {
 				// Cannot convert extension.
 			}
-		} 
+		}
 		return convertedExtension;
 	}
 

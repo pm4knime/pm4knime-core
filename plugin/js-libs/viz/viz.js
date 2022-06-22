@@ -20,7 +20,7 @@ Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler
 http://www.zlib.net/zlib_license.html
 */
 (function (global, factory) {
-  return typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global.Viz = factory());
 }(this, (function () { 'use strict';
@@ -89,11 +89,9 @@ http://www.zlib.net/zlib_license.html
       });
     }
 
-    var moduleName = 'es6-promise/auto';
-
     createClass(WorkerWrapper, [{
       key: 'render',
-      value: require(moduleName, function render(src, options) {
+      value: function render(src, options) {
         var _this2 = this;
 
         return new Promise(function (resolve, reject) {
@@ -109,7 +107,7 @@ http://www.zlib.net/zlib_license.html
 
           _this2.worker.postMessage({ id: id, src: src, options: options });
         });
-      })
+      }
     }]);
     return WorkerWrapper;
   }();
@@ -118,8 +116,7 @@ http://www.zlib.net/zlib_license.html
     classCallCheck(this, ModuleWrapper);
 
     var instance = module();
-    var moduleName = 'es6-promise/auto';
-    this.render = require(moduleName, function (src, options) {
+    this.render = function (src, options) {
       return new Promise(function (resolve, reject) {
         try {
           resolve(render(instance, src, options));
@@ -127,10 +124,11 @@ http://www.zlib.net/zlib_license.html
           reject(error);
         }
       });
-    });
+    };
   };
 
   // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+
 
   function b64EncodeUnicode(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
@@ -146,8 +144,7 @@ http://www.zlib.net/zlib_license.html
     }
   }
 
-  var moduleName = 'es6-promise/auto';
-  require(moduleName, function svgXmlToImageElement(svgXml) {
+  function svgXmlToImageElement(svgXml) {
     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         _ref$scale = _ref.scale,
         scale = _ref$scale === undefined ? defaultScale() : _ref$scale,
@@ -191,9 +188,9 @@ http://www.zlib.net/zlib_license.html
 
       svgImage.src = 'data:image/svg+xml;base64,' + b64EncodeUnicode(svgXml);
     });
-  });
+  }
 
-  require(moduleName, function svgXmlToImageElementFabric(svgXml) {
+  function svgXmlToImageElementFabric(svgXml) {
     var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         _ref2$scale = _ref2.scale,
         scale = _ref2$scale === undefined ? defaultScale() : _ref2$scale,
@@ -234,7 +231,7 @@ http://www.zlib.net/zlib_license.html
         resolve(image);
       });
     });
-  });
+  }
 
   var Viz = function () {
     function Viz() {
@@ -303,6 +300,7 @@ http://www.zlib.net/zlib_license.html
             mimeType = options.mimeType,
             quality = options.quality;
 
+
         return this.renderString(src, _extends({}, options, { format: 'svg' })).then(function (str) {
           if ((typeof fabric === 'undefined' ? 'undefined' : _typeof(fabric)) === "object" && fabric.loadSVGFromString) {
             return svgXmlToImageElementFabric(str, { scale: scale, mimeType: mimeType, quality: quality });
@@ -316,6 +314,7 @@ http://www.zlib.net/zlib_license.html
       value: function renderJSONObject(src) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var format = options.format;
+
 
         if (format !== 'json' || format !== 'json0') {
           format = 'json';
@@ -332,5 +331,3 @@ http://www.zlib.net/zlib_license.html
   return Viz;
 
 })));
-
-

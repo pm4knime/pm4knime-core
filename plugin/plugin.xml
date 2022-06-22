@@ -60,7 +60,6 @@
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPMNodeFactory"/>
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.jsvis.DataExplorerNodeFactory" id="org.pm4knime.node.jsvis.DataExplorerNodeFactory"/>
                     
     </extension>
         	
@@ -89,44 +88,45 @@
     </extension>
         	
     
-    <extension
-         point="org.knime.js.core.javascriptComponents">
-      <javascriptComponent
-            getComponentValue-method-name="getComponentValue"
-            implementationBundleID="jsform.bundle"
-            init-method-name="init"
-            javascriptComponentID="jsform"
-            name="JS Form"
-            namespace="jsform">
-      </javascriptComponent>
-   </extension>
-   <extension
-         point="org.knime.js.core.webResources">
-      <webResourceBundle
-            debug="true"
-            name="JS Form"
-            usesDefine="false"
-            version="1.0.0"
-            webResourceBundleID="jsform.bundle">
-         <webResource
-               relativePathSource="src/java/org/pm4knime/node/visualizations/jsgraphviz/"
-               relativePathTarget="src/java/org/pm4knime/node/visualizations/jsgraphviz/">
-         </webResource>
-         <importResource
-               relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.js"
-               type="JAVASCRIPT">
-         </importResource>
-         <webDependency webResourceBundleID="bootstrap_3.3.6"> </webDependency>
+    <extension point="org.knime.js.core.javascriptComponents">
+                        
+        
+        <javascriptComponent getComponentValue-method-name="getComponentValue" implementationBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle" init-method-name="init" javascriptComponentID="org.pm4knime.node.visualizations.jsgraphviz.component" name="Java Script GraphViz Visualizer" namespace="jsgraphviz">
+         </javascriptComponent>
+                    
+    
+    </extension>
+            
+    
+    <extension point="org.knime.js.core.webResources">
+                    	
+        
+        <webResourceBundle debug="true" name="Java Script GraphViz Visualizer" usesDefine="false" version="1.0.0" webResourceBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle">
+                                    
+            
+            <webResource relativePathSource="src/java/org/pm4knime/node/visualizations/jsgraphviz/" relativePathTarget="src/java/org/pm4knime/node/visualizations/jsgraphviz/">
+       		</webResource>
+                               		
+            
+            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.js" type="JAVASCRIPT"/>
+                                    
+            
+            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.css" type="CSS"/>
+                                    
+            
+            <webDependency webResourceBundleID="bootstrap_3.3.6"> </webDependency>
                                     
             
             <webDependency webResourceBundleID="Viz"> </webDependency>
                                     
             
             <webDependency webResourceBundleID="RequireJS_2.3.3"> </webDependency>
-         
-      </webResourceBundle>
-      
-      <webResourceBundle debug="true" name="Graphviz JS" usesDefine="false" version="2.1.2" webResourceBundleID="Viz">
+                                
+        
+        </webResourceBundle>
+                        
+        
+        <webResourceBundle debug="true" name="Graphviz JS" usesDefine="false" version="2.1.2" webResourceBundleID="Viz">
                                    
             
             <webResource relativePathSource="js-libs/viz/" relativePathTarget="js-libs/viz/"> </webResource>
@@ -139,7 +139,10 @@
                                 
         
         </webResourceBundle>
-   </extension>
+                                
+    
+    
+    </extension>
                         
 
 
