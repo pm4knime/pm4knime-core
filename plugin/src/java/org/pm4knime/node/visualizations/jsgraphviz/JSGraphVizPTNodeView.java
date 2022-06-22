@@ -2,6 +2,8 @@ package org.pm4knime.node.visualizations.jsgraphviz;
 
 import org.knime.core.node.NodeView;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 
 /**
  * This is an example implementation of the node view of the
@@ -12,6 +14,7 @@ import org.knime.core.node.NodeView;
  *
  * @author 
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class JSGraphVizPTNodeView extends NodeView<JSGraphVizPTNodeModel> {
 
 

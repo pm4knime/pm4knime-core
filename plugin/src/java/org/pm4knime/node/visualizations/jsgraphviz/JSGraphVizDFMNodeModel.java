@@ -81,7 +81,7 @@ public class JSGraphVizDFMNodeModel extends AbstractWizardNodeModel<JSGraphVizVi
 
 	@Override
 	public String getJavascriptObjectID() {
-		return "org.pm4knime.node.visualizations.jsgraphviz.component";
+		return "jsform";
 	}
 
 	@Override
