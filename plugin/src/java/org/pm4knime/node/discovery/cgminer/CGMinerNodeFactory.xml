@@ -5,49 +5,29 @@
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
 	<name>Causal Graph Miner</name>
 
-	<shortDescription>This node implements the Hybrid Miner to discover a causal graph from an event log.</shortDescription>
+	<shortDescription>This node implements the first step of the Hybrid Miner to discover a causal graph from an event log.</shortDescription>
 
 	<fullDescription>
 		<intro>
-			This node implements the Heuristics Miner to discover a process
-			model.
-			Heuristics Miner is an algorithm that acts on the directly-follows Graph,
-			providing way to handle with noise and to find dependency between
-			activities. An heuristics net or causal
-			net is the output, which is a directed graph with activities as nodes,
-			dependency interpreted as arcs and bindings.
-			The Heuristics Net can be then converted into a Petri net.
-			<br />
-			This node shows the Heuristics Net as one internal
-			result in View "Heuristic Net", while it
-			outputs a Petri net after an implicit conversion.
-
+			This node implements the first step of the Hybrid Miner to discover a hybrid Petri net from a causal graph.
+			A causal graph consists of nodes representing activities and two types of directed edges connecting nodes. Certain edges represent strong causal dependencies and uncertain edges represent weak dependencies. 
 		</intro>
 
 
-		<option name="Event classifer">The event classifier is chosen to classify the event
-			log.</option>
-		<option name="All tasks connected">Every task needs to have at least one input and
-			output arc, except the initial and the final activity.
+		<option name="Event classifer"></option>
+		<option name="Minimal activity frequency">An activity will be included if it occurs in at least x% of cases; set to 0 to include all activities.
 		</option>
-		<option name="Long distance dependency">Show long distance relations in the model.
+		<option name="Minimal trace variant frequency">A trace variant will be included if it covers at least x% of cases; set to 0 to include all trace variants.
 		</option>
 
 
-		<option name="Threshold: Relative-to-best">The admissible distance between directly follows
-			relations for an activity and the activity's best one. At 0 only the best directly
-			follows relation will be shown for every activity, at 100 all will be
-			shown.
+		<option name="Strong causality threshold">Lower bound for a strong causality between two activities.
 		</option>
-		<option name="Threshold: Dependency">The strength of the directly follows relations
-			determines when to show arcs (based on how frequently one activity is followed by another).
+		<option name="Weak causality threshold">Lower bound for a weak causality between two activities; >set to 100% to avoid uncertain edges.
 		</option>
-		<option name="Threshold: Length-one-loops">Show arcs based on frequency of L1L observations
+		<option name="Long-term dependency threshold">Lower bound for a strong long-term causality between two activities.
 		</option>
-		<option name="Threshold: Length-two-loops">Show arcs based on frequency of L2L observations
-		</option>
-		<option name="Threshold: Long distance">Show arcs based on how frequently one activity is
-			eventually followed by another</option>
+		<option name="Causality weight threshold">High values mean more emphasis on the split and join behavior of activities; low values mean more emphasis on the detection of concurrency and loops.</option>
 
 	</fullDescription>
 

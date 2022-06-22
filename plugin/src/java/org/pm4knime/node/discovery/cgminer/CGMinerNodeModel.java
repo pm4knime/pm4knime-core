@@ -33,7 +33,7 @@ public class CGMinerNodeModel extends DefaultMinerNodeModel implements PortObjec
 	private static final NodeLogger logger = NodeLogger
             .getLogger(CGMinerNodeModel.class);
 	
-	public static final String FILTER_ACTIVITY = "<html><b>Minimal activity frequency:</b><br>an activitiy will be included if it occurs in at least x% of cases; <br>set to 0 to include all activities.</html>";
+	public static final String FILTER_ACTIVITY = "<html><b>Minimal activity frequency:</b><br>an activity will be included if it occurs in at least x% of cases; <br>set to 0 to include all activities.</html>";
 	public static final String FILTER_TRACE = "<html><b>Minimal trace variant frequency:</b><br>a trace variant will be included if it covers at least x% of cases; <br>set to 0 to include all trace variants.</html>";
 	public static final String THRESHOLD_CERTAIN_EDGES = "<html><b>Strong causality threshold:</b><br>lower bound for a strong causality between two activities.</html>";
 	public static final String THRESHOLD_UNCERTAIN = "<html><b>Weak causality threshold:</b><br>lower bound for a weak causality between two activities; <br>set to 100% to avoid uncertain edges.</html>";
