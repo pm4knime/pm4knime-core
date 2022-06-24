@@ -1,12 +1,30 @@
 package org.pm4knime.node.discovery.cgminer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
+import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
+import org.knime.core.node.port.PortObjectSpec;
 
 
-public class CGMinerNodeDialog extends DefaultMinerNodeDialog {
+public class CGMinerNodeDialog extends DefaultNodeSettingsPane {
     
-	public void init() {
+	
+	public CGMinerNodeDialog() {
+		init();
+	}
+	
+	
+    public void init() {
 		
     	createNewGroup("Set Parameters: ");
     	
