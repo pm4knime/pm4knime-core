@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./DFM-icon.png" type="Learner" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>DFG Miner</name>
+    <name>DFG Miner (Legacy)</name>
     
     <shortDescription>
         This node is created to discover a directly-follows graph from an event log.
