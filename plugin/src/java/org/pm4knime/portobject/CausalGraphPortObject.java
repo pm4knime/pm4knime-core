@@ -324,10 +324,7 @@ public class CausalGraphPortObject extends AbstractPortObject{
 				e.setIDSD_ODSD(objIn.readDouble(), objIn.readDouble());		
 			}	
 			
-			cg.setTraceVariants(loadTraceVariants(settings, objIn));
-			// TO BE FIXED
-			cg.setLog(XFactoryRegistry.instance().currentDefault().createLog());
-						
+			cg.setTraceVariants(loadTraceVariants(settings, objIn));			
 			setCG(cg);
 			
 		} catch (Exception e) {
