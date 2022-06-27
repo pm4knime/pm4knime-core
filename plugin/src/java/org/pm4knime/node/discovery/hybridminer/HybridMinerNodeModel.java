@@ -59,23 +59,14 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 	public static final SettingsModelDoubleBounded t_fitness = new SettingsModelDoubleBounded(THRESHOLD_FITNESS, 0.8, 0, 1);
 	
 	private ExtendedHybridPetrinet pn;
+	protected CausalGraphPortObject cgPO = null;
 
 	protected HybridMinerNodeModel() {
-    
-        // TODO: Specify the amount of input and output ports needed.
         super(new PortType[] { CausalGraphPortObject.TYPE }, 
         		new PortType[] { HybridPetriNetPortObject.TYPE });
     }
-
-    
-    public static final String CFG_KEY_CLASSIFIER = "Event Classifier";
-	public static final String CFG_KEY_CLASSIFIER_SET = "Event Classifier Set";
-    protected SettingsModelString m_classifier =  new SettingsModelString(CFG_KEY_CLASSIFIER, "");
-	SettingsModelStringArray classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
-			new String[] {""}) ;
-	protected CausalGraphPortObject cgPO = null;
 	
-
+	
 	@Override
 	protected PortObject[] execute(final PortObject[] inObjects,
 	            final ExecutionContext exec) throws Exception {
@@ -106,21 +97,16 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 	
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		m_classifier.saveSettingsTo(settings);
-		classifierSet.saveSettingsTo(settings);
 		saveSpecificSettingsTo(settings);
 	}
 	
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		m_classifier.validateSettings(settings);
 	}
 	
 	
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		m_classifier.loadSettingsFrom(settings);
-		classifierSet.loadSettingsFrom(settings);
 		loadSpecificValidatedSettingsFrom(settings);
 	}
 

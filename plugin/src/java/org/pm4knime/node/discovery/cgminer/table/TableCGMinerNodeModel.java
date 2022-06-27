@@ -123,9 +123,6 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
         weight.saveSettingsTo(settings);
 	}
 
-	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		// TODO Auto-generated method stub		
-	}
 
 	protected void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
 		filter_a.loadSettingsFrom(settings);
@@ -157,7 +154,6 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
 	
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		validateSpecificSettings(settings);
 	}
 	
 	

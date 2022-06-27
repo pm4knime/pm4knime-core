@@ -1,13 +1,13 @@
 package org.pm4knime.node.discovery.hybridminer;
 
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 
-public class HybridMinerNodeDialog extends DefaultMinerNodeDialog {
+public class HybridMinerNodeDialog extends DefaultNodeSettingsPane {
     
-	public void init() {
+	public HybridMinerNodeDialog() {
     	createNewGroup("Set Parameters: ");
     	addDialogComponent(new DialogComponentNumber(HybridMinerNodeModel.t_cancel, HybridMinerNodeModel.THRESHOLD_CANCEL, 1000));
     	addDialogComponent(new DialogComponentStringSelection(HybridMinerNodeModel.type_fitness,

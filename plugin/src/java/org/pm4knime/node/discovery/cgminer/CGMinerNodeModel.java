@@ -151,7 +151,7 @@ public class CGMinerNodeModel extends DefaultNodeModel implements PortObjectHold
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 
 		if (!inSpecs[0].getClass().equals(XLogPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Table Log!");
+			throw new InvalidSettingsException("Input is not a valid event Log!");
 		
 		XLogPortObjectSpec logSpec = (XLogPortObjectSpec) inSpecs[0];
 		

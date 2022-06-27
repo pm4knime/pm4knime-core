@@ -3,20 +3,11 @@ package org.pm4knime.node.discovery.cgminer.table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.extension.std.XLifecycleExtension;
-import org.deckfour.xes.extension.std.XLifecycleExtension.StandardModel;
 import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
-import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.node.BufferedDataTable;
-import org.pm4knime.node.discovery.cgminer.table.TraceVariantsTable.TraceVariantLocal;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
 import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
@@ -97,6 +88,11 @@ public class TraceVariantsTable extends TraceVariantsLog{
 		
 	}
 	
+	public TraceVariantsTable(HybridCGMinerSettings settings) {
+		super(XFactoryRegistry.instance().currentDefault().createLog(), settings, settings.getTraceVariantsThreshold());
+		this.variants = new ArrayList<TraceVariant>();
+	}
+
 	private int getClassifierIndexFromColumn(BufferedDataTable table, String classifier) {
 		String[] columns = table.getDataTableSpec().getColumnNames();
 		int indexOfClassifierInTable = 0;
