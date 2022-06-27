@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -11,6 +12,7 @@ import java.util.zip.ZipEntry;
 import javax.swing.JComponent;
 
 import org.deckfour.xes.factory.XFactoryRegistry;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObjectSpec;
@@ -18,7 +20,10 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.node.discovery.cgminer.table.TraceVariantsTable;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
+import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
 import org.processmining.extendedhybridminer.models.causalgraph.ExtendedCausalGraph;
 import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedGraphEdge;
 import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedGraphNode;
@@ -191,7 +196,7 @@ public class CausalGraphPortObject extends AbstractPortObject{
 			objOut.writeDouble(e.getIDSD());
 		}	
 		
-		
+		writeTraceVariantsLog(cg.getTraceVariants(), objOut);
 		
 		objOut.close();
 		out.close();
@@ -319,8 +324,10 @@ public class CausalGraphPortObject extends AbstractPortObject{
 				e.setIDSD_ODSD(objIn.readDouble(), objIn.readDouble());		
 			}	
 			
+			cg.setTraceVariants(loadTraceVariants(settings, objIn));
+			// TO BE FIXED
 			cg.setLog(XFactoryRegistry.instance().currentDefault().createLog());
-			cg.setUnfilteredLog(XFactoryRegistry.instance().currentDefault().createLog());
+						
 			setCG(cg);
 			
 		} catch (Exception e) {
@@ -328,6 +335,26 @@ public class CausalGraphPortObject extends AbstractPortObject{
 		}
 
 		in.close();
+	}
+
+	private void writeTraceVariantsLog(TraceVariantsLog variants, ObjectOutputStream objOut) throws IOException {
+		objOut.writeInt(variants.getOriginalLogSize());
+		objOut.writeInt(variants.getNumberOfCoveredTraces());
+		objOut.writeInt(variants.getSize());
+		for (TraceVariant v: variants.getVariants()) {
+			ArrayList<String> activites = v.getActivities();
+			objOut.writeInt(activites.size());
+			for (String a: activites) {
+				objOut.writeUTF(a);
+			}
+			objOut.writeInt(v.getFrequency());
+		}
+	}
+	
+	private TraceVariantsTable loadTraceVariants(HybridCGMinerSettings settings, ObjectInputStream objIn) throws IOException {
+		TraceVariantsTable res = new TraceVariantsTable(settings);
+		res.loadFromStream(settings, objIn);
+		return res;
 	}
 
 	public static class CausalGraphPortObjectSerializer

@@ -1,11 +1,14 @@
 package org.pm4knime.node.discovery.cgminer.table;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.deckfour.xes.factory.XFactoryRegistry;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataRow;
 import org.knime.core.node.BufferedDataTable;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
@@ -18,7 +21,6 @@ public class TraceVariantsTable extends TraceVariantsLog{
 
 	public TraceVariantsTable(BufferedDataTable table, HybridCGMinerSettings settings) {
 		super(XFactoryRegistry.instance().currentDefault().createLog(), settings, settings.getTraceVariantsThreshold());
-		this.minimalFrequency = (int) Math.ceil(this.originalLogSize * settings.getTraceVariantsThreshold());
 		indexOfClassifierTable = getClassifierIndexFromColumn(table, settings.getClassifier().name());
 		
 		this.variants = new ArrayList<TraceVariant>();
@@ -42,6 +44,8 @@ public class TraceVariantsTable extends TraceVariantsLog{
 				originalLogSize++;
 			}
 		}
+		
+		this.minimalFrequency = (int) Math.ceil(this.originalLogSize * settings.getTraceVariantsThreshold());
 		
 		outerloop:
 		for (ArrayList<String> activities: traces.values()) {
@@ -106,28 +110,50 @@ public class TraceVariantsTable extends TraceVariantsLog{
 	
 	public class TraceVariantLocal extends TraceVariant {
 
-		private int frequency;
+		private int freq;
 
 		public TraceVariantLocal(ArrayList<String> activities) {
 			super(activities);
-			frequency = 1;
+			freq = 1;
+		}
+		
+		public TraceVariantLocal(ArrayList<String> activities, int f) {
+			super(activities);
+			freq = f;
 		}
 		
 		@Override
 		public int getFrequency() {
-	    	return this.frequency;
+	    	return this.freq;
 	    }
 	    
 		@Override
 		public int compareTo(TraceVariant t) {
-		    return  t.getFrequency() - this.frequency;
+		    return  t.getFrequency() - this.freq;
 		}
 		
 	    void increaseFrequency() {
-	    	this.frequency++;
+	    	this.freq++;
 	    }
 	    
 	}
 
+	public void loadFromStream(HybridCGMinerSettings settings, ObjectInputStream objIn) throws IOException {
+		
+		this.variants = new ArrayList<TraceVariant>();
+		this.originalLogSize = objIn.readInt();
+		this.numberOfCoveredTraces = objIn.readInt();
+		this.minimalFrequency = (int) Math.ceil(this.numberOfCoveredTraces * settings.getTraceVariantsThreshold());
+		int numTraces = objIn.readInt();
+		for (int i = 0; i < numTraces; i++){
+			ArrayList<String> activities = new ArrayList<String>();
+			int numActivities = objIn.readInt();
+			for (int j = 0; j < numActivities; j++){
+				activities.add(objIn.readUTF());
+			}
+			TraceVariantLocal variant = new TraceVariantLocal(activities, objIn.readInt());
+			variants.add(variant);
+		}		
+	}
 
 }
