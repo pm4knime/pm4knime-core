@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataRow;
 import org.knime.core.node.BufferedDataTable;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
@@ -17,11 +16,13 @@ import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 
 public class TraceVariantsTable extends TraceVariantsLog{
 
-	protected int indexOfClassifierTable;
+	protected int indexOfEventClassifierTable;
+	protected int indexOfTraceClassifierTable;
 
 	public TraceVariantsTable(BufferedDataTable table, HybridCGMinerSettings settings) {
 		super(XFactoryRegistry.instance().currentDefault().createLog(), settings, settings.getTraceVariantsThreshold());
-		indexOfClassifierTable = getClassifierIndexFromColumn(table, settings.getClassifier().name());
+		indexOfEventClassifierTable = getClassifierIndexFromColumn(table, "#Event Attribute#concept:name");
+		indexOfTraceClassifierTable = getClassifierIndexFromColumn(table, "#Trace Attribute#concept:name");
 		
 		this.variants = new ArrayList<TraceVariant>();
 		Map<String, Integer> activityFrequencyMap = new HashMap<String, Integer>();
@@ -31,8 +32,9 @@ public class TraceVariantsTable extends TraceVariantsLog{
 		Map<String, Integer> traceIDToCounter = new HashMap<String, Integer>();
 		originalLogSize = 0;
 		for (DataRow row : table) {
-			String currentActivity = row.getCell(this.indexOfClassifierTable).toString();
-			String currentTraceID = row.getCell(0).toString();
+			String currentActivity = row.getCell(this.indexOfEventClassifierTable).toString();
+
+			String currentTraceID = row.getCell(this.indexOfTraceClassifierTable).toString();
 			if (traceIDToCounter.containsKey(currentTraceID)) {
 				int traceIndex = traceIDToCounter.get(currentTraceID);
 				traces.get(traceIndex).add(currentActivity);
@@ -99,9 +101,10 @@ public class TraceVariantsTable extends TraceVariantsLog{
 
 	private int getClassifierIndexFromColumn(BufferedDataTable table, String classifier) {
 		String[] columns = table.getDataTableSpec().getColumnNames();
+		
 		int indexOfClassifierInTable = 0;
 		for (int i = 0; i < columns.length; i++) {
-			if (columns[i] == classifier) {
+			if (columns[i].equals(classifier)) {
 				indexOfClassifierInTable = i;
 			}
 		}

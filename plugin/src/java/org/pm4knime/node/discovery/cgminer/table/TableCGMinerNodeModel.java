@@ -70,6 +70,7 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
     	HybridCGMinerSettings settings = getConfiguration();
     	
 		TraceVariantsLog variants = new TraceVariantsTable(table, settings);
+		variants.print();
 		HybridCGMiner miner = new HybridCGMiner(null, null, variants, settings);
 		ExtendedCausalGraph cg = miner.mineFCG();
     	

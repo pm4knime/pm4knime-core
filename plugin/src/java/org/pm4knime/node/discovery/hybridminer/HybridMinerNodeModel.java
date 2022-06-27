@@ -13,7 +13,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
@@ -157,7 +156,7 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
     HybridPNMinerSettings getConfiguration() {
 		HybridPNMinerSettings settings = new HybridPNMinerSettings();
     	settings.setThresholdEarlyCancelationIterator(t_cancel.getIntValue());
-		settings.setReplayThreshold((int) (t_fitness.getDoubleValue()*100));
+		settings.setPlaceEvalThreshold(t_fitness.getDoubleValue());
 		try {
 			settings.setFitnessType(getFitnessType());
 		} catch (Exception e) {
@@ -174,7 +173,7 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
     	} else if (type_fitness.getStringValue() == FITNESS_TYPES.get("local")) {
     		return FitnessType.LOCAL;
     	} else {
-    		throw new Exception("Invalid place evaluation method!");
+    		throw new Exception("Invalid place evaluation method: " + type_fitness.getStringValue());
     	}
 	}
 

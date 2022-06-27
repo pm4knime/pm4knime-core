@@ -11,8 +11,6 @@ import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
 
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObjectSpec;
