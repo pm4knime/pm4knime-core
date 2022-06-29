@@ -44,7 +44,7 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 		PortObject pmPO = mine(logPO, exec);
 // check cancellation of node after mining
 		checkCanceled(null, exec);
-		return new PortObject[] { pmPO};
+		return new PortObject[] {pmPO};
 	
 }
 	
