@@ -32,11 +32,15 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
+import org.pm4knime.portobject.DFMPortObjectSpec;
+import org.pm4knime.portobject.DfgMsdPortObject;
+import org.pm4knime.portobject.DfgMsdPortObjectSpec;
+import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.processmining.directlyfollowsmodelminer.mining.DFMMiner;
 import org.processmining.directlyfollowsmodelminer.mining.DfgMsd2Dfm;
 import org.processmining.directlyfollowsmodelminer.model.DirectlyFollowsModel;
+import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
@@ -51,6 +55,7 @@ import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMTrace;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsdImpl;
+import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.Log2DfgMsd;
 
 import cern.colt.Arrays;
 import gnu.trove.iterator.TIntObjectIterator;
@@ -101,7 +106,7 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 	    protected DfgMinerTableNodeModel() {
 	    
 	        // TODO: Specify the amount of input and output ports needed.
-	    	super( new PortType[]{BufferedDataTable.TYPE }, new PortType[] { DFMPortObject2.TYPE }); 
+	    	super( new PortType[]{BufferedDataTable.TYPE }, new PortType[] { DfgMsdPortObject.TYPE }); 
 	    	}
 
 		@Override
@@ -121,97 +126,17 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 				throw new Exception("not found variant type");
 			}
 			checkCanceled(exec);
-			IMLog IM_log = new BufferedTableIMLog(log,activityClassifier);
-			DfgMsd dfg2 = convert(IM_log);
-			DirectlyFollowsModel dfg3 = DfgMsd2Dfm.convert(dfg2);
+			IMLog imLog = new BufferedTableIMLog(log,activityClassifier);
+			DfgMsd dfgmsd = Log2DfgMsd.convert(imLog);
 			checkCanceled(exec);
-			DFMPortObject2 dfmPO = new DFMPortObject2(dfg3);
 			logger.info("End:  DFM Miner");
-			return dfmPO;
+			DfgMsdPortObject dfgMsdObj = new DfgMsdPortObject(dfgmsd);
+			return dfgMsdObj;
 		}
 		
-		public static DfgMsd convert(IMLog log) {
-			DfgMsdImpl dfg = new DfgMsdImpl(log.getActivities());
-			TIntIntHashMap minimumSelfDistances = IMLogInfo.createEmptyMinimumSelfDistancesMap();
-			TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween = IMLogInfo.createEmptyMinimumSelfDistancesBetweenMap();
 
-			//walk trough the log
-			for (IMTrace trace : log) {
-				int toEventClass = -1;
-				int fromEventClass = -1;
-
-				int traceSize = 0;
-				TIntIntHashMap eventSeenAt = new TIntIntHashMap();
-				TIntList readTrace = new TIntArrayList();
-
-				for (IMEventIterator it = trace.iterator(); it.hasNext();) {
-					it.nextFast();
-					int eventClass = it.getActivityIndex();
-
-					dfg.addActivity(eventClass);
-
-					fromEventClass = toEventClass;
-					toEventClass = eventClass;
-
-					readTrace.add(toEventClass);
-
-					if (eventSeenAt.containsKey(toEventClass)) {
-						//we have detected an activity for the second time
-						//check whether this is shorter than what we had already seen
-						int oldDistance = Integer.MAX_VALUE;
-						if (minimumSelfDistances.containsKey(toEventClass)) {
-							oldDistance = minimumSelfDistances.get(toEventClass);
-						}
-
-						if (!minimumSelfDistances.containsKey(toEventClass)
-								|| traceSize - eventSeenAt.get(toEventClass) <= oldDistance) {
-							//keep the new minimum self distance
-							int newDistance = traceSize - eventSeenAt.get(toEventClass);
-							if (oldDistance > newDistance) {
-								//we found a shorter minimum self distance, record and restart with a new multiset
-								minimumSelfDistances.put(toEventClass, newDistance);
-
-								minimumSelfDistancesBetween.put(toEventClass, new MultiIntSet());
-							}
-
-							//store the minimum self-distance activities
-							MultiIntSet mb = minimumSelfDistancesBetween.get(toEventClass);
-							mb.addAll(readTrace.subList(eventSeenAt.get(toEventClass) + 1, traceSize));
-						}
-					}
-					eventSeenAt.put(toEventClass, traceSize);
-					{
-						if (fromEventClass != -1) {
-							//add edge to directly follows graph
-							dfg.getDirectlyFollowsGraph().addEdge(fromEventClass, toEventClass, 1);
-						} else {
-							//add edge to start activities
-							dfg.getStartActivities().add(toEventClass, 1);
-						}
-					}
-
-					traceSize += 1;
-				}
-
-				if (toEventClass != -1) {
-					dfg.getEndActivities().add(toEventClass, 1);
-				}
-
-				if (traceSize == 0) {
-					dfg.addEmptyTraces(1);
-				}
-			}
-			for (TIntObjectIterator<MultiIntSet> it = minimumSelfDistancesBetween.iterator(); it.hasNext();) {
-				it.advance();
-				MultiIntSet tos = it.value();
-				for (Iterator<Integer> it2 = tos.iterator(); it2.hasNext();) {
-					int to = it2.next();
-					long cardinality = tos.getCardinalityOf(to);
-					dfg.getMinimumSelfDistanceGraph().addEdge(it.key(), to, cardinality);
-				}
-			}
-			return dfg;
-		}
+		
+	
 		
 		@Override
 		public String getEventClassifier() {
@@ -246,7 +171,8 @@ public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
 		@Override
 		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 			// TODO Auto-generated method stub
-			return null;
+				return new PortObjectSpec[] { new DfgMsdPortObjectSpec() };
+			
 		}
 }
 
