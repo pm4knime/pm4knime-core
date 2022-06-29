@@ -234,7 +234,6 @@
         
             
     
-        <node category-path="/" factory-class="org.pm4knime.test.InductiveMinerIMLogNodeFactory" id="org.pm4knime.test.InductiveMinerIMLogNodeFactory"/>
     </extension>
                     	
     
