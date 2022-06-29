@@ -51,6 +51,7 @@
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" />
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.cgminer.CGMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.hybridminer.HybridMinerNodeFactory" />
 		<!-- nodes in conformance-->
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />

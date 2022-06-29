@@ -25,7 +25,7 @@
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Event Log">An causal graph as input</inPort>
+		<inPort index="0" name="Causal Graph">An causal graph as input</inPort>
 		<outPort index="0" name="Hybrid Petri Net">A hybrid Petri net as output</outPort>
 	</ports>
 </knimeNode>

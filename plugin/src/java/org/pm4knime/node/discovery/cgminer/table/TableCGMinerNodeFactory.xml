@@ -3,13 +3,13 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Causal Graph Miner</name>
+	<name>Causal Graph Miner (Table)</name>
 
-	<shortDescription>This node implements the first step of the Hybrid Miner to discover a causal graph from an event log.</shortDescription>
+	<shortDescription>This node implements the first step of the Hybrid Miner to discover a causal graph from a data table.</shortDescription>
 
 	<fullDescription>
 		<intro>
-			This node implements the first step of the Hybrid Miner to discover a causal graph from an event log.
+			This node implements the first step of the Hybrid Miner to discover a causal graph from a data table.
 			A causal graph consists of nodes representing activities and two types of directed edges connecting nodes. Certain edges represent strong causal dependencies and uncertain edges represent weak dependencies. 
 		</intro>
 
@@ -32,7 +32,7 @@
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Event Log">An event log as input</inPort>
+		<inPort index="0" name="Data Table">A data table as input</inPort>
 		<outPort index="0" name="Causal Graph">A causal graph net as output</outPort>
 	</ports>
 </knimeNode>
