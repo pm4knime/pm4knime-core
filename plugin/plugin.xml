@@ -104,14 +104,14 @@
         <webResourceBundle debug="true" name="Java Script GraphViz Visualizer" usesDefine="false" version="1.0.0" webResourceBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle">
                                     
             
-            <webResource relativePathSource="src/java/org/pm4knime/node/visualizations/jsgraphviz/" relativePathTarget="src/java/org/pm4knime/node/visualizations/jsgraphviz/">
+            <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/">
        		</webResource>
                                		
             
-            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.js" type="JAVASCRIPT"/>
+            <importResource relativePath="js-libs/form.js" type="JAVASCRIPT"/>
                                     
             
-            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.css" type="CSS"/>
+            <importResource relativePath="js-libs/form.css" type="CSS"/>
                                     
             
             <webDependency webResourceBundleID="bootstrap_3.3.6"> </webDependency>
@@ -129,13 +129,13 @@
         <webResourceBundle debug="true" name="Graphviz JS" usesDefine="false" version="2.1.2" webResourceBundleID="Viz">
                                    
             
-            <webResource relativePathSource="js-libs/viz/" relativePathTarget="js-libs/viz/"> </webResource>
+            <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/"> </webResource>
                                    
             
-            <importResource relativePath="js-libs/viz/viz.js" type="JAVASCRIPT"> </importResource>
+            <importResource relativePath="js-libs/viz.js" type="JAVASCRIPT"> </importResource>
                                    
             
-            <importResource relativePath="js-libs/viz/full.render.js" type="JAVASCRIPT"> </importResource>
+            <importResource relativePath="js-libs/full.render.js" type="JAVASCRIPT"> </importResource>
                                 
         
         </webResourceBundle>
