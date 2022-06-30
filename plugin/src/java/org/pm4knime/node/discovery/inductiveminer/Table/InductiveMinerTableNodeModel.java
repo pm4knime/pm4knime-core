@@ -21,8 +21,8 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel2;
 import org.pm4knime.portobject.PetriNetPortObject;
@@ -58,7 +58,7 @@ import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMLife
  *
  * @author 
  */
-public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
+public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
     
 	// the logger instance
 		private static final NodeLogger logger = NodeLogger.getLogger(InductiveMinerTableNodeModel.class);

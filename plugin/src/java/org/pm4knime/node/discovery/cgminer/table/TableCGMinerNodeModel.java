@@ -9,14 +9,13 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.cgminer.CGMinerNodeModel;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.portobject.CausalGraphPortObject;
 import org.pm4knime.portobject.CausalGraphPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.extendedhybridminer.algorithms.HybridCGMiner;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
 import org.processmining.extendedhybridminer.models.causalgraph.ExtendedCausalGraph;
@@ -25,7 +24,7 @@ import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 import org.processmining.framework.plugin.PluginContext;
 
 
-public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjectHolder{
+public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
 	private static final NodeLogger logger = NodeLogger
             .getLogger(TableCGMinerNodeModel.class);
@@ -37,12 +36,11 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
 	public static final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
 	public static final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(CGMinerNodeModel.WEIGHT, 0.5, 0, 1);
 	
+	
 	private ExtendedCausalGraph cg;
-	protected BufferedDataTable logPO = null;
+	protected BufferedDataTable logPO;
 	
 	protected TableCGMinerNodeModel() {
-    
-        // TODO: Specify the amount of input and output ports needed.
         super(new PortType[] { BufferedDataTable.TYPE }, 
         		new PortType[] { CausalGraphPortObject.TYPE });
     }
@@ -53,7 +51,6 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
 	            final ExecutionContext exec) throws Exception {
 		// we always put the event log as the first input!! 
 		logPO = (BufferedDataTable)inObjects[0];
-		
     	checkCanceled(null, exec);
 		PortObject pmPO = mine(logPO, exec);
 		checkCanceled(null, exec);
@@ -63,14 +60,14 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
 	
 	protected PortObject mine(BufferedDataTable table, final ExecutionContext exec) throws Exception{
     	logger.info("Begin: Causal Graph Miner (Table)");
-    	
+    	String tClassifier = getTraceClassifier();
+    	String eClassifier = getEventClassifier();
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(HybridCGMinerPlugin.class);
     	checkCanceled(pluginContext, exec);
     	HybridCGMinerSettings settings = getConfiguration();
     	
-		TraceVariantsLog variants = new TraceVariantsTable(table, settings);
-		variants.print();
+		TraceVariantsLog variants = new TraceVariantsTable(table, settings, tClassifier, eClassifier);
 		HybridCGMiner miner = new HybridCGMiner(null, null, variants, settings);
 		ExtendedCausalGraph cg = miner.mineFCG();
     	
@@ -104,17 +101,6 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
         return new PortObjectSpec[]{new CausalGraphPortObjectSpec()};
     }
 
-    @Override
-	public PortObject[] getInternalPortObjects() {
-		// TODO Auto-generated method stub
-		return new PortObject[] {logPO};
-	}
-
-	@Override
-	public void setInternalPortObjects(PortObject[] portObjects) {
-		logPO = (BufferedDataTable) portObjects[0];
-	}
-
 	protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
 		filter_a.saveSettingsTo(settings);
     	filter_t.saveSettingsTo(settings); 
@@ -142,26 +128,16 @@ public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjec
 			throw new InvalidSettingsException("Input is not a valid Table Log!");
 		
 		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];
+//		CLASSES = logSpec.getColumnNames();
+//		trace_class.setStringValue(TRACE_CLASS);
 		
 		return configureOutSpec(logSpec);
 	}
 	
-	
 	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) {
-		saveSpecificSettingsTo(settings);
+	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 	}
-	
-	
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-	}
-	
-	
-	@Override
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		loadSpecificValidatedSettingsFrom(settings);
-	}
+
    
 }
 

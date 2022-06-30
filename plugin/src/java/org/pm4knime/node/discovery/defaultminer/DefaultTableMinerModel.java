@@ -1,4 +1,4 @@
-package org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper;
+package org.pm4knime.node.discovery.defaultminer;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -7,29 +7,27 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 
-public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
+public abstract class DefaultTableMinerModel extends DefaultNodeModel {
 
-	protected DefaultMinerNodeModelBuffTable(PortType[] inPortTypes, PortType[] outPortTypes) {
+	protected DefaultTableMinerModel(PortType[] inPortTypes, PortType[] outPortTypes) {
 		super(inPortTypes, outPortTypes);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static final String CFG_KEY_CLASSIFIER = "Event Classifier";
-	public static final String CFG_KEY_CLASSIFIER_SET = "Event Classifier Set";
+	public static final String KEY_TRACE_CLASSIFIER = "Trace Classifier";
+	public static final String KEY_EVENT_CLASSIFIER = "Event Classifier";
 	
 	// set the classifier here , what if there is no explicit classifier there?? What to do then??
 	// we need to use the default ones!! Let us check it and fill it later??
-	protected SettingsModelString m_classifier =  new SettingsModelString(CFG_KEY_CLASSIFIER, "");
-	// we need a list to store the classifierList for each node. Not as static attributes there
-	SettingsModelStringArray classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
-			new String[] {""}) ;
+	protected SettingsModelString t_classifier =  new SettingsModelString(KEY_TRACE_CLASSIFIER, "");
+	protected SettingsModelString e_classifier =  new SettingsModelString(KEY_EVENT_CLASSIFIER, "");
+	
 	
 	protected BufferedDataTable logPO = null;
 	
@@ -60,8 +58,10 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 		
 		// why m_classifier is empty?? Because NodeDialog is not called without opening the configuration
 		// to change it, we force it to configure the even log here
-		if(m_classifier.getStringValue().isEmpty())
-			throw new InvalidSettingsException("Classifier is not set");
+		if(t_classifier.getStringValue().isEmpty())
+			throw new InvalidSettingsException("Trace Classifier is not set");
+		if(e_classifier.getStringValue().isEmpty())
+			throw new InvalidSettingsException("Event Classifier is not set");
 			
 		
 		
@@ -74,21 +74,20 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 	
 	
 	
-	// get the classifier parameters from it 
 	public String getEventClassifier() {
-		// get the list of classifiers from the event log!!
-		//XLog log = logPO.getLog();
-		//return XLogUtil.getEventClassifier(log, m_classifier.getStringValue());
-		return m_classifier.getStringValue();
-		
+		return e_classifier.getStringValue();		
+	}
+	
+	public String getTraceClassifier() {
+		return t_classifier.getStringValue();		
 	}
 	
 	
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
 		// TODO save m_classifier into the settings
-		m_classifier.saveSettingsTo(settings);
-		classifierSet.saveSettingsTo(settings);
+		t_classifier.saveSettingsTo(settings);
+		e_classifier.saveSettingsTo(settings);
 		// operation for another parameters
 		saveSpecificSettingsTo(settings);
 	}
@@ -97,10 +96,8 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		// TODO validate classifeir
-		m_classifier.validateSettings(settings);
-		
-//		classifierSet.validateSettings(settings);
+		t_classifier.validateSettings(settings);
+		e_classifier.validateSettings(settings);
 		validateSpecificSettings(settings);
 	}
 	
@@ -108,9 +105,8 @@ public abstract class DefaultMinerNodeModelBuffTable extends DefaultNodeModel {
 	
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		// TODO load m_classifier
-		m_classifier.loadSettingsFrom(settings);
-		classifierSet.loadSettingsFrom(settings);
+		t_classifier.loadSettingsFrom(settings);
+		e_classifier.loadSettingsFrom(settings);
 		
 		loadSpecificValidatedSettingsFrom(settings);
 	}

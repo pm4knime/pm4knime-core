@@ -31,8 +31,8 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
-import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
 import org.pm4knime.portobject.DFMPortObjectSpec;
 import org.pm4knime.portobject.DfgMsdPortObject;
 import org.pm4knime.portobject.DfgMsdPortObjectSpec;
@@ -75,7 +75,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
  *
  * @author 
  */
-public class DfgMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
+public class DfgMinerTableNodeModel extends DefaultTableMinerModel {
     
 	private static final NodeLogger logger = NodeLogger.getLogger(DfgMinerTableNodeModel.class);
 	// one parameter is the set noise, one is the classifier, those two like
