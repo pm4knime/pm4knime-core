@@ -5,13 +5,11 @@ import javax.swing.event.ChangeListener;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
-import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerDialog;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 /**
  * This is an example implementation of the node dialog of the

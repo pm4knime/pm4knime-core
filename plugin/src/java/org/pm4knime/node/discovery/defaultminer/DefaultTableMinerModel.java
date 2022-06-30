@@ -25,8 +25,8 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel {
 	
 	// set the classifier here , what if there is no explicit classifier there?? What to do then??
 	// we need to use the default ones!! Let us check it and fill it later??
-	protected SettingsModelString t_classifier =  new SettingsModelString(KEY_TRACE_CLASSIFIER, "");
-	protected SettingsModelString e_classifier =  new SettingsModelString(KEY_EVENT_CLASSIFIER, "");
+	protected static SettingsModelString t_classifier =  new SettingsModelString(KEY_TRACE_CLASSIFIER, "");
+	protected static SettingsModelString e_classifier =  new SettingsModelString(KEY_EVENT_CLASSIFIER, "");
 	
 	
 	protected BufferedDataTable logPO = null;

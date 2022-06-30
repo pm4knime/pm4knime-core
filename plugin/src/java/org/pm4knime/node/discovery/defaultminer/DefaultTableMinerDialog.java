@@ -61,18 +61,26 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
             final PortObjectSpec[] specs) throws NotConfigurableException {
  
 		DataTableSpec logSpec = (DataTableSpec) specs[0];
-			List<String> classAsList = Arrays.asList(logSpec.getColumnNames());
-			
-			if (classAsList.size() == 0) {
-				classAsList = new ArrayList<String>();
-				classAsList.add("");
-			}			
-			String tClassifier = getDefaultTraceClassifier(classAsList);
-			String eClassifier = getDefaultEventClassifier(classAsList);
-			t_classifier.setStringValue(tClassifier);
-			e_classifier.setStringValue(eClassifier);
-			trace_classifierComp.replaceListItems(classAsList, tClassifier);
-			event_classifierComp.replaceListItems(classAsList, eClassifier);
+		List<String> classAsList = Arrays.asList(logSpec.getColumnNames());
+		if (classAsList.size() == 0) {
+			throw new NotConfigurableException("Please make sure the connected table is in excution state");
+		} else {
+			try {
+		    	t_classifier.loadSettingsFrom(settings);
+				e_classifier.loadSettingsFrom(settings);
+				if (!classAsList.contains(t_classifier.getStringValue()) || !classAsList.contains(e_classifier.getStringValue())) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				String tClassifier = getDefaultTraceClassifier(classAsList);
+				String eClassifier = getDefaultEventClassifier(classAsList);
+				t_classifier.setStringValue(tClassifier);
+				e_classifier.setStringValue(eClassifier);
+			}
+			trace_classifierComp.replaceListItems(classAsList, t_classifier.getStringValue());
+			event_classifierComp.replaceListItems(classAsList, e_classifier.getStringValue());
+		}
+		
     }
     
     private String getDefaultTraceClassifier(List<String> classAsList) {		
