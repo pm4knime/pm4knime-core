@@ -26,15 +26,15 @@ import org.processmining.framework.plugin.PluginContext;
 
 public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
-	private static final NodeLogger logger = NodeLogger
+	private final NodeLogger logger = NodeLogger
             .getLogger(TableCGMinerNodeModel.class);
 	
-	public static final SettingsModelDoubleBounded filter_a = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_ACTIVITY, 0, 0, 100);
-	public static final SettingsModelDoubleBounded filter_t = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_TRACE, 0, 0, 100);
-	public static final SettingsModelDoubleBounded t_certain  = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_CERTAIN_EDGES, 0.4, 0, 1);
-	public static final SettingsModelDoubleBounded t_uncertain = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_UNCERTAIN, 0.3, 0, 1);
-	public static final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
-	public static final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(CGMinerNodeModel.WEIGHT, 0.5, 0, 1);
+	public final SettingsModelDoubleBounded filter_a = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_ACTIVITY, 0, 0, 100);
+	public final SettingsModelDoubleBounded filter_t = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_TRACE, 0, 0, 100);
+	public final SettingsModelDoubleBounded t_certain  = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_CERTAIN_EDGES, 0.4, 0, 1);
+	public final SettingsModelDoubleBounded t_uncertain = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_UNCERTAIN, 0.3, 0, 1);
+	public final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
+	public final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(CGMinerNodeModel.WEIGHT, 0.5, 0, 1);
 	
 	
 	private ExtendedCausalGraph cg;

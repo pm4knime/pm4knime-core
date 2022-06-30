@@ -1,6 +1,5 @@
 package org.pm4knime.node.discovery.defaultminer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,22 +16,24 @@ import org.knime.core.node.port.PortObjectSpec;
 public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	
 	//protected SettingsModelStringArray classifierSet ;
-	protected SettingsModelString e_classifier ;
+	protected DefaultTableMinerModel node;
+	//protected SettingsModelString e_classifier ;
 	protected DialogComponentStringSelection event_classifierComp ;
-	protected SettingsModelString t_classifier ;
+	//protected SettingsModelString t_classifier ;
 	protected DialogComponentStringSelection trace_classifierComp;
 	
-	public DefaultTableMinerDialog() {
+	public DefaultTableMinerDialog(DefaultTableMinerModel n) {
+		node = n;
 		
-		t_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, "");
-		e_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, "");
+		//t_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, "");
+		//e_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, "");
 		//classifierSet = new SettingsModelStringArray(DefaultMinerNodeModelBuffTable.KEY_CLASSIFIER_SET, new String[] {""});
 		
-		trace_classifierComp = new DialogComponentStringSelection(t_classifier,
+		trace_classifierComp = new DialogComponentStringSelection(node.t_classifier,
 				"Trace Classifier", new String[] {""});
 	    addDialogComponent(trace_classifierComp);
 		
-		event_classifierComp = new DialogComponentStringSelection(e_classifier,
+		event_classifierComp = new DialogComponentStringSelection(node.e_classifier,
 				"Event Classifier", new String[] {""});
 	    addDialogComponent(event_classifierComp);
 	    
@@ -66,19 +67,19 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 			throw new NotConfigurableException("Please make sure the connected table is in excution state");
 		} else {
 			try {
-		    	t_classifier.loadSettingsFrom(settings);
-				e_classifier.loadSettingsFrom(settings);
-				if (!classAsList.contains(t_classifier.getStringValue()) || !classAsList.contains(e_classifier.getStringValue())) {
+				node.t_classifier.loadSettingsFrom(settings);
+				node.e_classifier.loadSettingsFrom(settings);
+				if (!classAsList.contains(node.t_classifier.getStringValue()) || !classAsList.contains(node.e_classifier.getStringValue())) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
 				String tClassifier = getDefaultTraceClassifier(classAsList);
 				String eClassifier = getDefaultEventClassifier(classAsList);
-				t_classifier.setStringValue(tClassifier);
-				e_classifier.setStringValue(eClassifier);
+				node.t_classifier.setStringValue(tClassifier);
+				node.e_classifier.setStringValue(eClassifier);
 			}
-			trace_classifierComp.replaceListItems(classAsList, t_classifier.getStringValue());
-			event_classifierComp.replaceListItems(classAsList, e_classifier.getStringValue());
+			trace_classifierComp.replaceListItems(classAsList, node.t_classifier.getStringValue());
+			event_classifierComp.replaceListItems(classAsList, node.e_classifier.getStringValue());
 		}
 		
     }

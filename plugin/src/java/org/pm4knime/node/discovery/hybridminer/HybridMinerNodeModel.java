@@ -38,14 +38,14 @@ import org.processmining.extendedhybridminer.plugins.HybridPNMinerSettings;
 
 public class HybridMinerNodeModel extends DefaultNodeModel implements PortObjectHolder{
 	
-	private static final NodeLogger logger = NodeLogger
+	private final NodeLogger logger = NodeLogger
             .getLogger(HybridMinerNodeModel.class);
 	
-	public static final String THRESHOLD_CANCEL = "<html><b>Threshold for early cancellation of place iterator:</b><br>after x consecutive rejected places, the place iterator is canceled.</html>";
-	public static final String THRESHOLD_FITNESS = "<html><b>Fitness threshold for the place evaluation method</b></html>";
-	public static final String FITNESS_TYPE = "<html><b>Place evaluation method</b></html>";
+	public final String THRESHOLD_CANCEL = "<html><b>Threshold for early cancellation of place iterator:</b><br>after x consecutive rejected places, the place iterator is canceled.</html>";
+	public final String THRESHOLD_FITNESS = "<html><b>Fitness threshold for the place evaluation method</b></html>";
+	public final String FITNESS_TYPE = "<html><b>Place evaluation method</b></html>";
 	
-	public static final Map<String, String> FITNESS_TYPES = Collections.unmodifiableMap(new HashMap<String, String>() {
+	public final Map<String, String> FITNESS_TYPES = Collections.unmodifiableMap(new HashMap<String, String>() {
 	    {
 	        put("local", "local evaluation");
 	    	put("global", "local evaluation with global fitness guarantee");
@@ -53,9 +53,9 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 	
 	
 	
-	public static final SettingsModelInteger t_cancel = new SettingsModelInteger(THRESHOLD_CANCEL, 1000);
-	public static final SettingsModelString type_fitness = new SettingsModelString(FITNESS_TYPE, HybridMinerNodeModel.FITNESS_TYPES.get("global")); 
-	public static final SettingsModelDoubleBounded t_fitness = new SettingsModelDoubleBounded(THRESHOLD_FITNESS, 0.8, 0, 1);
+	public final SettingsModelInteger t_cancel = new SettingsModelInteger(THRESHOLD_CANCEL, 1000);
+	public final SettingsModelString type_fitness = new SettingsModelString(FITNESS_TYPE, FITNESS_TYPES.get("global")); 
+	public final SettingsModelDoubleBounded t_fitness = new SettingsModelDoubleBounded(THRESHOLD_FITNESS, 0.8, 0, 1);
 	
 	private ExtendedHybridPetrinet pn;
 	protected CausalGraphPortObject cgPO = null;
@@ -168,9 +168,9 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 
 
     public FitnessType getFitnessType() throws Exception {
-    	if (type_fitness.getStringValue() == FITNESS_TYPES.get("global")) {
+    	if (type_fitness.getStringValue().equals(FITNESS_TYPES.get("global"))) {
     		return FitnessType.GLOBAL;
-    	} else if (type_fitness.getStringValue() == FITNESS_TYPES.get("local")) {
+    	} else if (type_fitness.getStringValue().equals(FITNESS_TYPES.get("local"))) {
     		return FitnessType.LOCAL;
     	} else {
     		throw new Exception("Invalid place evaluation method: " + type_fitness.getStringValue());
