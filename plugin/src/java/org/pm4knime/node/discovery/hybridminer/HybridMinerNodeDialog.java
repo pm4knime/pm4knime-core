@@ -12,11 +12,11 @@ public class HybridMinerNodeDialog extends DefaultNodeSettingsPane {
 	public HybridMinerNodeDialog(HybridMinerNodeModel n) {
 		this.node = n;
     	createNewGroup("Set Parameters: ");
-    	addDialogComponent(new DialogComponentNumber(node.t_cancel, node.THRESHOLD_CANCEL, 1000));
+    	addDialogComponent(new DialogComponentNumber(node.t_cancel, HybridMinerNodeModel.THRESHOLD_CANCEL, 1000));
     	addDialogComponent(new DialogComponentStringSelection(node.type_fitness,
-    			node.FITNESS_TYPE,
-    			node.FITNESS_TYPES.values()));
-    	addDialogComponent(new DialogComponentNumber(node.t_fitness, node.THRESHOLD_FITNESS, 0.1));
+    			HybridMinerNodeModel.FITNESS_TYPE,
+    			HybridMinerNodeModel.FITNESS_TYPES.values()));
+    	addDialogComponent(new DialogComponentNumber(node.t_fitness, HybridMinerNodeModel.THRESHOLD_FITNESS, 0.1));
     	closeCurrentGroup();
     }
 }

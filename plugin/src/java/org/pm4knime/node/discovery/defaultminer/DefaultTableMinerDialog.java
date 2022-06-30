@@ -67,9 +67,9 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 			throw new NotConfigurableException("Please make sure the connected table is in excution state");
 		} else {
 			try {
-				node.t_classifier.loadSettingsFrom(settings);
-				node.e_classifier.loadSettingsFrom(settings);
-				if (!classAsList.contains(node.t_classifier.getStringValue()) || !classAsList.contains(node.e_classifier.getStringValue())) {
+				event_classifierComp.loadSettingsFrom(settings, specs);
+				trace_classifierComp.loadSettingsFrom(settings, specs); 
+				if (node.t_classifier.getStringValue().equals("") || node.e_classifier.getStringValue().equals("")) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -77,9 +77,9 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 				String eClassifier = getDefaultEventClassifier(classAsList);
 				node.t_classifier.setStringValue(tClassifier);
 				node.e_classifier.setStringValue(eClassifier);
+				trace_classifierComp.replaceListItems(classAsList, node.t_classifier.getStringValue());
+				event_classifierComp.replaceListItems(classAsList, node.e_classifier.getStringValue());
 			}
-			trace_classifierComp.replaceListItems(classAsList, node.t_classifier.getStringValue());
-			event_classifierComp.replaceListItems(classAsList, node.e_classifier.getStringValue());
 		}
 		
     }
@@ -106,7 +106,8 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	@Override
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
-        assert settings != null;        
+		event_classifierComp.saveSettingsTo(settings);  
+		trace_classifierComp.saveSettingsTo(settings);  
     }
 
 }

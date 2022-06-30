@@ -38,7 +38,6 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
 	
 	private ExtendedCausalGraph cg;
-	protected BufferedDataTable logPO;
 	
 	protected TableCGMinerNodeModel() {
         super(new PortType[] { BufferedDataTable.TYPE }, 
@@ -137,6 +136,7 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	@Override
 	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 	}
+
 
    
 }

@@ -8,12 +8,13 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 
-public abstract class DefaultTableMinerModel extends DefaultNodeModel {
+public abstract class DefaultTableMinerModel extends DefaultNodeModel implements PortObjectHolder {
 
 	protected DefaultTableMinerModel(PortType[] inPortTypes, PortType[] outPortTypes) {
 		super(inPortTypes, outPortTypes);
@@ -29,7 +30,7 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel {
 	public SettingsModelString e_classifier =  new SettingsModelString(KEY_EVENT_CLASSIFIER, "");
 	
 	
-	protected BufferedDataTable logPO = null;
+	protected BufferedDataTable logPO;
 	
 	@Override
 	protected PortObject[] execute(final PortObject[] inObjects,
@@ -94,12 +95,12 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel {
 	
 	protected abstract void saveSpecificSettingsTo(NodeSettingsWO settings);
 
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		t_classifier.validateSettings(settings);
-		e_classifier.validateSettings(settings);
-		validateSpecificSettings(settings);
-	}
+//	@Override
+//	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+//		t_classifier.validateSettings(settings);
+//		e_classifier.validateSettings(settings);
+//		validateSpecificSettings(settings);
+//	}
 	
 	protected abstract void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException;
 	
@@ -112,6 +113,14 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel {
 	}
 
 	protected abstract void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException;
+	
+	public PortObject[] getInternalPortObjects() {
+		return new PortObject[] {logPO};
+	}
+
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		logPO = (BufferedDataTable) portObjects[0];
+	}
 	
 	
 }

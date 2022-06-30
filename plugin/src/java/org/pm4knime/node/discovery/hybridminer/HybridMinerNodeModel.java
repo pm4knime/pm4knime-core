@@ -36,23 +36,22 @@ import org.processmining.extendedhybridminer.plugins.HybridPNMinerPlugin;
 import org.processmining.extendedhybridminer.plugins.HybridPNMinerSettings;
 
 
-public class HybridMinerNodeModel extends DefaultNodeModel implements PortObjectHolder{
+public class HybridMinerNodeModel extends DefaultNodeModel implements PortObjectHolder {
 	
 	private final NodeLogger logger = NodeLogger
             .getLogger(HybridMinerNodeModel.class);
 	
-	public final String THRESHOLD_CANCEL = "<html><b>Threshold for early cancellation of place iterator:</b><br>after x consecutive rejected places, the place iterator is canceled.</html>";
-	public final String THRESHOLD_FITNESS = "<html><b>Fitness threshold for the place evaluation method</b></html>";
-	public final String FITNESS_TYPE = "<html><b>Place evaluation method</b></html>";
+	public final static String THRESHOLD_CANCEL = "<html><b>Threshold for early cancellation of place iterator:</b><br>after x consecutive rejected places, the place iterator is canceled.</html>";
+	public final static String THRESHOLD_FITNESS = "<html><b>Fitness threshold for the place evaluation method</b></html>";
+	public final static String FITNESS_TYPE = "<html><b>Place evaluation method</b></html>";
 	
-	public final Map<String, String> FITNESS_TYPES = Collections.unmodifiableMap(new HashMap<String, String>() {
+	public static final Map<String, String> FITNESS_TYPES = Collections.unmodifiableMap(new HashMap<String, String>() {
 	    {
 	        put("local", "local evaluation");
 	    	put("global", "local evaluation with global fitness guarantee");
 	}});
 	
-	
-	
+		
 	public final SettingsModelInteger t_cancel = new SettingsModelInteger(THRESHOLD_CANCEL, 1000);
 	public final SettingsModelString type_fitness = new SettingsModelString(FITNESS_TYPE, FITNESS_TYPES.get("global")); 
 	public final SettingsModelDoubleBounded t_fitness = new SettingsModelDoubleBounded(THRESHOLD_FITNESS, 0.8, 0, 1);

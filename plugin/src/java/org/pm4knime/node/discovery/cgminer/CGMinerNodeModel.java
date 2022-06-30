@@ -30,7 +30,7 @@ import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 
 public class CGMinerNodeModel extends DefaultNodeModel implements PortObjectHolder {
 	
-	private static final NodeLogger logger = NodeLogger
+	private final NodeLogger logger = NodeLogger
             .getLogger(CGMinerNodeModel.class);
 	
 	public static final String FILTER_ACTIVITY = "<html><b>Minimal activity frequency:</b><br>an activity will be included if it occurs in at least x% of cases; <br>set to 0 to include all activities.</html>";
