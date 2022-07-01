@@ -99,11 +99,9 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 			checkCanceled(exec);
 			String activityClassifier = getEventClassifier();
 			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier);
-			System.out.println("End of Generating Log");
 			MiningParametersIM param =  createParameters();
 			XEventClassifier classifi = new XEventAttributeClassifier(activityClassifier);
 			param.setClassifier(classifi);
-			Instant start = Instant.now();
 			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, param,  new Canceller() {
 				public boolean isCancelled() {
 					try {
@@ -114,9 +112,6 @@ public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable
 					return false;
 				}
 			});
-			Instant end = Instant.now();
-			System.out.println(Duration.between(start, end).toMinutes());
-			System.out.println("End of Inductive Miner");
 			AcceptingPetriNet net = InductiveMinerPlugin.postProcessTree2PetriNet(ptE, new Canceller() {
 				public boolean isCancelled() {
 					try {
