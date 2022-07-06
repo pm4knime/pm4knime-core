@@ -25,8 +25,8 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel implements
 	public static final String KEY_EVENT_CLASSIFIER = "Event Classifier";
 	public static final String KEY_CLASSIFIER_SET = "Classifier Set";
 	
-	public String t_classifier =  "";
-	public String e_classifier =  "";
+	protected String t_classifier =  "";
+	protected String e_classifier =  "";
 	
 	protected BufferedDataTable logPO;
 	

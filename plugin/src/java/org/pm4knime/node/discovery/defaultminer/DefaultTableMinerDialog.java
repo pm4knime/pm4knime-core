@@ -15,6 +15,8 @@ import org.knime.core.node.port.PortObjectSpec;
 
 public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	
+	public static final String DEFAULT_TRACE_CLASS = "case:concept:name";
+	public static final String DEFAULT_EVENT_CLASS = "concept:name";
 	protected DefaultTableMinerModel node;
 	protected SettingsModelString e_classifier ;
 	protected DialogComponentStringSelection event_classifierComp ;
@@ -61,7 +63,6 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 			String eClassifier = getDefaultEventClassifier(currentClasses, this.node.e_classifier);
 			this.node.setTraceClassifier(tClassifier);
 			this.node.setEventClassifier(eClassifier);
-			this.node.e_classifier = eClassifier;
 			trace_classifierComp.replaceListItems(Arrays.asList(currentClasses), tClassifier);
 			event_classifierComp.replaceListItems(Arrays.asList(currentClasses), eClassifier);
 		}	
@@ -69,33 +70,35 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 
     
 	private String getDefaultTraceClassifier(String[] currentClasses, String oldValue) {		
+		String res = currentClasses[0];
 		for (String s: currentClasses) {
 			if (s.equals(oldValue)) {
 				return oldValue;
 			}
-			if (s.equals("case:concept:name")) {
-				return "case:concept:name";
+			if (s.equals(DEFAULT_TRACE_CLASS)) {
+				res = DEFAULT_TRACE_CLASS;
 			}
 		}
-		return currentClasses[0];
+		return res;
 	}
     
 	
     private String getDefaultEventClassifier(String[] currentClasses, String oldValue) {		
+    	String res;
+    	if (currentClasses.length > 1) {
+			res = currentClasses[1];
+		} else {
+			res = currentClasses[0];
+		}
     	for (String s: currentClasses) {
     		if (s.equals(oldValue)) {
 				return oldValue;
 			}
-			if (s.equals("concept:name")) {
-				return "concept:name";
+			if (s.equals(DEFAULT_EVENT_CLASS)) {
+				res = DEFAULT_EVENT_CLASS;
 			}
-		}
-    	
-    	if (currentClasses.length > 1) {
-			return currentClasses[1];
-		} else {
-			return currentClasses[0];
-		}
+		}   	
+    	return res;
 	}
 
 
