@@ -3,6 +3,7 @@ package org.pm4knime.node.discovery.dfgminer.dfgTableMiner;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeModel;
 
 /**
  * This is an example implementation of the node factory of the
@@ -12,14 +13,15 @@ import org.knime.core.node.NodeView;
  */
 public class DfgMinerTableNodeFactory 
         extends NodeFactory<DfgMinerTableNodeModel> {
+	DfgMinerTableNodeModel node;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public DfgMinerTableNodeModel createNodeModel() {
-		// Create and return a new node model.
-        return new DfgMinerTableNodeModel();
+    	node = new DfgMinerTableNodeModel();
+		return node;
     }
 
     /**
@@ -56,7 +58,7 @@ public class DfgMinerTableNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new DfgMinerTableNodeDialog();
+        return new DfgMinerTableNodeDialog(node);
     }
 
 }

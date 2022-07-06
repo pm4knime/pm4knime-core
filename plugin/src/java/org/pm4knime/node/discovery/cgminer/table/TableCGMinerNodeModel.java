@@ -48,7 +48,6 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	@Override
 	protected PortObject[] execute(final PortObject[] inObjects,
 	            final ExecutionContext exec) throws Exception {
-		// we always put the event log as the first input!! 
 		logPO = (BufferedDataTable)inObjects[0];
     	checkCanceled(null, exec);
 		PortObject pmPO = mine(logPO, exec);
@@ -96,7 +95,6 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 
 
     protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
-
         return new PortObjectSpec[]{new CausalGraphPortObjectSpec()};
     }
 
@@ -122,14 +120,9 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
 		if (!inSpecs[0].getClass().equals(DataTableSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Table Log!");
-		
+			throw new InvalidSettingsException("Input is not a valid Table Log!");	
 		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];
-//		CLASSES = logSpec.getColumnNames();
-//		trace_class.setStringValue(TRACE_CLASS);
-		
 		return configureOutSpec(logSpec);
 	}
 	
