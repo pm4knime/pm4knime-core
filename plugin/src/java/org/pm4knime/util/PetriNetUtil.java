@@ -18,6 +18,8 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
+import org.pm4knime.node.conformance.replayer.table.helper.TableEventLog;
+import org.pm4knime.node.conformance.replayer.table.helper.TransEvClassMappingTable;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.models.connections.GraphLayoutConnection;
@@ -132,6 +134,26 @@ public class PetriNetUtil {
 				if (t.getLabel().trim().equals(id.trim())) {
 					mapped = true;
 					mapping.put(t, evClass);
+					break;
+				}
+			}
+			if (!mapped) {
+				mapping.put(t, dummyEvent);
+			}
+		}
+		return mapping;
+	}
+	
+	public static TransEvClassMappingTable constructMapping(TableEventLog log, Petrinet net,  String eventClassifier, String dummyEvent) {
+		TransEvClassMappingTable mapping = new TransEvClassMappingTable(eventClassifier, dummyEvent);
+		// here we need dummy event to map invisible transition. Even if there is no corresponding event classes, we also need to map them
+		for (Transition t : net.getTransitions()) {
+			boolean mapped = false;
+			for (String activity : log.getActivties()) {
+
+				if (t.getLabel().trim().equals(activity.trim())) {
+					mapped = true;
+					mapping.put(t, activity);
 					break;
 				}
 			}
