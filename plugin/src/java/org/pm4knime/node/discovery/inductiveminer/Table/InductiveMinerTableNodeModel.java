@@ -2,9 +2,6 @@ package org.pm4knime.node.discovery.inductiveminer.Table;
 
 
 
-import java.time.Duration;
-import java.time.Instant;
-
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
 
