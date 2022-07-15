@@ -30,22 +30,22 @@ import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 
 public class CGMinerNodeModel extends DefaultNodeModel implements PortObjectHolder {
 	
-	private static final NodeLogger logger = NodeLogger
+	private final NodeLogger logger = NodeLogger
             .getLogger(CGMinerNodeModel.class);
 	
 	public static final String FILTER_ACTIVITY = "<html><b>Minimal activity frequency:</b><br>an activity will be included if it occurs in at least x% of cases; <br>set to 0 to include all activities.</html>";
-	public static final String FILTER_TRACE = "<html><b>Minimal trace variant frequency:</b><br>a trace variant will be included if it covers at least x% of cases; <br>set to 0 to include all trace variants.</html>";
-	public static final String THRESHOLD_CERTAIN_EDGES = "<html><b>Strong causality threshold:</b><br>lower bound for a strong causality between two activities.</html>";
-	public static final String THRESHOLD_UNCERTAIN = "<html><b>Weak causality threshold:</b><br>lower bound for a weak causality between two activities; <br>set to 100% to avoid uncertain edges.</html>";
-	public static final String THRESHOLD_LONG_DEPENDENCY = "<html><b>Long-term dependency threshold:</b><br>lower bound for a strong long-term causality between two activities.</html>";
-	public static final String WEIGHT = "<html><b>Causality weight threshold:</b><br>high values mean more emphasis on the split and join behavior of activities; <br>low values mean more emphasis on the detection of concurrency and loops.</html>";
+	public static String FILTER_TRACE = "<html><b>Minimal trace variant frequency:</b><br>a trace variant will be included if it covers at least x% of cases; <br>set to 0 to include all trace variants.</html>";
+	public static String THRESHOLD_CERTAIN_EDGES = "<html><b>Strong causality threshold:</b><br>lower bound for a strong causality between two activities.</html>";
+	public static String THRESHOLD_UNCERTAIN = "<html><b>Weak causality threshold:</b><br>lower bound for a weak causality between two activities; <br>set to 100% to avoid uncertain edges.</html>";
+	public static String THRESHOLD_LONG_DEPENDENCY = "<html><b>Long-term dependency threshold:</b><br>lower bound for a strong long-term causality between two activities.</html>";
+	public static String WEIGHT = "<html><b>Causality weight threshold:</b><br>high values mean more emphasis on the split and join behavior of activities; <br>low values mean more emphasis on the detection of concurrency and loops.</html>";
 
-	public static final SettingsModelDoubleBounded filter_a = new SettingsModelDoubleBounded(FILTER_ACTIVITY, 0, 0, 100);
-	public static final SettingsModelDoubleBounded filter_t = new SettingsModelDoubleBounded(FILTER_TRACE, 0, 0, 100);
-	public static final SettingsModelDoubleBounded t_certain  = new SettingsModelDoubleBounded(THRESHOLD_CERTAIN_EDGES, 0.4, 0, 1);
-	public static final SettingsModelDoubleBounded t_uncertain = new SettingsModelDoubleBounded(THRESHOLD_UNCERTAIN, 0.3, 0, 1);
-	public static final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
-	public static final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(WEIGHT, 0.5, 0, 1);
+	public final SettingsModelDoubleBounded filter_a = new SettingsModelDoubleBounded(FILTER_ACTIVITY, 0, 0, 100);
+	public final SettingsModelDoubleBounded filter_t = new SettingsModelDoubleBounded(FILTER_TRACE, 0, 0, 100);
+	public final SettingsModelDoubleBounded t_certain  = new SettingsModelDoubleBounded(THRESHOLD_CERTAIN_EDGES, 0.4, 0, 1);
+	public final SettingsModelDoubleBounded t_uncertain = new SettingsModelDoubleBounded(THRESHOLD_UNCERTAIN, 0.3, 0, 1);
+	public final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
+	public final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(WEIGHT, 0.5, 0, 1);
 	
 	private ExtendedCausalGraph cg;
 	protected XLogPortObject logPO = null;

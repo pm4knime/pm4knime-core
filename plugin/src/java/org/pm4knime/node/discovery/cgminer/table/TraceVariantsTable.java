@@ -14,15 +14,15 @@ import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVaria
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
 import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 
-public class TraceVariantsTable extends TraceVariantsLog{
+public class TraceVariantsTable extends TraceVariantsLog {
 
 	protected int indexOfEventClassifierTable;
 	protected int indexOfTraceClassifierTable;
 
-	public TraceVariantsTable(BufferedDataTable table, HybridCGMinerSettings settings) {
+	public TraceVariantsTable(BufferedDataTable table, HybridCGMinerSettings settings, String tClassifier, String eClassifier) {
 		super(XFactoryRegistry.instance().currentDefault().createLog(), settings, settings.getTraceVariantsThreshold());
-		indexOfEventClassifierTable = getClassifierIndexFromColumn(table, "#Event Attribute#concept:name");
-		indexOfTraceClassifierTable = getClassifierIndexFromColumn(table, "#Trace Attribute#concept:name");
+		indexOfEventClassifierTable = getClassifierIndexFromColumn(table, eClassifier);
+		indexOfTraceClassifierTable = getClassifierIndexFromColumn(table, tClassifier);
 		
 		this.variants = new ArrayList<TraceVariant>();
 		Map<String, Integer> activityFrequencyMap = new HashMap<String, Integer>();

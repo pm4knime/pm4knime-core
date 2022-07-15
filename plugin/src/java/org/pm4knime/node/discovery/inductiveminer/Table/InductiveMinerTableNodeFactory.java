@@ -12,6 +12,7 @@ import org.knime.core.node.NodeView;
  */
 public class InductiveMinerTableNodeFactory 
         extends NodeFactory<InductiveMinerTableNodeModel> {
+	InductiveMinerTableNodeModel node;
 
     /**
      * {@inheritDoc}
@@ -19,7 +20,8 @@ public class InductiveMinerTableNodeFactory
     @Override
     public InductiveMinerTableNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new InductiveMinerTableNodeModel();
+        node = new InductiveMinerTableNodeModel();
+        return node;
     }
 
     /**
@@ -56,7 +58,7 @@ public class InductiveMinerTableNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new InductiveMinerTableNodeDialog();
+        return new InductiveMinerTableNodeDialog(node);
     }
 
 }
