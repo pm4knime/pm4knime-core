@@ -2,7 +2,8 @@ package org.pm4knime.node.discovery.alpha;
 
 import java.util.Set;
 
-import org.deckfour.xes.model.XLog;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -14,13 +15,12 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
+import org.pm4knime.node.discovery.defaultminer.TraceVariantRep;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.alphaminer.parameters.AlphaMinerParameters;
@@ -36,7 +36,7 @@ import org.processmining.models.semantics.petrinet.Marking;
  * @author kefang-pads
  *
  */
-public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
+public class AlphaMinerNodeModel extends DefaultTableMinerModel {
 
 	// TODO: make the different versions of the alpha available through some
 	// settings model
@@ -52,15 +52,14 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 	public static final String[] variantList = {AlphaVersion.CLASSIC.toString() , AlphaVersion.PLUS.toString(),
 			AlphaVersion.PLUS_PLUS.toString(), AlphaVersion.SHARP.toString(), AlphaVersion.ROBUST.toString()};
 	
-	private SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
-	private SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
-	private SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);
-	private SettingsModelDoubleBounded m_casualTH = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_CASUAL, 0, 0, 100);
-	private SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerNodeModel.CFG_IGNORE_LL, false);
+	SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
+	SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
+	SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);
+	SettingsModelDoubleBounded m_casualTH = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_CASUAL, 0, 0, 100);
+	SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerNodeModel.CFG_IGNORE_LL, false);
 	
 	protected AlphaMinerNodeModel() {
-		super(new PortType[] { XLogPortObject.TYPE },
-				new PortType[] { PetriNetPortObject.TYPE });
+		super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
 		
 		m_noiseTLF.setEnabled(false);
     	m_noiseTMF.setEnabled(false);
@@ -70,7 +69,7 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 
 	
 	@Override
-	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
+	protected PortObject mine(BufferedDataTable table, final ExecutionContext exec) throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("Start: Alpha Miner");
 		AlphaMinerParameters alphaParams = null;
@@ -92,8 +91,8 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 		PluginContext context = PM4KNIMEGlobalContext.instance().getFutureResultAwarePluginContext(AlphaMinerPlugin.class);
 		
 		checkCanceled(context, exec);
-		Object[] result = AlphaMinerPlugin.apply(context, log,
-				getEventClassifier(), alphaParams);
+		TraceVariantRep variants = new TraceVariantRep(table, getTraceClassifier(), getEventClassifier());
+		Object[] result = AlphaAbstraction.apply(context, variants, getEventClassifier(), alphaParams);
 		
 		// when there is no finalMarking available, we set the finalMarking automatically
 		Set<Marking> fmSet = PetriNetUtil.guessFinalMarking((Petrinet) result[0]); // new HashMap();
@@ -105,11 +104,12 @@ public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 		return pnPO;
 	}
 
+	
 	@Override
-	protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
+	protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 		// TODO Auto-generated method stub
-		PetriNetPortObjectSpec pnSpec = new PetriNetPortObjectSpec();
-		return new PortObjectSpec[] { pnSpec };
+		PetriNetPortObjectSpec ptSpec = new PetriNetPortObjectSpec();
+		return new PortObjectSpec[] { ptSpec };
 	}
 
 
