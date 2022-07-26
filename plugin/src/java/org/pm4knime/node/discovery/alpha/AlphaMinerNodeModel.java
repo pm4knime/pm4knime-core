@@ -31,16 +31,9 @@ import org.processmining.alphaminer.plugins.AlphaMinerPlugin;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
-/**
- * change it to adapt for more variants, Classic and Alpha++. But not all of them 
- * @author kefang-pads
- *
- */
-public class AlphaMinerNodeModel extends DefaultTableMinerModel {
 
-	// TODO: make the different versions of the alpha available through some
-	// settings model
-	// TODO: publish the marking as a separate output object
+
+public class AlphaMinerNodeModel extends DefaultTableMinerModel {
 
 	private static final NodeLogger logger = NodeLogger.getLogger(AlphaMinerNodeModel.class);
 
@@ -50,8 +43,8 @@ public class AlphaMinerNodeModel extends DefaultTableMinerModel {
 	public static final String CFGKEY_THRESHOLD_CASUAL = "Casual threshhold";
 	public static final String CFG_IGNORE_LL = "Ignore the lenght of the loops";
 	public static final String[] variantList = {AlphaVersion.CLASSIC.toString() , AlphaVersion.PLUS.toString(),
-			AlphaVersion.PLUS_PLUS.toString(), AlphaVersion.SHARP.toString(), AlphaVersion.ROBUST.toString()};
-	
+			
+	AlphaVersion.PLUS_PLUS.toString(), AlphaVersion.SHARP.toString(), AlphaVersion.ROBUST.toString()};
 	SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
 	SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
 	SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);

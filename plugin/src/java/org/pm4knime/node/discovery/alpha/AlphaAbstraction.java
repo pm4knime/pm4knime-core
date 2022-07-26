@@ -1,7 +1,6 @@
 package org.pm4knime.node.discovery.alpha;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -10,10 +9,7 @@ import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.model.impl.XEventImpl;
 import org.pm4knime.node.discovery.defaultminer.TraceVariantRep;
 import org.pm4knime.node.discovery.defaultminer.TraceVariant;
 import org.processmining.alphaminer.abstractions.AlphaClassicAbstraction;
@@ -34,10 +30,6 @@ import org.processmining.alphaminer.parameters.AlphaPlusMinerParameters;
 import org.processmining.alphaminer.parameters.AlphaRobustMinerParameters;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.util.Pair;
-import org.processmining.hybridilpminer.utils.XLogUtils;
-import org.processmining.log.models.impl.XEventClassifierListImpl;
-import org.processmining.log.utils.XLogBuilder;
-import org.processmining.log.utils.XUtils;
 import org.processmining.logabstractions.factories.ActivityCountAbstractionFactory;
 import org.processmining.logabstractions.factories.CausalAbstractionFactory;
 import org.processmining.logabstractions.factories.DirectlyFollowsAbstractionFactory;
@@ -80,7 +72,7 @@ public class AlphaAbstraction {
 			case SHARP :
 				XEventClassifier classifier = new XEventAttributeClassifier("Event Name", eClassifier);
 				Pair<TraceVariantRep, Pair<XEventClass, XEventClass>> startEndLog = addArtificialStartEndToLog(context, variants, classifier);
-				return new AlphaSharpMinerImpl(context, parameters,
+				return AlphaMinerFactory.createAlphaSharpMiner(context, parameters,
 						createAlphaSharpAbstraction(startEndLog.getFirst()),
 						startEndLog.getSecond().getFirst(), startEndLog.getSecond().getSecond());
 			case ROBUST :
@@ -134,9 +126,6 @@ public class AlphaAbstraction {
 			endAppendix += a;
 		}
 
-		//XEventClasses classes = XEventClasses.deriveEventClasses(null, XFactoryRegistry.instance().currentDefault().createLog());
-		//classes.getClasses().addAll(Arrays.asList(createEventClasses(events)));
-		//System.out.println("Classes: " + classes.toString());
 		while (events.get(startTarget) != null) {
 			Random r = new Random();
 			int a = r.nextInt();
@@ -151,14 +140,11 @@ public class AlphaAbstraction {
 		}
 		Pair<String, String> startEndEvent = createStartEndEvents(startClean, endClean, startAppendix,
 				endAppendix);
-		//AddArtificialStartFilter startFilter = new AddArtificialStartFilter();
-		//AddArtificialEndFilter endFilter = new AddArtificialEndFilter();
 		try {
 			TraceVariantRep started = startFilter(variants, startEndEvent.getFirst());
 			TraceVariantRep ended = endFilter(started, startEndEvent.getSecond());
 			return new Pair<>(ended, getArtificialStartAndEnd(ended, classifier, startTarget, endTarget));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new Pair<>(variants, new Pair<XEventClass, XEventClass>(null, null));
@@ -220,27 +206,14 @@ public class AlphaAbstraction {
 
 	private static Pair<String, String> createStartEndEvents(String startClean,
 			String endClean, String startAppendix, String endAppendix) {
-		//XEvent startEvent = XFactoryRegistry.instance().currentDefault().createEvent();
-		//XEvent endEvent = XFactoryRegistry.instance().currentDefault().createEvent();
-		//for (int i = 0; i < classifier.getDefiningAttributeKeys().length; i++) {
-			String valStart = "";
-			String valEnd = "";
-			//if (i == 0) {
-				valStart += startClean;
-				valEnd += endClean;
-			//}
-			//if (i == classifier.getDefiningAttributeKeys().length - 1) {
-				valStart += startAppendix;
-				valEnd += endAppendix;
-			//}
-//			String key = classifier.getDefiningAttributeKeys()[i];
-//			startEvent.getAttributes().put(key, new XAttributeLiteralImpl(key, valStart));
-//			endEvent.getAttributes().put(key, new XAttributeLiteralImpl(key, valEnd));
-		//}
+		String valStart = "";
+		String valEnd = "";
+		valStart += startClean;
+		valEnd += endClean;
+		valStart += startAppendix;
+		valEnd += endAppendix;
 		return new Pair<>(valStart, valEnd);
 	}
-	
-	
 	
 	
 	public static AlphaClassicAbstraction<XEventClass> createAlphaClassicAbstraction(TraceVariantRep variants) {
@@ -268,10 +241,7 @@ public class AlphaAbstraction {
 				if (from.equals(to)) {
 					lol[events.get(from)] = LoopAbstractionFactory.DEFAULT_THRESHOLD_BOOLEAN;
 				}
-			}
-
-			
-			
+			}		
 		}
 
 		
@@ -366,10 +336,7 @@ public class AlphaAbstraction {
 				endsLf[reducedClasses.getSecond()[secondLf]] = StartEndActivityFactory.DEFAULT_THRESHOLD_BOOLEAN;
 			} else if (firstLf != -1) {
 				endsLf[reducedClasses.getSecond()[firstLf]] = StartEndActivityFactory.DEFAULT_THRESHOLD_BOOLEAN;
-			}
-				
-			
-			
+			}	
 		}
 		
 		return new AlphaPlusAbstractionImpl<>(aca,
@@ -464,37 +431,6 @@ public class AlphaAbstraction {
 	public static final double BOOLEAN_DEFAULT_THRESHOLD = 1.0;
 
 
-//	public static strictfp double[][] constructAlphaPlusPlusLongTermFollowsMatrix(TraceVariantRep variants,
-//			DirectlyFollowsAbstraction<XEventClass> dfa, CausalPrecedenceAbstraction<XEventClass> cpa,
-//			CausalSuccessionAbstraction<XEventClass> csa) {
-//		double[][] matrix = new double[classes.size()][classes.size()];
-//		for (XTrace t : log) {
-//			for (int i = 0; i < t.size() - 1; i++) {
-//				XEventClass a = classes.getClassOf(t.get(i));
-//				for (int j = i + 1; j < t.size(); j++) {
-//					XEventClass b = classes.getClassOf(t.get(j));
-//					if (!dfa.holds(a.getIndex(), b.getIndex())) {
-//						boolean ltf = true;
-//						for (int k = i + 1; k <= j - 1; k++) {
-//							XEventClass c = classes.getClassOf(t.get(k));
-//							if (c.equals(a) || c.equals(b)
-//									|| cpa.getValue(c.getIndex(), a.getIndex()) >= cpa.getThreshold()
-//									|| csa.getValue(c.getIndex(), a.getIndex()) >= csa.getThreshold()) {
-//								ltf = false;
-//								break;
-//							}
-//						}
-//						if (ltf) {
-//							matrix[a.getIndex()][b.getIndex()] = BOOLEAN_DEFAULT_THRESHOLD;
-//						}
-//					}
-//				}
-//			}
-//		}
-//		return matrix;
-//	}
-
-
 	public static strictfp double[][] constructAlphaPlusPlusLengthOneLoopFreeLongTermFollowsMatrix(TraceVariantRep variants, HashMap<String, Integer> events, DirectlyFollowsAbstraction<XEventClass> dfa,
 			CausalPrecedenceAbstraction<XEventClass> cpa, CausalSuccessionAbstraction<XEventClass> csa,
 			LengthOneLoopAbstraction<XEventClass> lola) {
@@ -559,6 +495,5 @@ public class AlphaAbstraction {
 				constructAlphaPlusPlusLengthOneLoopFreeLongTermFollowsMatrix(variants, events, dfa, cpa, csa, lola),
 				BOOLEAN_DEFAULT_THRESHOLD);
 	}
-
 
 }

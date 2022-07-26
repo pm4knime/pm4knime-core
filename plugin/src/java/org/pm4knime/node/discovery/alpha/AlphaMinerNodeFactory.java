@@ -3,7 +3,6 @@ package org.pm4knime.node.discovery.alpha;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.pm4knime.node.discovery.inductiveminer.Table.InductiveMinerTableNodeModel;
 
 public class AlphaMinerNodeFactory extends NodeFactory<AlphaMinerNodeModel> {
 	AlphaMinerNodeModel node;
