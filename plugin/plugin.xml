@@ -61,6 +61,7 @@
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPMNodeFactory"/>
+>>>>>>> refs/remotes/origin/integration
     </extension>
             	
     
