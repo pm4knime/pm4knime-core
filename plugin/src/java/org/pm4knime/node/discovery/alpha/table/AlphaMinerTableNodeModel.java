@@ -1,4 +1,4 @@
-package org.pm4knime.node.discovery.alpha;
+package org.pm4knime.node.discovery.alpha.table;
 
 import java.util.Set;
 
@@ -33,9 +33,9 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 
 
-public class AlphaMinerNodeModel extends DefaultTableMinerModel {
+public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 
-	private static final NodeLogger logger = NodeLogger.getLogger(AlphaMinerNodeModel.class);
+	private static final NodeLogger logger = NodeLogger.getLogger(AlphaMinerTableNodeModel.class);
 
 	public static final String CFGKEY_VARIANT_TYPE = "Alpha Miner Variant";
 	public static final String CFGKEY_THRESHOLD_NOISE_LF = "Noise threshhold for least frequency";
@@ -45,13 +45,13 @@ public class AlphaMinerNodeModel extends DefaultTableMinerModel {
 	public static final String[] variantList = {AlphaVersion.CLASSIC.toString() , AlphaVersion.PLUS.toString(),
 			
 	AlphaVersion.PLUS_PLUS.toString(), AlphaVersion.SHARP.toString(), AlphaVersion.ROBUST.toString()};
-	SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
-	SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
-	SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);
-	SettingsModelDoubleBounded m_casualTH = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_CASUAL, 0, 0, 100);
-	SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerNodeModel.CFG_IGNORE_LL, false);
+	SettingsModelString m_variant =  new SettingsModelString(AlphaMinerTableNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
+	SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerTableNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
+	SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerTableNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);
+	SettingsModelDoubleBounded m_casualTH = new SettingsModelDoubleBounded(AlphaMinerTableNodeModel.CFGKEY_THRESHOLD_CASUAL, 0, 0, 100);
+	SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerTableNodeModel.CFG_IGNORE_LL, false);
 	
-	protected AlphaMinerNodeModel() {
+	protected AlphaMinerTableNodeModel() {
 		super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
 		
 		m_noiseTLF.setEnabled(false);

@@ -1,16 +1,14 @@
-package org.pm4knime.node.discovery.alpha;
+package org.pm4knime.node.discovery.alpha.xlog;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
 public class AlphaMinerNodeFactory extends NodeFactory<AlphaMinerNodeModel> {
-	AlphaMinerNodeModel node;
 
 	@Override
 	public AlphaMinerNodeModel createNodeModel() {
-		node = new AlphaMinerNodeModel();
-        return node;
+		return new AlphaMinerNodeModel();
 	}
 
 	@Override
@@ -30,7 +28,7 @@ public class AlphaMinerNodeFactory extends NodeFactory<AlphaMinerNodeModel> {
 
 	@Override
 	protected NodeDialogPane createNodeDialogPane() {
-		return new AlphaMinerNodeDialog(node);
+		return new AlphaMinerNodeDialog();
 	}
 
 }
