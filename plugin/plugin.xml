@@ -12,11 +12,19 @@
 		<category level-id="ioRead" name="Read" path="/community/processmining/io" icon="icon/read.png"/>
 		<category level-id="ioWrite" name="Write" path="/community/processmining/io" icon="icon/write.png"/>
 		<category after="io" level-id="conversion" name="Conversion" path="/community/processmining" icon="icon/category-conversion.png" />
+		
+        <!-- Manipulation-->
 		<category after="conversion" level-id="manipulation" name="Manipulation" path="/community/processmining" icon="icon/category-manipulation.png" />
+		<category level-id="log" name="Log Manipulation" path="/community/processmining/manipulation" icon="icon/category-manipulation.png" />
+		<category after="log" level-id="table" name="Table Manipulation" path="/community/processmining/manipulation" icon="icon/category-manipulation.png" />
+		
+		<!-- Discovery-->
 		<category after="manipulation" level-id="discovery" name="Discovery" path="/community/processmining" icon="icon/category-discovery.png" />
-		<category level-id="log" name="Log-Baased Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
+		<category level-id="log" name="Log-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
 		<category after="log" level-id="table" name="Table-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
 		<category after="table" level-id="model" name="Model-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
+
+		
 		<category after="discovery" level-id="conformance" name="Evaluation" path="/community/processmining" icon="icon/category-conformance.png" />
 		<category after="conformance" level-id="visualization" name="Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
 	</extension>
@@ -32,14 +40,18 @@
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" />
-		<!-- nodes in manipulation-->
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
+		
+		<!-- nodes in log manipulation-->
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
+
+        <!-- nodes in table manipulation-->
+        <node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
+		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
+		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
+
 		<!-- nodes in conversion-->
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory" />
@@ -123,27 +135,7 @@
                         		
         
         
-        <!-- nodes in manipulation-->
-                        		
         
-        
-        <node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory"/>
                         		
         
         

@@ -1,12 +1,5 @@
 package org.pm4knime.node.discovery.dfgminer.dfgTableMiner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.deckfour.xes.classification.XEventAndClassifier;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventLifeTransClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -22,9 +15,6 @@ import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
 import org.pm4knime.portobject.DfgMsdPortObject;
 import org.pm4knime.portobject.DfgMsdPortObjectSpec;
-import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
-import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfoDefault;
-import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfoLifeCycle;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.Log2DfgMsd;
