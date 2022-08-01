@@ -23,7 +23,6 @@ import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybri
 import org.processmining.extendedhybridminer.models.causalgraph.gui.HybridPetrinetVisualizer;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
-import org.xesstandard.xml.XesXmlParserLenient;
 
 
 public class HybridPetriNetPortObject extends AbstractPortObject{
