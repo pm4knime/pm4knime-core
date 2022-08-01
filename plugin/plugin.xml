@@ -26,7 +26,7 @@
 
 		
 		<category after="discovery" level-id="conformance" name="Evaluation" path="/community/processmining" icon="icon/category-conformance.png" />
-		<category after="conformance" level-id="visualization" name="Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
+		<category after="conformance" level-id="visualization" name="JavaScript Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
 	</extension>
 
 	<extension point="org.knime.workbench.repository.nodes">
