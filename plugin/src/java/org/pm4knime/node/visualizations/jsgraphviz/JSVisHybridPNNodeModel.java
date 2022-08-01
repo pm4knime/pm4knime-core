@@ -9,28 +9,17 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 
-/**
- * This is an example implementation of the node model of the
- * "JSGraphViz" node.
- * 
- * This example node performs simple number formatting
- * ({@link String#format(String, Object...)}) using a user defined format string
- * on all double columns of its input table.
- *
- * @author 
- */
 public class JSVisHybridPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = {PetriNetPortObject.TYPE};
+	private static final PortType[] IN_TYPES = {HybridPetriNetPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
 
 	public JSVisHybridPNNodeModel() {
-		super(IN_TYPES, OUT_TYPES, "JSGraphVizPN");
+		super(IN_TYPES, OUT_TYPES, "JSVisHybridPN");
 	}
 
 	@Override
@@ -79,7 +68,7 @@ public class JSVisHybridPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVi
 
 		synchronized (getLock()) {
 			
-			PetriNetPortObject petrinet = (PetriNetPortObject) inObjects[0];
+			HybridPetriNetPortObject petrinet = (HybridPetriNetPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
 			Dot dot =  petrinet.getDotPanel().getDot();
 			dotstr = dot.toString();
@@ -88,9 +77,6 @@ public class JSVisHybridPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVi
 		
 		representation.setDotstr(dotstr);
 
-		// The FlowVariablePortObject ports are a mockup. They are not actually
-		// necessary as the flow
-		// variables are shared across the workflow.
 		return new PortObject[] {};
 	}
 

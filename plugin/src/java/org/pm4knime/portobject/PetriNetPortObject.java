@@ -129,7 +129,7 @@ public class PetriNetPortObject  implements PortObject{
 		}
 		
 		
-	if(m_anet != null) {
+	    if(m_anet != null) {
 			
 			DotPanel navDot;
 			navDot = new DotPanel(GraphvizPetriNet.convert(m_anet));
