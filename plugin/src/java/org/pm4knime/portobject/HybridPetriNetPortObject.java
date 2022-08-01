@@ -107,7 +107,7 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 			
 			DotPanel navDot;
 			navDot = new DotPanel(GraphvizHybridPetriNet.convert(pn));
-			navDot.setName("Generated petri net");
+			navDot.setName("Generated hybrid petri net");
 			return navDot;
 			
 		}
