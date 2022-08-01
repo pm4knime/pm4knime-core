@@ -29,7 +29,11 @@ public class TableEventLog {
 	private TableEventLog() {
 		
 	}
-
+/**
+ * 
+ * @param log the log as Table
+ * @param classifier Classifier as a string
+ */
 	public TableEventLog(BufferedDataTable log, String classifier) {
 		this.classifier = classifier;
 		this.log = log;
