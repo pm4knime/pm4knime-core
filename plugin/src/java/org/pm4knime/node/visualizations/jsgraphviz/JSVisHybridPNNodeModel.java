@@ -23,13 +23,13 @@ import org.processmining.plugins.graphviz.dot.Dot;
  *
  * @author 
  */
-public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSVisHybridPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {PetriNetPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
 
-	public JSGraphVizPNNodeModel() {
+	public JSVisHybridPNNodeModel() {
 		super(IN_TYPES, OUT_TYPES, "JSGraphVizPN");
 	}
 

@@ -11,16 +11,16 @@ import org.knime.core.node.NodeView;
  *
  * @author 
  */
-public class JSGraphVizPTNodeFactory 
-        extends NodeFactory<JSGraphVizPTNodeModel> implements WizardNodeFactoryExtension<JSGraphVizPTNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSVisHybridPNNodeFactory 
+        extends NodeFactory<JSGraphVizPNNodeModel> implements WizardNodeFactoryExtension<JSGraphVizPNNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public JSGraphVizPTNodeModel createNodeModel() {
+    public JSGraphVizPNNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new JSGraphVizPTNodeModel();
+        return new JSGraphVizPNNodeModel();
     }
 
     /**
@@ -36,8 +36,8 @@ public class JSGraphVizPTNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<JSGraphVizPTNodeModel> createNodeView(final int viewIndex,
-            final JSGraphVizPTNodeModel nodeModel) {
+    public NodeView<JSGraphVizPNNodeModel> createNodeView(final int viewIndex,
+            final JSGraphVizPNNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
 		return null;
     }
