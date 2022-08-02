@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.impl.XAttributeBooleanImpl;
@@ -169,7 +170,17 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
     	m_inSpec = (XLogPortObjectSpec) inSpecs[0];
-	
+    	if(m_traceAttrSet.getIncludeList().isEmpty()) {
+        	Set<String> specTraceColumns = m_inSpec.getGTraceAttrMap().keySet();
+        	m_traceAttrSet.setIncludeList(specTraceColumns);
+        	m_traceAttrSet.setExcludeList(new String[0]);
+    	}
+    	
+    	if(m_eventAttrSet.getIncludeList().isEmpty()) {
+        	Set<String> specEventColumns = m_inSpec.getGEventAttrMap().keySet();
+        	m_eventAttrSet.setIncludeList(specEventColumns);
+        	m_eventAttrSet.setExcludeList(new String[0]);
+    	}
         return new PortObjectSpec[]{null};
     }
 
