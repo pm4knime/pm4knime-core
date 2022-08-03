@@ -56,7 +56,6 @@
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
-<<<<<<< HEAD
 		
 		<!-- nodes in table-based discovery-->
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.alpha.table.AlphaMinerTableNodeFactory" />
@@ -76,17 +75,6 @@
 		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.hybridminer.HybridMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory"/>
 		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" />
-=======
-		<!-- nodes in discovery-->
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.hybridminer.HybridMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory"/>
-        <node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.Table.InductiveMinerTableNodeFactory"/>
->>>>>>> refs/remotes/origin/integration
         
 		<!-- nodes in conformance-->
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />
@@ -95,19 +83,12 @@
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory" />
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory" />
 		<!-- nodes visualization-->
-<<<<<<< HEAD
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSVisHybridPNNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSVisCGNodeFactory"/>
         
-=======
-		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPMNodeFactory"/>
->>>>>>> refs/remotes/origin/integration
->>>>>>> refs/remotes/origin/integration
     </extension>
             	
     
