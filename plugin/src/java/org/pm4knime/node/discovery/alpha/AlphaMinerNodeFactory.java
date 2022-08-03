@@ -5,10 +5,12 @@ import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
 public class AlphaMinerNodeFactory extends NodeFactory<AlphaMinerNodeModel> {
+	AlphaMinerNodeModel node;
 
 	@Override
 	public AlphaMinerNodeModel createNodeModel() {
-		return new AlphaMinerNodeModel();
+		node = new AlphaMinerNodeModel();
+        return node;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class AlphaMinerNodeFactory extends NodeFactory<AlphaMinerNodeModel> {
 
 	@Override
 	protected NodeDialogPane createNodeDialogPane() {
-		return new AlphaMinerNodeDialog();
+		return new AlphaMinerNodeDialog(node);
 	}
 
 }
