@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Causal Graph Miner</name>
+	<name>Causal Graph Miner (Log)</name>
 
 	<shortDescription>This node implements the first step of the Hybrid Miner to discover a causal graph from an event log.</shortDescription>
 

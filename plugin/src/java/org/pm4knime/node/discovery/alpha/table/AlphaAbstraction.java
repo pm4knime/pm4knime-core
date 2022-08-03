@@ -1,4 +1,4 @@
-package org.pm4knime.node.discovery.alpha;
+package org.pm4knime.node.discovery.alpha.table;
 
 import java.util.ArrayList;
 import java.util.HashMap;

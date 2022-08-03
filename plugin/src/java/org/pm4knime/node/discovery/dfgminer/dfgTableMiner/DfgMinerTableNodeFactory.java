@@ -3,7 +3,6 @@ package org.pm4knime.node.discovery.dfgminer.dfgTableMiner;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeModel;
 
 /**
  * This is an example implementation of the node factory of the

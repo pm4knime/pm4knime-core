@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./PN-icon.png" type="Visualizer" deprecated="false"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+   
+    <name>Hybrid Petri Net Visualizer</name>
+    
+    <shortDescription>
+        JS GraphViz Hybrid Petri Net Visualization
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>
+    This node implements a JavaScript Visualization of a Hybrid Petri Net.
+        </intro>
+    </fullDescription>
+    
+    <interactiveView name="JSGraphViz"></interactiveView>
+    
+   <ports>
+        <inPort name="Petri Net" index="0">Hybrid Petri Net</inPort>
+	</ports>
+
+</knimeNode>

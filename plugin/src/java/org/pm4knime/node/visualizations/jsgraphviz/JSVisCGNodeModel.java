@@ -9,28 +9,18 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.CausalGraphPortObject;
+import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 
-/**
- * This is an example implementation of the node model of the
- * "JSGraphViz" node.
- * 
- * This example node performs simple number formatting
- * ({@link String#format(String, Object...)}) using a user defined format string
- * on all double columns of its input table.
- *
- * @author 
- */
-public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSVisCGNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = {PetriNetPortObject.TYPE};
+	private static final PortType[] IN_TYPES = {CausalGraphPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
 
-	public JSGraphVizPNNodeModel() {
-		super(IN_TYPES, OUT_TYPES, "JSGraphVizPN");
+	public JSVisCGNodeModel() {
+		super(IN_TYPES, OUT_TYPES, "JSVisHybridPN");
 	}
 
 	@Override
@@ -79,18 +69,15 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 		synchronized (getLock()) {
 			
-			PetriNetPortObject petrinet = (PetriNetPortObject) inObjects[0];
+			CausalGraphPortObject cg = (CausalGraphPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
-			Dot dot =  petrinet.getDotPanel().getDot();
+			Dot dot =  cg.getDotPanel().getDot();
 			dotstr = dot.toString();
 
 		}
 		
 		representation.setDotstr(dotstr);
 
-		// The FlowVariablePortObject ports are a mockup. They are not actually
-		// necessary as the flow
-		// variables are shared across the workflow.
 		return new PortObject[] {};
 	}
 

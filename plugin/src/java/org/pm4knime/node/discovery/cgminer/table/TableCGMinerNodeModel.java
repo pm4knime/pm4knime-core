@@ -1,6 +1,18 @@
 package org.pm4knime.node.discovery.cgminer.table;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.deckfour.xes.factory.XFactoryRegistry;
+import org.deckfour.xes.info.XLogInfo;
+import org.deckfour.xes.info.XLogInfoFactory;
+import org.deckfour.xes.model.XEvent;
+import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.container.filter.TableFilter;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -64,7 +76,6 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 				.getFutureResultAwarePluginContext(HybridCGMinerPlugin.class);
     	checkCanceled(pluginContext, exec);
     	HybridCGMinerSettings settings = getConfiguration();
-    	
 		TraceVariantsLog variants = new TraceVariantsTable(table, settings, tClassifier, eClassifier);
 		HybridCGMiner miner = new HybridCGMiner(null, null, variants, settings);
 		ExtendedCausalGraph cg = miner.mineFCG();
@@ -81,10 +92,12 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
     }
     
     
+    
+    
     HybridCGMinerSettings getConfiguration() {
 		HybridCGMinerSettings settings = new HybridCGMinerSettings();
-    	settings.setFilterAcivityThreshold(filter_a.getDoubleValue()/100);
-		settings.setTraceVariantsThreshold(filter_t.getDoubleValue()/100);
+    	settings.setFilterAcivityThreshold(filter_a.getDoubleValue()/100.0);
+		settings.setTraceVariantsThreshold(filter_t.getDoubleValue()/100.0);
 		settings.setSureThreshold(t_certain.getDoubleValue());
 		settings.setQuestionMarkThreshold(t_uncertain.getDoubleValue());
 		settings.setLongDepThreshold(t_longDep.getDoubleValue());

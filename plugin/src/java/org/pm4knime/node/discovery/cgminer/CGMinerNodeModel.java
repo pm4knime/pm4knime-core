@@ -100,8 +100,8 @@ public class CGMinerNodeModel extends DefaultNodeModel implements PortObjectHold
     
     HybridCGMinerSettings getConfiguration() {
 		HybridCGMinerSettings settings = new HybridCGMinerSettings();
-    	settings.setFilterAcivityThreshold(filter_a.getDoubleValue()/100);
-		settings.setTraceVariantsThreshold(filter_t.getDoubleValue()/100);
+    	settings.setFilterAcivityThreshold(filter_a.getDoubleValue()/100.0);
+		settings.setTraceVariantsThreshold(filter_t.getDoubleValue()/100.0);
 		settings.setSureThreshold(t_certain.getDoubleValue());
 		settings.setQuestionMarkThreshold(t_uncertain.getDoubleValue());
 		settings.setLongDepThreshold(t_longDep.getDoubleValue());
