@@ -5,11 +5,14 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
+import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 
@@ -66,8 +69,12 @@ public class JSGraphVizPTNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 	public void saveCurrentValue(NodeSettingsWO content) {
 	}
 
+	
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
+		if (!inSpecs[0].getClass().equals(ProcessTreePortObjectSpec.class))
+			throw new InvalidSettingsException("Input is not a valid process tree!");
 		return new PortObjectSpec[] {};
 	}
 
@@ -113,4 +120,5 @@ public class JSGraphVizPTNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
 	}
+
 }

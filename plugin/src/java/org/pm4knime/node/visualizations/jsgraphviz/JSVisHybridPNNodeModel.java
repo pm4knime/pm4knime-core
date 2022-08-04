@@ -10,6 +10,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.pm4knime.portobject.HybridPetriNetPortObject;
+import org.pm4knime.portobject.HybridPetriNetPortObjectSpec;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 
@@ -55,8 +56,12 @@ public class JSVisHybridPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVi
 	public void saveCurrentValue(NodeSettingsWO content) {
 	}
 
+
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
+		if (!inSpecs[0].getClass().equals(HybridPetriNetPortObjectSpec.class))
+			throw new InvalidSettingsException("Input is not a valid hybrid Petri net!");
 		return new PortObjectSpec[] {};
 	}
 

@@ -1,20 +1,14 @@
 package org.pm4knime.portobject;
 
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
 
-import org.deckfour.xes.classification.XEventClass;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.AbstractPortObject;
@@ -23,21 +17,11 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
-import org.knime.core.node.port.AbstractPortObject.AbstractPortObjectSerializer;
-import org.pm4knime.util.PetriNetUtil;
-import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.directlyfollowsmodelminer.mining.plugins.DirectlyFollowsModelVisualisationPlugin;
-import org.processmining.directlyfollowsmodelminer.model.DirectlyFollowsModel;
-import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
-import org.processmining.plugins.directlyfollowsgraph.DirectlyFollowsGraph;
-import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
-import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizDirectlyFollowsGraph;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraph;
 import org.processmining.plugins.inductiveminer2.plugins.DfgMsdImportPlugin;
 import org.processmining.plugins.inductiveminer2.plugins.DfgMsdVisualisationPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
-import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsdImpl;
 
 public class DfgMsdPortObject extends AbstractPortObject {
 
