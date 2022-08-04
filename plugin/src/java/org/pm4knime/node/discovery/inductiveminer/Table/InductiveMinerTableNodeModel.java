@@ -1,7 +1,5 @@
 package org.pm4knime.node.discovery.inductiveminer.Table;
 
-
-
 import java.time.Duration;
 import java.time.Instant;
 
@@ -23,16 +21,17 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.pm4knime.portobject.ProcessTreePortObject;
+import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequent;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMLifeCycle;
+import org.processmining.processtree.ProcessTree;
 
 
 /**
@@ -65,13 +64,13 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 				InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.0, 0, 1.0);
 
 		protected InductiveMinerTableNodeModel() {
-			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
+			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { ProcessTreePortObject.TYPE });
 		}
 
 		@Override
 		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 			// TODO Auto-generated method stub
-			PetriNetPortObjectSpec ptSpec = new PetriNetPortObjectSpec();
+			ProcessTreePortObjectSpec ptSpec = new ProcessTreePortObjectSpec();
 			return new PortObjectSpec[] { ptSpec };
 		}
 		
@@ -101,24 +100,16 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 					return false;
 				}
 			});
+			
 			Instant end = Instant.now();
 			System.out.println(Duration.between(start, end).toMinutes());
 			System.out.println("End of Inductive Miner");
-			AcceptingPetriNet net = InductiveMinerPlugin.postProcessTree2PetriNet(ptE, new Canceller() {
-				public boolean isCancelled() {
-					try {
-						checkCanceled(exec);
-					} catch (final CanceledExecutionException ce) {
-						return true;
-					}
-					return false;
-				}
-			});
+			ProcessTree tree = EfficientTree2processTree.convert(ptE);
 
 			checkCanceled(exec);
-			PetriNetPortObject petriObj = new PetriNetPortObject(net, ptE);
+			ProcessTreePortObject treeObj = new ProcessTreePortObject(tree);
 			logger.info("End:  Inductive Miner");
-			return  petriObj;
+			return  treeObj;
 
 		}
 

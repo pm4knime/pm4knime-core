@@ -9,7 +9,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import org.pm4knime.portobject.DFMPortObject;
+import org.pm4knime.portobject.DfgMsdPortObject;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 
@@ -23,13 +23,13 @@ import org.processmining.plugins.graphviz.dot.Dot;
  *
  * @author 
  */
-public class JSGraphVizDFMNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSGraphVizDFGNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	// Input and output port types
-	private static final PortType[] IN_TYPES = {DFMPortObject.TYPE};
+	private static final PortType[] IN_TYPES = {DfgMsdPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
 
-	public JSGraphVizDFMNodeModel() {
+	public JSGraphVizDFGNodeModel() {
 		super(IN_TYPES, OUT_TYPES, "JSGraphVizDFM");
 	}
 
@@ -79,7 +79,7 @@ public class JSGraphVizDFMNodeModel extends AbstractWizardNodeModel<JSGraphVizVi
 
 		synchronized (getLock()) {
 			
-			DFMPortObject dfm = (DFMPortObject) inObjects[0];
+			DfgMsdPortObject dfm = (DfgMsdPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
 			Dot dot =  dfm.getDotPanel().getDot();
 			dotstr = dot.toString();

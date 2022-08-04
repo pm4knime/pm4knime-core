@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse version="3.0"?><plugin>
                             	
-                                	
-                                	
-                                	
-                                	
-    
-	<extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
+   <extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
 		<category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
 		<category icon="icon/category-io.png" level-id="io" name="IO" path="/community/processmining" />
 		<category level-id="ioRead" name="Read" path="/community/processmining/io" icon="icon/read.png"/>
@@ -68,13 +63,11 @@
 		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.alpha.xlog.AlphaMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.cgminer.CGMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2" />
 		
         <!-- nodes in model-based discovery-->
 		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.hybridminer.HybridMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory"/>
-		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" />
         
 		<!-- nodes in conformance-->
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />
@@ -84,7 +77,7 @@
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory" />
 		<!-- nodes visualization-->
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
+        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFGNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSVisHybridPNNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSVisCGNodeFactory"/>
