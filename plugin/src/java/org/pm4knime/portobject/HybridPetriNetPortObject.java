@@ -23,10 +23,7 @@ import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
 import org.processmining.extendedhybridminer.models.causalgraph.gui.HybridPetrinetVisualizer;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
-import org.processmining.plugins.inductiveVisualMiner.plugins.EfficientTreeVisualisationPlugin;
-import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizPetriNet;
 
 
 public class HybridPetriNetPortObject extends AbstractPortObject{

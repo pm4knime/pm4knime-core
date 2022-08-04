@@ -1,15 +1,18 @@
 package org.pm4knime.node.visualizations.jsgraphviz;
 
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 
@@ -23,11 +26,12 @@ import org.processmining.plugins.graphviz.dot.Dot;
  *
  * @author 
  */
-public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {PetriNetPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
+	PetriNetPortObject petrinet;
 
 	public JSGraphVizPNNodeModel() {
 		super(IN_TYPES, OUT_TYPES, "JSGraphVizPN");
@@ -66,8 +70,12 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 	public void saveCurrentValue(NodeSettingsWO content) {
 	}
 
+	
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
+		if (!inSpecs[0].getClass().equals(PetriNetPortObjectSpec.class))
+			throw new InvalidSettingsException("Input is not a valid Petri net!");
 		return new PortObjectSpec[] {};
 	}
 
@@ -79,7 +87,7 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 		synchronized (getLock()) {
 			
-			PetriNetPortObject petrinet = (PetriNetPortObject) inObjects[0];
+			petrinet = (PetriNetPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
 			Dot dot =  petrinet.getDotPanel().getDot();
 			dotstr = dot.toString();
@@ -112,5 +120,14 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+	}
+	
+	public PortObject[] getInternalPortObjects() {
+		return new PortObject[] {petrinet};
+	}
+
+	
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		petrinet = (PetriNetPortObject) portObjects[0];
 	}
 }

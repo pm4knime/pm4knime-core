@@ -10,6 +10,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.pm4knime.portobject.CausalGraphPortObject;
+import org.pm4knime.portobject.CausalGraphPortObjectSpec;
 import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.processmining.plugins.graphviz.dot.Dot;
 
@@ -56,8 +57,12 @@ public class JSVisCGNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepr
 	public void saveCurrentValue(NodeSettingsWO content) {
 	}
 
+
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
+		if (!inSpecs[0].getClass().equals(CausalGraphPortObjectSpec.class))
+			throw new InvalidSettingsException("Input is not a valid causal graph!");
 		return new PortObjectSpec[] {};
 	}
 

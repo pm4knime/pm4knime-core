@@ -20,7 +20,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.node.discovery.cgminer.table.TraceVariantsTable;
 import org.pm4knime.node.visualizations.jsgraphviz.util.GraphvizCausalGraph;
-import org.pm4knime.node.visualizations.jsgraphviz.util.GraphvizHybridPetriNet;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
