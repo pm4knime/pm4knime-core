@@ -182,14 +182,12 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     	if(!spec.getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
-    	if(spec.getClassifiersMap().isEmpty()|| spec.getGTraceAttrMap().isEmpty()|| spec.getClassifiersMap().isEmpty()) {
+    	if( spec.getGTraceAttrMap().isEmpty()|| spec.getClassifiersMap().isEmpty()) {
     		throw new InvalidSettingsException("Log Spec Object is Empty. Probably because the reader node got reset");
     	}
     	
     	
-    	if(m_inSpec !=null&&m_inSpec.equals(spec) ) {
-    		throw new InvalidSettingsException("Node Input value got changed please reset");
-    	}
+
     	
 
     	m_inSpec = spec;
