@@ -128,15 +128,18 @@ public class Table2XLogConverterNodeModel extends NodeModel {
     	// check if the type of this column is LocalDateTime or ZonedDateTime type
     	String tsName = m_config.getMTimeStamp().getStringValue();
     	DataTableSpec spec  = (DataTableSpec) inSpecs[0];
-    	if(!spec.getColumnSpec(tsName).getType().equals(LocalDateTimeCellFactory.TYPE) &&
+    	
+    	if(!tsName.equals(SMTable2XLogConfig.CFG_NO_OPTION)&&!spec.getColumnSpec(tsName).getType().equals(LocalDateTimeCellFactory.TYPE) &&
     			!spec.getColumnSpec(tsName).getType().equals(ZonedDateTimeCellFactory.TYPE))
     		throw new InvalidSettingsException("The time stamp doesn't have the required format in LocalDateTime or ZonedDateTime");
+    	
 
     	if(m_config.getMTraceAttrSet().getIncludeList().contains(m_config.getMCaseID().getStringValue())) 
     		if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMEventClass().getStringValue()))
     			if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMLifecycle().getStringValue()) 
     					|| m_config.getMLifecycle().getStringValue().equals(SMTable2XLogConfig.CFG_NO_OPTION))
-    				if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMTimeStamp().getStringValue()))
+    				if(m_config.getMEventAttrSet().getIncludeList().contains(m_config.getMTimeStamp().getStringValue()) 
+    						|| m_config.getMTimeStamp().getStringValue().equals(SMTable2XLogConfig.CFG_NO_OPTION))
     					return new PortObjectSpec[]{new XLogPortObjectSpec()};
     	
     	throw new InvalidSettingsException("Make sure the attribute set choice panel includes all"
