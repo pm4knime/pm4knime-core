@@ -98,7 +98,8 @@ public class ToXLogConverter {
 		
 		caseIDIdx = traceColumns.indexOf(config.getMCaseID().getStringValue());
 		eventClassIdx = eventColumns.indexOf(config.getMEventClass().getStringValue());
-
+		// complete time the time stamp here in default
+		tsIdx = eventColumns.indexOf(config.getMTimeStamp().getStringValue());
 //		String tsFormat = config.getMTSFormat().getStringValue();
 //		df = DateTimeFormatter.ofPattern(tsFormat);
 		
@@ -114,17 +115,9 @@ public class ToXLogConverter {
 			eventColVisited[lifecycleIdx] =  true;
 		}
 		
-		boolean withTimeStamp = false;
-		
-		if(!config.getMTimeStamp().getStringValue().equals(SMTable2XLogConfig.CFG_NO_OPTION)) {
-			withTimeStamp = true;
-			// complete time the time stamp here in default
-			tsIdx = eventColumns.indexOf(config.getMTimeStamp().getStringValue());
-			eventColVisited[tsIdx] =  true;
-		}
-		
 		traceColVisited[caseIDIdx] = true;
 		eventColVisited[eventClassIdx] =true;
+		eventColVisited[tsIdx] =true;
 		
 		
 		String currentCaseID = "-1", newCaseID="";
@@ -174,24 +167,20 @@ public class ToXLogConverter {
 			try {
 				// if the values there are also like this, what to do?? 
 				// String cTime = ((StringCell) row.getCell(eventColIndices[cTimeIdx])).getStringValue();
-				String lifecycle = null ;
-
-				if(withTimeStamp) {
 				Date timeStamp = convertString2Date( row.getCell(eventColIndices[tsIdx]));
 				
 				// here we check the lifecycle transition and assign the values to it!! 
+				String lifecycle = null ;
 				if(withLifecycle) {
 					// here we need to get the value from the column
 					DataCell lifecycleData = row.getCell(eventColIndices[lifecycleIdx]);
 					lifecycle = ((StringCell)lifecycleData).getStringValue();
 					
 				}
+				
+				
 				startEvent(eventClass, timeStamp, lifecycle);
-		}else {
-			startEventWithoutTimeStamp(eventClass,  lifecycle);
-
-		}
-					
+				
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -345,26 +334,6 @@ public class ToXLogConverter {
 			// find the corresponding conversion for the lifecycle to standard model change!
 			assignLifecycleTransition(factory, currentEvent, lifecycle);
 		}
-	}
-	
-	private void startEventWithoutTimeStamp(String eventClass, String lifecycle) {
-		if (config.getErrorHandlingMode() == CSVErrorHandlingMode.OMIT_EVENT_ON_ERROR) {
-			// Include the other events in that trace
-			errorDetected = false;
-		}
-		
-		currentEvent = factory.createEvent();
-		
-		assignName(factory, currentEvent, eventClass);
-		
-//		if(instance!=null)
-//			assignInstance(factory, currentEvent, instance);
-		// just add the time stamp with the corresponding lifecycle
-		if(lifecycle != null) {
-			// find the corresponding conversion for the lifecycle to standard model change!
-			assignLifecycleTransition(factory, currentEvent, lifecycle);
-		
-	}
 	}
 
 	

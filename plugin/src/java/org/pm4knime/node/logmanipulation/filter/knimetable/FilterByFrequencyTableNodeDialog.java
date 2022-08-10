@@ -1,10 +1,15 @@
 package org.pm4knime.node.logmanipulation.filter.knimetable;
 
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
+import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.pm4knime.node.discovery.alpha.AlphaMinerNodeModel;
 import org.pm4knime.util.defaultnode.DefaultTableNodeDialog;
+import org.processmining.alphaminer.parameters.AlphaVersion;
 
 /**
  * <code>NodeDialog</code> for the "FilterByFrequency" node.

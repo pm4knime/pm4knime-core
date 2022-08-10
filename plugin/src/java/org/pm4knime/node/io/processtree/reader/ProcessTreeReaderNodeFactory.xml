@@ -3,19 +3,19 @@
     <name>Process Tree Reader</name>
     
     <shortDescription>
-        Import a process tree from a PTML file.
+        this node is used to read process tree from file ptm
     </shortDescription>
     
     <fullDescription>
-        <intro>Import a process tree from a PTML file.</intro>
+        <intro>Load process tree from ptml file</intro>
         
         
-        <option name="Selected File">File location.</option>
+        <option name="Import Ptml File">File Location</option>
        
     </fullDescription>
     
     <ports>
-        <outPort index="0" name="Process Tree">a process tree</outPort>
+        <outPort index="0" name="Process Tree View">Output ProcessTreePortObject</outPort>
         <!-- possibly more output ports here-->
     </ports>    
 </knimeNode>

@@ -6,17 +6,14 @@ import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 
 
 public class HybridMinerNodeDialog extends DefaultNodeSettingsPane {
-	
-	HybridMinerNodeModel node;
     
-	public HybridMinerNodeDialog(HybridMinerNodeModel n) {
-		this.node = n;
+	public HybridMinerNodeDialog() {
     	createNewGroup("Set Parameters: ");
-    	addDialogComponent(new DialogComponentNumber(node.t_cancel, HybridMinerNodeModel.THRESHOLD_CANCEL, 1000));
-    	addDialogComponent(new DialogComponentStringSelection(node.type_fitness,
+    	addDialogComponent(new DialogComponentNumber(HybridMinerNodeModel.t_cancel, HybridMinerNodeModel.THRESHOLD_CANCEL, 1000));
+    	addDialogComponent(new DialogComponentStringSelection(HybridMinerNodeModel.type_fitness,
     			HybridMinerNodeModel.FITNESS_TYPE,
     			HybridMinerNodeModel.FITNESS_TYPES.values()));
-    	addDialogComponent(new DialogComponentNumber(node.t_fitness, HybridMinerNodeModel.THRESHOLD_FITNESS, 0.1));
+    	addDialogComponent(new DialogComponentNumber(HybridMinerNodeModel.t_fitness, HybridMinerNodeModel.THRESHOLD_FITNESS, 0.1));
     	closeCurrentGroup();
     }
 }

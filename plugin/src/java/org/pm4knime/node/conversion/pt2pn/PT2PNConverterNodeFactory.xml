@@ -3,27 +3,18 @@
     <name>Process Tree to Petri Net Converter</name>
     
     <shortDescription>
-        Convert a process tree into a Petri net.
+        Convert process tree to Petri net.
     </shortDescription>
     
     <fullDescription>
-        <intro>This node converts a process tree into a Petri net. 
-        No configuration is needed to complete the conversion. 
-        <br />
-    A process tree is a block-structured process model where the (inner) nodes are operators (sequence, choice, parallel, and loop) and the leaves are activities. 
-    <br /> 
-    A Petri net is a directed bipartite graph that visualizes all possible traces (order of executed activities). A Petri net consists of places, transitions, and directed arcs that connect them.  
-    Arcs can either connect places with transitions or transitions with places. Places can contain tokens. The placement of tokens defines the state of the Petri net. There is a start and a final state.
-    The start state has only a token in the green place (initial place). The goal state has only a token in the double margin place (final place).
-    A place is enabled if it it contains at least one token. A transition can only fire if all incoming places are enabled. 
-    After firing a transition, a token is consumed from all of its incoming places, and a token is produced in all of its outgoing places.
-        </intro>
+        <intro>This node converts the process tree into Petri net. 
+        No configuration is in need to complete the conversion. </intro>
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Process Tree">a process tree</inPort>
+        <inPort index="0" name="Process Tree">A process tree as input</inPort>
         <!-- possibly more input ports here-->
-       <outPort index="0" name="Petri net">a Petri net</outPort>
+       <outPort index="0" name="Petri net">The converted Petri net</outPort>
 		
     </ports>    
     

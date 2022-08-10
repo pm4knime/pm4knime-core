@@ -11,6 +11,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.kitfox.svg.SVGDiagram;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class JSGraphVizViewRepresentation extends JSONViewContent {

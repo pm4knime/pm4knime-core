@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.impl.XAttributeBooleanImpl;
@@ -104,17 +103,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     	
     	List<String> attrNames = new ArrayList();
 		List<DataType> attrTypes = new ArrayList();
-    	if(m_traceAttrSet.getIncludeList().isEmpty()) {
-        	Set<String> specTraceColumns = m_inSpec.getGTraceAttrMap().keySet();
-        	m_traceAttrSet.setIncludeList(specTraceColumns);
-        	m_traceAttrSet.setExcludeList(new String[0]);
-    	}
-    	
-    	if(m_eventAttrSet.getIncludeList().isEmpty()) {
-        	Set<String> specEventColumns = m_inSpec.getGEventAttrMap().keySet();
-        	m_eventAttrSet.setIncludeList(specEventColumns);
-        	m_eventAttrSet.setExcludeList(new String[0]);
-    	}
+		
 		// from the trace attr to event attr here
 		for (String attrKey : m_traceAttrSet.getIncludeList()) {
 			// how to get the traceTypes here?? We have the m_spec from the input, we need to use it!!
@@ -166,9 +155,8 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     @Override
     protected void reset() {
         // TODO: generated method stub
-    	m_traceAttrSet  = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, false );
-    	m_eventAttrSet = new SettingsModelFilterString(XLogSpecUtil.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false ); 	
     }
+
     /**
      * {@inheritDoc}
      */
@@ -177,34 +165,11 @@ public class XLog2TableConverterNodeModel extends NodeModel {
             throws InvalidSettingsException {
 
         // TODO: create a new DataTable there
-    	XLogPortObjectSpec spec = (XLogPortObjectSpec) inSpecs[0];
-
-    	if(!spec.getClass().equals(XLogPortObjectSpec.class)) 
+    	if(!inSpecs[0].getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
-    	if( spec.getGTraceAttrMap().isEmpty()|| spec.getClassifiersMap().isEmpty()) {
-    		throw new InvalidSettingsException("Log Spec Object is Empty. Probably because the reader node got reset");
-    	}
-    	
-    	
-
-    	
-
-    	m_inSpec = spec;
-    	
-    	
-    	
-    	if(m_traceAttrSet.getIncludeList().isEmpty()) {
-        	Set<String> specTraceColumns = m_inSpec.getGTraceAttrMap().keySet();
-        	m_traceAttrSet.setIncludeList(specTraceColumns);
-        	m_traceAttrSet.setExcludeList(new String[0]);
-    	}
-    	
-    	if(m_eventAttrSet.getIncludeList().isEmpty()) {
-        	Set<String> specEventColumns = m_inSpec.getGEventAttrMap().keySet();
-        	m_eventAttrSet.setIncludeList(specEventColumns);
-        	m_eventAttrSet.setExcludeList(new String[0]);
-    	}
+    	m_inSpec = (XLogPortObjectSpec) inSpecs[0];
+	
         return new PortObjectSpec[]{null};
     }
 

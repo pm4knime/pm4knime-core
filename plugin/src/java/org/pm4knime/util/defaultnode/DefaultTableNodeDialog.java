@@ -14,7 +14,9 @@ import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObjectSpec;
-
+import org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeModel;
+import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.pm4knime.util.XLogSpecUtil;
 /**
  * this class is used to provide the common structure for discovery algorithms. 
  * Make sure the first input PortObject is the event log. 

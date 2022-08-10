@@ -27,7 +27,7 @@ public class SampleLogNodeModel extends DefaultNodeModel {
 	// but actually, we can choose the overlapped sampling, or not overlapped sampling.. on it
 	public static final String CFG_SAMPLING_PERFERENCE = "Use Percentage";
 	// public static final String CFG_SAMPLE_NUM = "Sample Number";
-	public static final String CFG_SAMPLE_PERCENTAGE = "Sampling Number";
+	public static final String CFG_SAMPLE_PERCENTAGE = "Sample Percentage";
 	
 	private final SettingsModelBoolean m_samplePref = createSamplePerference();
 	// private static final SettingsModelInteger m_sampleNum = null;

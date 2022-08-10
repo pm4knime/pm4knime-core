@@ -18,6 +18,7 @@ import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.plugins.VisualizeAcceptingPetriNetPlugin;
+import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce.ReductionFailedException;
@@ -26,6 +27,7 @@ import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import org.processmining.plugins.inductiveVisualMiner.plugins.EfficientTreeVisualisationPlugin;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizPetriNet;
+import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 
 /**
  * this class defines PetriNetPortObject. It includes models as Petrinet + InitialMarking, FinalMarking, FinalMarkings[].
@@ -127,7 +129,7 @@ public class PetriNetPortObject  implements PortObject{
 		}
 		
 		
-	    if(m_anet != null) {
+	if(m_anet != null) {
 			
 			DotPanel navDot;
 			navDot = new DotPanel(GraphvizPetriNet.convert(m_anet));

@@ -3,19 +3,18 @@ package org.pm4knime.node.discovery.cgminer.table;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.pm4knime.node.discovery.cgminer.CGMinerNodeDialog;
 
 
 public class TableCGMinerNodeFactory 
         extends NodeFactory<TableCGMinerNodeModel> {
-	TableCGMinerNodeModel node;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public TableCGMinerNodeModel createNodeModel() {
-		node = new TableCGMinerNodeModel();
-		return node;
+		return new TableCGMinerNodeModel();
     }
 
     /**
@@ -48,7 +47,7 @@ public class TableCGMinerNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-		return new TableCGMinerNodeDialog(node);
+		return new CGMinerNodeDialog();
     }
 
 }

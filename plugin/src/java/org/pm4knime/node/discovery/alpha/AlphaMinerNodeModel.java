@@ -1,9 +1,8 @@
-package org.pm4knime.node.discovery.alpha.table;
+package org.pm4knime.node.discovery.alpha;
 
 import java.util.Set;
 
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
+import org.deckfour.xes.model.XLog;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -15,12 +14,13 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
-import org.pm4knime.node.discovery.defaultminer.TraceVariantRep;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
+import org.pm4knime.portobject.XLogPortObject;
+import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.alphaminer.parameters.AlphaMinerParameters;
@@ -31,11 +31,18 @@ import org.processmining.alphaminer.plugins.AlphaMinerPlugin;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
+/**
+ * change it to adapt for more variants, Classic and Alpha++. But not all of them 
+ * @author kefang-pads
+ *
+ */
+public class AlphaMinerNodeModel extends DefaultMinerNodeModel {
 
+	// TODO: make the different versions of the alpha available through some
+	// settings model
+	// TODO: publish the marking as a separate output object
 
-public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
-
-	private static final NodeLogger logger = NodeLogger.getLogger(AlphaMinerTableNodeModel.class);
+	private static final NodeLogger logger = NodeLogger.getLogger(AlphaMinerNodeModel.class);
 
 	public static final String CFGKEY_VARIANT_TYPE = "Alpha Miner Variant";
 	public static final String CFGKEY_THRESHOLD_NOISE_LF = "Noise threshhold for least frequency";
@@ -43,16 +50,17 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 	public static final String CFGKEY_THRESHOLD_CASUAL = "Casual threshhold";
 	public static final String CFG_IGNORE_LL = "Ignore the lenght of the loops";
 	public static final String[] variantList = {AlphaVersion.CLASSIC.toString() , AlphaVersion.PLUS.toString(),
-			
-	AlphaVersion.PLUS_PLUS.toString(), AlphaVersion.SHARP.toString(), AlphaVersion.ROBUST.toString()};
-	SettingsModelString m_variant =  new SettingsModelString(AlphaMinerTableNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
-	SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerTableNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
-	SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerTableNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);
-	SettingsModelDoubleBounded m_casualTH = new SettingsModelDoubleBounded(AlphaMinerTableNodeModel.CFGKEY_THRESHOLD_CASUAL, 0, 0, 100);
-	SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerTableNodeModel.CFG_IGNORE_LL, false);
+			AlphaVersion.PLUS_PLUS.toString(), AlphaVersion.SHARP.toString(), AlphaVersion.ROBUST.toString()};
 	
-	protected AlphaMinerTableNodeModel() {
-		super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
+	private SettingsModelString m_variant =  new SettingsModelString(AlphaMinerNodeModel.CFGKEY_VARIANT_TYPE, variantList[0]);
+	private SettingsModelDoubleBounded m_noiseTLF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_LF, 0, 0, 100);
+	private SettingsModelDoubleBounded m_noiseTMF = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_NOISE_MF, 0, 0, 100);
+	private SettingsModelDoubleBounded m_casualTH = new SettingsModelDoubleBounded(AlphaMinerNodeModel.CFGKEY_THRESHOLD_CASUAL, 0, 0, 100);
+	private SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerNodeModel.CFG_IGNORE_LL, false);
+	
+	protected AlphaMinerNodeModel() {
+		super(new PortType[] { XLogPortObject.TYPE },
+				new PortType[] { PetriNetPortObject.TYPE });
 		
 		m_noiseTLF.setEnabled(false);
     	m_noiseTMF.setEnabled(false);
@@ -62,7 +70,7 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 
 	
 	@Override
-	protected PortObject mine(BufferedDataTable table, final ExecutionContext exec) throws Exception {
+	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("Start: Alpha Miner");
 		AlphaMinerParameters alphaParams = null;
@@ -84,8 +92,8 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 		PluginContext context = PM4KNIMEGlobalContext.instance().getFutureResultAwarePluginContext(AlphaMinerPlugin.class);
 		
 		checkCanceled(context, exec);
-		TraceVariantRep variants = new TraceVariantRep(table, getTraceClassifier(), getEventClassifier());
-		Object[] result = AlphaAbstraction.apply(context, variants, getEventClassifier(), alphaParams);
+		Object[] result = AlphaMinerPlugin.apply(context, log,
+				getEventClassifier(), alphaParams);
 		
 		// when there is no finalMarking available, we set the finalMarking automatically
 		Set<Marking> fmSet = PetriNetUtil.guessFinalMarking((Petrinet) result[0]); // new HashMap();
@@ -97,12 +105,11 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 		return pnPO;
 	}
 
-	
 	@Override
-	protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
+	protected PortObjectSpec[] configureOutSpec(XLogPortObjectSpec logSpec) {
 		// TODO Auto-generated method stub
-		PetriNetPortObjectSpec ptSpec = new PetriNetPortObjectSpec();
-		return new PortObjectSpec[] { ptSpec };
+		PetriNetPortObjectSpec pnSpec = new PetriNetPortObjectSpec();
+		return new PortObjectSpec[] { pnSpec };
 	}
 
 

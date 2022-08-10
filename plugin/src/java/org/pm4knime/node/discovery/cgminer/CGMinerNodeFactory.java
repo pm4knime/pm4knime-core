@@ -7,16 +7,13 @@ import org.knime.core.node.NodeView;
 
 public class CGMinerNodeFactory 
         extends NodeFactory<CGMinerNodeModel> {
-	
-	CGMinerNodeModel node;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public CGMinerNodeModel createNodeModel() {
-		node = new CGMinerNodeModel();
-		return node;
+		return new CGMinerNodeModel();
     }
 
     /**
@@ -49,7 +46,7 @@ public class CGMinerNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-		return new CGMinerNodeDialog(node);
+		return new CGMinerNodeDialog();
     }
 
 }

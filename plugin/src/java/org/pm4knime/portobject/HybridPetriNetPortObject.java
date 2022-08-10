@@ -17,13 +17,13 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
-import org.pm4knime.node.visualizations.jsgraphviz.util.GraphvizHybridPetriNet;
 import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
 import org.processmining.extendedhybridminer.models.causalgraph.gui.HybridPetrinetVisualizer;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.xesstandard.xml.XesXmlParserLenient;
 
 
 public class HybridPetriNetPortObject extends AbstractPortObject{
@@ -98,16 +98,16 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 		return new JComponent[] {};
 	}
 	
-    public DotPanel getDotPanel() {
+	public DotPanel getDotPanel() {
 		
-		if(pn != null) {
-			
-			DotPanel navDot;
-			navDot = new DotPanel(GraphvizHybridPetriNet.convert(pn));
-			navDot.setName("Generated hybrid petri net");
-			return navDot;
-			
-		}
+//	if(cg != null) {
+//			
+//			DotPanel navDot;
+//			navDot = new DotPanel(GraphvizPetriNet.convert(m_anet));
+//			navDot.setName("Generated Causal Graph");
+//			return navDot;
+//			
+//		}
 		return null;
 		
 	}

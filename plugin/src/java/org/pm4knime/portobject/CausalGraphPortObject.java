@@ -19,7 +19,6 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.node.discovery.cgminer.table.TraceVariantsTable;
-import org.pm4knime.node.visualizations.jsgraphviz.util.GraphvizCausalGraph;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
@@ -32,7 +31,6 @@ import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedUn
 import org.processmining.extendedhybridminer.models.causalgraph.gui.HybridCausalGraphVisualizer;
 import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.graphviz.visualisation.DotPanel;
 
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
@@ -357,20 +355,6 @@ public class CausalGraphPortObject extends AbstractPortObject{
 	public static class CausalGraphPortObjectSerializer
 			extends AbstractPortObject.AbstractPortObjectSerializer<CausalGraphPortObject> {
 
-	}
-
-public DotPanel getDotPanel() {
-		
-		if(cg != null) {
-			
-			DotPanel navDot;
-			navDot = new DotPanel(GraphvizCausalGraph.convert(cg));
-			navDot.setName("Generated Causal Graph");
-			return navDot;
-			
-		}
-		return null;
-		
 	}
 
 

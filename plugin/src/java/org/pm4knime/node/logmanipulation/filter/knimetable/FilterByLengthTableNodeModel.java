@@ -49,9 +49,9 @@ import java.util.List;
 public class FilterByLengthTableNodeModel extends DefaultTableNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FilterByLengthTableNodeFactory.class);
 	
-	public static final String CFG_ISKEEP = "Keep";
-	public static final String CFG_MININUM_LENGTH = "Minimum Length";
-	public static final String CFG_MAXINUM_LENGTH = "Maximum Length";
+	public static final String CFG_ISKEEP = "Keep traces";
+	public static final String CFG_MININUM_LENGTH = "Minimum length";
+	public static final String CFG_MAXINUM_LENGTH = "Maximum length";
 	
 	private SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	// how to set the maximum length for each event log?? How to find the values there, 
