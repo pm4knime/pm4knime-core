@@ -10,7 +10,7 @@
         <intro>Export a process tree into a PTML file.</intro>
         
         
-        <option name="Output Location">Location for the PTML file.</option>
+        <option name="Export Location">Location for the PTML file.</option>
       
     </fullDescription>
     

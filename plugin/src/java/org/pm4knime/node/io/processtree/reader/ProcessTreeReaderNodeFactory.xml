@@ -10,7 +10,7 @@
         <intro>Import a process tree from a PTML file.</intro>
         
         
-        <option name="Selected File">File location.</option>
+        <option name="Input Location">File location.</option>
        
     </fullDescription>
     

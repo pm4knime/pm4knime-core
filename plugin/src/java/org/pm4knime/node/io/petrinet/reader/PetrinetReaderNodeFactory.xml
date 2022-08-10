@@ -10,7 +10,7 @@
         <intro>Import a Petri net from a PNML file.</intro>
         
         
-        <option name="Selected File">File location.</option>
+        <option name="Input Location">File location.</option>
     
     </fullDescription>
     

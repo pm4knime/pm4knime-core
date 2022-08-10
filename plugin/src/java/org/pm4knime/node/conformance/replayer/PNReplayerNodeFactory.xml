@@ -13,14 +13,16 @@
 		<intro>
 		This node wraps the ProM's plug-in "Replay a Log on Petri Net for Conformance Analysis" from the package PNetReplayer. 
 		It implements the alignment-based replayer, which accepts an event log and a Petri net as input and outputs the optimal alignments of the traces after replaying the event log on the Petri net.	
-			Alignment-based replay is the state-of-the-art technique in conformance checking.
-			Alignments provide a robust and detailed view on the deviations between the log and the model. 
-			Three types of moved are considered while constructing the alignments:
-				<li>Sync Move: <br/>
-				The classification of the current event corresponds to the firing transitions in Petri net.
-					In this case, during replaying, both the trace and the process model move to next comparison.
-				</li>
-
+		Alignment-based replay is the state-of-the-art technique in conformance checking.
+		Alignments provide a robust and detailed view on the deviations between the log and the model. 
+		
+		Three types of moves are considered while constructing the alignments:
+		<ul>
+		<li>Sync Move: <br/>
+		The classification of the current event corresponds to the firing transitions in Petri net.
+		In this case, during replaying, both the trace and the process model move to next comparison.
+		</li>
+  
 				<li>Log Move:<br/>
 				The classification of the current event doesn't have any
 					corresponding firing transitions in Petri net.
@@ -31,10 +33,10 @@
 				The firing transitions in Petri net have no corresponding event in the trace.
 					During replaying, the model moves forwards but the state of the event log doesn't change.
 				</li>
-			The user can set the costs of the different moves.
-			<br />
-			For more information:
-			<a href="https://ieeexplore.ieee.org/abstract/document/6037560">link</a>
+			</ul>
+		For more information:
+			<a href="https://ieeexplore.ieee.org/abstract/document/6037560">link</a>	
+		
 		</intro>
 
 		<option name="Event classifer">The attribute to be used as an event classifier.
@@ -42,16 +44,12 @@
 		<option name="Strategy type">
 			The replay strategy to be applied. The following options are available:
 				<li>
-					ILP Replayer.
-					<br />
-					This repalyer calculates the optimal alignment based on ILP.
+					ILP Replayer: this repalyer calculates the optimal alignment based on ILP.
 				</li>
 				<li> Non-ILP Replayer.
 				</li>
 				<li>
-					A*-ILP Based Manifest Replayer.
-					<br />
-					This replayer is reserved for performance checking. It generates
+					A*-ILP Based Manifest Replayer: this replayer is reserved for performance checking. It generates
 					the Manifest to wrap the alignments.
 				</li>
 		</option>
