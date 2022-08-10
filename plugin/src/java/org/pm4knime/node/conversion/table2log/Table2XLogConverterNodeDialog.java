@@ -155,10 +155,11 @@ public class Table2XLogConverterNodeDialog extends DefaultNodeSettingsPane  {
 		
     	if(! configColumns.containsAll(m_possibleColumns) 
     		 ||	!m_possibleColumns.containsAll(configColumns)){
+    		int indexOfNoOption = m_possibleColumns.indexOf(SMTable2XLogConfig.CFG_NO_OPTION);
     		caseIDComp.replaceListItems(m_possibleColumns, m_possibleColumns.get(0));
         	eventClassComp.replaceListItems(m_possibleColumns,  m_possibleColumns.get(0));
-        	timeStampComp.replaceListItems(m_possibleColumns,  m_possibleColumns.get(0));
-        	lifecycleNameComp.replaceListItems(m_possibleColumns, m_possibleColumns.get(0));
+        	timeStampComp.replaceListItems(m_possibleColumns,  m_possibleColumns.get(indexOfNoOption));
+        	lifecycleNameComp.replaceListItems(m_possibleColumns, m_possibleColumns.get(indexOfNoOption));
     		
     		m_traceAttrSet.setIncludeList(spec.getColumnNames());
         	m_eventAttrSet.setIncludeList(spec.getColumnNames());
