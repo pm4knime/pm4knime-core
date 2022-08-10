@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./PT-icon.png" type="Visualizer" deprecated="false"
-	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
    
     <name>Process Tree Visualizer</name>
     
     <shortDescription>
-        JS GraphViz Process Tree Visualization
+        JavaScript Visualizer for Process Trees
     </shortDescription>
     
     <fullDescription>
         <intro>
-    This node implements a JavaScript Visualization of a Process Tree.
+    This node implements a JavaScript visualization of Process Trees.
     <br />
-    A Process Tree is a representation of all possible traces (order of activities) of a process.
-    We have four operators (seq, xor loop, xor, and) that are always inner or root nodes. 
-    Leaf nodes are activities that can be silent if they have no label.
-    A Process tree starts by executing the root node. Each operator behaves differently on execution:
-    <br />
+    A process tree is a block-structured process model where the (inner) nodes are operators (sequence, choice, parallel, and loop) and the leaves are activities. 
     <br /> 
     The "seq" operator executes its children from right to left.
     <br />
@@ -25,16 +22,14 @@
     <br />
     The "and" operator executes the children in parallel.
     <br />
-    The "xor loop" operator executes one of its children and after this child is 
-    fully executed the loop operator is allowed to execute another of its children.
-    This goes on until the silent leaf is chosen. After this action, the operator is considered fully executed.
+    The "xor loop" operator models a do-redo loop. The first child is used as the do part, while an exclusive choice between the other children is used as the redo part.
     </intro>
     </fullDescription>
     
-    <interactiveView name="JSGraphViz"></interactiveView>
+    <interactiveView name="Process Tree (JavaScript)"></interactiveView>
     
    <ports>
-        <inPort name="Process Tree" index="0">Input Process Tree</inPort>
+        <inPort name="Process Tree" index="0">a process tree</inPort>
 	</ports>
 
 </knimeNode>

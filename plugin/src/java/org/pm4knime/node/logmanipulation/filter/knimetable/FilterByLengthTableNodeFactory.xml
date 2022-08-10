@@ -3,31 +3,30 @@
     <name>Filter Event Table By Length</name>
     
     <shortDescription>
-        This node filters the traces with a range of length from an event log. 
+        This node filters the traces based on their length.
     </shortDescription>
     
     <fullDescription>
-        <intro>This node filters the traces with a range of  length from an event log.</intro>
+        <intro> This node filters the traces based on their length.</intro>
         
-        <option name="Keep trace">The filer strategy. If keep is chosen, the traces that match the following conditions
-        will be kept. Else, the traces matching the conditions will be removed.</option>
+         <option name="Keep">The filtering strategy. If "keep"" is chosen, the traces that meet the filtering threshold will be kept.
+        Otherwise, the traces that meet the filtering threshold will removed.</option>
         <option name="Minimum trace length ">The minimum length of trace. It is a positive integer. 
-        When a negative value is given, the default value 1 is automatically set. 
+        When a negative value is given, the default value 1 is used instead. 
         When a double value is given, it is casted down. 
         It should be greater or equal than the minimum length. Otherwise, 
-        one configuration exception is thrown.</option>
+        a configuration exception is thrown.</option>
         <option name="Maximum trace length">The maximum length of trace. It is a positive integer.
         When a negative value is given, the default value 1 is automatically set. 
         When a double value is given, it is casted down. 
         It should be greater or equal than the minimum length. Otherwise, 
-        one configuration exception is thrown. </option>
+        a configuration exception is thrown. </option>
         
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="KINME Table">The event log to be filtered</inPort>
-        <!-- possibly more input ports here-->
-        <outPort index="0" name="Filted Event Log">The filtered event log</outPort>
-        <!-- possibly more output ports here-->
-    </ports>    
+        <inPort index="0" name="Table">the event table to be filtered</inPort>
+        <outPort index="0" name="Table">the filtered event table</outPort>
+       
+    </ports>      
 </knimeNode>

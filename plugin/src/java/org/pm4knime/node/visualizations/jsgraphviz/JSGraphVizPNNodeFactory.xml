@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./PN-icon.png" type="Visualizer" deprecated="false"
-	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
    
     <name>Petri Net Visualizer</name>
     
     <shortDescription>
-        JS GraphViz Petri Net Visualization
+        JavaScript Visualizer for Petri Nets
     </shortDescription>
     
     <fullDescription>
         <intro>
-    This node implements a JavaScript Visualization of a Petri Net.
-    A Petri Net in the context of process mining is a directed bipartite graph that visualizes all possible traces (order of executed activities)
+    This node implements a JavaScript visualization of Petri nets.
     <br/>
-    A Petri Net consists of places, transitions, and arcs that connect them.  
-    Input arcs connect places with transitions, while output arcs start at a transition 
-    and end at a place. Places can contain tokens. The placement of tokens defines the state of the Petri net. There is a start and a goal state.
-    The start state has only a token in the green place (source). The goal state has all tokens in the double margin place (goal).
-    The transitions are gray and narrow if they are silent. The transitions have a label in them if they execute an activity.
-    A transition can only fire if all places that have an arc from place to transition have at least one token in them.
-    If a transition fires then every place that has an arc outgoing from the transition increases its token by one.
+    A Petri net is a directed bipartite graph that visualizes all possible traces (order of executed activities). A Petri net consists of places, transitions, and directed arcs that connect them.  
+    Arcs can either connect places with transitions or transitions with places. Places can contain tokens. The placement of tokens defines the state of the Petri net. There is a start and a final state.
+    The start state has only a token in the green place (initial place). The goal state has only a token in the double margin place (final place).
+    A place is enabled if it it contains at least one token. A transition can only fire if all incoming places are enabled. 
+    After firing a transition, a token is consumed from all of its incoming places, and a token is produced in all of its outgoing places.
         </intro>
     </fullDescription>
     
-    <interactiveView name="JSGraphViz"></interactiveView>
+    <interactiveView name="Petri Net (JavaScript)"></interactiveView>
     
    <ports>
-        <inPort name="Petri Net" index="0">Input Petri Net</inPort>
+        <inPort name="Petri Net" index="0">a Petri net</inPort>
 	</ports>
 
 </knimeNode>

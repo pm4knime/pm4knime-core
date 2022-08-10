@@ -3,26 +3,26 @@
     <name>DFG Miner</name>
     
         <shortDescription>
-        This node is created to discover a directly-follows graph from an event table.
+        This node implements the first step of the Inductive Miner to discover a directly-follows graph from an event table.
     </shortDescription>
     
     <fullDescription>
-        <intro> This node is created to discover a directly-follows graph. It accepts an event table as input and generates a directly-follows graph as output.
-        In this package without notification, directly-follows graph  is abbreviated as DFG. A DFG is composed of activities in rectangles, 
-        which are connected by arcs for directly-follows relation. The green rectangles represent the start activities, while the red
-        ones are for the end activities.   
+        <intro> 
+        This node wraps the first step of the ProM's plug-in "Mine efficient tree with Inductive Miner" from the package InductiveMiner.
+        This node is used to discover a directly-follows graph (DFG) from an event table. 
+        A DFG consists of nodes representing activities and directed edges connecting nodes to model the directly-follows relations between activities. 
+        The green nodes represent the start activities, while the red ones are for the end activities.   
         </intro>
-        
-        <option name="Event classifer">The column to be used as an event classifier.</option>
         <option name="Trace classifer">The column to be used as a trace classifier.</option>
-        <option name="Variant">The variant type used to extract one directly-follows graph from event table. There is currently one option available. </option>
+        <option name="Event classifer">The column to be used as an event classifier.</option>
+        <option name="Variant">The variant of the DFG Miner to be used. </option>
        
         
     </fullDescription>
     
     <ports>
-       <inPort index="0" name="Table">An event table</inPort>
-       <outPort index="0" name="Directly-Follows Model">A directly-follows model</outPort>
+       <inPort index="0" name="Table">an event table</inPort>
+       <outPort index="0" name="DFG">a directly-follows graph</outPort>
         <!-- possibly more output ports here-->
     </ports> 
 </knimeNode>

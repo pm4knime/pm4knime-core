@@ -38,13 +38,13 @@ public class MergeLogNodeModel extends DefaultNodeModel {
 
 	public static final int CGF_INPUTS_NUM = 2;
 	public static final String CFG_ATTRIBUTE_PREFIX = "Log-";
-	public static final String CFG_KEY_TRACE_STRATEGY = "Merge Strategy";
+	public static final String CFG_KEY_TRACE_STRATEGY = "Merging Strategy";
 	public static final String[]  CFG_TRACE_STRATEGY = {"Separate Trace",  "Ignore Trace", "Internal Trace Merge", "Internal Event Merge"};
 	public static final String CFG_KEY_TRACE_ATTRSET = "Trace Attribute Set";
 	public static final String CFG_KEY_EVENT_ATTRSET = "Event Attribute Set";
 
-	public static final String[] CFG_KEY_CASE_ID = {"Case ID 0", "Case ID 1"};
-	public static final String[] CFG_KEY_EVENT_ID = {"Event ID 0", "Event ID 1"};
+	public static final String[] CFG_KEY_CASE_ID = {"CaseID 1", "CaseID 2"};
+	public static final String[] CFG_KEY_EVENT_ID = {"EventID 1", "EventID 2"};
 	
 	SettingsModelString m_strategy =  new SettingsModelString(CFG_KEY_TRACE_STRATEGY, CFG_TRACE_STRATEGY[0]);
 	// create attributes to store the caseID and eventID for those two logs

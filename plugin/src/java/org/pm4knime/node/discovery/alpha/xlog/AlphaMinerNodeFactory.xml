@@ -3,20 +3,23 @@
     <name>Alpha Miner (Log)</name>
     
     <shortDescription>
-        This node applies the Alpha Miner on an event log.
+        This node applies the Alpha Miner to discover a Petri net from an event log.
     </shortDescription>
     
     <fullDescription>
-        <intro>This node applies the Alpha Miner on an event log. It discovers a Petri net as output.</intro>
+        <intro>
+        This node wraps the ProM's plug-in "Alpha Miner" from the package AlphaMiner. 
+        It implements the Alpha Miner to discover a Petri net from an event log.
+        </intro>
         
-        <option name="Event classifer">The column to be used as an event classifier.</option>
-        <option name="Alpha Miner Variant">The Alpha miner variant to be applied. Currently, five variants are supported: Alpha, Alpha+, Alpha++, Alpha#, and AlphaR.  </option>
+        <option name="Event classifer">The attribute to be used as an event classifier.</option>
+        <option name="Alpha Miner Variant">The Alpha miner variant to be applied. Currently, five variants are supported: Alpha, Alpha+, Alpha++, Alpha#, and AlphaR. </option>
         
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Log">An event log</inPort>
-        <outPort index="0" name="Petri net">A Petri net</outPort>
+        <inPort index="0" name="Event Log">an event log</inPort>
+        <outPort index="0" name="Petri Net">a Petri net</outPort>
     </ports>    
   
 </knimeNode>
