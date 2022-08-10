@@ -6,13 +6,17 @@ import org.knime.core.node.NodeView;
 
 public class HybridMinerNodeFactory 
         extends NodeFactory<HybridMinerNodeModel> {
+	
+	HybridMinerNodeModel node;
+	
 
     /**
      * {@inheritDoc}
      */
     @Override
     public HybridMinerNodeModel createNodeModel() {
-		return new HybridMinerNodeModel();
+		node = new HybridMinerNodeModel();
+		return node;
     }
 
     /**
@@ -45,7 +49,7 @@ public class HybridMinerNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-		return new HybridMinerNodeDialog();
+		return new HybridMinerNodeDialog(this.node);
     }
 
 }

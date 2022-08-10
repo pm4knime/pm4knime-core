@@ -6,55 +6,45 @@
 	<name>Performance Checker</name>
 
 	<shortDescription>
-		Based on the alignments after replaying, this node calculates the performance on time. 
+		Based on the replay result, this node computes the statistical performance information.
 	</shortDescription>
 
 	<fullDescription>
 		<intro>
-		This node is based on the alignment result from PNReplayer, and calculates the performance information on Petri net. 
-		Usually, Strategy type of the previous replayer is A*-ILP Based Manifest Replayer.
-		
-		At end, the performance information is given on tables, such as<br/> global cases, transitions, and places of Petri net. 
-		Also, the performance projection on Petri net is shown in view.  
-		<br />
+		This node is based on the result of alignment-based replayer. It outputs the statistical performance information. The performance information is given as tables,
+		 and the performance projection on the Petri net is shown as a view.  
+		<!--<br />
 			More information seen in the :
 			<a href="http://goo.gl/EmiDJ">paper</a> and
-			<a href="https://svn.win.tue.nl/repos/prom/Packages/PetriNetReplayAnalysis/">codes</a>.
+			  <a href="https://svn.win.tue.nl/repos/prom/Packages/PetriNetReplayAnalysis/">codes</a>. -->
 		</intro>
 
-		<option name="Time stamp">The attribute is chosen as the complete time to
-			calculate the performance.
-			In default, it is set as the complete time. More choices will be seen
-			in the future version.
+		<option name="Time stamp">The attribute to be used for the time stamp.
 		</option>
-		<option name="Consider performance in syn moves">It is true in default.</option>
-		<option name="Include unreliable replay results">Choose to include unreliable replay result in
-			performance calculation.
-			It is true in default.
+		<option name="Consider performance in syn moves">Choose whether to consider syn moves. This option is enabled by default.</option>
+		<option name="Include unreliable replay results">Choose whether to include unreliable replay results. This option is enabled by default.
 		</option>
 		
 	</fullDescription>
 
 	<ports>
-		 <inPort index="0" name="Replay Result ">Replayer Result</inPort>
+		 <inPort index="0" name="Replay Result ">replay result</inPort>
 		<!-- possibly more input ports here -->
-		  <outPort index="0" name="Performance StatInfo">Performance Statistical Information</outPort>
-		<outPort index="1" name="Global Performance Statistics">
-		It shows statistical performance of all cases from the event log. It focuses on the throughput time of cases. 
-		  	However, the global fitness information is also included.
+		  <outPort index="0" name="Global Performance StatInfo">performance statistical information</outPort>
+		<!-- <outPort index="1" name="Local Performance Statistics">
+		performance statistical information for the different patterns in the log
+		</outPort>-->
+		<outPort index="1" name="Transition Performance Statistics">
+		performance statistical information for the different transitions in the Petri net (waiting time, synchronization time, and sojourn time).
 		</outPort>
-		<outPort index="2" name="Transitions Performance Statistics">
-		It lists the throughput time, waiting time, and sojourn time for each transition from Petri net. 
-		</outPort>
-		<outPort index="3" name="Places Performance Statistics">
-		It lists the waiting time, synchronization time, and sojourn time for each place from Petri net. 
+		<outPort index="2" name="Place Performance Statistics">
+		performance statistical information for the different places in the Petri net (waiting time, synchronization time, and sojourn time). 
 		  	
 		</outPort>
 		<!-- possibly more output ports here -->
 	</ports>
 	<views>
-		<view index="0" name="Performance Projection on Model">Performance projected on Petri net. It
-			accepts customized changes.</view>
+		<view index="0" name="Performance Projection on Model">Performance projection on the Petri net.</view>
 		<!--view index="1" name="name of second view">Description of second view...</view -->
 	</views>
 </knimeNode>

@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./IM-icon.png" type="Learner" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Inductive Miner (Legacy)</name>
+    <name>Inductive Miner (Log)</name>
     
     <shortDescription>
-        This node Inductive Miner discovers a process tree from an event log.
+        This node implements the Inductive Miner to discover a process tree from an event log.
     </shortDescription>
     
     <fullDescription>
-        <intro>This node accepts an event log to generate a process tree. 
-        Process tree is a block-structured process model, where the (inner) nodes are operators such as sequence, 
-        and choice, while leaves are activities. With process tree, it guarantees the soundness of process model. 
-		This node output process tree as output. Later, the process tree can be converted into Petri net.
+        <intro>
+        This node wraps the ProM's plug-in "Mine process tree with Inductive Miner".
+        This node is used to discover a process tree from an event log.
+        A process tree is a block-structured process model where the (inner) nodes are operators (such as sequence, choice, parallel, and loop) and the leaves are activities. 
+        The inductive miner guarantees the discovery of a sound process model. 
+		The discovered process tree can be converted into a Petri net.
         </intro>
         
-        <option name="Event classifer">The classifier chosen to classify the event log.</option>
-        <option name="Inductive Miner Variant">One Inductive Miner variant is chosen to mine a process model. 
-        There are different variants to cope with different event log types.  </option>
-        <option name="Noise threshold">Noise threshold is used to filter the event log.  
-        If we choose one method with noise filter, this options shows up.
-         When the Inductive Miner Variant is Inductive Miner, the noise threshold turns gray. </option>
+        <option name="Event classifer">The attribute to be used as an event classifier.</option>
+        <option name="Inductive Miner Variant">The variant of the Inductive Miner to be used.  </option>
+        <option name="Noise threshold">Threshold for filtering out noise. </option>
       
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Event Log">The Event Log as input</inPort>
+        <inPort index="0" name="Event Log">an event log</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Process Tree">Generated Process tree as output</outPort>
+        <outPort index="0" name="Process Tree">a process tree</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     

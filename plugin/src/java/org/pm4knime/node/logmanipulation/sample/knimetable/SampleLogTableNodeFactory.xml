@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./Eventlog-Sample-icon.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Sample Event Log (KNIME Table)</name>
+    <name>Sample Event Table</name>
     
     <shortDescription>
-        Sample randomly the event log on traces by giving number or a percentage. 
+        This node is used to randomly sample a percentage of traces from the event table. 
     </shortDescription>
     
     <fullDescription>
         <intro>
-        Sample randomly the event log on traces with the given number or a percentage. 
-        After sampling, it outputs two event log, one is with the number or percentage on sampling; the other is
-        the rest traces in the event log.  </intro>
+        This node is used to randomly sample a percentage of traces from the event table. 
+        After sampling, it outputs two event tables: the sampled event table and the event table that contains the removed traces.</intro>
         
-        
-        <option name="Use Percentage to Sample">Set the sample preference to use percentage or Num. 
-        If it is checked, the percentage is used to sample data. Else, one integer number is required.</option>
-        <option name="Sample Number">Sample number is non negative. If you enter a negative value,
-         the value will stays as the SampleLog non-negative value.  
-         <br/>In percentage, the interval is  0-1.0. If it is over 1.0, one warning will be given. 
-         <br/>In integer number, only integer format is accepted. </option>
+        <option name="Use Percentage">If checked, the sampling number is used as the percentage of traces to be kept. 
+        Otherwise, the sampling number is used as the number of traces to be kept.</option>
+        <option name="Sampling Number">
+         <br/>If "Use Percentage" is checked, the sampling number must be between 0 and 1.0 to set the percentage of traces to be kept.
+         <br/>Otherwise, the sampling number must be a non-negative integer to set the number of traces to be kept.</option>
         
     </fullDescription>
     
     <ports>
-       <inPort index="0" name="KNIME Table">An event log as input</inPort>
+       <inPort index="0" name="Table">the event table to be sampled</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Sampled Event Log">The event log sampled with the percentage. </outPort>
-		 <outPort index="1" name="Disposed Event Log">The event log left from the sampling. </outPort>
+        <outPort index="0" name="Table">the sampled event table</outPort>
+		 <outPort index="1" name="Table">the event table that contains the removed traces</outPort>
         
-    </ports>    
+    </ports>       
     
 </knimeNode>

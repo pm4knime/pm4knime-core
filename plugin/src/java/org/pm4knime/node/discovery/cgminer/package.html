@@ -1,8 +1,10 @@
 <body>
-This package implements the node Causal Graph Miner. 
+This node implements the first step of the Hybrid Miner to discover a causal graph from an event log.
 <p>
-The <code>CGMinerNodeModel</code> wraps the ProM plugin HybridCGMinerPlugin from the package ExtendedHybridMiner. 
-It accepts an event log as input and mines a causal graph as an output.
+This node wraps the ProM's plug-in "Extended Causal Graph Miner" from the package ExtendedHybridMiner.
+It implements the first step of the Hybrid Miner to discover a causal graph from an event log. 
+A causal graph consists of nodes representing activities and two types of directed edges connecting nodes. 
+Certain edges represent strong causal dependencies and uncertain edges represent weak dependencies. 
+A third type of edges is used to represent long-term dependencies.
 <br>
-
 </body>
