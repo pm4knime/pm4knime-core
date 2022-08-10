@@ -28,7 +28,7 @@
 				</li>
 			</ul>
 		</option>
-		<option name="Selected File">File location.</option>
+		<option name="File">File location.</option>
 	</fullDescription>
 
 	<ports>

@@ -11,7 +11,7 @@
         
         
         <option name="Format">The file format to be used. The following formats are supported: XES, XES.GZ, MXML, and MXML.GZ.</option>
-        <option name="Output Location">Location for the output file.</option>
+        <option name="Export Location">Location for the output file.</option>
        
     </fullDescription>
     

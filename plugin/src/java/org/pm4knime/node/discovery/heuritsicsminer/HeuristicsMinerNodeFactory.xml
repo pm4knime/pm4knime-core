@@ -33,7 +33,7 @@
 		</option>
 		<option name="Threshold: Dependency">A threshold for the strength of the directly follows relation.
 		</option>
-		<option name="Threshold: Length-One-loops">>A threshold for the L1L metric.
+		<option name="Threshold: Length-One-loops">A threshold for the L1L metric.
 		</option>
 		<option name="Threshold: Length-Two-loops">A threshold for the L1L metric.
 		</option>

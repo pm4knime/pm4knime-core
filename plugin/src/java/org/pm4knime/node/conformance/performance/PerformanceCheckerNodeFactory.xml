@@ -30,7 +30,7 @@
 	<ports>
 		 <inPort index="0" name="Replay Result ">replay result</inPort>
 		<!-- possibly more input ports here -->
-		  <outPort index="0" name="Global Performance StatInfo">performance statistical information</outPort>
+		  <outPort index="0" name="Global Performance StatInfo">global performance statistical information</outPort>
 		<!-- <outPort index="1" name="Local Performance Statistics">
 		performance statistical information for the different patterns in the log
 		</outPort>-->

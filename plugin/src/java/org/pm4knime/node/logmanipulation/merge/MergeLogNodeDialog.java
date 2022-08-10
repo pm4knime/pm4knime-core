@@ -85,7 +85,7 @@ public class MergeLogNodeDialog extends DefaultNodeSettingsPane {
         
     	// set parameters
     	m_strategy = new SettingsModelString(MergeLogNodeModel.CFG_KEY_TRACE_STRATEGY, MergeLogNodeModel.CFG_TRACE_STRATEGY[0]);
-    	DialogComponentStringSelection strategyComp = new DialogComponentStringSelection(m_strategy,"Choose Merge Strategy" ,MergeLogNodeModel.CFG_TRACE_STRATEGY);
+    	DialogComponentStringSelection strategyComp = new DialogComponentStringSelection(m_strategy,"Merging Strategy" ,MergeLogNodeModel.CFG_TRACE_STRATEGY);
     	addDialogComponent(strategyComp);
     	
     	// add additional equation to choose the comparison
@@ -101,7 +101,8 @@ public class MergeLogNodeDialog extends DefaultNodeSettingsPane {
     		
     		m_traceIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_CASE_ID[i], "");
     		// create comp for this traeID to make them equal
-    		tIDComps[i] = new DialogComponentStringSelection(m_traceIDs[i],"Trace ID for log " + i, new String[]{""});
+    		int j = i+1;
+    		tIDComps[i] = new DialogComponentStringSelection(m_traceIDs[i],"CaseID for log " + j, new String[]{""});
     		addDialogComponent(tIDComps[i]);
     		
     	}
@@ -110,7 +111,7 @@ public class MergeLogNodeDialog extends DefaultNodeSettingsPane {
     	
     	// create the group to choose trace attributes. Do we allow attributes with same names in trace?? 
     	// If it is not allowed, we check it at the configuration steps..
-    	this.createNewGroup("Choose Trace Attributes");
+    	this.createNewGroup("Trace Attribute Set");
     	m_traceAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
     	m_traceAttrFilterComp = new DialogComponentAttributesFilter (m_traceAttrSet,  true);
     	addDialogComponent(m_traceAttrFilterComp);
@@ -119,13 +120,14 @@ public class MergeLogNodeDialog extends DefaultNodeSettingsPane {
     	this.setHorizontalPlacement(true);
     	for(int i=0; i< MergeLogNodeModel.CGF_INPUTS_NUM; i++) {
     		m_eventIDs[i] = new SettingsModelString(MergeLogNodeModel.CFG_KEY_EVENT_ID[i], "");	
-    		eIDComps[i] = new DialogComponentStringSelection(m_eventIDs[i],"Event ID for log " + i, new String[]{""});
+    		int j = i+1;
+    		eIDComps[i] = new DialogComponentStringSelection(m_eventIDs[i],"EventID for log " + j, new String[]{""});
     		addDialogComponent(eIDComps[i]);
     	}
     	
     	this.setHorizontalPlacement(false);
     	
-    	this.createNewGroup("Choose Event Attributes");
+    	this.createNewGroup("Event Attribute Set");
     	m_eventAttrSet = new SettingsModelFilterString(MergeLogNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, true );
     	m_eventAttrFilterComp = new DialogComponentAttributesFilter (m_eventAttrSet, true);
     	addDialogComponent(m_eventAttrFilterComp);
