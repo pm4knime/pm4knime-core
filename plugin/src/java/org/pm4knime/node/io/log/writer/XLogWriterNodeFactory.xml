@@ -3,20 +3,20 @@
     <name>Event Log Writer</name>
     
     <shortDescription>
-        It exports the event log into a local file.
+        This node exports an event log into a file.
     </shortDescription>
     
     <fullDescription>
-        <intro>It exports the event log into local file. </intro>
+        <intro>This node exports an event log into a file. The following file types are supported: XES, XES.GZ, MXML, and MXML.GZ.</intro>
         
         
-        <option name="Format">The format to save event log</option>
-        <option name="FileName">The place to save the event log</option>
+        <option name="Format">The file format to be used. The following formats are supported: XES, XES.GZ, MXML, and MXML.GZ.</option>
+        <option name="Output Location">Location for the output file.</option>
        
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Event Log">The event log written to the local file</inPort>
+        <inPort index="0" name="Event Log">an event log</inPort>
         
     </ports>    
    

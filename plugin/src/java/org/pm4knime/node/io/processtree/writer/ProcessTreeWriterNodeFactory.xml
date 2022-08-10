@@ -3,19 +3,19 @@
     <name>Process Tree Writer</name>
     
     <shortDescription>
-        Export process tree into .ptml file.
+        Export a process tree into a PTML file.
     </shortDescription>
     
     <fullDescription>
-        <intro>Simple Export Operation for Process Tree</intro>
+        <intro>Export a process tree into a PTML file.</intro>
         
         
-        <option name="Output Location">choose the loaction file to output</option>
+        <option name="Output Location">Location for the PTML file.</option>
       
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Process Tree">Input Object is Process tree</inPort>
+        <inPort index="0" name="Process Tree">a process tree</inPort>
        
     </ports>    
 </knimeNode>

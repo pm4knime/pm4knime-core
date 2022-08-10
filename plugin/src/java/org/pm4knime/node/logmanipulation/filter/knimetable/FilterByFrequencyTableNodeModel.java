@@ -48,10 +48,10 @@ import java.util.List;
 public class FilterByFrequencyTableNodeModel extends DefaultTableNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FilterByFrequencyTableNodeFactory.class);
 	
-	public static final String CFG_ISKEEP = "Keep traces";
+	public static final String CFG_ISKEEP = "Keep";
 	// give one trace threshold, one absolute value or a percentage is both OK.
 	// when it is below 1, we think it is the percentage, else, we use the absolute number 
-	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "For single trace variant";
+	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "Trace Variant Filtering";
 	public static final String CFG_THRESHOLD = "Threshold";
 SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	SettingsModelBoolean m_isForSingleTV = new SettingsModelBoolean(CFG_ISFOR_SINGLETRACE_VARIANT, true);

@@ -3,29 +3,24 @@
     <name>Fitness Checker</name>
     
     <shortDescription>
-        Based on the alignments after replaying, this node outputs the statistical fitness information. 
+        Based on the replay result, this node outputs the statistical fitness information. 
     </shortDescription>
     
     <fullDescription>
-        <intro>This node is based on the result from alignment-based replayer, and calculates the fitness information on Petri net. 
-        The measurement is conducted based on one of the best matching instances between each trace in the log and the model. 
-        Because the information is always included by the replayer, so there is no option to be chosen from this nodes. 
-        <br />
-			More information seen in the :
-			<a href="https://svn.win.tue.nl/repos/prom/Packages/PetriNetReplayAnalysis/">paper</a> and
+        <intro>This node is based on the result of alignment-based replayer. It outputs the statistical fitness information. 
         </intro>
         
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Replay Result ">Alignment after replaying</inPort>
+        <inPort index="0" name="Replay Result ">replay result</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Fitness StatInfo">Fitness Statistical Information</outPort>
+        <outPort index="0" name="Fitness StatInfo">fitness statistical information</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <!-- to view work here to show the projection on model -->
     <views>
-        <view index="0" name="Fitness Projection">Projection on Process Model (Petri net) to show the fitness result</view>
+        <view index="0" name="Fitness Projection">Projection on the Petri Net to show the fitness result.</view>
       
     </views>
 </knimeNode>

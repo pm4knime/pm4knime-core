@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./PN-icon.png" type="Visualizer" deprecated="false"
-	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
    
     <name>Hybrid Petri Net Visualizer</name>
     
     <shortDescription>
-        JS GraphViz Hybrid Petri Net Visualization
+        JavaScript Visualizer for hybrid Petri nets.
     </shortDescription>
     
     <fullDescription>
         <intro>
-    This node implements a JavaScript Visualization of a Hybrid Petri Net.
+    This node implements a JavaScript visualization of hybrid Petri nets. By default, informal edges are colored as follows: blue arcs for certain edges, red arcs for uncertain edges, and yellow arcs for long-term dependency edges.
         </intro>
     </fullDescription>
     
-    <interactiveView name="JSGraphViz"></interactiveView>
+    <interactiveView name="Hybrid Petri Net (JavaScript)"></interactiveView>
     
    <ports>
-        <inPort name="Petri Net" index="0">Hybrid Petri Net</inPort>
+        <inPort name="Hybrid Petri Net" index="0">a hybrid Petri net</inPort>
 	</ports>
 
 </knimeNode>

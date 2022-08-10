@@ -9,37 +9,36 @@
     <fullDescription>
         <intro>Merge two event logs</intro>
         
-        <option name="Case ID 0">Case Id for the first event log to identify traces</option>
-        <option name="Event ID 0">Event Id for the first event log to identify events in traces with the same caseID</option>
+        <option name="CaseID 1">The attribute used as a CaseId in the first event log.</option>
+        <option name="EventID 1">The attribute used as an EventID in the first event log.</option>
         
-        <option name="Case ID 1">Case Id for the second event log to identify traces</option>
-        <option name="Event ID 1">Event Id for the second event log to identify events in traces with the same caseID</option>
+        <option name="CaseID 2">The attribute used as a CaseId in the second event log.</option>
+        <option name="EventID 2">The attribute used as an EventID in the second event log.</option>
         
-        <option name="Merge Strategy">It includes four strategies:
+        <option name="Merging Strategy">The merging strategy. The following strategies are available:
         <ul>
-        	<li> Separate Trace: <br/> For the traces with same caseID, they are stored in the merged event log with the same trace IDs.  
+        	<li>Separate Trace: traces with the same caseID are added to the merged event log as separate traces.  
         	</li>
-        	<li>Ignore Trace:  <br/> For the traces with the same caseID from the second event log, we ignore those traces.</li>
-	        <li>Internal Trace Merge: <br/>For the traces with the same caseID, we merge all events from two traces together.
-         			But the trace attributes, we modify them according to the options. </li>
-	        <li>Internal Event Merge: <br/> In traces with same caseID, the events with same eventID 
-                    merge together but with different attributes chosen from the table below. </li>
+        	<li>Ignore Trace:  traces with the same caseID from both logs, only the traces from the first event log are added to the merged event log.</li>
+	        <li>Internal Trace Merge: traces with the same caseID are merge into a single trace containing all events from these traces.
+            </li>
+	        <li>Internal Event Merge: traces with the same caseID are merge into a single trace, and the events with same eventID in this trace are merge into a single event.</li>
         </ul>
         </option>
         
-        <option name="Trace Attribute Set"> The trace attributes chosen for the merged traces 
+        <option name="Trace Attribute Set"> The trace attributes to be included in the merged event log.
         </option>
         
-        <option name="Event Attribute Set"> The event attributes chosen for the merged events in traces.
+        <option name="Event Attribute Set"> The event attributes to be included in the merged event log.
         </option>
        
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="First Event Log">First event log to be merged. Usually as the base event log</inPort>
-        <inPort index="1" name="Second Event Log">Second event log to merge</inPort>
+        <inPort index="0" name="Event Log">first event log to be merged (used as the base event log)</inPort>
+        <inPort index="1" name="Event Log">second event log to merge</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Merged Event Log">Merged event log</outPort>
+        <outPort index="0" name="Event Log">merged event log</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     
