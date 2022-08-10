@@ -1,6 +1,5 @@
 package org.pm4knime.portobject;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,8 +8,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.out.XSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;

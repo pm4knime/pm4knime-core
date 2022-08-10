@@ -3,45 +3,35 @@
     <name>Table to XLog Converter</name>
     
     <shortDescription>
-        This node converts a Data Table from KNIME platform into an event log port object. 
+        This node converts a KNIME Data Table into an event log. 
     </shortDescription>
     
     <fullDescription>
-        <intro> This node converts a Data Table from KNIME platform into an event log PortObject. 
-        CaseID, Event class, time stamp and format are mandatory to set up in the first table; 
-        In table "Choose Attribute Set", other attributes for traces and events are set optional due to the need. 
-        In Expert Choice, it lists the strategy to handle error, empty cells and the XFactory to create event log.</intro>
+        <intro> This node converts a KNIME Data Table into an event log. </intro>
         
         <!--  still think sth options are not sol well defined -->
         <tab name="Standard Options">
-        <option name="Case ID">Choose one column as caseID for the event log</option>
-        <option name="Eventclass">Choose one column as eventID for the event log</option>
-        <option name="Life Cycle">Choose one column as life cycle for the event log. If there is no such column, 
-        choose the option NO AVAILABLE.</option>
-        <option name="Time Stamp">Choose one column as time stamp for events in the event log. 
-        It should be in format of ZonedDateTime or DateTime format. Else, the configuration error is given. </option>
+        <option name="Case ID">Column to be used as a caseID in the event log</option>
+        <option name="Eventclass">Column to be used as an eventID in the event log</option>
+        <option name="Life Cycle">Column to be used for the life cycle attribute in the event log.</option>
+        <option name="Time Stamp">Column to be used for the time stamp attribute in the event log. It should be in format of ZonedDateTime or DateTime; otherwise, an error will be thrown.</option>
        <!--   <option name="Date Format">Set the format to parse the time stamp. 
          For example, if the date in "2009-12-31", to parse it, the Date format should be given "yyyy-MM-dd"</option>
         -->
        </tab>
        <tab name="Choose Attributes Set">
-            <option name="Trace Attributes">Choose table columns as trace attributes. For all events with in one trace, they are supposed to 
-            have the same values for each trace attributes. Else, it will omit this trace in the event log. Values from included columns
-            will be shown as the attributes for each trace. Please make sure the columns chosen in "Standard Options" are included; else, it 
-            will give the InvalidConfiguration Error. </option>
-            <option name="Event Attributes">Choose table columns as event attributes. Values from included columns 
-            will be shonw as the attributes for event. Please make sure the columns chosen in "Standard Options" are included; else, it 
-            will give the InvalidConfiguration Error.</option>
+            <option name="Trace Attributes">Table columns to be used as trace attributes. Please make sure the columns chosen in the "Standard Options" dialog window are included; 
+            otherwise, an error will be thrown. </option>
+            <option name="Event Attributes">Table columns to be used as event attributes. Please make sure the columns chosen in the "Standard Options" dialog window are included; 
+            otherwise, an error will be thrown.</option>
         </tab>
         
          <tab name="Expert Choice">
-          <option name="XFactory">XFactory implementation that is used to create the log. Some implementations might be more memory efficient, 
-          consider changing this in case you import a huge log. Additional Conversion Options (Defaults are a good guess)</option>
-          <option name="Error Handling">The strategy to stop conversion upon malformed input or try to import as much as possible.</option>
-          <option name="Sparse / Dense Log">This affects how empty cells in the CSV are handled. 
-          Exclude (sparse) or include (dense) empty cells in the conversion. 
-						Some plug-ins require the log to be dense, i.e., all attributes are defined for each event.
-						In other cases it might be more efficient or even required to only add attributes to events if the attributes actually contain data.</option>
+          <option name="XFactory">XFactory implementation that is used to create the log. </option>
+          <option name="Error Handling">The strategy for handling errors.</option>
+          <option name="Sparse / Dense Log"> This affects how empty cells in the table are handled. 
+          Some plug-ins require the log to be dense, i.e., all attributes are defined for each event. 
+          In other cases, it might be more efficient or even required to only add attributes to events if the attributes actually contain data.</option>
 		
            
          </tab>
@@ -49,9 +39,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Data Table">A Data Table in KNIME</inPort>
+        <inPort index="0" name="Table">an event table</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Event Log">The event log converted from Data Table. </outPort>
+        <outPort index="0" name="Event Log">an event log</outPort>
       
     </ports>    
    
