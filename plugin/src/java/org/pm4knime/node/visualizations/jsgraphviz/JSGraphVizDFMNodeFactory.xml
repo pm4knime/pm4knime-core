@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./DFM-icon.png" type="Visualizer" deprecated="false"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+   
+    <name>Visualize DFM (GraphViz)</name>
+    
+    <shortDescription>JS GraphViz Directly Follows Miner Visualization</shortDescription>
+    
+    <fullDescription>
+        <intro>
+		    This node implements a JavaScript Visualization of a Directly Follows Model. 
+		    <br/>
+		    It visualizes all possible traces (order of activities).
+		    The green nodes are the start activities and the red activities are the end activity. The number on the arcs that connect to another activity 
+		    displays the number of traces that choose the following activity after the current activity.
+       
+        </intro>
+        
+
+    </fullDescription>
+    
+    <interactiveView name="JSGraphViz"></interactiveView>
+    
+   <ports>
+        <inPort name="Directly Follows Model" index="0">Input Directly Follows Miner</inPort>
+	</ports>
+
+</knimeNode>

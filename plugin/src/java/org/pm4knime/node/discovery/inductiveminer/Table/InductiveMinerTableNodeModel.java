@@ -1,10 +1,13 @@
 package org.pm4knime.node.discovery.inductiveminer.Table;
 
+
+
 import java.time.Duration;
 import java.time.Instant;
 
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
+
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -18,20 +21,31 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.BufferedTableIMLog;
+import org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DefaultMinerNodeModelBuffTable;
 import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel;
+import org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeModel2;
+import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
+import org.pm4knime.portobject.XLogPortObject;
+import org.pm4knime.portobject.XLogPortObjectSpec;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersEKS;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMf;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMflc;
+import org.processmining.processtree.ProcessTree;
+import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
+import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
+import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequent;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMLifeCycle;
-import org.processmining.processtree.ProcessTree;
 
 
 /**
@@ -44,7 +58,7 @@ import org.processmining.processtree.ProcessTree;
  *
  * @author 
  */
-public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
+public class InductiveMinerTableNodeModel extends DefaultMinerNodeModelBuffTable {
     
 	// the logger instance
 		private static final NodeLogger logger = NodeLogger.getLogger(InductiveMinerTableNodeModel.class);
@@ -64,13 +78,13 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 				InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.0, 0, 1.0);
 
 		protected InductiveMinerTableNodeModel() {
-			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { ProcessTreePortObject.TYPE });
+			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
 		}
 
 		@Override
 		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 			// TODO Auto-generated method stub
-			ProcessTreePortObjectSpec ptSpec = new ProcessTreePortObjectSpec();
+			PetriNetPortObjectSpec ptSpec = new PetriNetPortObjectSpec();
 			return new PortObjectSpec[] { ptSpec };
 		}
 		
@@ -84,7 +98,7 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 			logger.info("Begin: Inductive Miner");
 			checkCanceled(exec);
 			String activityClassifier = getEventClassifier();
-			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier, getTraceClassifier());
+			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier);
 			System.out.println("End of Generating Log");
 			MiningParametersIM param =  createParameters();
 			XEventClassifier classifi = new XEventAttributeClassifier(activityClassifier);
@@ -100,16 +114,24 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 					return false;
 				}
 			});
-			
 			Instant end = Instant.now();
 			System.out.println(Duration.between(start, end).toMinutes());
 			System.out.println("End of Inductive Miner");
-			ProcessTree tree = EfficientTree2processTree.convert(ptE);
+			AcceptingPetriNet net = InductiveMinerPlugin.postProcessTree2PetriNet(ptE, new Canceller() {
+				public boolean isCancelled() {
+					try {
+						checkCanceled(exec);
+					} catch (final CanceledExecutionException ce) {
+						return true;
+					}
+					return false;
+				}
+			});
 
 			checkCanceled(exec);
-			ProcessTreePortObject treeObj = new ProcessTreePortObject(tree);
+			PetriNetPortObject petriObj = new PetriNetPortObject(net, ptE);
 			logger.info("End:  Inductive Miner");
-			return  treeObj;
+			return  petriObj;
 
 		}
 

@@ -19,18 +19,18 @@ import org.knime.core.node.port.PortType;
 
 import org.pm4knime.portobject.DfgMsdPortObject;
 import org.pm4knime.portobject.DfgMsdPortObjectSpec;
-import org.pm4knime.portobject.ProcessTreePortObject;
-import org.pm4knime.portobject.ProcessTreePortObjectSpec;
+import org.pm4knime.portobject.PetriNetPortObject;
+import org.pm4knime.portobject.PetriNetPortObjectSpec;
+
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerWithoutLogPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMWithoutLog;
-import org.processmining.processtree.ProcessTree;
 
 /**
  * <code>NodeModel</code> for the "InductiveMinerDFGTable" node.
@@ -55,7 +55,7 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 	 */
 	protected InductiveMinerDFGTableNodeModel() {
 
-		super(new PortType[] { DfgMsdPortObject.TYPE }, new PortType[] { ProcessTreePortObject.TYPE });
+		super(new PortType[] { DfgMsdPortObject.TYPE }, new PortType[] { PetriNetPortObject.TYPE });
 	}
 
 	/**
@@ -84,10 +84,19 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 					}
 				});
 
-		ProcessTree tree = EfficientTree2processTree.convert(ptEff);
+		AcceptingPetriNet net = InductiveMinerPlugin.postProcessTree2PetriNet(ptEff, new Canceller() {
+			public boolean isCancelled() {
+				try {
+					checkCanceled(exec);
+				} catch (final CanceledExecutionException ce) {
+					return true;
+				}
+				return false;
+			}
+		});
 
 		checkCanceled(exec);
-		ProcessTreePortObject petriObj = new ProcessTreePortObject(tree);
+		PetriNetPortObject petriObj = new PetriNetPortObject(net, ptEff);
 		logger.info("End:  Inductive Miner");
 		return new PortObject[] { petriObj };
 	}
@@ -109,9 +118,9 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 		if (!inSpecs[0].getClass().equals(DfgMsdPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid DfgMsd  model!");
 
-		ProcessTreePortObjectSpec ptPOSpec = new ProcessTreePortObjectSpec();
+		PetriNetPortObjectSpec ptPOSpec = new PetriNetPortObjectSpec();
 
-		return new ProcessTreePortObjectSpec[] { ptPOSpec };
+		return new PetriNetPortObjectSpec[] { ptPOSpec };
 	}
 
 	/**

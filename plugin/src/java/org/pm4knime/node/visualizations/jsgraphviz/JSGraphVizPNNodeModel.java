@@ -1,19 +1,52 @@
 package org.pm4knime.node.visualizations.jsgraphviz;
 
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
+import org.knime.core.node.port.flowvariable.FlowVariablePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
+import org.pm4knime.portobject.ProcessTreePortObject;
 import org.processmining.plugins.graphviz.dot.Dot;
+import org.processmining.plugins.graphviz.visualisation.DotPanel;
+
+import java.io.File;
+import java.io.IOException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.IllegalFormatException;
+import java.util.List;
+
+import org.knime.core.data.DataCell;
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.container.CloseableRowIterator;
+import org.knime.core.data.def.DefaultRow;
+import org.knime.core.data.def.DoubleCell;
+import org.knime.core.data.def.StringCell;
+import org.knime.core.node.BufferedDataContainer;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeModel;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortType;
 
 
 /**
@@ -26,12 +59,11 @@ import org.processmining.plugins.graphviz.dot.Dot;
  *
  * @author 
  */
-public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
+public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {PetriNetPortObject.TYPE};
 	private static final PortType[] OUT_TYPES = {};
-	PetriNetPortObject petrinet;
 
 	public JSGraphVizPNNodeModel() {
 		super(IN_TYPES, OUT_TYPES, "JSGraphVizPN");
@@ -70,12 +102,8 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 	public void saveCurrentValue(NodeSettingsWO content) {
 	}
 
-	
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
-		if (!inSpecs[0].getClass().equals(PetriNetPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Petri net!");
 		return new PortObjectSpec[] {};
 	}
 
@@ -87,10 +115,13 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 		synchronized (getLock()) {
 			
-			petrinet = (PetriNetPortObject) inObjects[0];
+			PetriNetPortObject petrinet = (PetriNetPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
 			Dot dot =  petrinet.getDotPanel().getDot();
 			dotstr = dot.toString();
+			
+			
+			JSGraphVizViewValue value = getViewValue();
 
 		}
 		
@@ -120,14 +151,5 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-	}
-	
-	public PortObject[] getInternalPortObjects() {
-		return new PortObject[] {petrinet};
-	}
-
-	
-	public void setInternalPortObjects(PortObject[] portObjects) {
-		petrinet = (PetriNetPortObject) portObjects[0];
 	}
 }

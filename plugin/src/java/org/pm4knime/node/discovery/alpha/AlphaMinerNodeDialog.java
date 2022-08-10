@@ -1,4 +1,4 @@
-package org.pm4knime.node.discovery.alpha.xlog;
+package org.pm4knime.node.discovery.alpha;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

@@ -1,18 +1,6 @@
 package org.pm4knime.node.discovery.cgminer.table;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.container.filter.TableFilter;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -21,13 +9,14 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.discovery.cgminer.CGMinerNodeModel;
-import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.pm4knime.portobject.CausalGraphPortObject;
 import org.pm4knime.portobject.CausalGraphPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.extendedhybridminer.algorithms.HybridCGMiner;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
 import org.processmining.extendedhybridminer.models.causalgraph.ExtendedCausalGraph;
@@ -36,22 +25,24 @@ import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
 import org.processmining.framework.plugin.PluginContext;
 
 
-public class TableCGMinerNodeModel extends DefaultTableMinerModel {
+public class TableCGMinerNodeModel extends DefaultNodeModel implements PortObjectHolder{
 	
-	private final NodeLogger logger = NodeLogger
+	private static final NodeLogger logger = NodeLogger
             .getLogger(TableCGMinerNodeModel.class);
 	
-	public final SettingsModelDoubleBounded filter_a = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_ACTIVITY, 0, 0, 100);
-	public final SettingsModelDoubleBounded filter_t = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_TRACE, 0, 0, 100);
-	public final SettingsModelDoubleBounded t_certain  = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_CERTAIN_EDGES, 0.4, 0, 1);
-	public final SettingsModelDoubleBounded t_uncertain = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_UNCERTAIN, 0.3, 0, 1);
-	public final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
-	public final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(CGMinerNodeModel.WEIGHT, 0.5, 0, 1);
-	
+	public static final SettingsModelDoubleBounded filter_a = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_ACTIVITY, 0, 0, 100);
+	public static final SettingsModelDoubleBounded filter_t = new SettingsModelDoubleBounded(CGMinerNodeModel.FILTER_TRACE, 0, 0, 100);
+	public static final SettingsModelDoubleBounded t_certain  = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_CERTAIN_EDGES, 0.4, 0, 1);
+	public static final SettingsModelDoubleBounded t_uncertain = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_UNCERTAIN, 0.3, 0, 1);
+	public static final SettingsModelDoubleBounded t_longDep = new SettingsModelDoubleBounded(CGMinerNodeModel.THRESHOLD_LONG_DEPENDENCY, 0.8, 0, 1);
+	public static final SettingsModelDoubleBounded weight = new SettingsModelDoubleBounded(CGMinerNodeModel.WEIGHT, 0.5, 0, 1);
 	
 	private ExtendedCausalGraph cg;
+	protected BufferedDataTable logPO = null;
 	
 	protected TableCGMinerNodeModel() {
+    
+        // TODO: Specify the amount of input and output ports needed.
         super(new PortType[] { BufferedDataTable.TYPE }, 
         		new PortType[] { CausalGraphPortObject.TYPE });
     }
@@ -60,7 +51,9 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	@Override
 	protected PortObject[] execute(final PortObject[] inObjects,
 	            final ExecutionContext exec) throws Exception {
+		// we always put the event log as the first input!! 
 		logPO = (BufferedDataTable)inObjects[0];
+		
     	checkCanceled(null, exec);
 		PortObject pmPO = mine(logPO, exec);
 		checkCanceled(null, exec);
@@ -70,13 +63,14 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
 	protected PortObject mine(BufferedDataTable table, final ExecutionContext exec) throws Exception{
     	logger.info("Begin: Causal Graph Miner (Table)");
-    	String tClassifier = getTraceClassifier();
-    	String eClassifier = getEventClassifier();
+    	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(HybridCGMinerPlugin.class);
     	checkCanceled(pluginContext, exec);
     	HybridCGMinerSettings settings = getConfiguration();
-		TraceVariantsLog variants = new TraceVariantsTable(table, settings, tClassifier, eClassifier);
+    	
+		TraceVariantsLog variants = new TraceVariantsTable(table, settings);
+		variants.print();
 		HybridCGMiner miner = new HybridCGMiner(null, null, variants, settings);
 		ExtendedCausalGraph cg = miner.mineFCG();
     	
@@ -92,12 +86,10 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
     }
     
     
-    
-    
     HybridCGMinerSettings getConfiguration() {
 		HybridCGMinerSettings settings = new HybridCGMinerSettings();
-    	settings.setFilterAcivityThreshold(filter_a.getDoubleValue()/100.0);
-		settings.setTraceVariantsThreshold(filter_t.getDoubleValue()/100.0);
+    	settings.setFilterAcivityThreshold(filter_a.getDoubleValue()/100);
+		settings.setTraceVariantsThreshold(filter_t.getDoubleValue()/100);
 		settings.setSureThreshold(t_certain.getDoubleValue());
 		settings.setQuestionMarkThreshold(t_uncertain.getDoubleValue());
 		settings.setLongDepThreshold(t_longDep.getDoubleValue());
@@ -108,8 +100,20 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 
 
     protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
+
         return new PortObjectSpec[]{new CausalGraphPortObjectSpec()};
     }
+
+    @Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return new PortObject[] {logPO};
+	}
+
+	@Override
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		logPO = (BufferedDataTable) portObjects[0];
+	}
 
 	protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
 		filter_a.saveSettingsTo(settings);
@@ -133,17 +137,31 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
 		if (!inSpecs[0].getClass().equals(DataTableSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Table Log!");	
+			throw new InvalidSettingsException("Input is not a valid Table Log!");
+		
 		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];
+		
 		return configureOutSpec(logSpec);
 	}
 	
+	
 	@Override
-	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+	protected void saveSettingsTo(NodeSettingsWO settings) {
+		saveSpecificSettingsTo(settings);
 	}
-
-
+	
+	
+	@Override
+	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+	}
+	
+	
+	@Override
+	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+		loadSpecificValidatedSettingsFrom(settings);
+	}
    
 }
 

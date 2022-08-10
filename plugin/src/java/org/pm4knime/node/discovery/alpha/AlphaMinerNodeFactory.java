@@ -1,4 +1,4 @@
-package org.pm4knime.node.discovery.alpha.xlog;
+package org.pm4knime.node.discovery.alpha;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;

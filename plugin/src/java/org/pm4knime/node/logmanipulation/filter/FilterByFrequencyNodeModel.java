@@ -40,10 +40,10 @@ import org.pm4knime.util.defaultnode.DefaultNodeModel;
 public class FilterByFrequencyNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FilterByFrequencyNodeFactory.class);
 	
-	public static final String CFG_ISKEEP = "Keep";
+	public static final String CFG_ISKEEP = "Keep traces";
 	// give one trace threshold, one absolute value or a percentage is both OK.
 	// when it is below 1, we think it is the percentage, else, we use the absolute number 
-	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "Trace Variant Filtering";
+	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "For single trace variant";
 	public static final String CFG_THRESHOLD = "Threshold";
 	
 	SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
