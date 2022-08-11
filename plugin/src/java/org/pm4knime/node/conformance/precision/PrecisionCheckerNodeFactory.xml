@@ -21,6 +21,7 @@
         
        <option name="Ordered Representation">The representation of the information in the event log (ordered sequences or multi-sets). This option is enabled by default.</option>
 		<option name="Algorithm">The algorithm to calculate the precision. The following options are available:
+			<ul>
 			<!--  more details on the algorithms, what they do actually -->
 				<li>1-Align Precision.</li>
 				<li>All-Align Precision.</li>
@@ -32,6 +33,7 @@
 				after this prefix. In order to improve the precision measure robust to non-fitting traces, alignments are used to
 				 calculate the prefix automation.-->
 				</li>
+				</ul>
  		</option>
     </fullDescription>
     

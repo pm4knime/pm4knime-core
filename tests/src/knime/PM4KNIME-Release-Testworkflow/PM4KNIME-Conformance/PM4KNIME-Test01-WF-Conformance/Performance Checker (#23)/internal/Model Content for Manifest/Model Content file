@@ -26,25 +26,25 @@
         <entry key="2" type="xdouble" value="1.0"/>
         <entry key="3" type="xdouble" value="1.0"/>
         <entry key="4" type="xdouble" value="14.0"/>
-        <entry key="5" type="xdouble" value="31.0"/>
+        <entry key="5" type="xdouble" value="4.0"/>
         <entry key="6" type="xdouble" value="0.0"/>
         <entry key="7" type="xdouble" value="1.0"/>
         <entry key="8" type="xdouble" value="1.0"/>
         <entry key="9" type="xdouble" value="1.0"/>
         <entry key="10" type="xdouble" value="10.0"/>
-        <entry key="11" type="xdouble" value="0.0"/>
+        <entry key="11" type="xdouble" value="3.0"/>
         <entry key="12" type="xdouble" value="0.0"/>
         <entry key="13" type="xdouble" value="1.0"/>
         <entry key="14" type="xdouble" value="1.0"/>
         <entry key="15" type="xdouble" value="1.0"/>
         <entry key="16" type="xdouble" value="6.0"/>
-        <entry key="17" type="xdouble" value="0.0"/>
+        <entry key="17" type="xdouble" value="1.0"/>
         <entry key="18" type="xdouble" value="0.0"/>
         <entry key="19" type="xdouble" value="1.0"/>
         <entry key="20" type="xdouble" value="1.0"/>
         <entry key="21" type="xdouble" value="1.0"/>
         <entry key="22" type="xdouble" value="6.0"/>
-        <entry key="23" type="xdouble" value="16.0"/>
+        <entry key="23" type="xdouble" value="2.0"/>
         <entry key="24" type="xdouble" value="0.0"/>
         <entry key="25" type="xdouble" value="1.0"/>
         <entry key="26" type="xdouble" value="1.0"/>
@@ -315,25 +315,25 @@
     </config>
     <config key="Transclass Keys">
         <entry key="array-size" type="xint" value="8"/>
-        <entry key="0" type="xstring" value="check ticket"/>
-        <entry key="1" type="xstring" value="decide"/>
+        <entry key="0" type="xstring" value="register request"/>
+        <entry key="1" type="xstring" value="examine thoroughly"/>
         <entry key="2" type="xstring" value="pay compensation"/>
-        <entry key="3" type="xstring" value="reject request"/>
-        <entry key="4" type="xstring" value="examine casually"/>
-        <entry key="5" type="xstring" value="reinitiate request"/>
-        <entry key="6" type="xstring" value="examine thoroughly"/>
-        <entry key="7" type="xstring" value="register request"/>
+        <entry key="3" type="xstring" value="reinitiate request"/>
+        <entry key="4" type="xstring" value="reject request"/>
+        <entry key="5" type="xstring" value="decide"/>
+        <entry key="6" type="xstring" value="check ticket"/>
+        <entry key="7" type="xstring" value="examine casually"/>
     </config>
     <config key="Transclass Values">
         <entry key="array-size" type="xint" value="8"/>
-        <entry key="0" type="xshort" value="0"/>
-        <entry key="1" type="xshort" value="1"/>
+        <entry key="0" type="xshort" value="5"/>
+        <entry key="1" type="xshort" value="3"/>
         <entry key="2" type="xshort" value="4"/>
-        <entry key="3" type="xshort" value="7"/>
-        <entry key="4" type="xshort" value="2"/>
-        <entry key="5" type="xshort" value="6"/>
-        <entry key="6" type="xshort" value="3"/>
-        <entry key="7" type="xshort" value="5"/>
+        <entry key="3" type="xshort" value="6"/>
+        <entry key="4" type="xshort" value="7"/>
+        <entry key="5" type="xshort" value="1"/>
+        <entry key="6" type="xshort" value="0"/>
+        <entry key="7" type="xshort" value="2"/>
     </config>
     <config key="Eventclass Keys">
         <entry key="array-size" type="xint" value="8"/>

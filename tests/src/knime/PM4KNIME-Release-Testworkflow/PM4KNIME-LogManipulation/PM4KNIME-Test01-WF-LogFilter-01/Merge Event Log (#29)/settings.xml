@@ -60,18 +60,22 @@
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
     <entry key="state" type="xstring" value="EXECUTED"/>
+    <config key="nodecontainer_message">
+        <entry key="type" type="xstring" value="WARNING"/>
+        <entry key="message" type="xstring" value="Loading model settings failed: String for key &quot;Merging Strategy&quot; not found."/>
+    </config>
     <entry key="factory" type="xstring" value="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory"/>
-    <entry key="node-name" type="xstring" value="Merge Event Log"/>
+    <entry key="node-name" type="xstring" value="Merge Event Logs"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>
     <entry key="node-bundle-symbolic-name" type="xstring" value="org.pm4knime.plugin"/>
     <entry key="node-bundle-vendor" type="xstring" value="Fraunhofer Institute for Applied Information Technology"/>
-    <entry key="node-bundle-version" type="xstring" value="1.1.1.qualifier"/>
+    <entry key="node-bundle-version" type="xstring" value="1.1.5.qualifier"/>
     <entry key="node-feature-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-version" type="xstring" value="0.0.0"/>
     <config key="factory_settings"/>
-    <entry key="name" type="xstring" value="Merge Event Log"/>
+    <entry key="name" type="xstring" value="Merge Event Logs"/>
     <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
@@ -87,6 +91,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="ae7009f7-ecca-49e8-bae1-8a8e496d7b14"/>
+        <entry key="file_store_id" type="xstring" isnull="true" value=""/>
     </config>
 </config>
