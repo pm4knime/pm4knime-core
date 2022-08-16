@@ -1,6 +1,7 @@
 package org.pm4knime.node.conformance.replayer.table.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -111,7 +112,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	protected Map<Transition, Integer> mapTrans2Cost;
 	protected Map<String, Integer> mapEvClass2Cost;
 	protected Map<Transition, Integer> mapSync2Cost;
-	protected XEventClassifier classifier;
+	protected String classifier;
 	protected int maxNumOfStates;
 	protected Marking initMarking;
 	protected Marking[] finalMarkings;
@@ -120,7 +121,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	/**
 	 * Return true if all replay inputs are correct
 	 */
-	public boolean isAllReqSatisfied(PluginContext context, PetrinetGraph net, TableEventLog log, TransEvClassMapping mapping,
+	public boolean isAllReqSatisfied(PluginContext context, PetrinetGraph net, TableEventLog log, TransEvClassMappingTable mapping,
 			IPNReplayParameter parameter) {
 		if ((net instanceof ResetInhibitorNet) || (net instanceof InhibitorNet) || (net instanceof ResetNet)
 				|| (net instanceof Petrinet) || (net instanceof OpenNet)) {
@@ -162,23 +163,20 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	 * event class in the log is mapped to it) are mapped to cost; all costs
 	 * should be non negative; numStates is non negative
 	 */
-	public boolean isParameterReqCorrect(PetrinetGraph net, TableEventLog log, TransEvClassMapping mapping,
+	public boolean isParameterReqCorrect(PetrinetGraph net, TableEventLog log, TransEvClassMappingTable mapping,
 			IPNReplayParameter parameter) {
-		if (parameter instanceof CostBasedCompleteParam) {
-			CostBasedCompleteParam param = (CostBasedCompleteParam) parameter;
+		if (parameter instanceof CostBasedCompleteParamTable) {
+			CostBasedCompleteParamTable param = (CostBasedCompleteParamTable) parameter;
 			if ((param.getMapTrans2Cost() != null) && (param.getMaxNumOfStates() != null)
 					&& (param.getMapEvClass2Cost() != null) && (param.getInitialMarking() != null)
 					&& (param.getFinalMarkings() != null)) {
 				// check all transitions are indeed mapped to cost
 				if ((param.getMaxNumOfStates() >= 0)
 						&& (param.getMapTrans2Cost().keySet().containsAll(net.getTransitions()))) {
-					Set<XEventClass> evClassWithCost = param.getMapEvClass2Cost().keySet();
-					// check all event classes are mapped to cost
-					XEventClassifier classifier = mapping.getEventClassifier();
-					XLogInfo summary = XLogInfoFactory.createLogInfo(log, classifier);
-					XEventClasses eventClassesName = summary.getEventClasses();
-
-					if (evClassWithCost.containsAll(eventClassesName.getClasses())) {
+					Set<String> evClassWithCost = param.getMapEvClass2Cost().keySet();
+					String[] eventClassesName = log.getActivties();
+					List<String> eventClassList = new ArrayList<String>(Arrays.asList(eventClassesName));
+					if (evClassWithCost.containsAll(eventClassList)) {
 						// dummy event class has to be mapped to cost
 						//if (mapping.getDummyEventClass() != null) {
 						//	if (!evClassWithCost.contains(mapping.getDummyEventClass())) {
@@ -230,7 +228,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		return new CostBasedCompleteParamProvider(context, net, log, mapping);
 	}
 
-	protected SyncReplayResult recordToResult(AbstractPDelegate<?> d, XTrace trace, Trace filteredTrace, PRecord r,
+	protected SyncReplayResult recordToResult(AbstractPDelegateTable<?> d, String[] trace, Trace filteredTrace, PRecord r,
 			int traceIndex, int stateCount, boolean isReliable, long milliseconds, int queuedStates, int traversedArcs,
 			int minCostMoveModel, TIntList unUsedIndices, TIntIntMap trace2orgTrace) {
 		List<PRecord> history = PRecord.getHistory(r);
@@ -264,8 +262,9 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 
 				// check rec.getMovedEvent. If this is larger than unUsedIndices, then include all unUsedIndices
 				// upto rec.getMovedEvent as LogMoves right now.
+				//Todo: might be drastic change******check
 				while (trace2orgTrace.get(rec.getMovedEvent()) > firstUnUsed) {
-					XEventClass clsInTrace = d.getClassOf(trace.get(firstUnUsed)); // this an unused event
+					String clsInTrace = trace[firstUnUsed]; // this an unused event
 
 					stepTypes.add(StepTypes.L);
 					nodeInstance.add(clsInTrace);
@@ -311,9 +310,9 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		// add the rest of the trace
 		eventInTrace++;
 		//		while (eventInTrace < trace.size()) {
-		while (firstUnUsed < trace.size()) {
+		while (firstUnUsed < trace.length) {
 			// move log only
-			XEventClass a = d.getClassOf(trace.get(firstUnUsed));
+			String a = trace[firstUnUsed];
 			eventInTrace++;
 			stepTypes.add(StepTypes.L);
 			nodeInstance.add(a);
@@ -325,8 +324,8 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 
 		// calculate mlUpper (because in cases where we have synchronous move in manifest, more than one events are aggregated
 		// in one movement
-		for (XEvent evt : trace) {
-			mlUpper += mapEvClass2Cost.get(d.getClassOf(evt));
+		for (String evt : trace) {
+			mlUpper += mapEvClass2Cost.get(evt);
 		}
 
 		SyncReplayResult res = new SyncReplayResult(nodeInstance, stepTypes, traceIndex);
@@ -409,9 +408,9 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 				+ "activities can be assigned uniquely for each move on model/log. </html>";
 	}
 
-	public PNRepResult replayLog(final PluginContext context, PetrinetGraph net, final XLog log,
-			TransEvClassMapping mapping, final IPNReplayParameter parameters) throws AStarException {
-		importParameters((CostBasedCompleteParam) parameters);
+	public PNRepResult replayLog(final PluginContext context, PetrinetGraph net, final TableEventLog log,
+			TransEvClassMappingTable mapping, final IPNReplayParameter parameters) throws AStarException {
+		importParameters((CostBasedCompleteParamTable) parameters);
 		classifier = mapping.getEventClassifier();
 
 		if (parameters.isGUIMode()) {
@@ -422,14 +421,14 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 			}
 		}
 
-		final XLogInfo summary = XLogInfoFactory.createLogInfo(log, classifier);
-		final XEventClasses classes = summary.getEventClasses();
+	
+		final String[] classes = log.getActivties();
 
 		final int delta = 1000;
 		final int threads = parameters.getNumThreads();
 		final D localDelegate = getDelegate(net, log, classes, mapping, delta, threads);
 
-		final MemoryEfficientAStarAlgorithm<PHead, T> aStar = new MemoryEfficientAStarAlgorithm<PHead, T>(localDelegate);
+		final MemoryEfficientAStarAlgorithm<PHeadTable, T> aStar = new MemoryEfficientAStarAlgorithm<PHeadTable, T>(localDelegate);
 
 		ExecutorService pool = Executors.newFixedThreadPool(threads);
 
@@ -440,9 +439,9 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		long start = System.currentTimeMillis();
 
 		if (context != null) {
-			context.getProgress().setMaximum(log.size() + 1);
+			context.getProgress().setMaximum(log.getTraces().size() + 1);
 		}
-		TObjectIntMap<Trace> traces = new TObjectIntHashMap<Trace>(log.size() / 2, 0.5f, -1);
+		TObjectIntMap<Trace> traces = new TObjectIntHashMap<Trace>(log.getTraces().size() / 2, 0.5f, -1);
 
 		final List<SyncReplayResult> col = new ArrayList<SyncReplayResult>();
 
@@ -465,17 +464,17 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 				}
 			} : parameters.getCanceller();
 
-			for (int i = 0; i < log.size(); i++) {
+			for (int i = 0; i < log.getTraces().size(); i++) {
 				if (parameters.getCanceller() != null) {
 					if (parameters.getCanceller().isCancelled()) {
 						break;
 					}
 				}
 
-				PHead initial = constructHead(localDelegate, initMarking, log.get(i));
+				PHeadTable initial = constructHead(localDelegate, initMarking, log.getTraces().get(i));
 
 				final TIntList unUsedIndices = new TIntArrayList();
-				final TIntIntMap trace2orgTrace = new TIntIntHashMap(log.get(i).size(), 0.5f, -1, -1);
+				final TIntIntMap trace2orgTrace = new TIntIntHashMap(log.getTraces().get(i).size(), 0.5f, -1, -1);
 				final Trace trace = usePartialOrderEvents ? poBuilder.getPartiallyOrderedTrace(log, i, localDelegate,
 						unUsedIndices, trace2orgTrace) : getLinearTrace(log, i, localDelegate, unUsedIndices,
 						trace2orgTrace);
@@ -683,8 +682,8 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		return null;// debug code
 	}
 
-	protected PHead constructHead(D delegate, Marking m, XTrace xtrace) {
-		return new PHead(delegate, m, xtrace);
+	protected PHeadTable constructHead(D delegate, Marking m, List<String> trace) {
+		return new PHeadTable(delegate, m, trace);
 	}
 
 	/**
@@ -701,7 +700,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	 * @return
 	 */
 	protected int getMinBoundMoveModel(IPNReplayParameter parameters, final int delta,
-			final MemoryEfficientAStarAlgorithm<PHead, T> aStar, D delegateD) throws AStarException {
+			final MemoryEfficientAStarAlgorithm<PHeadTable, T> aStar, D delegateD) throws AStarException {
 		// create a log 
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		XTrace emptyTrace = factory.createTrace();
@@ -748,7 +747,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		}
 	}
 
-	protected abstract D getDelegate(PetrinetGraph net, XLog log, XEventClasses classes, TransEvClassMapping mapping,
+	protected abstract D getDelegate(PetrinetGraph net, TableEventLog log, String[] classes, TransEvClassMappingTable mapping,
 			int delta, int threads);
 
 	protected int addReplayResults(Progress progress, D delegate, XTrace trace, Result r, TIntList unUsedIndices,

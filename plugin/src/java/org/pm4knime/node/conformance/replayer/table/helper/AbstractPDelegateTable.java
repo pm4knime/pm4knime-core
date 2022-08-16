@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-
+import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.model.XEvent;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Arc;
@@ -394,7 +395,9 @@ public abstract class AbstractPDelegateTable<T extends Tail> implements StorageA
 		return headCompressor;
 	}
 
+	
 
+	
 	public int getActivityOf(int trace, int event) {
 		if (trace < 0 || event < 0 || trace >= log.getTraces().size() || event >= log.getTraces().get(trace).size()) {
 			return AStarThread.NOMOVE;
