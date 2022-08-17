@@ -34,6 +34,7 @@
 					During replaying, the model moves forwards but the state of the event log doesn't change.
 				</li>
 			</ul>
+		<br />
 		For more information:
 			<a href="https://ieeexplore.ieee.org/abstract/document/6037560">link</a>	
 		
@@ -43,6 +44,7 @@
 		</option>
 		<option name="Strategy type">
 			The replay strategy to be applied. The following options are available:
+				<ul>
 				<li>
 					ILP Replayer: this repalyer calculates the optimal alignment based on ILP.
 				</li>
@@ -52,6 +54,7 @@
 					A*-ILP Based Manifest Replayer: this replayer is reserved for performance checking. It generates
 					the Manifest to wrap the alignments.
 				</li>
+				</ul>
 		</option>
 
 		<option name="Move on log cost">The unified cost for a log move in a non-negative

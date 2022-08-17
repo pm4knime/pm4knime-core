@@ -18,9 +18,11 @@
 
     </fullDescription>
     
+   <interactiveView name="DFG (JavaScript)"></interactiveView>
+    
    <ports>
         <inPort name="DFG" index="0">a directly follows graph</inPort>
 	</ports>
-	<interactiveView name="DFG (JavaScript)"></interactiveView>
+	
 
 </knimeNode>
