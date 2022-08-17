@@ -19,7 +19,12 @@ import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.plugins.VisualizeAcceptingPetriNetPlugin;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce.ReductionFailedException;
+import org.processmining.plugins.InductiveMiner.efficienttree.UnknownTreeNodeException;
+import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.processmining.plugins.inductiveVisualMiner.plugins.EfficientTreeVisualisationPlugin;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizPetriNet;
 
 /**
@@ -43,11 +48,17 @@ public class PetriNetPortObject  implements PortObject{
 	// use AcceptingPetriNet as the model
 	AcceptingPetriNet m_anet ;
 	PetriNetPortObjectSpec m_spec;
-	
+	private EfficientTree effTree;
 	public PetriNetPortObject() {}
 	
 	public PetriNetPortObject(AcceptingPetriNet anet) {
 		m_anet = anet;
+		this.effTree = null;
+	}
+	
+	public PetriNetPortObject(AcceptingPetriNet anet,EfficientTree effTree) throws UnknownTreeNodeException, ReductionFailedException {
+		this.effTree = effTree;
+		this.m_anet =  anet;
 	}
 	
 	
@@ -87,6 +98,12 @@ public class PetriNetPortObject  implements PortObject{
 	 */
 	@Override
 	public JComponent[] getViews() {
+		if(effTree != null) {
+			JComponent viewPanel = getDotPanel();
+			viewPanel.setName("Petri net");
+			return new JComponent[] { viewPanel };	
+		}
+		
 		if (m_anet != null) {
 			
 			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
@@ -100,7 +117,17 @@ public class PetriNetPortObject  implements PortObject{
 	
 	public DotPanel getDotPanel() {
 		
-	if(m_anet != null) {
+		if(effTree != null) {
+			Dot dot = EfficientTreeVisualisationPlugin.fancy(effTree);
+			DotPanel navDot = new DotPanel(dot);
+			
+			navDot.setName("Generated petri net");
+			return navDot;
+			
+		}
+		
+		
+	    if(m_anet != null) {
 			
 			DotPanel navDot;
 			navDot = new DotPanel(GraphvizPetriNet.convert(m_anet));

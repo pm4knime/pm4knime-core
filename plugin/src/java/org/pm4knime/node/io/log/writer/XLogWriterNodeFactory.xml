@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./Eventlog-Writer-icon.png" type="Sink" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Event Log Writer</name>
+    <name>Event XLog Writer</name>
     
     <shortDescription>
-        It exports the event log into a local file.
+        This node exports an event log into a file.
     </shortDescription>
     
     <fullDescription>
-        <intro>It exports the event log into local file. </intro>
+        <intro>This node exports an event log into a file. The following file types are supported: XES, XES.GZ, MXML, and MXML.GZ.</intro>
         
         
-        <option name="Format">The format to save event log</option>
-        <option name="FileName">The place to save the event log</option>
+        <option name="Format">The file format to be used. The following formats are supported: XES, XES.GZ, MXML, and MXML.GZ.</option>
+        <option name="Export Location">Location for the output file.</option>
        
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Event Log">The event log written to the local file</inPort>
+        <inPort index="0" name="Event Log">an event log</inPort>
         
     </ports>    
    

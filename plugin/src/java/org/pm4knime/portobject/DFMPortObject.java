@@ -24,8 +24,6 @@ import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.dfgOnly.DfgImpl;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizDirectlyFollowsGraph;
-import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizProcessTree;
-import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizProcessTree.NotYetImplementedException;
 
 public class DFMPortObject extends AbstractPortObject {
 

@@ -3,64 +3,52 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Heuristics Miner</name>
+	<name>Heuristics Miner (XLog)</name>
 
 	<shortDescription>
-		This node implements the Heuristics Miner to discover a process model from an event log.
+		This node implements the Heuristics Miner to discover a Petri net from an event log.
 	</shortDescription>
 
 	<fullDescription>
 		<intro>
-			This node implements the Heuristics Miner to discover a process
-			model.
-			Heuristics Miner is an algorithm that acts on the directly-follows Graph,
-			providing way to handle with noise and to find dependency between
-			activities. An heuristics net or causal
-			net is the output, which is a directed graph with activities as nodes,
-			dependency interpreted as arcs and bindings.
-			The Heuristics Net can be then converted into a Petri net.
-			<br />
-			This node shows the Heuristics Net as one internal
-			result in View "Heuristic Net", while it
-			outputs a Petri net after an implicit conversion.
-
+		This node wraps the ProM's plug-in "Mine for a Heuristics Net using Heuristics Miner" from the package HeuristicsMiner.
+			It implements the Heuristics Miner to discover a Petri net from an event log.
+			The Heuristics Miner discovers a heuristics net, which is a directed graph with activities as nodes and edges connecting nodes to model dependencies between activities.
+			The discovered heuristics net is converted into a Petri net.
 		</intro>
 
 
-		<option name="Event classifer">The event classifier is chosen to classify the event
-			log.</option>
-		<option name="All tasks connected">Every task needs to have at least one input and
-			output arc, except the initial and the final activity.
+		<option name="Event classifer">
+		The attribute to be used as an event classifier.</option>
+		<option name="All tasks connected">
+		If enabled, every task must have at least one input and one output arc (except the initial and the final activity).
 		</option>
-		<option name="Long distance dependency">Show long distance relations in the model.
+		<option name="Long distance dependency">
+		If enabled, long distance dependencies are shown in the model.
 		</option>
-
-
-		<option name="Threshold: Relative-to-best">The admissible distance between directly follows
-			relations for an activity and the activity's best one. At 0 only the best directly
-			follows relation will be shown for every activity, at 100 all will be
-			shown.
+        <option name="Threshold: Relative-to-best">
+        The percentage for the admissible distance between directly follows relations for an activity and the activity's best one. 
+        At 0, only the best directly follows relation will be shown for every activity. 
+        At 100, all will be shown.
 		</option>
-		<option name="Threshold: Dependency">The strength of the directly follows relations
-			determines when to show arcs (based on how frequently one activity is followed by another).
+		<option name="Threshold: Dependency">A threshold for the strength of the directly follows relation.
 		</option>
-		<option name="Threshold: Length-one-loops">Show arcs based on frequency of L1L observations
+		<option name="Threshold: Length-One-loops">A threshold for the L1L metric.
 		</option>
-		<option name="Threshold: Length-two-loops">Show arcs based on frequency of L2L observations
+		<option name="Threshold: Length-Two-loops">A threshold for the L1L metric.
 		</option>
-		<option name="Threshold: Long distance">Show arcs based on how frequently one activity is
-			eventually followed by another</option>
+		<option name="Threshold: Long Distance">A threshold for the strength of the eventually follows relation.
+		</option>
 
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Event Log">An event log as input</inPort>
-		<outPort index="0" name="Petri net">The discovered process model in Petri
-			net</outPort>
+		<inPort index="0" name="Event Log">an event log</inPort>
+		<outPort index="0" name="Petri Net">a Petri net</outPort>
 
 	</ports>
 	<views>
-		<view index="0" name="Heuristic Net">Heuristic Net Visualization</view>
+		<view index="0" name="Heuristics Net">Visualization of the intermediate Heuristics Net.</view>
 
 	</views>
 </knimeNode>

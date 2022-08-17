@@ -29,7 +29,7 @@ public class XLogWriterNodeDialog extends DefaultNodeSettingsPane {
     protected XLogWriterNodeDialog() {
     	
     	
-    	addDialogComponent(new DialogComponentStringSelection(m_format, "Select Export Type", XLogWriterNodeModel.formatTypes));
+    	addDialogComponent(new DialogComponentStringSelection(m_format, "Format", XLogWriterNodeModel.formatTypes));
     	
     	DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(m_outfile, "log.xes.writer.history",
         		JFileChooser.SAVE_DIALOG, false, createFlowVariableModel(m_outfile));

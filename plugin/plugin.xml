@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse version="3.0"?><plugin>
-                	
-    
-	
-   
-	<extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
+                            	
+   <extension id="pm-categories" name="Process Mining Categories" point="org.knime.workbench.repository.categories">
 		<category level-id="processmining" name="Process Mining" path="/community" icon="icon/category-processmining.png" />
 		<category icon="icon/category-io.png" level-id="io" name="IO" path="/community/processmining" />
 		<category level-id="ioRead" name="Read" path="/community/processmining/io" icon="icon/read.png"/>
 		<category level-id="ioWrite" name="Write" path="/community/processmining/io" icon="icon/write.png"/>
 		<category after="io" level-id="conversion" name="Conversion" path="/community/processmining" icon="icon/category-conversion.png" />
+		
+        <!-- Manipulation-->
 		<category after="conversion" level-id="manipulation" name="Manipulation" path="/community/processmining" icon="icon/category-manipulation.png" />
+		<category level-id="log" name="Log Manipulation" path="/community/processmining/manipulation" icon="icon/category-manipulation.png" />
+		<category after="log" level-id="table" name="Table Manipulation" path="/community/processmining/manipulation" icon="icon/category-manipulation.png" />
+		
+		<!-- Discovery-->
 		<category after="manipulation" level-id="discovery" name="Discovery" path="/community/processmining" icon="icon/category-discovery.png" />
+		<category level-id="log" name="Log-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
+		<category after="log" level-id="table" name="Table-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
+		<category after="table" level-id="model" name="Model-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
+
+		
 		<category after="discovery" level-id="conformance" name="Evaluation" path="/community/processmining" icon="icon/category-conformance.png" />
-		<category after="conformance" level-id="visualization" name="Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
+		<category after="conformance" level-id="visualization" name="JavaScript Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
 	</extension>
 
 	<extension point="org.knime.workbench.repository.nodes">
@@ -23,31 +31,44 @@
 		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory" />
 		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory" />
-		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory" id="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory" />
-		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory" />
-		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory" />
-		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" />
-		<!-- nodes in manipulation-->
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
-		<node category-path="/community/processmining/manipulation" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
+		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory" />
+		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory" />
+		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory"  />
+		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" />
+		
+		<!-- nodes in log manipulation-->
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
+
+        <!-- nodes in table manipulation-->
+        <node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
+		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
+		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
+
 		<!-- nodes in conversion-->
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
-		<!-- nodes in discovery-->
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.alpha.AlphaMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" deprecated="true" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFMMinerNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.dfgminer.DFM2PMNodeFactory" />
-		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" />
+		
+		<!-- nodes in table-based discovery-->
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.alpha.table.AlphaMinerTableNodeFactory" />
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.inductiveminer.Table.InductiveMinerTableNodeFactory"/>
+        
+        <!-- nodes in log-based discovery-->
+		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.ilpminer.ILPMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.alpha.xlog.AlphaMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.cgminer.CGMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.inductiveminer.InductiveMinerNodeFactory2" />
+		
+        <!-- nodes in model-based discovery-->
+		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.hybridminer.HybridMinerNodeFactory" />
+		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory"/>
+        
 		<!-- nodes in conformance-->
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />
 		<!-- nodes in performance-->
@@ -55,91 +76,249 @@
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory" />
 		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory" />
 		<!-- nodes visualization-->
-		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFMNodeFactory"/>
-        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory" id="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPMNodeFactory"/>
-                    
+		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
+        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFGNodeFactory"/>
+        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPNNodeFactory"/>
+        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSVisHybridPNNodeFactory"/>
+        <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSVisCGNodeFactory"/>
+        
     </extension>
-        	
+            	
+    
+    
+    <extension point="org.knime.workbench.repository.nodes">
+                        		
+        
+        
+        <!-- nodes in io-->
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory" id="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.XesGzImporter.XesGzImporterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLGzImporter.MxmlGzImporterNodeFactory"/>
+                        		
+        
+        
+        
+                        		
+        
+        
+        <!-- nodes in conversion-->
+                        		
+        
+        
+        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory"/>
+                        		
+        
+        
+        <!-- nodes in conformance-->
+                        		
+        
+        
+        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory"/>
+                        		
+        
+        
+        <!-- nodes in performance-->
+                        		
+        
+        
+        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory"/>
+                        		
+        
+        
+        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory"/>
+            
+    
+    </extension>
+                    	
+    
+    
+    
     
     <extension point="org.knime.core.PortType">
-                		
+                                        		
+        
+        
+        
         
         <portType hidden="false" name="Event Log" objectClass="org.pm4knime.portobject.XLogPortObject" objectSerializer="org.pm4knime.portobject.XLogPortObject$XLogPortObjectSerializer" specClass="org.pm4knime.portobject.XLogPortObjectSpec" specSerializer="org.pm4knime.portobject.XLogPortObjectSpec$XLogPortObjectSpecSerializer"/>
-                		
+                                        		
+        
+        
+        
         
         <portType hidden="false" name="Petri Net" objectClass="org.pm4knime.portobject.PetriNetPortObject" objectSerializer="org.pm4knime.portobject.PetriNetPortObject$PetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.PetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.PetriNetPortObjectSpec$PetriNetPortObjectSpecSerializer"/>
-                		
+        <portType hidden="false" name="Causal Graph" objectClass="org.pm4knime.portobject.CausalGraphPortObject" objectSerializer="org.pm4knime.portobject.CausalGraphPortObject$CausalGraphPortObjectSerializer" specClass="org.pm4knime.portobject.CausalGraphPortObjectSpec" specSerializer="org.pm4knime.portobject.CausalGraphPortObjectSpec$CausalGraphPortObjectSpecSerializer"/>
+        <portType hidden="false" name="Hybrid Petri Net" objectClass="org.pm4knime.portobject.HybridPetriNetPortObject" objectSerializer="org.pm4knime.portobject.HybridPetriNetPortObject$HybridPetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.HybridPetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.HybridPetriNetPortObjectSpec$HybridPetriNetPortObjectSpecSerializer"/>
+               		
         
         <portType hidden="false" name="Process Tree" objectClass="org.pm4knime.portobject.ProcessTreePortObject" objectSerializer="org.pm4knime.portobject.ProcessTreePortObjectSerializer" specClass="org.pm4knime.portobject.ProcessTreePortObjectSpec" specSerializer="org.pm4knime.portobject.ProcessTreePortObjectSpecSerializer"/>
-                		
+                                        		
+        
+        
+        
         
         <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObject" objectSerializer="org.pm4knime.portobject.RepResultPortObject$RepResultPortObjectSerializer" specClass="org.pm4knime.portobject.RepResultPortObjectSpec" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpec$RepResultPortObjectSpecSerializer"/>
-                		
+                                        		
+        
+        
+        
         
         <portType hidden="false" name="Directly Follows Model" objectClass="org.pm4knime.portobject.DFMPortObject" objectSerializer="org.pm4knime.portobject.DFMPortObject$DFMPortObjectSerializer" specClass="org.pm4knime.portobject.DFMPortObjectSpec" specSerializer="org.pm4knime.portobject.DFMPortObjectSpec$DFMPortObjectSpecSerializer"/>
-        <portType hidden="false" name="Directly Follows Model" objectClass="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2" objectSerializer="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2$DFMPortObject2Serializer" specClass="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObject2Spec" specSerializer="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.helper.DFMPortObjectSpec2$DFMPortObjectSpec2Serializer"/>
-                	
+                                
+        
+        <portType hidden="false" name="Directly Follows Msd" objectClass="org.pm4knime.portobject.DfgMsdPortObject" objectSerializer="org.pm4knime.portobject.DfgMsdPortObject$DfgMsdPortObjectSerializer" specClass="org.pm4knime.portobject.DfgMsdPortObjectSpec" specSerializer="org.pm4knime.portobject.DfgMsdPortObjectSpec$DfgMsdPortObjectSpecSerializer"/>
+                
+                                	
+    
+    
+    
     
     </extension>
-        	
+                    	
+    
+    
+    
     
     <extension point="org.knime.js.core.javascriptComponents">
-                        
+                                                
+        
+        
+        
         
         <javascriptComponent getComponentValue-method-name="getComponentValue" implementationBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle" init-method-name="init" javascriptComponentID="org.pm4knime.node.visualizations.jsgraphviz.component" name="Java Script GraphViz Visualizer" namespace="jsgraphviz">
          </javascriptComponent>
-                    
+                                            
+    
+    
+    
     
     </extension>
-            
+                        
+    
+    
+    
     
     <extension point="org.knime.js.core.webResources">
-                    	
+                                            	
+        
+        
+        
         
         <webResourceBundle debug="true" name="Java Script GraphViz Visualizer" usesDefine="false" version="1.0.0" webResourceBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle">
-                                    
+                                                                        
             
-            <webResource relativePathSource="src/java/org/pm4knime/node/visualizations/jsgraphviz/" relativePathTarget="src/java/org/pm4knime/node/visualizations/jsgraphviz/">
+            
+            
+            
+            <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/">
        		</webResource>
-                               		
+                                                                   		
             
-            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.js" type="JAVASCRIPT"/>
+            
+            
+            
+            <importResource relativePath="js-libs/form.js" type="JAVASCRIPT"/>
                                     
             
-            <importResource relativePath="src/java/org/pm4knime/node/visualizations/jsgraphviz/form.css" type="CSS"/>
+            <importResource relativePath="js-libs/form.css" type="CSS"/>
                                     
             
             <webDependency webResourceBundleID="bootstrap_3.3.6"> </webDependency>
-                                    
+                                                                        
+            
+            
+            
             
             <webDependency webResourceBundleID="Viz"> </webDependency>
-                                    
+                                                                        
+            
+            
+            
             
             <webDependency webResourceBundleID="RequireJS_2.3.3"> </webDependency>
-                                
+                                                                    
+        
+        
+        
         
         </webResourceBundle>
-                        
+                                                
+        
+        
+        
         
         <webResourceBundle debug="true" name="Graphviz JS" usesDefine="false" version="2.1.2" webResourceBundleID="Viz">
+                                                                       
+            
+            
+            
+            
+            <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/"> </webResource>
                                    
             
-            <webResource relativePathSource="js-libs/viz/" relativePathTarget="js-libs/viz/"> </webResource>
+            <importResource relativePath="js-libs/viz.js" type="JAVASCRIPT"> </importResource>
                                    
             
-            <importResource relativePath="js-libs/viz/viz.js" type="JAVASCRIPT"> </importResource>
-                                   
-            
-            <importResource relativePath="js-libs/viz/full.render.js" type="JAVASCRIPT"> </importResource>
+            <importResource relativePath="js-libs/full.render.js" type="JAVASCRIPT"> </importResource>
                                 
         
         </webResourceBundle>
-                                
+                                                        
+    
+    
+    
     
     
     </extension>
-                        
+                                    
+
+
+
 
 
 </plugin>

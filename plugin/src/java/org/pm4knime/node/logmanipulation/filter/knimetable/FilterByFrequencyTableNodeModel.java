@@ -1,7 +1,5 @@
 package org.pm4knime.node.logmanipulation.filter.knimetable;
 
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
@@ -15,19 +13,10 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.node.discovery.alpha.AlphaMinerNodeModel;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.util.XLogSpecUtil;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.pm4knime.util.defaultnode.DefaultTableNodeModel;
-import org.processmining.alphaminer.parameters.AlphaVersion;
-import org.processmining.log.utils.TraceVariantByClassifier;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,10 +48,10 @@ import java.util.List;
 public class FilterByFrequencyTableNodeModel extends DefaultTableNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FilterByFrequencyTableNodeFactory.class);
 	
-	public static final String CFG_ISKEEP = "Keep traces";
+	public static final String CFG_ISKEEP = "Keep";
 	// give one trace threshold, one absolute value or a percentage is both OK.
 	// when it is below 1, we think it is the percentage, else, we use the absolute number 
-	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "For single trace variant";
+	public static final String CFG_ISFOR_SINGLETRACE_VARIANT = "Trace Variant Filtering";
 	public static final String CFG_THRESHOLD = "Threshold";
 SettingsModelBoolean m_isKeep = new SettingsModelBoolean(CFG_ISKEEP, true);
 	SettingsModelBoolean m_isForSingleTV = new SettingsModelBoolean(CFG_ISFOR_SINGLETRACE_VARIANT, true);

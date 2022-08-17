@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./cg-icon.png" type="Learner"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Causal Graph Miner</name>
+
+	<shortDescription>This node implements the first step of the Hybrid Miner to discover a causal graph from an event table.</shortDescription>
+
+	<fullDescription>
+		<intro>
+			This node wraps the ProM's plug-in "Extended Causal Graph Miner" from the package ExtendedHybridMiner.
+			It implements the first step of the Hybrid Miner to discover a causal graph from an event table. 
+			A causal graph consists of nodes representing activities and two types of directed edges connecting nodes. 
+			Certain edges represent strong causal dependencies and uncertain edges represent weak dependencies. 
+			A third type of edges is used to represent long-term dependencies.
+		</intro>
+
+		<option name="Trace classifer">The column to be used as a trace classifier.</option>
+		<option name="Event classifer">The column to be used as an event classifier.</option>
+        <option name="Minimal activity frequency">An activity will be included if it occurs in at least x% of cases; set to 0 to include all activities.
+		</option>
+		<option name="Minimal trace variant frequency">A trace variant will be included if it covers at least x% of cases; set to 0 to include all trace variants.
+		</option>
+
+
+		<option name="Strong causality threshold">Lower bound for a strong causality between two activities.
+		</option>
+		<option name="Weak causality threshold">Lower bound for a weak causality between two activities; >set to 100% to avoid uncertain edges.
+		</option>
+		<option name="Long-term dependency threshold">Lower bound for a strong long-term causality between two activities.
+		</option>
+		<option name="Causality weight threshold">High values mean more emphasis on the split and join behavior of activities; low values mean more emphasis on the detection of concurrency and loops.</option>
+
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Table">an event table</inPort>
+		<outPort index="0" name="Causal Graph">a causal graph</outPort>
+	</ports>
+</knimeNode>

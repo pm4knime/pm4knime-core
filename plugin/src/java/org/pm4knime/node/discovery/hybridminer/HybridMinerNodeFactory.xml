@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./hm-icon.png" type="Learner"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Hybrid Petri Net Miner</name>
+
+	<shortDescription>This node implements the second step of the Hybrid Miner to discover a hybrid Petri net from a causal graph.</shortDescription>
+
+	<fullDescription>
+		<intro>
+		    This node wraps the ProM's plug-in "Extended Hybrid Petri Net Miner" from the package ExtendedHybridMiner.
+			It implements the second step of the Hybrid Miner to discover a hybrid Petri net from a causal graph.
+			The hybrid miner combines the best of formal and informal modeling notations by discovering hybrid Petri nets. 
+			The hybrid miner converts the edges of the input causal graph into formal places if there is enough evidence in the data justifying adding formal constraints. 
+			For vague structures where formal constraints cannot be justified, causal relations are depicted in the final hybrid Petri net as informal edges.  			
+		</intro>
+
+		<option name="Threshold for early cancellation of place iterator">
+		After x consecutive rejected places, the place iterator is canceled.
+		</option>
+		<option name="Place evaluation method">
+		</option>
+		<option name="Fitness threshold for the place evaluation method">
+		</option>
+
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Causal Graph">a causal graph</inPort>
+		<outPort index="0" name="Hybrid Petri Net">a hybrid Petri net</outPort>
+	</ports>
+</knimeNode>

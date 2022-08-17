@@ -13,7 +13,7 @@
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>
     <entry key="node-bundle-symbolic-name" type="xstring" value="org.pm4knime.plugin"/>
     <entry key="node-bundle-vendor" type="xstring" value="Fraunhofer Institute for Applied Information Technology"/>
-    <entry key="node-bundle-version" type="xstring" value="1.1.1.qualifier"/>
+    <entry key="node-bundle-version" type="xstring" value="1.1.5.qualifier"/>
     <entry key="node-feature-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
@@ -47,6 +47,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="9fe5e58b-4b46-432c-9254-367044e9e890"/>
+        <entry key="file_store_id" type="xstring" value="c777f8c5-9e03-4830-9e08-67ce606318bf"/>
     </config>
 </config>
