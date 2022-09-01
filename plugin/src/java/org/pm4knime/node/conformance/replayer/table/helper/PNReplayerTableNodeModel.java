@@ -31,7 +31,7 @@ public class PNReplayerTableNodeModel extends DefaultPNReplayerTableModel {
 	@Override
 	protected void initializeParameter() {
 		
-    	m_parameter = new SMAlignmentReplayParameterWithCT(CFG_PARAMETER_NAME);
+    	m_parameter = new SMAlignmentReplayerParameterWithCTTable(CFG_PARAMETER_NAME);
     }
 
 	@Override

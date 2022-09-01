@@ -14,17 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClasses;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.factory.XFactory;
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
+
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.Progress;
 import org.processmining.models.graphbased.directed.opennet.OpenNet;
@@ -40,8 +30,7 @@ import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer.Represe
 import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer.Result;
 import org.processmining.plugins.astar.petrinet.impl.AbstractPDelegate;
 import org.processmining.plugins.astar.petrinet.impl.AbstractPILPDelegate;
-import org.processmining.plugins.astar.petrinet.impl.PHead;
-import org.processmining.plugins.astar.petrinet.impl.PRecord;
+
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNPartialOrderAwareReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParamProvider;
@@ -89,7 +78,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	}
 
 	public static class Result {
-		public PRecord record;
+		public PRecordTable record;
 		public int states;
 		public long milliseconds;
 		public int trace;
@@ -141,15 +130,14 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	/**
 	 * Return true if input of replay without parameters are correct
 	 */
-	public boolean isReqWOParameterSatisfied(PluginContext context, PetrinetGraph net, XLog log,
-			TransEvClassMapping mapping) {
+	public boolean isReqWOParameterSatisfied(PluginContext context, PetrinetGraph net, TableEventLog log,
+			TransEvClassMappingTable mapping) {
 		if ((net instanceof ResetInhibitorNet) || (net instanceof InhibitorNet) || (net instanceof ResetNet)
 				|| (net instanceof Petrinet) || (net instanceof OpenNet)) {
 			// check number of transitions, places, and event classes, should be less than Short.MAX_VALUE
 			if ((net.getTransitions().size() < Short.MAX_VALUE) && (net.getPlaces().size() < Short.MAX_VALUE)) {
 				// check the number of event classes, should be less than Short.MAX_VALUE
-				XLogInfo summary = XLogInfoFactory.createLogInfo(log, mapping.getEventClassifier());
-				return (summary.getEventClasses().getClasses().size() < Short.MAX_VALUE);
+				return (log.getActivties().length < Short.MAX_VALUE);
 			}
 		}
 		return false;
@@ -223,15 +211,18 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	/**
 	 * construct GUI in which the parameter for this algorithm can be obtained
 	 */
-	public IPNReplayParamProvider constructParamProvider(PluginContext context, PetrinetGraph net, XLog log,
-			TransEvClassMapping mapping) {
-		return new CostBasedCompleteParamProvider(context, net, log, mapping);
+	public IPNReplayParamProvider constructParamProvider(PluginContext context, PetrinetGraph net, TableEventLog log,
+			TransEvClassMappingTable mapping) {
+		/*
+		 * TODO: UI CHANGING
+		 */
+		return  null;
 	}
 
-	protected SyncReplayResult recordToResult(AbstractPDelegateTable<?> d, String[] trace, Trace filteredTrace, PRecord r,
+	protected SyncReplayResult recordToResult(AbstractPDelegateTable<?> d, List<String> trace, Trace filteredTrace, PRecordTable r,
 			int traceIndex, int stateCount, boolean isReliable, long milliseconds, int queuedStates, int traversedArcs,
 			int minCostMoveModel, TIntList unUsedIndices, TIntIntMap trace2orgTrace) {
-		List<PRecord> history = PRecord.getHistory(r);
+		List<PRecordTable> history = PRecordTable.getHistory(r);
 		double mmCost = 0; // total cost of move on model
 		double mlCost = 0; // total cost of move on log
 		double mSyncCost = 0; // total cost of synchronous move
@@ -245,7 +236,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 
 		TIntIterator it = unUsedIndices.iterator();
 		int firstUnUsed = it.hasNext() ? it.next() : Integer.MAX_VALUE;
-		for (PRecord rec : history) {
+		for (PRecordTable rec : history) {
 			if (rec.getMovedEvent() == AStarThread.NOMOVE) {
 				// move model only
 				Transition t = d.getTransition((short) rec.getModelMove());
@@ -264,7 +255,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 				// upto rec.getMovedEvent as LogMoves right now.
 				//Todo: might be drastic change******check
 				while (trace2orgTrace.get(rec.getMovedEvent()) > firstUnUsed) {
-					String clsInTrace = trace[firstUnUsed]; // this an unused event
+					String clsInTrace = trace.get(firstUnUsed); // this an unused event
 
 					stepTypes.add(StepTypes.L);
 					nodeInstance.add(clsInTrace);
@@ -310,9 +301,9 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		// add the rest of the trace
 		eventInTrace++;
 		//		while (eventInTrace < trace.size()) {
-		while (firstUnUsed < trace.length) {
+		while (firstUnUsed < trace.size()) {
 			// move log only
-			String a = trace[firstUnUsed];
+			String a = trace.get(firstUnUsed);
 			eventInTrace++;
 			stepTypes.add(StepTypes.L);
 			nodeInstance.add(a);
@@ -374,10 +365,11 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	 * @param listMoveOnLog
 	 * @return
 	 */
-	protected LinearTrace getLinearTrace(XLog log, int trace, AbstractPDelegate<?> delegate, TIntList unUsedIndices,
+	protected LinearTrace getLinearTrace(TableEventLog log, int trace, AbstractPDelegateTable<?> delegate, TIntList unUsedIndices,
 			TIntIntMap trace2orgTrace) {
-		int s = log.get(trace).size();
-		String name = XConceptExtension.instance().extractName(log.get(trace));
+		List<String> traces = log.getTraces().get(trace);
+		int s = traces.size();
+		String name = log.getTraceName(trace);
 		if (name == null || name.isEmpty()) {
 			name = "Trace " + trace;
 		}
@@ -475,8 +467,10 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 
 				final TIntList unUsedIndices = new TIntArrayList();
 				final TIntIntMap trace2orgTrace = new TIntIntHashMap(log.getTraces().get(i).size(), 0.5f, -1, -1);
-				final Trace trace = usePartialOrderEvents ? poBuilder.getPartiallyOrderedTrace(log, i, localDelegate,
-						unUsedIndices, trace2orgTrace) : getLinearTrace(log, i, localDelegate, unUsedIndices,
+				/**
+				 * Todo partial order
+				 */
+				final Trace trace = getLinearTrace(log, i, localDelegate, unUsedIndices,
 						trace2orgTrace);
 				int first = traces.get(trace);
 				if (first >= 0) {
@@ -487,10 +481,10 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 					traces.put(trace, i);
 				}
 
-				final ObservableAStarThread<PHead, T> thread;
+				final ObservableAStarThread<PHeadTable, T> thread;
 
 				// MEMORY EFFICIENT
-				thread = new AStarThread.MemoryEfficient<PHead, T>(aStar, initial, trace, maxNumOfStates);
+				thread = new AStarThread.MemoryEfficient<PHeadTable, T>(aStar, initial, trace, maxNumOfStates);
 
 				thread.setType(parameters.getType());
 				thread.setASynchronousMoveSorting(parameters.getAsynchronousMoveSort());
@@ -538,7 +532,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 
 						// long start = System.nanoTime();
 						long start = System.currentTimeMillis();
-						result.record = (PRecord) thread.getOptimalRecord(canceller);
+						result.record = (PRecordTable) thread.getOptimalRecord(canceller);
 						//long end = System.nanoTime();
 						long end = System.currentTimeMillis();
 						result.reliable = thread.wasReliable();
@@ -554,7 +548,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 									//									context.log(j + "/" + log.size() + " queueing " + thread.getQueuedStateCount()
 									//											+ " states, visiting " + thread.getVisitedStateCount() + " states took "
 									//											+ (end - start) / 1000000000.0 + " seconds.");
-									context.log(j + "/" + log.size() + " queueing " + thread.getQueuedStateCount()
+									context.log(j + "/" + log.getTraces().size() + " queueing " + thread.getQueuedStateCount()
 											+ " states, visiting " + thread.getVisitedStateCount() + " states took "
 											+ (end - start) + " seconds.");
 								}
@@ -631,7 +625,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 						} catch (InterruptedException e) {
 						}
 					}
-					XTrace trace = log.get(r.trace);
+					List<String> trace = log.getTraces().get(r.trace);
 					int states = addReplayResults((context == null ? null : context.getProgress()), localDelegate,
 							trace, r, r.unUsedIndices, r.trace2orgTrace, doneMap, log, col, r.trace, minCostMoveModel);//, null);
 					maxStateCount = Math.max(maxStateCount, states);
@@ -675,9 +669,12 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 			// TODO: handle exception
 			e.printStackTrace();
 		} finally {
-			if (localDelegate instanceof AbstractPILPDelegate) {
+			/*
+			 * TODO: fix later when abstractilp is there
+			 */
+			/*if (localDelegate instanceof AbstractPILPDelegate) {
 				((AbstractPILPDelegate<?>) localDelegate).deleteLPs();
-			}
+			}*/
 		}
 		return null;// debug code
 	}
@@ -702,13 +699,12 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	protected int getMinBoundMoveModel(IPNReplayParameter parameters, final int delta,
 			final MemoryEfficientAStarAlgorithm<PHeadTable, T> aStar, D delegateD) throws AStarException {
 		// create a log 
-		XFactory factory = XFactoryRegistry.instance().currentDefault();
-		XTrace emptyTrace = factory.createTrace();
+		List<String> emptyTrace = new ArrayList<String>();
 
 		//final D delegateD = getDelegate(net, log, classes, mapping, delta, threads);
-		PHead initialD = constructHead(delegateD, initMarking, emptyTrace);
+		PHeadTable initialD = constructHead(delegateD, initMarking, emptyTrace);
 
-		final AStarThread<PHead, T> threadD = new AStarThread.MemoryEfficient<PHead, T>(aStar, initialD,
+		final AStarThread<PHeadTable, T> threadD = new AStarThread.MemoryEfficient<PHeadTable, T>(aStar, initialD,
 				new LinearTrace("Empty", 0), maxNumOfStates);
 
 		threadD.setType(parameters.getType());
@@ -730,7 +726,7 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 					}
 				};
 			}
-			PRecord recordD = (PRecord) threadD.getOptimalRecord(canceller);
+			PRecordTable recordD = (PRecordTable) threadD.getOptimalRecord(canceller);
 			if (recordD == null) {
 				return 0;
 			}
@@ -750,8 +746,8 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 	protected abstract D getDelegate(PetrinetGraph net, TableEventLog log, String[] classes, TransEvClassMappingTable mapping,
 			int delta, int threads);
 
-	protected int addReplayResults(Progress progress, D delegate, XTrace trace, Result r, TIntList unUsedIndices,
-			TIntIntMap trace2orgTrace, TIntObjectMap<Representative> doneMap, XLog log, List<SyncReplayResult> col,
+	protected int addReplayResults(Progress progress, D delegate, List<String> trace, Result r, TIntList unUsedIndices,
+			TIntIntMap trace2orgTrace, TIntObjectMap<Representative> doneMap, TableEventLog log, List<SyncReplayResult> col,
 			int traceIndex, int minCostMoveModel) {//, Map<Integer, SyncReplayResult> mapRes) {
 
 		SyncReplayResult srr = recordToResult(delegate, trace, r.filteredTrace, r.record, traceIndex, r.states,
@@ -771,15 +767,15 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		forLoop: for (int key : doneMap.keys()) {
 			Representative value = doneMap.get(key);
 			if (value != null && value.trace == r.trace) {
-				// Consider all XTraces which are mapped to the same internal trace of r.
+				// Consider all Traces which are mapped to the same internal trace of r.
 
-				// Get the actual XTrace from the log
-				XTrace keyTrace = log.get(key);
+				// Get the actual Trace from the log
+				List<String> keyTrace = log.getTraces().get(key);
 
 				// Consider all log traces for which a replay result is available and
 				// try to find an XTrace that has the same event list as keyTrace.
 				for (Integer keyMapRes : mapRes.keySet()) {
-					if (compareEventClassList(delegate, log.get(keyMapRes), keyTrace)) {
+					if (compareEventClassList(delegate, log.getTraces().get(keyMapRes), keyTrace)) {
 						// Now add key to the synchronous replay result for the keyMapRes, to 
 						// indicate that the synchronous replay result for keyTrace is identical to
 						// the synchronous replay result of keyMapRes.
@@ -814,13 +810,13 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 		return r.states;
 	}
 
-	protected boolean compareEventClassList(D d, XTrace t1, XTrace t2) {
+	protected boolean compareEventClassList(D d, List<String> t1, List<String> t2) {
 		if (t1.size() != t2.size()) {
 			return false;
 		}
-		Iterator<XEvent> it = t2.iterator();
-		for (XEvent e : t1) {
-			if (!d.getClassOf(e).equals(d.getClassOf(it.next()))) {
+		Iterator<String> it = t2.iterator();
+		for (String e : t1) {
+			if (!e.equals(it.next())){
 				return false;
 			}
 		}

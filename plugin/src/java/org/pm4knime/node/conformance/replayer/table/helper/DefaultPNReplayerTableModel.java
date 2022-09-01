@@ -1,8 +1,7 @@
 package org.pm4knime.node.conformance.replayer.table.helper;
 
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XLog;
+
+import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -15,14 +14,10 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.pm4knime.portobject.RepResultPortObject;
-import org.pm4knime.portobject.RepResultPortObjectSpec;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
+
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
-import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
@@ -52,15 +47,15 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
 	// it can't belong to this class
 	String evClassDummy;
 	
-	RepResultPortObject repResultPO;
-	RepResultPortObjectSpec m_rSpec ;
+	RepResultPortObjectTable repResultPO;
+	RepResultPortObjectSpecTable m_rSpec ;
     /**
      * Constructor for the node model.
      */
     protected DefaultPNReplayerTableModel() {
     
         // TODO: Specify the amount of input and output ports needed.
-    	super(new PortType[] { BufferedDataTable.TYPE, PetriNetPortObject.TYPE }, new PortType[] {RepResultPortObject.TYPE });
+    	super(new PortType[] { BufferedDataTable.TYPE, PetriNetPortObject.TYPE }, new PortType[] {RepResultPortObjectTable.TYPE });
     	evClassDummy = "dummy";
     	// need to initialize the parameters later, because it has different types there.
     	initializeParameter();
@@ -101,7 +96,7 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	// here to change the operation on the classifier
 
     	PNRepResult repResult = null;
-    	IPNReplayAlgorithm replayAlgorithm = null ;
+    	IPNReplayAlgorithmTable replayAlgorithm = null ;
     	
     	// for performance only
     	if(strategyName.equals(ReplayerUtil.strategyList[2])) {
@@ -131,9 +126,9 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	}else {
     		// for conformance 
 	    	if(strategyName.equals(ReplayerUtil.strategyList[0]) ) {
-	    		replayAlgorithm = new PetrinetReplayerWithILP();
+	    		replayAlgorithm = null;
 	    	}else if(strategyName.equals(ReplayerUtil.strategyList[1])) {
-	    		replayAlgorithm = new PetrinetReplayerWithoutILP();
+	    		replayAlgorithm = new PetrinetReplayerWithoutILPTable();
 	    	}
 	    	
 	    	TransEvClassMappingTable mapping = PetriNetUtil.constructMapping(log, anet.getNet(), eventClassifier, evClassDummy);
@@ -146,18 +141,18 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	}
     	
     	// put the dummy event class and event classifier in the info table for reuse
-    	repResult.addInfo(XLogUtil.CFG_DUMMY_ECNAME, XLogUtil.serializeEventClass(evClassDummy));
-    	repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, m_parameter.getMClassifierName().getStringValue());
+    	//repResult.addInfo(XLogUtil.CFG_DUMMY_ECNAME, XLogUtil.serializeEventClass(evClassDummy));
+    	//repResult.addInfo(XLogUtil.CFG_EVENTCLASSIFIER_NAME, m_parameter.getMClassifierName().getStringValue());
     	
     	// check cancellation of node after replaying the result
     	checkCanceled(exec);
     	
-		repResultPO = new RepResultPortObject(repResult, log, anet);
+		repResultPO = new RepResultPortObjectTable(repResult, log, anet);
 		m_rSpec.setMParameter(m_parameter);
 		repResultPO.setSpec(m_rSpec);
     }
     
-    public RepResultPortObject getRepResultPO() {
+    public RepResultPortObjectTable getRepResultPO() {
 		return repResultPO;
 	}
     
@@ -168,8 +163,8 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-    	if (!inSpecs[INPORT_LOG].getClass().equals(XLogPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid event log!");
+    	if (!inSpecs[INPORT_LOG].getClass().equals(DataTableSpec.class))
+			throw new InvalidSettingsException("Input is not a valid table log!");
     	
 
 		if (!inSpecs[INPORT_PETRINET].getClass().equals(PetriNetPortObjectSpec.class))
@@ -178,7 +173,7 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
 		if(m_parameter.getMClassifierName().getStringValue().isEmpty())
 			throw new InvalidSettingsException("Event classifier is not set!");
 		
-		m_rSpec = new RepResultPortObjectSpec();
+		m_rSpec = new RepResultPortObjectSpecTable();
 		m_rSpec.setMParameter(m_parameter);
 		// one question, how to add the type information here to make them valid at first step??
 		return new PortObjectSpec[]{ m_rSpec};

@@ -23,8 +23,9 @@ public class TableEventLog {
 	private Map<Integer, List<String>> traces;
 	private BufferedDataTable log;
 	private String classifier;
+	private String traceClassifier;
 	private TObjectIntMap<String> activity2index;
-
+	private Map<Integer, String> traceIDName;
 	
 	private TableEventLog() {
 		
@@ -33,8 +34,9 @@ public class TableEventLog {
  * 
  * @param log the log as Table
  * @param classifier Classifier as a string
+ * @throws Exception 
  */
-	public TableEventLog(BufferedDataTable log, String classifier) {
+	public TableEventLog(BufferedDataTable log, String classifier) throws Exception {
 		this.classifier = classifier;
 		this.log = log;
 		this.traces = tableLogToMap();		
@@ -42,7 +44,33 @@ public class TableEventLog {
 		createActivity2Index();
 		List<String> activityList = createActivityList();
 		this.activties = activityList.stream().map(s -> s.toString()).toArray(String[]::new);
+		String[] names = log.getDataTableSpec().getColumnNames();
+		 this.traceClassifier = findRowWithTraceConceptName(names);
+		if(traceClassifier.isEmpty()) {
+			throw new Exception("Concept Name for Trace was not found");
+		}
+		this.traceIDName = traceIdToName();
+		
+		
 	}
+	
+	public String getTraceName(int traceId) {
+		return this.traceIDName.get(traceId);
+	}
+	
+	
+	private String findRowWithTraceConceptName(String[] names) {
+	
+		String traceName ="";
+				for(String currentRowName:names) {
+					if(currentRowName.toLowerCase().contains("trace") && currentRowName.contains("concept:name")) {
+						traceName = currentRowName;
+						return traceName;
+					}
+				}
+		return traceName;
+	}
+	
 	
 	private List<String> createActivityList(){
 		List<String> activitiesList = new ArrayList<>();
@@ -81,6 +109,35 @@ public class TableEventLog {
 	
 	
 	
+	private String buildUniqueTrace(DataRow row) {
+		int indexOfClassifierTable = getClassifierIndexFromColumn(this.traceClassifier);
+		DataCell cell = row.getCell(indexOfClassifierTable);
+		return row.getCell(0).toString() + ";" + cell.toString();		
+	}
+	private Map<Integer, String>  traceIdToName() {
+		/**
+		 * We use id to counter so we can have flexible types for trace identification
+		 */
+				Map<Integer, String> traces = new HashMap<Integer, String>();
+				Map<String, Integer> traceIDToCounter = new HashMap<String, Integer>();
+				int counter = 0;
+				for (DataRow row : log) {
+					String activity = buildUniqueTrace(row);
+					String[] traceActvityEnc = activity.split(";");
+					String currentTraceName = traceActvityEnc[1];
+					String currentTraceID = traceActvityEnc[0];
+					if (traceIDToCounter.containsKey(currentTraceID)) {
+						
+					} else {
+						traceIDToCounter.put(currentTraceID, counter);
+						traces.put(counter, currentTraceName);
+						counter++;
+					}
+				}
+				return traces;
+	}	
+	
+	
 	private Map<Integer, List<String>>  tableLogToMap() {
 		/**
 		 * We use id to counter so we can have flexible types for trace identification
@@ -106,7 +163,6 @@ public class TableEventLog {
 				}
 
 				return traces;
-		
 	}
 	
 	private Set<String> getUniqueTraceIDs() {

@@ -8,7 +8,6 @@ import org.processmining.models.graphbased.directed.petrinet.ResetInhibitorNet;
 import org.processmining.models.graphbased.directed.petrinet.ResetNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.astar.petrinet.impl.PNaiveTail;
 
 import nl.tue.astar.impl.State;
 import nl.tue.astar.impl.memefficient.TailInflater;
@@ -16,9 +15,9 @@ import nl.tue.astar.util.ShortShortMultiset;
 import nl.tue.storage.CompressedHashSet;
 import nl.tue.storage.Deflater;
 
-public class PNaiveDelegateTable extends AbstractPDelegateTable<PNaiveTail> {
+public class PNaiveDelegateTable extends AbstractPDelegateTable<PNaiveTailTable> {
 	
-	private final PNaiveTail compressor;
+	private final PNaiveTailTable compressor;
 	private final boolean allMarkingsAreFinal;
 
 	public PNaiveDelegateTable(ResetNet net, TableEventLog log, TransEvClassMappingTable map,
@@ -27,7 +26,7 @@ public class PNaiveDelegateTable extends AbstractPDelegateTable<PNaiveTail> {
 		super(net, log, map, mapTrans2Cost, mapEvClass2Cost, delta, set);
 		this.allMarkingsAreFinal = allMarkingsAreFinal;
 
-		compressor = PNaiveTail.EMPTY;
+		compressor = PNaiveTailTable.EMPTY;
 	}
 
 	public PNaiveDelegateTable(InhibitorNet net, TableEventLog log, TransEvClassMappingTable map,
@@ -36,7 +35,7 @@ public class PNaiveDelegateTable extends AbstractPDelegateTable<PNaiveTail> {
 		super(net, log, map, mapTrans2Cost, mapEvClass2Cost, delta, set);
 		this.allMarkingsAreFinal = allMarkingsAreFinal;
 
-		compressor = PNaiveTail.EMPTY;
+		compressor = PNaiveTailTable.EMPTY;
 	}
 
 	public PNaiveDelegateTable(ResetInhibitorNet net, TableEventLog log,  TransEvClassMappingTable map,
@@ -45,7 +44,7 @@ public class PNaiveDelegateTable extends AbstractPDelegateTable<PNaiveTail> {
 		super(net, log, map, mapTrans2Cost, mapEvClass2Cost, delta, set);
 		this.allMarkingsAreFinal = allMarkingsAreFinal;
 
-		compressor = PNaiveTail.EMPTY;
+		compressor = PNaiveTailTable.EMPTY;
 	}
 
 	public PNaiveDelegateTable(Petrinet net, TableEventLog log, TransEvClassMappingTable map,
@@ -54,22 +53,22 @@ public class PNaiveDelegateTable extends AbstractPDelegateTable<PNaiveTail> {
 		super(net, log, map, mapTrans2Cost, mapEvClass2Cost, delta, set);
 		this.allMarkingsAreFinal = allMarkingsAreFinal;
 
-		compressor = PNaiveTail.EMPTY;
+		compressor = PNaiveTailTable.EMPTY;
 	}
 
-	public PNaiveTail createInitialTail(PHeadTable head) {
-		return PNaiveTail.EMPTY;
+	public PNaiveTailTable createInitialTail(PHeadTable head) {
+		return PNaiveTailTable.EMPTY;
 	}
 
-	public TailInflater<PNaiveTail> getTailInflater() {
+	public TailInflater<PNaiveTailTable> getTailInflater() {
 		return compressor;
 	}
 
-	public Deflater<PNaiveTail> getTailDeflater() {
+	public Deflater<PNaiveTailTable> getTailDeflater() {
 		return compressor;
 	}
 
-	public void setStateSpace(CompressedHashSet<State<PHeadTable, PNaiveTail>> statespace) {
+	public void setStateSpace(CompressedHashSet<State<PHeadTable, PNaiveTailTable>> statespace) {
 
 	}
 

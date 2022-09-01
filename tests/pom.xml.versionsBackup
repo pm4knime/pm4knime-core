@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.pm4knime</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.1.5-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.pm4knime.tests</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<include>org.pm4knime.*</include>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- the report goal of jacoco-maven-plugin plugin shows coverage of tests. 
+				To get coverage of ../plugin/java/src/ use the jacoco ant reporter. See https://intellectualcramps.wordpress.com/2012/03/22/jacoco-tycho-and-coverage-reports/ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.jacoco</groupId>
+						<artifactId>org.jacoco.ant</artifactId>
+						<version>0.8.0</version>
+					</dependency>
+					<dependency>
+						<groupId>ant-contrib</groupId>
+						<artifactId>ant-contrib</artifactId>
+						<version>20020829</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>jacoco-report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<property name="source-location" location="../" />
+								<taskdef name="jacoco-report" classname="org.jacoco.ant.ReportTask"
+									classpathref="maven.plugin.classpath" />
+								<taskdef classpathref="maven.runtime.classpath"
+									resource="net/sf/antcontrib/antcontrib.properties" />
+								<available file="${project.basedir}/target/jacoco.exec"
+									property="jacoco.exec.file.exists" />
+								<echo message="${project.basedir}/target/jacoco.exec" />
+								<if>
+									<equals arg1="${jacoco.exec.file.exists}" arg2="true" />
+									<then>
+										<echo message="Executing jacoco report" />
+										<echo message="${source-location}" />
+										<trycatch>
+											<try>
+												<jacoco-report>
+													<executiondata>
+														<file file="${project.basedir}/target/jacoco.exec" />
+													</executiondata>
+
+													<structure name="plugin">
+														<classfiles>
+															<fileset dir="${source-location}/plugin/target/classes" />
+														</classfiles>
+														<sourcefiles encoding="UTF-8">
+															<fileset dir="${source-location}/plugin/src/java" />
+														</sourcefiles>
+													</structure>
+													<html destdir="${project.basedir}/target/jacoco/report" />
+													<xml destfile="${project.basedir}/target/jacoco/report/jacoco.xml" />
+												</jacoco-report>
+											</try>
+											<catch>
+												<echo>skipping</echo>
+											</catch>
+										</trycatch>
+									</then>
+									<else>
+										<echo message="No jacoco.exec file found." />
+									</else>
+								</if>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<argLine>${tycho.testArgLine} ${tycho.test.jvmArgs}</argLine>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>${custom.UIThread}</useUIThread>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>org.knime.features.clfixes</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+						</extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<!-- kill test JVM if tests take more than 1 minute (60 seconds) to finish -->
+		<surefire.timeout>60</surefire.timeout>
+		<custom.UIThread>true</custom.UIThread>
+		<sonar.skip>true</sonar.skip>
+	</properties>
+	<profiles>
+		<profile>
+			<id>macosx</id>
+			<activation>
+				<os>
+					<name>mac os x</name>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<tycho.test.jvmArgs>-XstartOnFirstThread -nosplash</tycho.test.jvmArgs>
+				<custom.UIThread>false</custom.UIThread>
+			</properties>
+			<build>
+			</build>
+		</profile>
+	</profiles>
+</project>

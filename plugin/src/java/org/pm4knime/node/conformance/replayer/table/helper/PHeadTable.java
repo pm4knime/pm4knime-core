@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.astar.petrinet.impl.AbstractPDelegate;
 
 import gnu.trove.iterator.TShortIterator;
 import gnu.trove.list.TIntList;
@@ -63,7 +62,7 @@ public class PHeadTable implements Head {
 
 	public PHeadTable getNextHead(Record rec, Delegate<? extends Head, ? extends Tail> d, int modelMove, int logMove,
 			int activity) {
-		AbstractPDelegate<?> delegate = (AbstractPDelegate<?>) d;
+		AbstractPDelegateTable<?> delegate = (AbstractPDelegateTable<?>) d;
 
 		final ShortShortMultiset newMarking;
 		if (modelMove != AStarThread.NOMOVE) {
@@ -83,7 +82,7 @@ public class PHeadTable implements Head {
 		return createHead(newMarking, newParikh, PROVIDER.hash(newMarking, newParikh));
 	}
 
-	protected ShortShortMultiset cloneAndUpdateMarking(AbstractPDelegate<?> delegate, ShortShortMultiset marking,
+	protected ShortShortMultiset cloneAndUpdateMarking(AbstractPDelegateTable<?> delegate, ShortShortMultiset marking,
 			short modelMove) {
 		ShortShortMultiset newMarking = marking.clone();
 		// clone the marking
@@ -93,7 +92,7 @@ public class PHeadTable implements Head {
 		for (short place = delegate.numPlaces(); place-- > 0;) {
 			short val = newMarking.get(place);
 			short needed = in[place];
-			if (needed != AbstractPDelegate.INHIBITED) {
+			if (needed != AbstractPDelegateTable.INHIBITED) {
 				// only adjust the value for non-inhibitor arcs
 				newMarking.adjustValue(place, (short) -needed);
 			}
@@ -115,12 +114,12 @@ public class PHeadTable implements Head {
 	}
 
 	public TIntList getModelMoves(Record rec, Delegate<? extends Head, ? extends Tail> d) {
-		return ((AbstractPDelegate<?>) d).getEnabledTransitionsChangingMarking(marking);
+		return ((AbstractPDelegateTable<?>) d).getEnabledTransitionsChangingMarking(marking);
 	}
 
 	public TIntList getSynchronousMoves(Record rec, Delegate<? extends Head, ? extends Tail> d, TIntList enabled,
 			int activity) {
-		final AbstractPDelegate<?> delegate = (AbstractPDelegate<?>) d;
+		final AbstractPDelegateTable<?> delegate = (AbstractPDelegateTable<?>) d;
 
 		// only consider transitions mapped to activity
 		final TIntList result = new TIntArrayList();
@@ -138,11 +137,11 @@ public class PHeadTable implements Head {
 	}
 
 	public boolean isFinal(Delegate<? extends Head, ? extends Tail> d) {
-		AbstractPDelegate<?> delegate = (AbstractPDelegate<?>) d;
+		AbstractPDelegateTable<?> delegate = (AbstractPDelegateTable<?>) d;
 		return parikh.isEmpty() && delegate.isFinal(marking);
 	}
 
-	protected Marking fromMultiSet(AbstractPDelegate<?> delegate) {
+	protected Marking fromMultiSet(AbstractPDelegateTable<?> delegate) {
 		Marking m = new Marking();
 		for (short i = 0; i < delegate.numPlaces(); i++) {
 			if (marking.get(i) > 0) {

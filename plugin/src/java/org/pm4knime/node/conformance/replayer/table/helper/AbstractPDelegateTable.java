@@ -382,7 +382,7 @@ public abstract class AbstractPDelegateTable<T extends Tail> implements StorageA
 	}
 
 	public Record createInitialRecord(PHeadTable head, Trace trace) {
-		PRecord r = new PRecord(0, null, head.getMarking().getNumElts(), trace.getSize());
+		PRecordTable r = new PRecordTable(0, null, head.getMarking().getNumElts(), trace.getSize());
 		r.setEstimatedRemainingCost(0, true);
 		return r;
 	}

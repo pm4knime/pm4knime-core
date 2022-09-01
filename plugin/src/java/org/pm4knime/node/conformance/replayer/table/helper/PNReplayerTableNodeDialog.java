@@ -14,14 +14,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XLog;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponent;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
@@ -29,14 +28,8 @@ import org.knime.core.node.port.PortObject;
 import org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeModel;
 import org.pm4knime.node.conformance.replayer.PNReplayerNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
-import org.pm4knime.util.XLogSpecUtil;
-import org.pm4knime.util.XLogUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 
 /**
@@ -47,12 +40,12 @@ import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 	protected JPanel m_compositePanel;
-	protected SMAlignmentReplayParameterWithCT m_parameter;
+	protected SMAlignmentReplayerParameterWithCTTable m_parameter;
 	String[] strategyList = ReplayerUtil.strategyList;
 
 	DialogComponentStringSelection classifierComp;
 
-	XLogPortObject logPO;
+	BufferedDataTable logPO;
 
 	/**
 	 * New pane for configuring the PNReplayer node.
@@ -68,15 +61,15 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 	protected void specialInit() {
 		// TODO Auto-generated method stub
-		m_parameter = new SMAlignmentReplayParameterWithCT(PNReplayerNodeModel.CFG_PARAMETER_NAME);
+		m_parameter = new SMAlignmentReplayerParameterWithCTTable(PNReplayerTableNodeModel.CFG_PARAMETER_NAME);
 
 		// TODO : remove tmp. just use the old parameter here
-		SMAlignmentReplayParameterWithCT tmp = m_parameter;
+		SMAlignmentReplayerParameterWithCTTable tmp = m_parameter;
 		commonInitPanel(m_parameter);
 
 		// here to add special codes from the additional items
 		Box tbox = new Box(BoxLayout.Y_AXIS);
-		for (int i = 0; i < SMAlignmentReplayParameterWithCT.CFG_COST_TYPE_NUM; i++) {
+		for (int i = 0; i < SMAlignmentReplayerParameterWithCTTable.CFG_COST_TYPE_NUM; i++) {
 			tbox.add(createTable(i));
 		}
 
@@ -85,7 +78,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 		// add action listener. If the value of defaultCost changes, the table values
 		// should changes, too.
 		// to deal with log move at first.
-		for (int i = 0; i < SMAlignmentReplayParameter.CFG_COST_TYPE_NUM; i++) {
+		for (int i = 0; i < SMAlignmentReplayParameterTable.CFG_COST_TYPE_NUM; i++) {
 			DefaultTableModel tTable = tmp.getMCostTMs()[i];
 			// int oldValue = tmp.getMDefaultCosts()[i].getIntValue();
 			final int idx = i;
@@ -121,7 +114,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 	}
 
-	protected void commonInitPanel(SMAlignmentReplayParameter parameter) {
+	protected void commonInitPanel(SMAlignmentReplayParameterTable parameter) {
 		// TODO : complete the codes with classifer names
 
 		classifierComp = new DialogComponentStringSelection(m_parameter.getMClassifierName(),
@@ -134,10 +127,10 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 		addDialogComponent(m_strategyComp);
 
 		Box cbox = new Box(BoxLayout.X_AXIS);
-		DialogComponentNumberEdit[] defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameter.CFG_COST_TYPE_NUM];
-		for (int i = 0; i < SMAlignmentReplayParameter.CFG_COST_TYPE_NUM; i++) {
+		DialogComponentNumberEdit[] defaultCostComps = new DialogComponentNumberEdit[SMAlignmentReplayParameterTable.CFG_COST_TYPE_NUM];
+		for (int i = 0; i < SMAlignmentReplayParameterTable.CFG_COST_TYPE_NUM; i++) {
 			defaultCostComps[i] = new DialogComponentNumberEdit(m_parameter.getMDefaultCosts()[i],
-					SMAlignmentReplayParameter.CFG_MCOST_KEY[i], 5);
+					SMAlignmentReplayParameterTable.CFG_MCOST_KEY[i], 5);
 			cbox.add(defaultCostComps[i].getComponentPanel());
 		}
 		m_compositePanel.add(cbox);
@@ -151,7 +144,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 	@Override
 	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
-			throws NotConfigurableException {
+			throws NotConfigurableException, NullPointerException {
 		
 		try {
 			// before we need to consider the selected values here, or we check if the spec is the same one
@@ -161,19 +154,18 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 //			String selectedItem = m_parameter.getMClassifierName().getStringValue();
 
-			if (!(input[DefaultPNReplayerNodeModel.INPORT_LOG] instanceof XLogPortObject))
+			if (!(input[DefaultPNReplayerTableModel.INPORT_LOG] instanceof BufferedDataTable))
 				throw new NotConfigurableException("Input is not a valid event log!");
 
-			if (!(input[DefaultPNReplayerNodeModel.INPORT_PETRINET] instanceof PetriNetPortObject))
+			if (!(input[DefaultPNReplayerTableModel.INPORT_PETRINET] instanceof PetriNetPortObject))
 				throw new NotConfigurableException("Input is not a valid Petri net!");
 
-			logPO = (XLogPortObject) input[DefaultPNReplayerNodeModel.INPORT_LOG];
-			PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerNodeModel.INPORT_PETRINET];
+			logPO = (BufferedDataTable) input[DefaultPNReplayerTableModel.INPORT_LOG];
+			PetriNetPortObject netPO = (PetriNetPortObject) input[DefaultPNReplayerTableModel.INPORT_PETRINET];
 
-			XLogPortObjectSpec logSpec = (XLogPortObjectSpec) logPO.getSpec();
+			DataTableSpec logSpec = (DataTableSpec) logPO.getSpec();
 			
-			List<String> specClassifierSet = new ArrayList<String>(
-					XLogSpecUtil.getClassifierWithClsList(logSpec.getClassifiersMap()));
+			List<String> specClassifierSet = Arrays.asList(logSpec.getColumnNames());
 			
 			List<String> configClassifierSet = Arrays.asList(m_parameter.getClassifierSet().getStringArrayValue());
 
@@ -183,16 +175,18 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 				
 			}
 			// to avoid the split names there, but we save the classifier with 
-			classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), 
-					logSpec.getClassifiersMap().keySet().iterator().next());
+			/*classifierComp.replaceListItems(logSpec.getClassifiersMap().keySet(), 
+					logSpec.getClassifiersMap().keySet().iterator().next());*/
+			classifierComp.replaceListItems(specClassifierSet, 
+					specClassifierSet.iterator().next());
 			m_parameter.getMClassifierName().loadSettingsFrom(settings);
 			// if the classifier is the same, then we don't need to check the event log. because they are the same
-			SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+			SMAlignmentReplayerParameterWithCTTable tmp = (SMAlignmentReplayerParameterWithCTTable) m_parameter;
+			String eventClassifier = m_parameter.getMClassifierName().getStringValue(); 
+			TableEventLog log = new TableEventLog(logPO, eventClassifier);
 			
-			XLog log = logPO.getLog();
-			XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
-					m_parameter.getMClassifierName().getStringValue());
-			List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
+			List<String> ecNames = Arrays.asList(log.getActivties());
+			ecNames.sort(String::compareTo);
 			List<String> ecModelNames = getColumnStrValueTM(m_parameter.getMCostTMs()[0], 0);
 			if(!ecNames.containsAll(ecModelNames) || !ecModelNames.containsAll(ecNames)) {
 				tmp.setCostTM(ecNames, 0);
@@ -214,17 +208,24 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					// TODO it implements the update if we change the event classifier in choice
-					SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+					SMAlignmentReplayerParameterWithCTTable tmp = (SMAlignmentReplayerParameterWithCTTable) m_parameter;
 
 					if (logPO != null) {
-						XLog log = logPO.getLog();
+						String eventClassifier = m_parameter.getMClassifierName().getStringValue();
+						TableEventLog log;
+						try {
+							log = new TableEventLog(logPO, eventClassifier);
+							List<String> ecNames = Arrays.asList(log.getActivties());
+							ecNames.sort(String::compareTo);
+							tmp.setCostTM(ecNames, 0);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						// here the value is still the old value,
 //						System.out.println("the current value is " + m_parameter.getMClassifierName().getStringValue());
-						XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
-								m_parameter.getMClassifierName().getStringValue());
 
-						List<String> ecNames = XLogUtil.extractAndSortECNames(log, eventClassifier);
-						tmp.setCostTM(ecNames, 0);
+		
 						// need some update to the view? 
 						
 					}
@@ -232,9 +233,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 			});
 
-		} catch (InvalidSettingsException |
-
-				NullPointerException e) {
+		} catch (Exception e) {
 			// TODO if there is not with TM, we set it from the input PortObject
 			System.out.println("Some wrong is here");
 			e.printStackTrace();
@@ -255,7 +254,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 	 * names -- costTable passed through the NodeModel and JTable
 	 */
 	private JScrollPane createTable(int idx) {
-		SMAlignmentReplayParameterWithCT tmp = (SMAlignmentReplayParameterWithCT) m_parameter;
+		SMAlignmentReplayerParameterWithCTTable tmp = (SMAlignmentReplayerParameterWithCTTable) m_parameter;
 		DefaultTableModel costTM = tmp.getMCostTMs()[idx];
 
 		JTable table = new JTable(costTM) {

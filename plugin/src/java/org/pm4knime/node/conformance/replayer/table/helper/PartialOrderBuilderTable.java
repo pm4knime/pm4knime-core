@@ -15,14 +15,18 @@ import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import nl.tue.astar.AStarThread;
 import nl.tue.astar.util.PartiallyOrderedTrace;
-
+/**TODO PARTIAL ORDER fixing
+ * 
+ * @author Barry
+ *
+ */
 public interface PartialOrderBuilderTable {
 	
 	public static PartiallyOrderedTrace getPartiallyOrderedTrace(TableEventLog log, int trace, AbstractPDelegateTable<?> delegate,
 			TIntList unUsedIndices, TIntIntMap trace2orgTrace) {
 		int s = log.getTraces().get(trace).size();
 		int[] idx = new int[s];
-		String name = XConceptExtension.instance().extractName(log.getTraces().get(trace));
+		String name = log.getTraceName(trace);
 		if (name == null || name.isEmpty()) {
 			name = "Trace " + trace;
 		}
