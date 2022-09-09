@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance.replayer.table.helper;
+package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
 
 import org.processmining.models.graphbased.directed.petrinet.InhibitorNet;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;

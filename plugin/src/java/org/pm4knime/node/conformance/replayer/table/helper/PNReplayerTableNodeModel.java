@@ -16,6 +16,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeModel;
 import org.pm4knime.node.conformance.replayer.PNReplayerNodeModel;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayerParameterWithCTTable;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 
 /**

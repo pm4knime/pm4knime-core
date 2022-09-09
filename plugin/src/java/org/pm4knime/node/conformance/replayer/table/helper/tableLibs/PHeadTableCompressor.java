@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance.replayer.table.helper;
+package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
 
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance.replayer.table.helper;
+package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
 import java.util.HashMap;
 
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;

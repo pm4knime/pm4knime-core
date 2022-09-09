@@ -12,6 +12,15 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeModel;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.IPNReplayAlgorithmTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerILPRestrictedMoveModelTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerWithILPTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerWithoutILPTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.RepResultPortObjectSpecTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.RepResultPortObjectTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TableEventLog;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TransEvClassMappingTable;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 
@@ -101,7 +110,7 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	// for performance only
     	if(strategyName.equals(ReplayerUtil.strategyList[2])) {
     		/*change the calculation with ILP from nonILP mining.
-    		replayAlgorithm = new PetrinetReplayerILPRestrictedMoveModel();
+    		replayAlgorithm = new PetrinetReplayerILPRestrictedMoveModelTable();
     		
     		// different parameters need different get parameter methods. We need to go back to replayer node
     		PNManifestReplayerParameter manifestParameters = m_parameter.getPerfParameter(log, anet, eventClassifier);
@@ -126,7 +135,7 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	}else {
     		// for conformance 
 	    	if(strategyName.equals(ReplayerUtil.strategyList[0]) ) {
-	    		replayAlgorithm = null;
+	    		replayAlgorithm = new PetrinetReplayerWithILPTable();
 	    	}else if(strategyName.equals(ReplayerUtil.strategyList[1])) {
 	    		replayAlgorithm = new PetrinetReplayerWithoutILPTable();
 	    	}

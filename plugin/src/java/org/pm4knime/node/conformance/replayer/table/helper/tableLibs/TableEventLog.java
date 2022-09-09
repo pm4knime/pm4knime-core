@@ -1,6 +1,7 @@
-package org.pm4knime.node.conformance.replayer.table.helper;
+package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ public class TableEventLog {
 	private String[] activties;
 	private String[] index2activity;
 	private Map<Integer, List<String>> traces;
+	private Map<Integer, List<String>> tracesWithCompleteEvent;
 	private BufferedDataTable log;
 	private String classifier;
 	private String traceClassifier;
@@ -50,9 +52,13 @@ public class TableEventLog {
 			throw new Exception("Concept Name for Trace was not found");
 		}
 		this.traceIDName = traceIdToName();
+		this.tracesWithCompleteEvent = tableLogToMapWholeEventRow();
 		
 		
 	}
+	
+
+	
 	
 	public String getTraceName(int traceId) {
 		return this.traceIDName.get(traceId);
@@ -61,6 +67,7 @@ public class TableEventLog {
 	
 	private String findRowWithTraceConceptName(String[] names) {
 	
+		
 		String traceName ="";
 				for(String currentRowName:names) {
 					if(currentRowName.toLowerCase().contains("trace") && currentRowName.contains("concept:name")) {
@@ -165,6 +172,33 @@ public class TableEventLog {
 				return traces;
 	}
 	
+	
+	private Map<Integer, List<String>>  tableLogToMapWholeEventRow() {
+		/**
+		 * We use id to counter so we can have flexible types for trace identification
+		 */
+				Map<Integer, List<String>> traces = new HashMap<Integer, List<String>>();
+				Map<String, Integer> traceIDToCounter = new HashMap<String, Integer>();
+				int counter = 0;
+				for (DataRow row : log) {
+					String activity = buildUniqueEventFullRow(row);
+					String[] traceActvityEnc = activity.split(";");
+					String currentTraceID = traceActvityEnc[0];
+					if (traceIDToCounter.containsKey(currentTraceID)) {
+						int traceIndex = traceIDToCounter.get(currentTraceID);
+						traces.get(traceIndex).add(activity);
+					} else {
+						traceIDToCounter.put(currentTraceID, counter);
+						ArrayList<String> traceBeginning = new ArrayList<String>();
+						traceBeginning.add(activity);
+						traces.put(counter, traceBeginning);
+						counter++;
+					}
+				}
+
+				return traces;
+	}
+	
 	private Set<String> getUniqueTraceIDs() {
 		Set<String> traceSet = new HashSet<>();
 		for (DataRow row : log) {
@@ -187,8 +221,21 @@ public class TableEventLog {
 	private String buildUniqueEvent(DataRow row) {
 		int indexOfClassifierTable = getClassifierIndexFromColumn(this.classifier);
 		DataCell cell = row.getCell(indexOfClassifierTable);
+		String wholeCell ="";
+		for(int i = 0; i < row.getNumCells(); i++) {
+			wholeCell = wholeCell+row.getCell(i).toString()+";";
+		}
 		return row.getCell(0).toString() + ";" + cell.toString();
 	}
+	
+	private String buildUniqueEventFullRow(DataRow row) {
+		String wholeCell ="";
+		for(int i = 0; i < row.getNumCells(); i++) {
+			wholeCell = wholeCell+row.getCell(i).toString()+";";
+		}
+		return wholeCell;
+	}
+	
 	public String[] getActivties() {
 		return activties;
 	}

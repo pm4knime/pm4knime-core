@@ -1,10 +1,8 @@
-package org.pm4knime.node.conformance.replayer.table.helper;
+package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-
 
 import gnu.trove.TIntCollection;
 import gnu.trove.set.TShortSet;

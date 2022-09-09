@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance.replayer.table.helper;
+package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.Progress;
@@ -669,12 +668,10 @@ IPNPartialOrderAwareReplayAlgorithmTable {
 			// TODO: handle exception
 			e.printStackTrace();
 		} finally {
-			/*
-			 * TODO: fix later when abstractilp is there
-			 */
-			/*if (localDelegate instanceof AbstractPILPDelegate) {
-				((AbstractPILPDelegate<?>) localDelegate).deleteLPs();
-			}*/
+	
+			if (localDelegate instanceof AbstractPILPDelegateTable) {
+				((AbstractPILPDelegateTable<?>) localDelegate).deleteLPs();
+			}
 		}
 		return null;// debug code
 	}
