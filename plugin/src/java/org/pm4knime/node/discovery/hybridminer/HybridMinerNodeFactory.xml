@@ -9,23 +9,25 @@
 
 	<fullDescription>
 		<intro>
-			This node implements the second step of the Hybrid Miner to discover a hybrid Petri net from a causal graph.
-			The hybrid miner combines the best of formal and informal modeling notations by discovering hybrid Petri nets. The hybrid miner converts the edges of the input causal graph into formal places if there is enough evidence in the data justifying adding formal constraints. For vague structures where formal constraints cannot be justified, causal relations are depicted in the final hybrid Petri net as informal edges.  			
+		    This node wraps the ProM's plug-in "Extended Hybrid Petri Net Miner" from the package ExtendedHybridMiner.
+			It implements the second step of the Hybrid Miner to discover a hybrid Petri net from a causal graph.
+			The hybrid miner combines the best of formal and informal modeling notations by discovering hybrid Petri nets. 
+			The hybrid miner converts the edges of the input causal graph into formal places if there is enough evidence in the data justifying adding formal constraints. 
+			For vague structures where formal constraints cannot be justified, causal relations are depicted in the final hybrid Petri net as informal edges.  			
 		</intro>
 
-		<option name="Threshold for early cancellation of place iterator">After x consecutive rejected places, the place iterator is canceled.
+		<option name="Threshold for early cancellation of place iterator">
+		After x consecutive rejected places, the place iterator is canceled.
+		</option>
+		<option name="Place evaluation method">
 		</option>
 		<option name="Fitness threshold for the place evaluation method">
-		</option>
-
-
-		<option name="Place evaluation method">
 		</option>
 
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Event Log">An causal graph as input</inPort>
-		<outPort index="0" name="Hybrid Petri Net">A hybrid Petri net as output</outPort>
+		<inPort index="0" name="Causal Graph">a causal graph</inPort>
+		<outPort index="0" name="Hybrid Petri Net">a hybrid Petri net</outPort>
 	</ports>
 </knimeNode>

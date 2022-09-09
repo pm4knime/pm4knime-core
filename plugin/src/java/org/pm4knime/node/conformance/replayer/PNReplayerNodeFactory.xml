@@ -6,106 +6,80 @@
 	<name>Alignment-Based Replayer</name>
 
 	<shortDescription>
-		This alignment-based replayer accepts one event log and one Petri net as
-		input and outputs the optimal alignments for traces after replaying
-		traces on Petri net.
-		With this node, the cost can be set individually for each move on
-		log/model.
+		This node implements the alignment-based replayer for constructing the optimal alignments by replaying an event log on a Petri net.
 	</shortDescription>
 
 	<fullDescription>
 		<intro>
-			Alignment-based replay is the state-of-the-art technique in
-			conformance checking.
-			Alignments provide a robust and detailed view on the deviations. For each trace
-			from the event log after replaying,
-			there is one alignment corresponding to it.
-
-			<ul>
-				<li>Sync move <br/>
-				The classification of the current event corresponds to the
-					firing transitions in Petri net.
-					In this case, during replaying,
-					both the trace and the process model move
-					to next comparison.
-				</li>
-
-				<li>Move on log<br/>
+		This node wraps the ProM's plug-in "Replay a Log on Petri Net for Conformance Analysis" from the package PNetReplayer. 
+		It implements the alignment-based replayer, which accepts an event log and a Petri net as input and outputs the optimal alignments of the traces after replaying the event log on the Petri net.	
+		Alignment-based replay is the state-of-the-art technique in conformance checking.
+		Alignments provide a robust and detailed view on the deviations between the log and the model. 
+		
+		Three types of moves are considered while constructing the alignments:
+		<ul>
+		<li>Sync Move: <br/>
+		The classification of the current event corresponds to the firing transitions in Petri net.
+		In this case, during replaying, both the trace and the process model move to next comparison.
+		</li>
+  
+				<li>Log Move:<br/>
 				The classification of the current event doesn't have any
 					corresponding firing transitions in Petri net.
-					During replaying, the
-					trace moves forward but the state of process model
-					doesn't change.
+					During replaying, the trace moves forward but the state of process model doesn't change.
 				</li>
 
-				<li>Move on model<br/>
-				The firing transitions in Petri net have no corresponding event
-					in the trace.
-					During replaying, the model moves forwards but the
-					state of the event log
-					doesn't change.
+				<li>Model Move:<br/>
+				The firing transitions in Petri net have no corresponding event in the trace.
+					During replaying, the model moves forwards but the state of the event log doesn't change.
 				</li>
 			</ul>
-			<br />
-			With this node, the cost can be set individually for each move on
-			log/model.
-
-			<br />
-			More information seen in the :
-			<a href="https://ieeexplore.ieee.org/abstract/document/6037560">link</a>
+		<br />
+		For more information:
+			<a href="https://ieeexplore.ieee.org/abstract/document/6037560">link</a>	
+		
 		</intro>
 
-		<option name="Event classifer">The classifier chosen to classify the event log.
+		<option name="Event classifer">The attribute to be used as an event classifier.
 		</option>
 		<option name="Strategy type">
-			The strategy to replay the event log on Petri net. It includes
-			<ul>
+			The replay strategy to be applied. The following options are available:
+				<ul>
 				<li>
-					ILP Replayer.
-					<br />
-					The repalyer calculates the optimal alignment based on ILP.
+					ILP Replayer: this repalyer calculates the optimal alignment based on ILP.
 				</li>
 				<li> Non-ILP Replayer.
 				</li>
 				<li>
-					A*-ILP Based Manifest Replayer.
-					<br />
-					This replayer is reserved for performance checking. It generates
+					A*-ILP Based Manifest Replayer: this replayer is reserved for performance checking. It generates
 					the Manifest to wrap the alignments.
 				</li>
-			</ul>
-
+				</ul>
 		</option>
 
-		<option name="Move on log cost">The unified cost for the move on log in non-negative
+		<option name="Move on log cost">The unified cost for a log move in a non-negative
 			integer. In default, it is 1.</option>
-		<option name="Move on model cost">The unified cost for the move on model in non-negative
+		<option name="Move on model cost">The unified cost for a model move in a non-negative
 			integer. In default, it is 1.</option>
-		<option name="Sync move cost">The unified cost for the sync move in non-negative
+		<option name="Sync move cost">The unified cost for a sync move in a non-negative
 			integer. In default, it is 0.</option>
 
 		<option name="Move on log cost table">
-			The cost table for the move on log with non-negative integer.
+			The cost table for log moves in non-negative integers.
 			<br />
 			The cost table provides the ability to modify cost for each move.
-			The unified move cost can assign the same cost to all items in the
-			table.
+			The unified move cost can assign the same cost to all items in the table.
 		</option>
-		<option name="Move on model cost table">The cost table for the move on model in non-negative
-			integer. </option>
-		<option name="Sync move cost table">The cost table for the sync move in non-negative
-			integer. </option>
+		<option name="Move on model cost table">The cost table for model moves in non-negative integers.</option>
+		<option name="Sync move cost table">The cost table for sync moves in non-negative integers. </option>
 
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Event Log">Input port for an event log</inPort>
-		<inPort index="1" name="Petri Net">Input port for a Petri net</inPort>
+		<inPort index="0" name="Event Log">an event log</inPort>
+		<inPort index="1" name="Petri Net">a Petri net</inPort>
 		<!-- possibly more input ports here -->
-		<outPort index="0" name="Replay Result">Output replay result after replaying.
-			It includes the alignment, implicitly the corresponding event log and Petri net as well.
-			
-		</outPort>
+		<outPort index="0" name="Replay Result">replay result</outPort>
 
 		<!-- possibly more output ports here -->
 	</ports>

@@ -215,7 +215,7 @@
     <entry key="node-bundle-name" type="xstring" value="Test-Node extension for KNIME Workbench"/>
     <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.testing"/>
     <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
-    <entry key="node-bundle-version" type="xstring" value="4.6.0.v202201211748"/>
+    <entry key="node-bundle-version" type="xstring" value="4.6.0.v202206030823"/>
     <entry key="node-feature-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
@@ -227,6 +227,6 @@
     <config key="ports"/>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="73aa2d68-d608-4825-86c5-5e05a08ac26d"/>
+        <entry key="file_store_id" type="xstring" value="a8ab9bc4-5b60-47b5-b4d7-d56aad05ef5a"/>
     </config>
 </config>

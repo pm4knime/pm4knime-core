@@ -36,12 +36,14 @@ public class BufferedTableIMLog implements IMLog {
 	private String[] index2activity;
 	private long[][] events;
 	private List<String> activitiesList = new ArrayList<>();
-	private int indexOfClassifierTable = 0;
+	private int indexOfTraceClassifierTable = 0;
+	private int indexOfEventClassifierTable = 0;
 
-	public BufferedTableIMLog(BufferedDataTable log, String classifier) {
+	public BufferedTableIMLog(BufferedDataTable log, String aClassifier, String tClassifier) {
 		this.log = log;
-		String activityColumn = classifier;
-		indexOfClassifierTable = getClassifierIndexFromColumn(classifier);
+		String activityColumn = aClassifier;
+		indexOfEventClassifierTable = getClassifierIndexFromColumn(aClassifier);
+		indexOfTraceClassifierTable = getClassifierIndexFromColumn(tClassifier);
 		this.activities = log.getDataTableSpec().getColumnSpec(activityColumn).getDomain().getValues();
 		createActivity2Index();
 		transformTableIntoEvents();
@@ -133,7 +135,7 @@ public class BufferedTableIMLog implements IMLog {
 	private Set<String> getUniqueTraceIDs() {
 		Set<String> traceSet = new HashSet<>();
 		for (DataRow row : log) {
-			traceSet.add(row.getCell(0).toString());
+			traceSet.add(row.getCell(indexOfTraceClassifierTable).toString());
 		}
 		return traceSet;
 
@@ -143,9 +145,11 @@ public class BufferedTableIMLog implements IMLog {
 		return getUniqueTraceIDs().size();
 	}
 
+	
 	private String buildUniqueEvent(DataRow row) {
-		DataCell cell = row.getCell(this.indexOfClassifierTable);
-		return row.getCell(0).toString() + ";" + cell.toString();
+		DataCell trace = row.getCell(this.indexOfTraceClassifierTable);
+		DataCell cell = row.getCell(this.indexOfEventClassifierTable);
+		return trace.toString() + ";" + cell.toString();
 	}
 
 	private void createActivity2Index() {

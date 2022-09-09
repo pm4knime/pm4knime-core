@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./Petrinet-Reader-icon.png" type="Source" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>PNML Reader</name>
+    <name>Petri Net Reader</name>
     
     <shortDescription>
-        read Petri net from pnml file
+        Import a Petri net from a PNML file.
     </shortDescription>
     
     <fullDescription>
-        <intro>Read Petri net from pnml file</intro>
+        <intro>Import a Petri net from a PNML file.</intro>
         
         
-        <option name="Selected File">The File represents the Petri net</option>
+        <option name="Input Location">File location.</option>
     
     </fullDescription>
     
     <ports>
       
-        <outPort index="0" name="Petri net Model">The imported Petri net</outPort>
+        <outPort index="0" name="Petri Net">a Petri net</outPort>
         <!-- possibly more output ports here-->
     </ports>    
 </knimeNode>

@@ -1,19 +1,11 @@
 package org.pm4knime.node.discovery.dfgminer.dfgTableMiner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.port.PortObjectSpec;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerDialog;
+
+
 
 /**
  * This is an example implementation of the node dialog of the
@@ -27,56 +19,25 @@ import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
  * 
  * @author 
  */
-public class DfgMinerTableNodeDialog extends DefaultMinerNodeDialog {
+public class DfgMinerTableNodeDialog extends DefaultTableMinerDialog {
 
-
-    /**
-     * New pane for configuring the DfgMiner node.
-     */
-	private SettingsModelDoubleBounded m_noiseThreshold = null;	
 	SettingsModelString m_variant;
+	
+	
+	public DfgMinerTableNodeDialog(DfgMinerTableNodeModel n) {
+		super(n);
+	}	
+	
 
 	@Override
 	public void init() {
 		
 		m_variant = new SettingsModelString(DfgMinerTableNodeModel.CFG_VARIANT_KEY, DfgMinerTableNodeModel.CFG_VARIANT_VALUES[0]);
-		// the variants values are fixed
 		DialogComponentStringSelection variantComp = new DialogComponentStringSelection(m_variant, "Variant",
 				DfgMinerTableNodeModel.CFG_VARIANT_VALUES);
-    	addDialogComponent(variantComp);
-    	
+    	addDialogComponent(variantComp);  	
 	}
     
-    
-    
-	@Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
-		try {
-			
-			classifierSet.loadSettingsFrom(settings);
-    		List<String> configClassifierSet = Arrays.asList(classifierSet.getStringArrayValue());
-    		System.out.println("");
-    		DataTableSpec logSpec = (DataTableSpec) specs[0];
-			List<String> specClassifierSet = new ArrayList<String>();
-			specClassifierSet.addAll(Arrays.asList(logSpec.getColumnNames()));
-			specClassifierSet.addAll(DfgMinerTableNodeModel.sClfNames);
-			
-			if(! configClassifierSet.containsAll(specClassifierSet) 
-		    		 ||	!specClassifierSet.containsAll(configClassifierSet)){
-				
-				classifierSet.setStringArrayValue(specClassifierSet.toArray(new String[0]));
-			}
-			
-			List<String> classAsList = Arrays.asList(logSpec.getColumnNames());
-			classifierComp.replaceListItems(classAsList, classAsList.get(0));
-			m_classifier.loadSettingsFrom(settings);
-			
-		} catch (NullPointerException | InvalidSettingsException e ) {
-			// TODO Auto-generated catch block
-			throw new NotConfigurableException("Please make sure the connected event log in excution state");
-			
-		}
-	}
+
 }
 

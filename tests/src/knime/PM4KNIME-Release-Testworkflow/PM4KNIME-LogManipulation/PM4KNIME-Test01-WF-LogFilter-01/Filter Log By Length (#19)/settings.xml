@@ -6,36 +6,36 @@
         <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
     </config>
     <config key="model">
-        <config key="Keep traces_Internals">
+        <config key="Keep_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_boolean"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="Keep traces" type="xboolean" value="false"/>
-        <config key="Minimum length_Internals">
+        <entry key="Keep" type="xboolean" value="false"/>
+        <config key="Minimum Length_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_integer"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="Minimum length" type="xint" value="1"/>
-        <config key="Maximum length_Internals">
+        <entry key="Minimum Length" type="xint" value="1"/>
+        <config key="Maximum Length_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_integer"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="Maximum length" type="xint" value="5"/>
+        <entry key="Maximum Length" type="xint" value="20"/>
     </config>
     <entry key="customDescription" type="xstring" isnull="true" value=""/>
     <entry key="state" type="xstring" value="EXECUTED"/>
     <entry key="factory" type="xstring" value="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory"/>
-    <entry key="node-name" type="xstring" value="Filter Log By Length"/>
+    <entry key="node-name" type="xstring" value="Filter Event Log By Length"/>
     <entry key="node-bundle-name" type="xstring" value="Development Build"/>
     <entry key="node-bundle-symbolic-name" type="xstring" value="org.pm4knime.plugin"/>
     <entry key="node-bundle-vendor" type="xstring" value="Fraunhofer Institute for Applied Information Technology"/>
-    <entry key="node-bundle-version" type="xstring" value="1.1.1.qualifier"/>
+    <entry key="node-bundle-version" type="xstring" value="1.1.5.qualifier"/>
     <entry key="node-feature-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
     <entry key="node-feature-version" type="xstring" value="0.0.0"/>
     <config key="factory_settings"/>
-    <entry key="name" type="xstring" value="Filter Log By Length"/>
+    <entry key="name" type="xstring" value="Filter Event Log By Length"/>
     <entry key="hasContent" type="xboolean" value="true"/>
     <entry key="isInactive" type="xboolean" value="false"/>
     <config key="ports">
@@ -51,6 +51,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="22883e9a-2f0e-4437-a816-fafa5748843e"/>
+        <entry key="file_store_id" type="xstring" value="b551144e-c23d-4bcd-8c66-2b9e9e50f9bc"/>
     </config>
 </config>

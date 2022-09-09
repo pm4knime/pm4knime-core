@@ -17,13 +17,13 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.node.visualizations.jsgraphviz.util.GraphvizHybridPetriNet;
 import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
 import org.processmining.extendedhybridminer.models.causalgraph.gui.HybridPetrinetVisualizer;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
-import org.xesstandard.xml.XesXmlParserLenient;
 
 
 public class HybridPetriNetPortObject extends AbstractPortObject{
@@ -98,16 +98,16 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 		return new JComponent[] {};
 	}
 	
-	public DotPanel getDotPanel() {
+    public DotPanel getDotPanel() {
 		
-//	if(cg != null) {
-//			
-//			DotPanel navDot;
-//			navDot = new DotPanel(GraphvizPetriNet.convert(m_anet));
-//			navDot.setName("Generated Causal Graph");
-//			return navDot;
-//			
-//		}
+		if(pn != null) {
+			
+			DotPanel navDot;
+			navDot = new DotPanel(GraphvizHybridPetriNet.convert(pn));
+			navDot.setName("Generated hybrid petri net");
+			return navDot;
+			
+		}
 		return null;
 		
 	}
@@ -138,25 +138,15 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 			throw new IOException("Failed to load Causal Graph port object. " + "Invalid zip entry name '" + entry.getName()
 					+ "', expected '" + ZIP_ENTRY_NAME + "'.");
 		}
-		XesXmlParserLenient parser = new XesXmlParserLenient();
-
 		final ObjectInputStream objIn = new ObjectInputStream(in);
 		try {
 			setSpec((HybridPetriNetPortObjectSpec) spec);
-//			HybridPNMinerSettings settings = new HybridPNMinerSettings();
-//			settings.setFilterAcivityThreshold(objIn.readDouble());
-//			settings.setTraceVariantsThreshold(objIn.readDouble());
-//			settings.setSureThreshold(objIn.readDouble());
-//			settings.setQuestionMarkThreshold(objIn.readDouble());
-//			settings.setLongDepThreshold(objIn.readDouble());
-//			settings.setCausalityWeight(objIn.readDouble());
-			
+
 			Color color1 = new Color(objIn.readInt());
 			Color color2 = new Color(objIn.readInt());
 			Color color3 = new Color(objIn.readInt());	
 			Color color4 = new Color(objIn.readInt());	
-			
-			
+						
 			ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("Hybrid Petri Net");
 			HybridPetriNetUtil.importHybridPetrinetFromStream(objIn, net);
 			
@@ -176,47 +166,4 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 			extends AbstractPortObject.AbstractPortObjectSerializer<HybridPetriNetPortObject> {
 
 	}
-	
-	
-//	// here we serialise the PortObject by using the prom plugin
-//	public static class HybridPetriNetPortObjectSerializer extends PortObjectSerializer<HybridPetriNetPortObject> {
-//
-//		@Override
-//		public void savePortObject(HybridPetriNetPortObject portObject, PortObjectZipOutputStream out, ExecutionMonitor exec)
-//				throws IOException, CanceledExecutionException {
-//
-//			HybridPNExporter.exportPetriNetToPNMLFile(null, getPN(), out);
-//			
-//			out.closeEntry();
-//			out.close();
-//			
-//		}
-//
-//		@Override
-//		public HybridPetriNetPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
-//				ExecutionMonitor exec) throws IOException, CanceledExecutionException {
-//			// nothing to do with spec here 
-//			ZipEntry nextEntry = in.getNextEntry();
-//			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_NAME)) {
-//				throw new IOException("Expected zip entry '" + ZIP_ENTRY_NAME + "' not present");
-//			}
-//			
-//			HybridPetriNetPortObject result = null;
-//			try {
-//				// they put layout information into context, if we want to show the them, 
-//				// we need to keep the context the same in load and save program. But how to do this??
-//				// that's why there is context in portObject. If we also save the context, what can be done??
-//				ExtendedHybridPetrinet net = pn;
-//				result = new HybridPetriNetPortObject(net);
-//				result.setSpec(spec);
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			// in.close();
-//			
-//			return result;
-//		}
-//		
-//	}
 }

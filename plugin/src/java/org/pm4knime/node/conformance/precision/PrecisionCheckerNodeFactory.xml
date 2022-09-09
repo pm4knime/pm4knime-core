@@ -3,46 +3,44 @@
     <name>Precision Checker</name>
     
     <shortDescription>
-       Based on the replayed alignment result of the event log and Petri net, the node Precision Checker measures the precision.
+       Based on the replay result, this node computes the statistical precision information.
     </shortDescription>
     
     <fullDescription>
         <intro>
+        This node wraps the ProM's plug-in "Check Precision based on Align-ETConformance" from the package ETConformance. 
+        This node is based on the result of alignment-based replayer. It computes the statistical precision information. 
         Conceptually, the precision of a process model compared to one event log is supposed to be (1) high when the model 
         allows for few traces not seen in the log; and (2) low when it allows for many traces not seen in the log.   
-        
-        This node implements the Escaping Edges Precision (ETC) Conformance plugin from ProM. 
-        It accepts the inputs of a Petri net and an event log, calculates the values for percision metrics and the
- Minimal Disconformant Traces [MDT] (traces that helps to identify the exact
- point where the model begins to allow more behaviour than the log).  
  		<br />
-			More information seen in the :
+			For more information:
 			<a href="https://link.springer.com/chapter/10.1007/978-3-642-15618-2_16">paper</a> and 
-			<a href="https://svn.win.tue.nl/trac/prom/browser/Documentation/ETConformance%20plug-in.pdf">codes documentation</a>.
+			<!--  <a href="https://svn.win.tue.nl/trac/prom/browser/Documentation/ETConformance%20plug-in.pdf">codes documentation</a>. -->
         </intro>
         
         
-       <option name="Ordered presentation">It is true in default. </option>
-		<option name="Algorithm">The algorithm to calculate the precision. It includes the following algorithms.
+       <option name="Ordered Representation">The representation of the information in the event log (ordered sequences or multi-sets). This option is enabled by default.</option>
+		<option name="Algorithm">The algorithm to calculate the precision. The following options are available:
 			<ul>
 			<!--  more details on the algorithms, what they do actually -->
 				<li>1-Align Precision.</li>
 				<li>All-Align Precision.</li>
 				<li>Representative-Align Precision.</li>
-				<li>ETC Precision (no invisible/duplicates allowed). Escaping Edges Precision (ETC) calculates precision 
+				<li>ETC Precision (no invisible/duplicates allowed). 
+				<!-- Escaping Edges Precision (ETC) calculates precision 
 				between an event log and a Petri net by constructing a prefix automaton and computing the escaping edges. 
 				Escaping edges are activities that are allowed as next activities in the process model but that are never observed in the event log 
 				after this prefix. In order to improve the precision measure robust to non-fitting traces, alignments are used to
-				 calculate the prefix automation.
+				 calculate the prefix automation.-->
 				</li>
-			</ul>
+				</ul>
  		</option>
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Alignment">Replayed result in alignment as input. </inPort>
+        <inPort index="0" name="Replay Result">replay result</inPort>
 		 
-        <outPort index="0" name="Precision Info">Precision Information</outPort>
+        <outPort index="0" name="Precision StatInfo">precision statistical information</outPort>
         
     </ports>    
 </knimeNode>
