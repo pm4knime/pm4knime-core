@@ -12,7 +12,11 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeModel;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.CostBasedCompleteManifestParamTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.IPNReplayAlgorithmTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNLogReplayerTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNManifestFlattenerTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNManifestReplayerParameterTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerILPRestrictedMoveModelTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerWithILPTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerWithoutILPTable;
@@ -109,14 +113,14 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	
     	// for performance only
     	if(strategyName.equals(ReplayerUtil.strategyList[2])) {
-    		/*change the calculation with ILP from nonILP mining.
+    		//change the calculation with ILP from nonILP mining.
     		replayAlgorithm = new PetrinetReplayerILPRestrictedMoveModelTable();
     		
     		// different parameters need different get parameter methods. We need to go back to replayer node
-    		PNManifestReplayerParameter manifestParameters = m_parameter.getPerfParameter(log, anet, eventClassifier);
+    		PNManifestReplayerParameterTable manifestParameters = m_parameter.getPerfParameter(log, anet);
     		
-    		PNManifestFlattener flattener = new PNManifestFlattener(anet.getNet(), manifestParameters);
-    		CostBasedCompleteManifestParam parameter = new CostBasedCompleteManifestParam(flattener.getMapEvClass2Cost(),
+    		PNManifestFlattenerTable flattener = new PNManifestFlattenerTable(anet.getNet(), manifestParameters);
+    		CostBasedCompleteManifestParamTable parameter = new CostBasedCompleteManifestParamTable(flattener.getMapEvClass2Cost(),
     				flattener.getMapTrans2Cost(), flattener.getMapSync2Cost(),
     				flattener.getInitMarking(), flattener.getFinalMarkings(), manifestParameters.getMaxNumOfStates(),
     				flattener.getFragmentTrans());
@@ -128,9 +132,9 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     				.getFutureResultAwarePluginContext(PNManifestReplayer.class);
     		// check cancellation of node before replaying the result
     		checkCanceled(pluginContext, exec);
-    		PNLogReplayer replayer = new PNLogReplayer();
+    		PNLogReplayerTable replayer = new PNLogReplayerTable();
     		repResult = replayer.replayLog(pluginContext, flattener.getNet(), log, flattener.getMap(),
-    				replayAlgorithm, parameter);*/
+    				replayAlgorithm, parameter);
     		
     	}else {
     		// for conformance 

@@ -67,7 +67,7 @@ public class PNManifestReplayerParameterTable extends AbstractPNManifestReplayer
 				while (i < encodedPatterns.length) {
 					EvClassPattern list = new EvClassPattern(encodedPatterns[i + 1]);
 					for (int j = i + 2; j < i + 2 + encodedPatterns[i + 1]; j++) {
-						list.add(mapping.decodeEvClass(encodedPatterns[j]));
+						//list.add(mapping.decodeEvClass(encodedPatterns[j]));
 					}
 					res.add(list);
 					i += 2 + encodedPatterns[i + 1];
@@ -94,7 +94,7 @@ public class PNManifestReplayerParameterTable extends AbstractPNManifestReplayer
 			return this.maxNumOfStates;
 		}
 
-		public TransClass2PatternMap getMapping() {
+		public TransClass2PatternMapTable getMapping() {
 			return this.mapping;
 		}
 }

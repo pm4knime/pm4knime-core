@@ -9,18 +9,10 @@ import java.util.Set;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 import org.pm4knime.util.PetriNetUtil;
-import org.pm4knime.util.ReplayerUtil;
-import org.pm4knime.util.XLogUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
@@ -145,29 +137,28 @@ public class SMAlignmentReplayerParameterWithCTTable extends SMAlignmentReplayPa
 	
 	// for performance parameter
 	@Override
-    public PNManifestReplayerParameter getPerfParameter(XLog log, AcceptingPetriNet anet, XEventClassifier eventClassifier ) {
+    public PNManifestReplayerParameterTable getPerfParameter(TableEventLog log, AcceptingPetriNet anet) {
     	// how to create a table to assign such values here?? 
 		// if many event classes are available here?? 
     	
-		XLogInfo logInfo = XLogInfoFactory.createLogInfo(log, eventClassifier);
-		Collection<XEventClass> eventClasses =  logInfo.getEventClasses().getClasses();
+		Collection<String> eventClasses =  Arrays.asList(log.getActivties());
 
-		PNManifestReplayerParameter parameters = new PNManifestReplayerParameter();
+		PNManifestReplayerParameterTable parameters = new PNManifestReplayerParameterTable();
 		//TODO : assign a better value here
 		// parameters.setMaxNumOfStates(200000);
 		
 		// get the pattern map for transition & event classes 
 		TransClasses tc = new TransClasses(anet.getNet());
-		Map<TransClass, Set<EvClassPattern>> pattern = ReplayerUtil.buildPattern(tc, eventClasses);
-		TransClass2PatternMap mapping = new TransClass2PatternMap(log, anet.getNet(), eventClassifier, tc, pattern);
+		Map<TransClass, Set<EvClassPatternTable>> pattern = ReplayerUtilTable.buildPattern(tc, eventClasses);
+		TransClass2PatternMapTable mapping = new TransClass2PatternMapTable(log, anet.getNet(), tc, pattern);
 		parameters.setMapping(mapping);
 		
 		// set the move cost
 		// TODO: flexible to accept different values given from the cost table
 		// given one table, how to set the values there
-		Map<XEventClass, Integer> mapLMCost = ReplayerUtil.buildLMCostMap(eventClasses, m_costTMs[0]);
-		Map<TransClass, Integer> mapTMCost = ReplayerUtil.buildTMCostMap(tc, m_costTMs[1]);
-		Map<TransClass, Integer> mapSMCost = ReplayerUtil.buildTMCostMap(tc, m_costTMs[2]);
+		Map<String, Integer> mapLMCost = ReplayerUtilTable.buildLMCostMap(eventClasses, m_costTMs[0]);
+		Map<TransClass, Integer> mapTMCost = ReplayerUtilTable.buildTMCostMap(tc, m_costTMs[1]);
+		Map<TransClass, Integer> mapSMCost = ReplayerUtilTable.buildTMCostMap(tc, m_costTMs[2]);
 		
 		parameters.setMapEvClass2Cost(mapLMCost);
 		parameters.setTrans2Cost(mapTMCost);

@@ -9,14 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XLog;
+
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
-import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 
@@ -71,7 +66,7 @@ public class TransClass2PatternMapTable {
 	 * @param mapping
 	 */
 	public TransClass2PatternMapTable(TableEventLog log, PetrinetGraph net,  TransClasses transClasses,
-			Map<TransClass, Set<EvClassPattern>> mapping) {
+			Map<TransClass, Set<EvClassPatternTable>> mapping) {
 		/* Todo sub evclassPattern*/
 		init(log, net, transClasses, mapping);
 	}
@@ -126,7 +121,7 @@ public class TransClass2PatternMapTable {
 	 * @param mapping
 	 */
 	public void init(TableEventLog log, PetrinetGraph net,  TransClasses transClasses,
-			Map<TransClass, Set<EvClassPattern>> mapping) {
+			Map<TransClass, Set<EvClassPatternTable>> mapping) {
 		this.evClassifier = log.getClassifier();
 		this.transClasses = transClasses;
 
@@ -165,17 +160,17 @@ public class TransClass2PatternMapTable {
 
 		TShortArrayList tempTail = new TShortArrayList(transClassEnc.length * 4);
 		for (int i = 0; i < transClassEnc.length; i++) {
-			Set<EvClassPattern> setListEvClass = mapping.get(transClassEnc[i]);
+			Set<EvClassPatternTable> setListEvClass = mapping.get(transClassEnc[i]);
 			if (setListEvClass != null) {
 				// index of the beginning of a transition should be < Integer.MAX_VALUE
 				patternsTemp.add((short) (transClassEnc.length + tempTail.size()));
 
-				for (List<XEventClass> lst : setListEvClass) {
+				for (List<String> lst : setListEvClass) {
 					short patternSize = (short) lst.size();
 					patternID2IdxTemp.add((short) (tempTail.size() + transClassEnc.length + 1));
 					tempTail.add(patternIDcounter++);
 					tempTail.add(patternSize);
-					for (XEventClass ec : lst) {
+					for (String ec : lst) {
 						tempTail.add(evClass2Enc.get(ec).shortValue());
 					}
 				}
@@ -256,7 +251,7 @@ public class TransClass2PatternMapTable {
 	 * @param evClass
 	 * @return null if there is no encoding
 	 */
-	public Short getEvClassEncFor(XEventClass evClass) {
+	public Short getEvClassEncFor(String evClass) {
 		return evClass2Enc.get(evClass);
 	}
 

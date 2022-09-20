@@ -10,28 +10,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.deckfour.xes.classification.XEventClasses;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
+
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
-import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer.Representative;
-import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer.Result;
+
 import org.processmining.plugins.astar.petrinet.impl.AStarRestrictedMoveModelThread;
-import org.processmining.plugins.astar.petrinet.impl.AbstractPILPDelegate;
-import org.processmining.plugins.astar.petrinet.impl.PHead;
-import org.processmining.plugins.astar.petrinet.impl.PILPDelegate;
-import org.processmining.plugins.astar.petrinet.impl.PILPTail;
-import org.processmining.plugins.astar.petrinet.impl.PRecord;
-import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
-import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
+
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
-import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.PNRepResultImpl;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
@@ -61,9 +48,9 @@ public class PetrinetReplayerILPRestrictedMoveModelTable extends PetrinetReplaye
 	@Override
 	public boolean isAllReqSatisfied(PluginContext context, PetrinetGraph net, TableEventLog log, TransEvClassMappingTable mapping,
 			IPNReplayParameter parameter) {
-		if (parameter instanceof CostBasedCompleteManifestParam) {
+		if (parameter instanceof CostBasedCompleteManifestParamTable) {
 			if (super.isAllReqSatisfied(context, net, log, mapping, parameter)) {
-				Marking[] finalMarking = ((CostBasedCompleteParam) parameter).getFinalMarkings();
+				Marking[] finalMarking = ((CostBasedCompleteParamTable) parameter).getFinalMarkings();
 				if ((finalMarking != null) && (finalMarking.length > 0)) {
 					return true;
 				}
