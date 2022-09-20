@@ -152,7 +152,7 @@
         
         <!-- nodes in conformance-->
                         		
-         <node category-path="/" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" id="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory"/>
+         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" id="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory"/>
         
         
         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory"/>
