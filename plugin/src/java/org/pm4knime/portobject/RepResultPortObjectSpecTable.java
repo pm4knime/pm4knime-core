@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
+package org.pm4knime.portobject;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,7 +12,8 @@ import org.knime.core.node.NodeSettings;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
-import org.pm4knime.portobject.RepResultPortObjectSpec;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayerParameterWithCTTable;
 
 
 public class RepResultPortObjectSpecTable implements PortObjectSpec {

@@ -1,4 +1,4 @@
-package org.pm4knime.node.conformance.replayer.table.helper.tableLibs;
+package org.pm4knime.portobject;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,19 +13,21 @@ import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
 
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.model.XLog;
+
+import org.knime.core.data.DataTable;
+
+import org.knime.core.data.container.DataContainer;
+import org.knime.core.data.util.NonClosableOutputStream;
+import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
-import org.knime.core.node.port.PortObject.PortObjectSerializer;
-import org.pm4knime.portobject.RepResultPortObject;
-import org.pm4knime.portobject.RepResultPortObjectSpec;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNLogReplayResultVisPanelTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TableEventLog;
 import org.pm4knime.util.PetriNetUtil;
-import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
@@ -39,9 +41,10 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 
 public class RepResultPortObjectTable implements PortObject {
 	private static final String ZIP_ENTRY_NAME = "RepResultPortObject";
-	private static final String ZIP_ENTRY_LOG = "XLog";
+	private static final String ZIP_ENTRY_LOG = "Log";
 	private static final String ZIP_ENTRY_NET = "Accepting Petri net";
 	private static final String ZIP_ENTRY_REP_RESULT = "Replay Result";
+	private static final String ZIP_ENTRY_CLASSIFIER = "Classifier";
 	// alignment result but only for one trace variance
 	// SyncReplayResult alignment;
 	
@@ -57,13 +60,15 @@ public class RepResultPortObjectTable implements PortObject {
 	// so change the saved object without Port Object
 	// PetriNetPortObject pnPO;
 	// XLogPortObject xlogPO;
-	private TableEventLog log;
+	private static TableEventLog log;
+	private DataTable tableLog;
 	AcceptingPetriNet anet;
 	
-	public RepResultPortObjectTable(PNRepResult repResult, TableEventLog log, AcceptingPetriNet anet) { // PetriNetPortObject pnPO,
+	public RepResultPortObjectTable(PNRepResult repResult,TableEventLog log, DataTable tableLog, AcceptingPetriNet anet) { // PetriNetPortObject pnPO,
 		this.repResult = repResult;
 		// this.pnPO = pnPO;
 		this.log = log;
+		this.tableLog = tableLog;
 		this.anet = anet;
 	}
 	
@@ -80,9 +85,21 @@ public class RepResultPortObjectTable implements PortObject {
 	public TableEventLog getLog() {
 		return log;
 	}
-	public void setLog(TableEventLog log) {
+	public DataTable getTable() {
+		return tableLog;
+	}
+
+	public void setLog(DataTable tableLog, String classifier) {
 		// TODO Auto-generated method stub
-		this.log = log;
+		TableEventLog logTEL = null;
+		try {
+			logTEL = new TableEventLog(tableLog, classifier);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.log = logTEL;
+		this.tableLog = tableLog;
 	}
 	public AcceptingPetriNet getNet() {
 		return anet;
@@ -120,16 +137,17 @@ public class RepResultPortObjectTable implements PortObject {
 	}
 	
 	// here we serialise the PortObject by using the prom plugin
-	public static class RepResultPortObjectSerializer extends PortObjectSerializer<RepResultPortObject> {
+	public static class RepResultPortObjectSerializerTable extends PortObjectSerializer<RepResultPortObjectTable> {
 
+	    private Map<String, DataTable> m_inputData = null;
+	    
 		@Override
-		public void savePortObject(RepResultPortObject portObject, PortObjectZipOutputStream out, ExecutionMonitor exec)
+		public void savePortObject(RepResultPortObjectTable portObject, PortObjectZipOutputStream out, ExecutionMonitor exec)
 				throws IOException, CanceledExecutionException {
 			// TODO get item of alignment one item for another item to serialze them
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NAME));
 			System.out.println("Enter the save  "+ ZIP_ENTRY_NAME + " in serializer");
 			ObjectOutputStream objOut = new ObjectOutputStream(out);
-			
 			// save Petri net without PortObject 
 			out.putNextEntry(new ZipEntry(ZIP_ENTRY_NET));
 			AcceptingPetriNet anet = portObject.getNet();
@@ -146,6 +164,8 @@ public class RepResultPortObjectTable implements PortObject {
 			// if we save them into string, it should be fine
 			Map<String, Object> infoMap = repResult.getInfo();
 			serializeInfo(infoMap);
+			String classifier = log.getClassifier();
+			objOut.writeUTF(classifier);
 			// how to make sure the object stored in infoMap is serializable?? No secure way!!
 			// so we need to remember only the names for the class, after this, we will recover it.
 			objOut.writeObject(infoMap);
@@ -161,13 +181,10 @@ public class RepResultPortObjectTable implements PortObject {
 				// after this, we have the XEvent class, then we need to do?? 
 				objOut.writeInt(nodeInstances.size());
 				for(Object node: nodeInstances) {
-					if(node instanceof XEventClass) {
-						XEventClass ecls = (XEventClass) node;
-						
-						objOut.writeUTF(ecls.getClass().getName());
-						objOut.writeUTF(ecls.getId());
-						objOut.writeInt(ecls.getIndex());
-						objOut.writeInt(ecls.size());
+					if(node instanceof String) {
+						String ecls = (String) node;
+						objOut.writeUTF(ecls);
+						objOut.writeInt(ecls.length());
 					}else if(node instanceof Transition) {
 						// transition in Petri net, we need to store a lot of object here
 						Transition t = (Transition) node;
@@ -200,14 +217,15 @@ public class RepResultPortObjectTable implements PortObject {
 			}
 			out.closeEntry();
 			
+				
+				// without the help of port Object
+				out.putNextEntry(new ZipEntry(ZIP_ENTRY_LOG));
+				// create another OutputStream for log
+				 BufferedDataContainer.writeToStream(portObject.getTable(), new NonClosableOutputStream(out), exec);
+				 out.closeEntry();
+
 			
-			// without the help of port Object
-			out.putNextEntry(new ZipEntry(ZIP_ENTRY_LOG));
-			// create another OutputStream for log
-			XLogUtil.saveLog(portObject.getLog(), out);
-			out.closeEntry();
-			
-			// out.close();
+			out.close();
 			System.out.println("Exit the save "+ ZIP_ENTRY_NAME + " in serializer");
 		}
 
@@ -225,7 +243,7 @@ public class RepResultPortObjectTable implements PortObject {
 		}
 
 		@Override
-		public RepResultPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
+		public RepResultPortObjectTable loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
 				ExecutionMonitor exec) throws IOException, CanceledExecutionException {
 			// TODO Auto-generated method stub
 			// in the same order of writing part
@@ -256,8 +274,9 @@ public class RepResultPortObjectTable implements PortObject {
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_REP_RESULT)) {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_REP_RESULT + "' not present");
 			}
-			RepResultPortObject repResultPO = new RepResultPortObject();
+			RepResultPortObjectTable repResultPO = new RepResultPortObjectTable();
 			Map<String, Object> infoMap = new HashMap();
+			String classifier = objIn.readUTF();
 			try {
 				infoMap = (Map<String, Object>) objIn.readObject();
 				
@@ -278,14 +297,12 @@ public class RepResultPortObjectTable implements PortObject {
 					
 						// make sure of the class to read
 						String classType = objIn.readUTF();
-						if(classType.equals(XEventClass.class.getName())) {
+						if(classType.equals(String.class.getName())) {
 							
 							String Id = objIn.readUTF();
-							int nIdx = objIn.readInt();
 							int esize = objIn.readInt();
 							
-							XEventClass ecls = new XEventClass(Id, nIdx);
-							ecls.setSize(esize);
+							String ecls = Id;
 							nodeInstances.add(ecls);
 						}else if(classType.equals(Transition.class.getName())) {
 //							String label = objIn.readUTF();
@@ -318,25 +335,33 @@ public class RepResultPortObjectTable implements PortObject {
 					
 				}
 			
+			
 			// firstly to get the entry name for replay result
 			nextEntry = in.getNextEntry();
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_LOG)) {
 				throw new IOException("Expected zip entry '" + ZIP_ENTRY_LOG + "' not present");
-			}
+			}	
+			
 			
 			// this method closes the InputStream, why it can't read the data
-			XLog log = XLogUtil.loadLog(in);
-			
+			DataTable log = null;
+			try {
+				log = DataContainer.readFromStream(in);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+
 			// use this alignment object, we need to reload it here
 			repResultPO.setRepResult(new PNRepResultImpl(col));
-			repResultPO.setLog(log);
+			repResultPO.setLog(log,classifier);
 			repResultPO.setNet(anet);
 			// when they use the Impl, it creates the info by itselves. So we don't need to store it here.
 			// but about the other infoMap, it could be not so lucky!! So, we still read the map and store it here
 			repResultPO.getRepResult().setInfo(infoMap);
 			// this is very important if we want to have some data from spec!!
-			repResultPO.setSpec((RepResultPortObjectSpec) spec);
-			// in.close();
+			repResultPO.setSpec((RepResultPortObjectSpecTable) spec);
 			System.out.println("Exit the load "+ ZIP_ENTRY_NAME + " in serializer");
 			return repResultPO;
 		}

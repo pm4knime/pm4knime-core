@@ -20,14 +20,13 @@ import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNManifestR
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerILPRestrictedMoveModelTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerWithILPTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PetrinetReplayerWithoutILPTable;
-import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.RepResultPortObjectSpecTable;
-import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.RepResultPortObjectTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TableEventLog;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TransEvClassMappingTable;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
-
+import org.pm4knime.portobject.RepResultPortObjectSpecTable;
+import org.pm4knime.portobject.RepResultPortObjectTable;
 import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
@@ -160,7 +159,7 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	// check cancellation of node after replaying the result
     	checkCanceled(exec);
     	
-		repResultPO = new RepResultPortObjectTable(repResult, log, anet);
+		repResultPO = new RepResultPortObjectTable(repResult, log, logPO, anet);
 		m_rSpec.setMParameter(m_parameter);
 		repResultPO.setSpec(m_rSpec);
     }

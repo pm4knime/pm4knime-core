@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
+import org.knime.core.data.DataTable;
 import org.knime.core.node.BufferedDataTable;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
@@ -17,13 +18,17 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.strategy.HashingStrategy;
 
-public class TableEventLog {
+public class TableEventLog implements java.io.Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String[] activties;
 	private String[] index2activity;
 	private Map<Integer, List<String>> traces;
 	private Map<Integer, List<String>> tracesWithCompleteEvent;
-	private BufferedDataTable log;
+	private DataTable log;
 	private String classifier;
 	private String traceClassifier;
 	private TObjectIntMap<String> activity2index;
@@ -38,7 +43,7 @@ public class TableEventLog {
  * @param classifier Classifier as a string
  * @throws Exception 
  */
-	public TableEventLog(BufferedDataTable log, String classifier) throws Exception {
+	public TableEventLog(DataTable log, String classifier) throws Exception {
 		this.classifier = classifier;
 		this.log = log;
 		this.traces = tableLogToMap();		
