@@ -47,6 +47,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 	String[] strategyList = ReplayerUtil.strategyList;
 
 	DialogComponentStringSelection classifierComp;
+	DialogComponentStringSelection classifierTraceComp;
 
 	BufferedDataTable logPO;
 
@@ -123,7 +124,9 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 		classifierComp = new DialogComponentStringSelection(m_parameter.getMClassifierName(),
 				"Select Classifier Name", new String[] { "" });
 		addDialogComponent(classifierComp);
-
+		classifierTraceComp = new DialogComponentStringSelection(m_parameter.getMClassifierTrace(),
+				"Select Trace Classifier Name", new String[] { "" });
+		addDialogComponent(classifierTraceComp);
 		parameter.getMStrategy().setStringValue(strategyList[0]);
 		DialogComponentStringSelection m_strategyComp = new DialogComponentStringSelection(m_parameter.getMStrategy(),
 				"Select Replay Strategy", strategyList);
@@ -182,11 +185,15 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 					logSpec.getClassifiersMap().keySet().iterator().next());*/
 			classifierComp.replaceListItems(specClassifierSet, 
 					specClassifierSet.iterator().next());
+			classifierTraceComp.replaceListItems(specClassifierSet, 
+					specClassifierSet.iterator().next());
 			m_parameter.getMClassifierName().loadSettingsFrom(settings);
+			m_parameter.getMClassifierTrace().loadSettingsFrom(settings);
 			// if the classifier is the same, then we don't need to check the event log. because they are the same
 			SMAlignmentReplayerParameterWithCTTable tmp = (SMAlignmentReplayerParameterWithCTTable) m_parameter;
 			String eventClassifier = m_parameter.getMClassifierName().getStringValue(); 
-			TableEventLog log = new TableEventLog(logPO, eventClassifier);
+			String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
+			TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier);
 			
 			List<String> ecNames = Arrays.asList(log.getActivties());
 			ecNames.sort(String::compareTo);
@@ -215,9 +222,10 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 
 					if (logPO != null) {
 						String eventClassifier = m_parameter.getMClassifierName().getStringValue();
+						String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
 						TableEventLog log;
 						try {
-							log = new TableEventLog(logPO, eventClassifier);
+							log = new TableEventLog(logPO, eventClassifier, traceClassifier);
 							List<String> ecNames = Arrays.asList(log.getActivties());
 							ecNames.sort(String::compareTo);
 							tmp.setCostTM(ecNames, 0);
@@ -235,6 +243,38 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 				}
 
 			});
+			
+			m_parameter.getMClassifierTrace().addChangeListener(new ChangeListener() {
+				// to update the classifier according to the chosen transitions expression there
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					// TODO it implements the update if we change the event classifier in choice
+					SMAlignmentReplayerParameterWithCTTable tmp = (SMAlignmentReplayerParameterWithCTTable) m_parameter;
+
+					if (logPO != null) {
+						String eventClassifier = m_parameter.getMClassifierName().getStringValue();
+						String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
+						TableEventLog log;
+						try {
+							log = new TableEventLog(logPO, eventClassifier, traceClassifier);
+							List<String> ecNames = Arrays.asList(log.getActivties());
+							ecNames.sort(String::compareTo);
+							tmp.setCostTM(ecNames, 0);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						// here the value is still the old value,
+//						System.out.println("the current value is " + m_parameter.getMClassifierName().getStringValue());
+
+		
+						// need some update to the view? 
+						
+					}
+				}
+
+			});
+
 
 		} catch (Exception e) {
 			// TODO if there is not with TM, we set it from the input PortObject

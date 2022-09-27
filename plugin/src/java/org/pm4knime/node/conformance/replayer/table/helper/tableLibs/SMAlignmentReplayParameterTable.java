@@ -40,12 +40,14 @@ implements SettingsModelFlowVariableCompatible{
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
 	final String CFG_KEY_CLASSIFIER_SET = "Event classifier set";
+	final String CKF_KEY_TRACE_CLASSIFIER = "Trace classifier";
 	
 	// remove the final before string
 	private String m_configName;
 	
 	private SettingsModelString m_strategy;
 	private SettingsModelString m_classifierName;
+	private SettingsModelString m_classifierTrace;
 	private SettingsModelStringArray classifierSet; 
 	private SettingsModelIntegerBounded[] m_defaultCosts;
 	
@@ -64,6 +66,7 @@ implements SettingsModelFlowVariableCompatible{
 		m_classifierName = new SettingsModelString(CKF_KEY_EVENT_CLASSIFIER, "");
 		classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
 					new String[] {""});
+		m_classifierTrace = new SettingsModelString(CKF_KEY_TRACE_CLASSIFIER, "");
 		m_defaultCosts = new SettingsModelIntegerBounded[CFG_COST_TYPE_NUM];
 		
 		// m_defaultCosts here 
@@ -90,9 +93,15 @@ implements SettingsModelFlowVariableCompatible{
 	public SettingsModelString getMClassifierName() {
 		return m_classifierName;
 	}
+	public SettingsModelString getMClassifierTrace() {
+		return m_classifierTrace;
+	}
 
 	public void setMClassifierName(SettingsModelString m_classifierName) {
 		this.m_classifierName = m_classifierName;
+	}
+	public void setMClassifierTrace(SettingsModelString m_classifierTrace) {
+		this.m_classifierTrace = m_classifierTrace;
 	}
 
 	public SettingsModelIntegerBounded[] getMDefaultCosts() {
@@ -128,6 +137,7 @@ implements SettingsModelFlowVariableCompatible{
 //		clone.setClassifierSet(classifierSet);
 		clone.setMStrategy(m_strategy);
 		clone.setMDefaultCosts(m_defaultCosts);
+		clone.setMClassifierTrace(m_classifierTrace);
 		
 		return clone;
 	}
@@ -170,6 +180,7 @@ implements SettingsModelFlowVariableCompatible{
     	// one difficulty is how to get it from the classifierSet?? 
     	// how to get and save it here??
     	classifierSet.saveSettingsTo(subSettings);
+    	m_classifierTrace.saveSettingsTo(subSettings);
     	
     	for(int i=0; i< CFG_COST_TYPE_NUM; i++){
     		m_defaultCosts[i].saveSettingsTo(subSettings);
@@ -181,7 +192,7 @@ implements SettingsModelFlowVariableCompatible{
 		// TODO Auto-generated method stub
 		m_strategy.validateSettings(settings);
 		m_classifierName.validateSettings(settings);
-		
+		m_classifierTrace.validateSettings(settings);
 		classifierSet.validateSettings(settings);
 		
 
@@ -204,6 +215,7 @@ implements SettingsModelFlowVariableCompatible{
 		
 		m_classifierName.loadSettingsFrom(subSettings);
     	classifierSet.loadSettingsFrom(subSettings);
+    	m_classifierTrace.loadSettingsFrom(subSettings);
     	
     		for(int i=0; i< CFG_COST_TYPE_NUM; i++){
     			if(subSettings.containsKey(CFG_MCOST_KEY[i])) {

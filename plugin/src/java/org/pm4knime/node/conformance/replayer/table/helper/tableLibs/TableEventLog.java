@@ -30,7 +30,7 @@ public class TableEventLog implements java.io.Serializable{
 	private Map<Integer, List<String>> tracesWithCompleteEvent;
 	private DataTable log;
 	private String classifier;
-	private String traceClassifier;
+	private String traceClassifier ="";
 	private TObjectIntMap<String> activity2index;
 	private Map<Integer, String> traceIDName;
 	
@@ -43,7 +43,7 @@ public class TableEventLog implements java.io.Serializable{
  * @param classifier Classifier as a string
  * @throws Exception 
  */
-	public TableEventLog(DataTable log, String classifier) throws Exception {
+	public TableEventLog(DataTable log, String classifier, String traceClassifier) throws Exception {
 		this.classifier = classifier;
 		this.log = log;
 		this.traces = tableLogToMap();		
@@ -52,7 +52,7 @@ public class TableEventLog implements java.io.Serializable{
 		List<String> activityList = createActivityList();
 		this.activties = activityList.stream().map(s -> s.toString()).toArray(String[]::new);
 		String[] names = log.getDataTableSpec().getColumnNames();
-		 this.traceClassifier = findRowWithTraceConceptName(names);
+		
 		if(traceClassifier.isEmpty()) {
 			throw new Exception("Concept Name for Trace was not found");
 		}
@@ -65,6 +65,9 @@ public class TableEventLog implements java.io.Serializable{
 
 	
 	
+	public String getTraceClassifier() {
+		return this.traceClassifier;
+	}
 	public String getTraceName(int traceId) {
 		return this.traceIDName.get(traceId);
 	}
@@ -212,6 +215,10 @@ public class TableEventLog implements java.io.Serializable{
 		return traceSet;
 	}
 	
+	public void setTraceClassifier(String traceClassifier) {
+		this.traceClassifier = traceClassifier;
+		
+	}
 	private int getClassifierIndexFromColumn(String classifier) {
 		String[] columns = log.getDataTableSpec().getColumnNames();
 		int indexOfClassifierInTable = 0;

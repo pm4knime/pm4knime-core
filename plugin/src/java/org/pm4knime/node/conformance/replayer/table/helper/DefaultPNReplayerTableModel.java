@@ -102,7 +102,8 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	BufferedDataTable logPO = (BufferedDataTable) inData[INPORT_LOG];
     	PetriNetPortObject netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
     	String eventClassifier = m_parameter.getMClassifierName().getStringValue();
-    	TableEventLog log = new TableEventLog(logPO, eventClassifier); 
+    	String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
+    	TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier); 
     	AcceptingPetriNet anet = netPO.getANet();
     	
     	// here to change the operation on the classifier

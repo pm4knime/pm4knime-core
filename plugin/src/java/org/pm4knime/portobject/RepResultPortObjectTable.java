@@ -89,11 +89,11 @@ public class RepResultPortObjectTable implements PortObject {
 		return tableLog;
 	}
 
-	public void setLog(DataTable tableLog, String classifier) {
+	public void setLog(DataTable tableLog, String classifier, String traceClassifier) {
 		// TODO Auto-generated method stub
 		TableEventLog logTEL = null;
 		try {
-			logTEL = new TableEventLog(tableLog, classifier);
+			logTEL = new TableEventLog(tableLog, classifier, traceClassifier);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -165,7 +165,9 @@ public class RepResultPortObjectTable implements PortObject {
 			Map<String, Object> infoMap = repResult.getInfo();
 			serializeInfo(infoMap);
 			String classifier = log.getClassifier();
+			String traceClassifier = log.getTraceClassifier();
 			objOut.writeUTF(classifier);
+			objOut.writeUTF(traceClassifier);
 			// how to make sure the object stored in infoMap is serializable?? No secure way!!
 			// so we need to remember only the names for the class, after this, we will recover it.
 			objOut.writeObject(infoMap);
@@ -277,6 +279,7 @@ public class RepResultPortObjectTable implements PortObject {
 			RepResultPortObjectTable repResultPO = new RepResultPortObjectTable();
 			Map<String, Object> infoMap = new HashMap();
 			String classifier = objIn.readUTF();
+			String traceClassifier = objIn.readUTF();
 			try {
 				infoMap = (Map<String, Object>) objIn.readObject();
 				
@@ -336,6 +339,7 @@ public class RepResultPortObjectTable implements PortObject {
 				}
 			
 			
+			
 			// firstly to get the entry name for replay result
 			nextEntry = in.getNextEntry();
 			if ((nextEntry == null) || !nextEntry.getName().equals(ZIP_ENTRY_LOG)) {
@@ -355,7 +359,7 @@ public class RepResultPortObjectTable implements PortObject {
 
 			// use this alignment object, we need to reload it here
 			repResultPO.setRepResult(new PNRepResultImpl(col));
-			repResultPO.setLog(log,classifier);
+			repResultPO.setLog(log,classifier, traceClassifier);
 			repResultPO.setNet(anet);
 			// when they use the Impl, it creates the info by itselves. So we don't need to store it here.
 			// but about the other infoMap, it could be not so lucky!! So, we still read the map and store it here
