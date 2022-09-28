@@ -3,9 +3,9 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Alignment-Based Replayer(Legacy)</name>
-
-	<shortDescription>
+    <name>Alignment-Based Replayer</name>
+    
+<shortDescription>
 		This node implements the alignment-based replayer for constructing the optimal alignments by replaying an event log on a Petri net.
 	</shortDescription>
 
@@ -83,5 +83,4 @@
 
 		<!-- possibly more output ports here -->
 	</ports>
-
 </knimeNode>

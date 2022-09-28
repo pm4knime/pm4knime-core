@@ -152,6 +152,7 @@
         
         <!-- nodes in conformance-->
                         		
+         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" id="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory"/>
         
         
         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory"/>
@@ -204,6 +205,7 @@
         
         <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObject" objectSerializer="org.pm4knime.portobject.RepResultPortObject$RepResultPortObjectSerializer" specClass="org.pm4knime.portobject.RepResultPortObjectSpec" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpec$RepResultPortObjectSpecSerializer"/>
                                         		
+         <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObjectTable" objectSerializer="org.pm4knime.portobject.RepResultPortObjectTable$RepResultPortObjectSerializerTable" specClass="org.pm4knime.portobject.RepResultPortObjectSpecTable" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpecTable$RepResultPortObjectSpecSerializerTable"/>
         
         
         
