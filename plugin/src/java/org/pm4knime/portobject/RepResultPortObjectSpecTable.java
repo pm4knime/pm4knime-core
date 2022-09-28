@@ -19,7 +19,7 @@ import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignment
 public class RepResultPortObjectSpecTable implements PortObjectSpec {
 	
 	
-private static final String ZIP_ENTRY_NAME = "RepResultPortObjectSpec";
+private static final String ZIP_ENTRY_NAME = "RepResultPortObjectSpecTable";
 	
 	// add m_parameter here 
  private SMAlignmentReplayParameterTable m_parameter;

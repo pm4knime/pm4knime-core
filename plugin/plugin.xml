@@ -19,8 +19,12 @@
 		<category after="log" level-id="table" name="Table-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
 		<category after="table" level-id="model" name="Model-Based Discovery" path="/community/processmining/discovery" icon="icon/category-discovery.png" />
 
-		
+		<!-- conformance-->
 		<category after="discovery" level-id="conformance" name="Evaluation" path="/community/processmining" icon="icon/category-conformance.png" />
+		<category level-id="log" name="Log-Based Evaluation" path="/community/processmining/conformance" icon="icon/category-conformance.png" />
+		<category after="log" level-id="table" name="Table-Based Evaluation" path="/community/processmining/conformance" icon="icon/category-conformance.png" />
+		
+		
 		<category after="conformance" level-id="visualization" name="JavaScript Visualization" path="/community/processmining" icon="icon/category-visualization.png" />
 	</extension>
 
@@ -70,11 +74,18 @@
 		<node category-path="/community/processmining/discovery/model" factory-class="org.pm4knime.node.discovery.dfgminer.knimeTable.InductiveMinerDFGTableNodeFactory"/>
         
 		<!-- nodes in conformance-->
-		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />
-		<!-- nodes in performance-->
-		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory" />
-		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory" />
-		<node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory" />
+		<node category-path="/community/processmining/conformance/log" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory" />
+		<node category-path="/community/processmining/conformance/log" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory" />
+		<node category-path="/community/processmining/conformance/log" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory" />
+		<node category-path="/community/processmining/conformance/log" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory" />
+		
+		
+		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" id="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory"/>
+		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.table.fitness.FitnessCheckerNodeFactory" />
+		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.table.performance.PerformanceCheckerNodeFactory" />
+		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.table.precision.PrecisionCheckerNodeFactory" />
+		
+		    
 		<!-- nodes visualization-->
 		<node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizPTNodeFactory"/>
         <node category-path="/community/processmining/visualization" factory-class="org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizDFGNodeFactory"/>
@@ -150,28 +161,7 @@
                         		
         
         
-        <!-- nodes in conformance-->
-                        		
-         <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" id="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory"/>
         
-        
-        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.fitness.FitnessCheckerNodeFactory"/>
-                        		
-        
-        
-        <!-- nodes in performance-->
-                        		
-        
-        
-        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.performance.PerformanceCheckerNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/conformance" factory-class="org.pm4knime.node.conformance.replayer.PNReplayerNodeFactory"/>
             
     
     </extension>

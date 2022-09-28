@@ -36,15 +36,13 @@ import org.processmining.models.graphbased.directed.petrinet.impl.AbstractResetI
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.PNRepResultImpl;
 import org.processmining.plugins.petrinet.replayresult.StepTypes;
-import org.processmining.plugins.petrinet.replayresult.visualization.PNLogReplayResultVisPanel;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 
 public class RepResultPortObjectTable implements PortObject {
-	private static final String ZIP_ENTRY_NAME = "RepResultPortObject";
+	private static final String ZIP_ENTRY_NAME = "RepResultPortObjectTable";
 	private static final String ZIP_ENTRY_LOG = "Log";
 	private static final String ZIP_ENTRY_NET = "Accepting Petri net";
 	private static final String ZIP_ENTRY_REP_RESULT = "Replay Result";
-	private static final String ZIP_ENTRY_CLASSIFIER = "Classifier";
 	// alignment result but only for one trace variance
 	// SyncReplayResult alignment;
 	
@@ -60,8 +58,8 @@ public class RepResultPortObjectTable implements PortObject {
 	// so change the saved object without Port Object
 	// PetriNetPortObject pnPO;
 	// XLogPortObject xlogPO;
-	private static TableEventLog log;
-	private DataTable tableLog;
+	TableEventLog log;
+	DataTable tableLog;
 	AcceptingPetriNet anet;
 	
 	public RepResultPortObjectTable(PNRepResult repResult,TableEventLog log, DataTable tableLog, AcceptingPetriNet anet) { // PetriNetPortObject pnPO,
@@ -120,7 +118,7 @@ public class RepResultPortObjectTable implements PortObject {
 		// TODO if it access the null one??
 		if(m_rSpec != null)
 			return m_rSpec ;
-		return new RepResultPortObjectSpec();
+		return new RepResultPortObjectSpecTable();
 	}
 
 	@Override
@@ -164,8 +162,8 @@ public class RepResultPortObjectTable implements PortObject {
 			// if we save them into string, it should be fine
 			Map<String, Object> infoMap = repResult.getInfo();
 			serializeInfo(infoMap);
-			String classifier = log.getClassifier();
-			String traceClassifier = log.getTraceClassifier();
+			String classifier = portObject.log.getClassifier();
+			String traceClassifier = portObject.log.getTraceClassifier();
 			objOut.writeUTF(classifier);
 			objOut.writeUTF(traceClassifier);
 			// how to make sure the object stored in infoMap is serializable?? No secure way!!
