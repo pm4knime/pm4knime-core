@@ -27,23 +27,14 @@ import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
 import org.pm4knime.portobject.RepResultPortObjectTable;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerILPRestrictedMoveModel;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
-import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
-import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
-import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
-import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
-import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 
@@ -55,7 +46,7 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
 	protected static final int INPORT_LOG = 0;
 	protected static final int INPORT_PETRINET = 1;
 	
-	protected SMAlignmentReplayParameterTable m_parameter;
+	SMAlignmentReplayParameterTable m_parameter;
 	// it can't belong to this class
 	String evClassDummy;
 	
@@ -217,6 +208,11 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
+    }
+    
+    @Override
+    protected void reset() {
+    	initializeParameter();
     }
     
 

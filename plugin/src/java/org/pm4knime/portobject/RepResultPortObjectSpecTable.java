@@ -22,7 +22,7 @@ public class RepResultPortObjectSpecTable implements PortObjectSpec {
 private static final String ZIP_ENTRY_NAME = "RepResultPortObjectSpecTable";
 	
 	// add m_parameter here 
- private SMAlignmentReplayParameterTable m_parameter;
+    SMAlignmentReplayParameterTable m_parameter;
 	
 	public RepResultPortObjectSpecTable() {}
 	public RepResultPortObjectSpecTable(SMAlignmentReplayParameterTable parameter) {

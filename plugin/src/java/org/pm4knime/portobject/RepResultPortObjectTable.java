@@ -136,8 +136,6 @@ public class RepResultPortObjectTable implements PortObject {
 	
 	// here we serialise the PortObject by using the prom plugin
 	public static class RepResultPortObjectSerializerTable extends PortObjectSerializer<RepResultPortObjectTable> {
-
-	    private Map<String, DataTable> m_inputData = null;
 	    
 		@Override
 		public void savePortObject(RepResultPortObjectTable portObject, PortObjectZipOutputStream out, ExecutionMonitor exec)
@@ -183,6 +181,7 @@ public class RepResultPortObjectTable implements PortObject {
 				for(Object node: nodeInstances) {
 					if(node instanceof String) {
 						String ecls = (String) node;
+						objOut.writeUTF(ecls.getClass().getName());
 						objOut.writeUTF(ecls);
 						objOut.writeInt(ecls.length());
 					}else if(node instanceof Transition) {
