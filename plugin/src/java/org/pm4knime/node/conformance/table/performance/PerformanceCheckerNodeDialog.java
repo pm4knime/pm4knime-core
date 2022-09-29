@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -101,9 +100,9 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 		if(specParameter.getClassifierSet() != null) {
 			for (String clfPlusClass : specParameter.getClassifierSet().getStringArrayValue()) {
 				String[] clfPlusClassArray = clfPlusClass.split(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR);
-				if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
-					
-					tsAttrNameList.add(clfPlusClassArray[0]);
+//				if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
+//					
+				tsAttrNameList.add(clfPlusClassArray[0]);
 			}
 		}
 	    

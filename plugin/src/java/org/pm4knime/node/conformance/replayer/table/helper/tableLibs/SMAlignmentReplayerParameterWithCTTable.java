@@ -16,13 +16,9 @@ import org.pm4knime.util.PetriNetUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
-import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
-import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
-import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
 
 public class SMAlignmentReplayerParameterWithCTTable extends SMAlignmentReplayParameterTable {
 	private static final String DELIMETER = "::";

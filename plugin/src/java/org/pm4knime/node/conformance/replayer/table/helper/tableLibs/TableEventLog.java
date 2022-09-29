@@ -53,9 +53,9 @@ public class TableEventLog implements java.io.Serializable{
 		this.activties = activityList.stream().map(s -> s.toString()).toArray(String[]::new);
 		String[] names = log.getDataTableSpec().getColumnNames();
 		
-		if(traceClassifier.isEmpty()) {
-			throw new Exception("Concept Name for Trace was not found");
-		}
+//		if(traceClassifier.isEmpty()) {
+//			throw new Exception("Trace Classifier was not found");
+//		}
 		this.traceIDName = traceIdToName();
 		this.tracesWithCompleteEvent = tableLogToMapWholeEventRow();
 		
