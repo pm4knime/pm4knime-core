@@ -16,7 +16,6 @@ import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObjectSpec;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogSpecUtil;
 

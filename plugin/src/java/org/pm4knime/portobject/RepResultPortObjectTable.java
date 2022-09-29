@@ -160,8 +160,9 @@ public class RepResultPortObjectTable implements PortObject {
 			// if we save them into string, it should be fine
 			Map<String, Object> infoMap = repResult.getInfo();
 			serializeInfo(infoMap);
-			String classifier = portObject.log.getClassifier();
-			String traceClassifier = portObject.log.getTraceClassifier();
+			TableEventLog table_log = portObject.getLog();
+			String classifier = table_log.getClassifier();
+			String traceClassifier = table_log.getTraceClassifier();
 			objOut.writeUTF(classifier);
 			objOut.writeUTF(traceClassifier);
 			// how to make sure the object stored in infoMap is serializable?? No secure way!!

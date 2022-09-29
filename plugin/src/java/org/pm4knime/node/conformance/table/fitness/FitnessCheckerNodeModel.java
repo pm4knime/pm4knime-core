@@ -18,16 +18,15 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.portobject.RepResultPortObjectTable;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
-import org.pm4knime.util.ReplayerUtil;
+import org.pm4knime.portobject.RepResultPortObjectTable;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 /**
  * <code>NodeModel</code> for the "ConformanceChecker" node.
  *
  * @author 
  */
-public class FitnessCheckerNodeModel extends DefaultNodeModel  implements PortObjectHolder{
+public class FitnessCheckerNodeModel extends DefaultNodeModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(FitnessCheckerNodeModel.class);
 	
 	private DataTableSpec m_tSpec;
@@ -54,7 +53,7 @@ public class FitnessCheckerNodeModel extends DefaultNodeModel  implements PortOb
 // check cancellation of node before sync
     	checkCanceled(null, exec);
     	// make the transitions in replay result and transitions corresponding!!
-    	ReplayerUtil.adjustRepResult(repResultPO.getRepResult(), repResultPO.getNet());
+//    	ReplayerUtil.adjustRepResult(repResultPO.getRepResult(), repResultPO.getNet());
     	
     	BufferedDataContainer buf = exec.createDataContainer(m_tSpec);
     	// one warning here, if we could get the fitness information , or not.
@@ -105,22 +104,6 @@ public class FitnessCheckerNodeModel extends DefaultNodeModel  implements PortOb
         return new PortObjectSpec[]{m_tSpec};
     }
 
-
-	public RepResultPortObjectTable getRepResultPO() {
-		// TODO Auto-generated method stub
-		return repResultPO;
-	}
-	
-	@Override
-	public void setInternalPortObjects(PortObject[] portObjects) {
-		repResultPO = (RepResultPortObjectTable)portObjects[0];
-	}
-
-	@Override
-	public PortObject[] getInternalPortObjects() {
-		// TODO Auto-generated method stub
-		return new PortObject[] {repResultPO};
-	}
 
 }
 

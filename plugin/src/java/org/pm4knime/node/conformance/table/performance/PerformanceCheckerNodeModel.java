@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
 import org.knime.core.data.def.StringCell;
@@ -30,15 +28,11 @@ import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestFac
 import org.pm4knime.portobject.ManifestWithSerializer;
 import org.pm4knime.portobject.RepResultPortObjectTable;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
-import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
-
 import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
 import org.processmining.plugins.manifestanalysis.visualization.performance.ReliablePerfCounter;
 
