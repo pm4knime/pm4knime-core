@@ -10,14 +10,11 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
-import java.sql.Timestamp;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,19 +23,6 @@ import java.util.Map;
 
 import nl.tue.astar.util.ShortShortMultiset;
 
-//import org.deckfour.xes.classification.XEventClass;
-//import org.deckfour.xes.classification.XEventClasses;
-//import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.extension.std.XConceptExtension;
-//import org.deckfour.xes.info.XLogInfo;
-//import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XAttributeContinuous;
-import org.deckfour.xes.model.XAttributeDiscrete;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
-import org.deckfour.xes.xstream.XAttributeConverter;
-import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
-import org.deckfour.xes.factory.XFactory;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
@@ -47,9 +31,7 @@ import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.ResetArc;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
 import org.processmining.plugins.manifestanalysis.visualization.performance.TimeFormatter;
-import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
 
 
 /**
@@ -332,8 +314,6 @@ public class PerfCounterTable {
 						//String currEventTime = extractTimestamp(currEvent, timeAtt, bindedClass);
 
 						long currEventTime = extractTimestamp(currTime);
-						System.out.println("String: " + currTime);
-						System.out.println("Double: " + currEventTime);
 						if (beginTime == null) {
 							beginTime = currEventTime; // begin time = the moment the case start
 						}
