@@ -4,15 +4,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
-import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
-import org.processmining.plugins.petrinet.manifestreplayresult.ManifestEvClassPattern;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.StepTypes;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
@@ -29,7 +23,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class ManifestFactoryTable {
 	public static ManifestEvClassPatternTable construct(PetrinetGraph net, Marking initMarking, Marking[] finalMarkings, TableEventLog log,
-			PNManifestFlattenerTable flattener, PNRepResult pnRepResult, TransClass2PatternMap transClass2PatternMap)
+			PNManifestFlattenerTable flattener, PNRepResult pnRepResult, TransClass2PatternMapTable transClass2PatternMap)
 			throws Exception {
 		// necessary results for Manifest object
 		TIntList info = new TIntArrayList();
@@ -70,17 +64,17 @@ public class ManifestFactoryTable {
 
 			// add all keys to 
 			Double temp = infoFromSyncRepRes.get(PNRepResult.RAWFITNESSCOST);
-			fitnessStats.add(temp == null ? Manifest.NOSTATS : temp / flattener.getCostFactor());
+			fitnessStats.add(temp == null ? ManifestTable.NOSTATS : temp / flattener.getCostFactor());
 			temp = infoFromSyncRepRes.get(PNRepResult.MOVELOGFITNESS);
-			fitnessStats.add(temp == null ? Manifest.NOSTATS : temp);
+			fitnessStats.add(temp == null ? ManifestTable.NOSTATS : temp);
 			temp = infoFromSyncRepRes.get(PNRepResult.MOVEMODELFITNESS);
-			fitnessStats.add(temp == null ? Manifest.NOSTATS : temp);
+			fitnessStats.add(temp == null ? ManifestTable.NOSTATS : temp);
 			temp = infoFromSyncRepRes.get(PNRepResult.TRACEFITNESS);
-			fitnessStats.add(temp == null ? Manifest.NOSTATS : temp);
+			fitnessStats.add(temp == null ? ManifestTable.NOSTATS : temp);
 			temp = infoFromSyncRepRes.get(PNRepResult.NUMSTATEGENERATED);
-			fitnessStats.add(temp == null ? Manifest.NOSTATS : temp);
+			fitnessStats.add(temp == null ? ManifestTable.NOSTATS : temp);
 			temp = infoFromSyncRepRes.get(PNRepResult.TIME);
-			fitnessStats.add(temp == null ? Manifest.NOSTATS : temp);
+			fitnessStats.add(temp == null ? ManifestTable.NOSTATS : temp);
 
 			Iterator<StepTypes> itStepTypes = syncRepResult.getStepTypes().iterator();
 			Iterator<Object> itNodeInst = syncRepResult.getNodeInstance().iterator();
@@ -92,7 +86,7 @@ public class ManifestFactoryTable {
 				switch (itStepTypes.next()) {
 					case L :
 						// just add it to info
-						info.add(Manifest.MOVELOG);
+						info.add(ManifestTable.MOVELOG);
 
 						// increase infoPointer
 						infoPointer++;
@@ -123,7 +117,7 @@ public class ManifestFactoryTable {
 						}
 
 						// add the movement
-						info.add(Manifest.MOVESYNC);
+						info.add(ManifestTable.MOVESYNC);
 
 						// annotate the current event with the manifest ID
 						info.add(currManifestID);
@@ -143,7 +137,7 @@ public class ManifestFactoryTable {
 						break;
 					case MINVI :
 					case MREAL :
-						info.add(Manifest.MOVEMODEL);
+						info.add(ManifestTable.MOVEMODEL);
 						info.add(flattener.getOrigEncTransFor(flatTrans2Int.get(itNodeInst.next())));
 						infoPointer += 2;
 						break;
@@ -160,12 +154,6 @@ public class ManifestFactoryTable {
 		newManifest.setMoveModelCost(flattener.getMapTrans2Cost());
 		newManifest.setMoveLogCost(flattener.getMapEvClass2Cost());
 		return newManifest;
-	}
-
-	public static Manifest construct(Petrinet net, Marking initialMarking, Marking[] array, TableEventLog log,
-			PNManifestFlattenerTable flattener, PNRepResult repResult, TransClass2PatternMapTable mapping) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

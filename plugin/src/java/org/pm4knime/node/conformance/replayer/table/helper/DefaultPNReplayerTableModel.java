@@ -2,6 +2,8 @@ package org.pm4knime.node.conformance.replayer.table.helper;
 
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -27,6 +29,7 @@ import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
 import org.pm4knime.portobject.RepResultPortObjectTable;
+import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
@@ -94,7 +97,8 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	PetriNetPortObject netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
     	String eventClassifier = m_parameter.getMClassifierName().getStringValue();
     	String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
-    	TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier); 
+    	String timeClassifier = m_parameter.getMClassifierTime().getStringValue();
+    	TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier, timeClassifier); 
     	AcceptingPetriNet anet = netPO.getANet();
     	
     	// here to change the operation on the classifier
@@ -176,6 +180,14 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
 		
 		if(m_parameter.getMClassifierName().getStringValue().isEmpty())
 			throw new InvalidSettingsException("Event classifier is not set!");
+		
+		String timeClass = m_parameter.getMClassifierTime().getStringValue();
+		if(timeClass.isEmpty())
+			throw new InvalidSettingsException("Time attribute is not set!");
+		
+		DataTableSpec spec = (DataTableSpec) inSpecs[INPORT_LOG];
+		if(!spec.getColumnSpec(timeClass).getType().equals(ZonedDateTimeCellFactory.TYPE))
+    		throw new InvalidSettingsException("The time stamp doesn't have the required format in ZonedDateTime!");
 		
 		m_rSpec = new RepResultPortObjectSpecTable();
 		m_rSpec.setMParameter(m_parameter);

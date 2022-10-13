@@ -22,10 +22,13 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.node.conformance.performance.PerfCheckerInfoAssistant;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNManifestFlattenerTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNManifestReplayerParameterTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PerfCounterTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ReliablePerfCounterTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TableEventLog;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestFactoryTable;
-import org.pm4knime.portobject.ManifestWithSerializer;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestTable;
+//import org.pm4knime.portobject.ManifestWithSerializer;
 import org.pm4knime.portobject.RepResultPortObjectTable;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
@@ -33,11 +36,9 @@ import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
-import org.processmining.plugins.manifestanalysis.visualization.performance.ReliablePerfCounter;
+//import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
+//import org.processmining.plugins.manifestanalysis.visualization.performance.ReliablePerfCounter;
 
-import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
-import org.processmining.plugins.petrinet.manifestreplayresult.ManifestEvClassPattern;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 
@@ -75,8 +76,8 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 	// we create a similar nodeSetting like Conformance Checking?
 	SMPerformanceParameter m_parameter;
 	RepResultPortObjectSpecTable m_rSpec;
-	private Manifest mResult;
-	private PerfCounter counter;
+	private ManifestTable mResult;
+	private PerfCounterTable counter;
 	RepResultPortObjectTable repResultPO;
 
 	protected PerformanceCheckerNodeModel() {
@@ -112,7 +113,6 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 		// more time..
 //		XEventClassifier eventClassifier = XLogUtil.getEventClassifier(log,
 //				specParameter.getMClassifierName().getStringValue());
-		
 		PNManifestReplayerParameterTable manifestParameters = specParameter.getPerfParameter(log, anet);
 		PNManifestFlattenerTable flattener = new PNManifestFlattenerTable(anet.getNet(), manifestParameters);
 		
@@ -124,19 +124,17 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 		checkCanceled(null, exec);
 		mResult = ManifestFactoryTable.construct(anet.getNet(), anet.getInitialMarking(),
 				anet.getFinalMarkings().toArray(new Marking[0]), log, flattener, repResult, manifestParameters.getMapping());
-		
-//		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
+		//		mResult = ManifestFactory.construct(flattener.getNet(), flattener.getInitMarking(),
 //				flattener.getFinalMarkings(), log, flattener, repResult, manifestParameters.getMapping());
 		checkCanceled(null, exec);
 		// global statistics information. It includes all the performance info, the
 		// whole process
 		// we need one view to show the result here
 		if (m_parameter.isMWithSynMove().getBooleanValue()) {
-			counter = new ReliablePerfCounter();
+			counter = new ReliablePerfCounterTable();
 		} else
-			counter = new PerfCounter();
-
-		PerfCheckerInfoAssistant infoAssistant = new PerfCheckerInfoAssistant(m_parameter, mResult, counter);
+			counter = new PerfCounterTable();
+		PerfCheckerInfoAssistantTable infoAssistant = new PerfCheckerInfoAssistantTable(m_parameter, mResult, counter);
 
 		DataTableSpec gSpec = createGlobalStatsTableSpec();
 		BufferedDataContainer gBuf = exec.createDataContainer(gSpec);
@@ -191,7 +189,7 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 
 	}
 
-	public Manifest getMainfestResult() {
+	public ManifestTable getMainfestResult() {
 		return mResult;
 	}
 
@@ -239,8 +237,9 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 			throw new InvalidSettingsException("Input is not a valid replay result!");
 
 		// TODO : assign the table spec here
-		if(m_parameter.getMTimeStamp().getStringValue().isEmpty())
-			throw new InvalidSettingsException("The timestamp attribute is not set!");
+		//if(m_parameter.getMTimeStamp().getStringValue().isEmpty())
+		//m_parameter.setMTimeStamp(mResult.pa);
+			//throw new InvalidSettingsException("The timestamp attribute is not set!");
 		
 		m_rSpec = (RepResultPortObjectSpecTable) inSpecs[0];
 		return new PortObjectSpec[] { null, null, null };
@@ -269,13 +268,13 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 		// TODO deserialize the manifest and other related data for view
-		try {
-			File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
-			mResult = ManifestWithSerializer.loadFrom(manifestDir, exec);
-		} catch (InvalidSettingsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
+//			mResult = ManifestWithSerializer.loadFrom(manifestDir, exec);
+//		} catch (InvalidSettingsException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 
@@ -287,7 +286,7 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 		// to serialize manifest with a dir
 		File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
 		manifestDir.mkdirs();
-		ManifestWithSerializer.saveTo((ManifestEvClassPattern) mResult, manifestDir , exec);
+//		ManifestWithSerializer.saveTo((ManifestEvClassPatternTable) mResult, manifestDir , exec);
 		
 	}
 	

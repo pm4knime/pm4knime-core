@@ -87,11 +87,11 @@ public class RepResultPortObjectTable implements PortObject {
 		return tableLog;
 	}
 
-	public void setLog(DataTable tableLog, String classifier, String traceClassifier) {
+	public void setLog(DataTable tableLog, String classifier, String traceClassifier, String timeClassifier) {
 		// TODO Auto-generated method stub
 		TableEventLog logTEL = null;
 		try {
-			logTEL = new TableEventLog(tableLog, classifier, traceClassifier);
+			logTEL = new TableEventLog(tableLog, classifier, traceClassifier, timeClassifier);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,8 +163,11 @@ public class RepResultPortObjectTable implements PortObject {
 			TableEventLog table_log = portObject.getLog();
 			String classifier = table_log.getClassifier();
 			String traceClassifier = table_log.getTraceClassifier();
+			String timeClassifier = table_log.getTimeClassifier();
+
 			objOut.writeUTF(classifier);
 			objOut.writeUTF(traceClassifier);
+			objOut.writeUTF(timeClassifier);
 			// how to make sure the object stored in infoMap is serializable?? No secure way!!
 			// so we need to remember only the names for the class, after this, we will recover it.
 			objOut.writeObject(infoMap);
@@ -278,6 +281,8 @@ public class RepResultPortObjectTable implements PortObject {
 			Map<String, Object> infoMap = new HashMap();
 			String classifier = objIn.readUTF();
 			String traceClassifier = objIn.readUTF();
+			String timeClassifier = objIn.readUTF();
+			
 			try {
 				infoMap = (Map<String, Object>) objIn.readObject();
 				
@@ -357,7 +362,7 @@ public class RepResultPortObjectTable implements PortObject {
 
 			// use this alignment object, we need to reload it here
 			repResultPO.setRepResult(new PNRepResultImpl(col));
-			repResultPO.setLog(log,classifier, traceClassifier);
+			repResultPO.setLog(log,classifier, traceClassifier, timeClassifier);
 			repResultPO.setNet(anet);
 			// when they use the Impl, it creates the info by itselves. So we don't need to store it here.
 			// but about the other infoMap, it could be not so lucky!! So, we still read the map and store it here

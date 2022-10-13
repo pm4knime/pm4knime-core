@@ -31,7 +31,7 @@ public class PerformanceCheckerNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 1;
+        return 0;
     }
 
     /**
@@ -41,10 +41,10 @@ public class PerformanceCheckerNodeFactory
     public NodeView<PerformanceCheckerNodeModel> createNodeView(final int viewIndex,
             final PerformanceCheckerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-    	JPanel viewPanel = new JPanel();
-    	viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
-    	viewPanel.setName("Performance Projection Panel");
-		return new PerformanceCheckerNodeView(nodeModel, viewPanel);
+//    	JPanel viewPanel = new JPanel();
+//    	viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
+//    	viewPanel.setName("Performance Projection Panel");
+		return null;
     }
 
     /**

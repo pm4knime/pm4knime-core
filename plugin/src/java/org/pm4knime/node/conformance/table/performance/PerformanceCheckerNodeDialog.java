@@ -1,6 +1,7 @@
 package org.pm4knime.node.conformance.table.performance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -13,7 +14,6 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.port.PortObjectSpec;
-import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
 import org.pm4knime.settingsmodel.SMPerformanceParameter;
 import org.pm4knime.util.XLogSpecUtil;
@@ -45,7 +45,7 @@ import org.pm4knime.util.XLogSpecUtil;
 public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 	protected JPanel m_compositePanel;
 	SMPerformanceParameter m_parameter;
-	DialogComponentStringSelection m_timestampComp;
+	//DialogComponentStringSelection m_timestampComp;
 
 	/**
 	 * New pane for configuring the PerformanceChecker node.
@@ -61,9 +61,9 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 				SMPerformanceParameter.CKF_KEY_WITH_SYN_MOVE);
 		addDialogComponent(m_withSynMoveComp);
 		// 2. the attributes of time stamp...
-		m_timestampComp = new DialogComponentStringSelection(tmp.getMTimeStamp(), SMPerformanceParameter.CKF_KEY_TIMESTAMP,
-				new String[] { "" });
-		addDialogComponent(m_timestampComp);
+		//m_timestampComp = new DialogComponentStringSelection(tmp.getMTimeStamp(), SMPerformanceParameter.CKF_KEY_TIMESTAMP,
+		//		new String[] { "" });
+		//addDialogComponent(m_timestampComp);
 
 		DialogComponentBoolean m_withUnreliableResultComp = new DialogComponentBoolean(tmp.isMWithUnreliableResult(),
 				SMPerformanceParameter.CKF_KEY_WITH_UNRELIABLE_RESULT);
@@ -82,7 +82,7 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 		if (!(specs[0] instanceof RepResultPortObjectSpecTable))
 			throw new NotConfigurableException("Input is not a valid replayer log!");
 
-		RepResultPortObjectSpecTable repResultPOSpec = (RepResultPortObjectSpecTable) specs[0];
+		//RepResultPortObjectSpecTable repResultPOSpec = (RepResultPortObjectSpecTable) specs[0];
 
 		// if we have the classifier set from the parameter, we can't figure out the key
 		// for time stamp.
@@ -94,23 +94,41 @@ public class PerformanceCheckerNodeDialog extends DefaultNodeSettingsPane {
 		// we depend on the SpecObject to provide us the right value but now it doesn't 
 		
 		// we will expect we have the spec totally loaded here!! 
-		SMAlignmentReplayParameterTable specParameter = repResultPOSpec.getMParameter();
-
-		List<String> tsAttrNameList = new ArrayList<String>();
-		if(specParameter.getClassifierSet() != null) {
-			for (String clfPlusClass : specParameter.getClassifierSet().getStringArrayValue()) {
-				String[] clfPlusClassArray = clfPlusClass.split(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR);
-//				if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
-//					
-				tsAttrNameList.add(clfPlusClassArray[0]);
-			}
-		}
-	    
-		if (!tsAttrNameList.contains(m_parameter.getMTimeStamp().getStringValue())) {
-			m_timestampComp.replaceListItems(tsAttrNameList, tsAttrNameList.get(0));
-			m_parameter.getMTimeStamp().setStringValue(tsAttrNameList.get(0));
-			m_parameter.setClassifierSet(specParameter.getClassifierSet().getStringArrayValue());
-		}
+//		SMAlignmentReplayParameterTable specParameter = repResultPOSpec.getMParameter();
+//
+//		List<String> tsAttrNameList = new ArrayList<String>();
+//		if(specParameter.getClassifierSet() != null) {
+//			for (String clfPlusClass : specParameter.getClassifierSet().getStringArrayValue()) {
+//				String[] clfPlusClassArray = clfPlusClass.split(XLogSpecUtil.CFG_KEY_CLASSIFIER_SEPARATOR);
+////				if (clfPlusClassArray[1].equals(XAttributeTimestampImpl.class.toString()))
+////					
+//				tsAttrNameList.add(clfPlusClassArray[0]);
+//			}
+//		}
+//		
+//		List<String> configClassifierSet = Arrays.asList(m_parameter.getClassifierSet().getStringArrayValue());
+//
+//		if (!configClassifierSet.containsAll(tsAttrNameList)
+//				|| !tsAttrNameList.containsAll(configClassifierSet)) {
+//			m_parameter.getClassifierSet().setStringArrayValue(configClassifierSet.toArray(new String[0]));
+//			
+//		};
+		//m_timestampComp.replaceListItems(configClassifierSet, 
+		//		configClassifierSet.iterator().next());
+//		try {
+//			m_parameter.getMTimeStamp().loadSettingsFrom(settings);
+//		} catch (InvalidSettingsException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	 
+		/*
+		 * if (!tsAttrNameList.contains(m_parameter.getMTimeStamp().getStringValue())) {
+		 * m_timestampComp.replaceListItems(tsAttrNameList, tsAttrNameList.get(0));
+		 * m_parameter.getMTimeStamp().setStringValue(tsAttrNameList.get(0));
+		 * m_parameter.setClassifierSet(specParameter.getClassifierSet().
+		 * getStringArrayValue()); }
+		 */
 
 	}
 	

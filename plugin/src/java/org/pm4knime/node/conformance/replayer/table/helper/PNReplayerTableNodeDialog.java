@@ -47,6 +47,7 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 	String[] strategyList = ReplayerUtil.strategyList;
 
 	DialogComponentStringSelection classifierComp;
+	DialogComponentStringSelection classifierTimeComp;
 	DialogComponentStringSelection classifierTraceComp;
 
 	BufferedDataTable logPO;
@@ -124,6 +125,9 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 		classifierComp = new DialogComponentStringSelection(m_parameter.getMClassifierName(),
 				"Select Classifier Name", new String[] { "" });
 		addDialogComponent(classifierComp);
+		classifierTimeComp = new DialogComponentStringSelection(m_parameter.getMClassifierTime(),
+				"Select Time Attribute", new String[] { "" });
+		addDialogComponent(classifierTimeComp);
 		classifierTraceComp = new DialogComponentStringSelection(m_parameter.getMClassifierTrace(),
 				"Select Trace Classifier Name", new String[] { "" });
 		addDialogComponent(classifierTraceComp);
@@ -185,15 +189,19 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 					logSpec.getClassifiersMap().keySet().iterator().next());*/
 			classifierComp.replaceListItems(specClassifierSet, 
 					specClassifierSet.iterator().next());
+			classifierTimeComp.replaceListItems(specClassifierSet, 
+					specClassifierSet.iterator().next());
 			classifierTraceComp.replaceListItems(specClassifierSet, 
 					specClassifierSet.iterator().next());
 			m_parameter.getMClassifierName().loadSettingsFrom(settings);
+			m_parameter.getMClassifierTime().loadSettingsFrom(settings);
 			m_parameter.getMClassifierTrace().loadSettingsFrom(settings);
 			// if the classifier is the same, then we don't need to check the event log. because they are the same
 			SMAlignmentReplayerParameterWithCTTable tmp = (SMAlignmentReplayerParameterWithCTTable) m_parameter;
 			String eventClassifier = m_parameter.getMClassifierName().getStringValue(); 
 			String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
-			TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier);
+			String timeClassifier = m_parameter.getMClassifierTime().getStringValue();
+			TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier, timeClassifier);
 			
 			List<String> ecNames = Arrays.asList(log.getActivties());
 			ecNames.sort(String::compareTo);
@@ -223,9 +231,10 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 					if (logPO != null) {
 						String eventClassifier = m_parameter.getMClassifierName().getStringValue();
 						String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
+						String timeClassifier = m_parameter.getMClassifierTime().getStringValue();
 						TableEventLog log;
 						try {
-							log = new TableEventLog(logPO, eventClassifier, traceClassifier);
+							log = new TableEventLog(logPO, eventClassifier, traceClassifier, timeClassifier);
 							List<String> ecNames = Arrays.asList(log.getActivties());
 							ecNames.sort(String::compareTo);
 							tmp.setCostTM(ecNames, 0);
@@ -254,9 +263,10 @@ public class PNReplayerTableNodeDialog extends DataAwareNodeDialogPane {
 					if (logPO != null) {
 						String eventClassifier = m_parameter.getMClassifierName().getStringValue();
 						String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
+						String timeClassifier = m_parameter.getMClassifierTime().getStringValue();
 						TableEventLog log;
 						try {
-							log = new TableEventLog(logPO, eventClassifier, traceClassifier);
+							log = new TableEventLog(logPO, eventClassifier, traceClassifier, timeClassifier);
 							List<String> ecNames = Arrays.asList(log.getActivties());
 							ecNames.sort(String::compareTo);
 							tmp.setCostTM(ecNames, 0);

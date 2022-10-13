@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
+//import org.deckfour.xes.classification.XEventClass;
+//import org.deckfour.xes.classification.XEventClassifier;
+//import org.deckfour.xes.model.XEvent;
+//import org.deckfour.xes.model.XLog;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
@@ -348,7 +348,7 @@ public abstract class ManifestTable {
 		return transArr[encTrans];
 	}
 
-	public abstract XEventClassifier getEvClassifier();
+	public abstract String getEvClassifier();
 
 	public abstract TransClass getTransClassOf(Transition t);
 }

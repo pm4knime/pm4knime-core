@@ -39,6 +39,7 @@ implements SettingsModelFlowVariableCompatible{
 	
 	static final String CFGKEY_STRATEGY_TYPE = "Strategy type";
 	final String CKF_KEY_EVENT_CLASSIFIER = "Event classifier";
+	final String CKF_KEY_TIME_CLASSIFIER = "Timestamp attribute";
 	final String CFG_KEY_CLASSIFIER_SET = "Event classifier set";
 	final String CKF_KEY_TRACE_CLASSIFIER = "Trace classifier";
 	
@@ -47,6 +48,7 @@ implements SettingsModelFlowVariableCompatible{
 	
 	private SettingsModelString m_strategy;
 	private SettingsModelString m_classifierName;
+	private SettingsModelString m_classifierTime;
 	private SettingsModelString m_classifierTrace;
 	private SettingsModelStringArray classifierSet; 
 	private SettingsModelIntegerBounded[] m_defaultCosts;
@@ -64,6 +66,7 @@ implements SettingsModelFlowVariableCompatible{
 		// the default values in dialog
 		m_strategy = new SettingsModelString(CFGKEY_STRATEGY_TYPE, "");
 		m_classifierName = new SettingsModelString(CKF_KEY_EVENT_CLASSIFIER, "");
+		m_classifierTime = new SettingsModelString(CKF_KEY_TIME_CLASSIFIER, "");
 		classifierSet = new SettingsModelStringArray(CFG_KEY_CLASSIFIER_SET, 
 					new String[] {""});
 		m_classifierTrace = new SettingsModelString(CKF_KEY_TRACE_CLASSIFIER, "");
@@ -93,6 +96,12 @@ implements SettingsModelFlowVariableCompatible{
 	public SettingsModelString getMClassifierName() {
 		return m_classifierName;
 	}
+	
+	
+	public SettingsModelString getMClassifierTime() {
+		return m_classifierTime;
+	}
+	
 	public SettingsModelString getMClassifierTrace() {
 		return m_classifierTrace;
 	}
@@ -100,6 +109,11 @@ implements SettingsModelFlowVariableCompatible{
 	public void setMClassifierName(SettingsModelString m_classifierName) {
 		this.m_classifierName = m_classifierName;
 	}
+	
+	public void setMClassifierTime(SettingsModelString m_classifierTime) {
+		this.m_classifierTime = m_classifierTime;
+	}
+	
 	public void setMClassifierTrace(SettingsModelString m_classifierTrace) {
 		this.m_classifierTrace = m_classifierTrace;
 	}
@@ -134,6 +148,7 @@ implements SettingsModelFlowVariableCompatible{
 		// TODO Auto-generated method stub
 		SMAlignmentReplayParameterTable clone = new SMAlignmentReplayParameterTable(m_configName);
 		clone.setMClassifierName(m_classifierName);
+		clone.setMClassifierTime(m_classifierTime);
 //		clone.setClassifierSet(classifierSet);
 		clone.setMStrategy(m_strategy);
 		clone.setMDefaultCosts(m_defaultCosts);
@@ -177,6 +192,7 @@ implements SettingsModelFlowVariableCompatible{
 	protected void saveSettingsPure(NodeSettingsWO subSettings) {
 		m_strategy.saveSettingsTo(subSettings);
     	m_classifierName.saveSettingsTo(subSettings);
+    	m_classifierTime.saveSettingsTo(subSettings);
     	// one difficulty is how to get it from the classifierSet?? 
     	// how to get and save it here??
     	classifierSet.saveSettingsTo(subSettings);
@@ -192,6 +208,7 @@ implements SettingsModelFlowVariableCompatible{
 		// TODO Auto-generated method stub
 		m_strategy.validateSettings(settings);
 		m_classifierName.validateSettings(settings);
+		m_classifierTime.validateSettings(settings);
 		m_classifierTrace.validateSettings(settings);
 		classifierSet.validateSettings(settings);
 		
@@ -214,6 +231,7 @@ implements SettingsModelFlowVariableCompatible{
 		m_strategy.loadSettingsFrom(subSettings);
 		
 		m_classifierName.loadSettingsFrom(subSettings);
+		m_classifierTime.loadSettingsFrom(subSettings);
     	classifierSet.loadSettingsFrom(subSettings);
     	m_classifierTrace.loadSettingsFrom(subSettings);
     	
