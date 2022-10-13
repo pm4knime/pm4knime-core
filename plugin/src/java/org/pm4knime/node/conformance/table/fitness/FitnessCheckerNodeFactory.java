@@ -30,8 +30,7 @@ public class FitnessCheckerNodeFactory
      */
     @Override
     public int getNrNodeViews() {
-		// The number of views the node should have, in this cases there is none.
-        return 0;
+		return 1;
     }
 
     /**
@@ -40,7 +39,10 @@ public class FitnessCheckerNodeFactory
     @Override
     public NodeView<FitnessCheckerNodeModel> createNodeView(final int viewIndex,
             final FitnessCheckerNodeModel nodeModel) {
-		return null;
+		JPanel viewPanel = new JPanel();
+    	viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
+    	viewPanel.setName("Fitness Projection Panel");
+		return new FitnessCheckerNodeView(nodeModel, viewPanel);
     }
 
     /**

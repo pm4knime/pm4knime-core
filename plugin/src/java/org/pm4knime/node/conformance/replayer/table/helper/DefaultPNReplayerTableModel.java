@@ -2,7 +2,6 @@ package org.pm4knime.node.conformance.replayer.table.helper;
 
 
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -29,7 +28,6 @@ import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
 import org.pm4knime.portobject.RepResultPortObjectTable;
-import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
