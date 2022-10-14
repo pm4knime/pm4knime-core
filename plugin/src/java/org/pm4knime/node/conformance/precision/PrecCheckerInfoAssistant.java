@@ -16,14 +16,14 @@ import org.processmining.plugins.multietc.res.MultiETCResult;
  */
 public class PrecCheckerInfoAssistant {
 	
-	static DataTableSpec createGlobalStatsTableSpec(String tableName) {
+	public static DataTableSpec createGlobalStatsTableSpec(String tableName) {
     	String[] columnNames = { "Property", "Value"};
     	DataType[] columnTypes ={StringCell.TYPE, DoubleCell.TYPE};
     	DataTableSpec tSpec = new DataTableSpec( tableName, columnNames, columnTypes);
     	return tSpec;
     }
 	
-	static void buildInfoTable(BufferedDataContainer tBuf, MultiETCResult res) {
+	public static void buildInfoTable(BufferedDataContainer tBuf, MultiETCResult res) {
 		// how to set the table name?? 
 		
 		// set precision information

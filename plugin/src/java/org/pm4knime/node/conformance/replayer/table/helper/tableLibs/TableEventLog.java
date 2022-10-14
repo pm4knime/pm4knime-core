@@ -14,6 +14,7 @@ import org.knime.core.data.DataTable;
 import org.knime.core.node.BufferedDataTable;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
+import gnu.trove.list.TShortList;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.strategy.HashingStrategy;
@@ -27,35 +28,36 @@ public class TableEventLog implements java.io.Serializable{
 	private String[] activties;
 	private String[] index2activity;
 	private Map<Integer, List<String>> traces;
+	private Map<Integer, List<String>> timestampTraces;
 	private Map<Integer, List<String>> tracesWithCompleteEvent;
 	private DataTable log;
 	private String classifier;
-	private String traceClassifier ="";
+	private String traceClassifier;
+	private String timeClassifier;
 	private TObjectIntMap<String> activity2index;
 	private Map<Integer, String> traceIDName;
 	
-	private TableEventLog() {
-		
-	}
 /**
  * 
  * @param log the log as Table
  * @param classifier Classifier as a string
  * @throws Exception 
  */
-	public TableEventLog(DataTable log, String classifier, String traceClassifier) throws Exception {
+	public TableEventLog(DataTable log, String classifier, String traceClassifier, String timestampClassifier) throws Exception {
 		this.classifier = classifier;
+		this.traceClassifier = traceClassifier;
+		this.timeClassifier = timestampClassifier;
 		this.log = log;
-		this.traces = tableLogToMap();		
+		tableLogToTraces();		
 		Set<DataCell> act = log.getDataTableSpec().getColumnSpec(classifier).getDomain().getValues();
 		createActivity2Index();
 		List<String> activityList = createActivityList();
 		this.activties = activityList.stream().map(s -> s.toString()).toArray(String[]::new);
 		String[] names = log.getDataTableSpec().getColumnNames();
 		
-		if(traceClassifier.isEmpty()) {
-			throw new Exception("Concept Name for Trace was not found");
-		}
+//		if(traceClassifier.isEmpty()) {
+//			throw new Exception("Trace Classifier was not found");
+//		}
 		this.traceIDName = traceIdToName();
 		this.tracesWithCompleteEvent = tableLogToMapWholeEventRow();
 		
@@ -68,6 +70,12 @@ public class TableEventLog implements java.io.Serializable{
 	public String getTraceClassifier() {
 		return this.traceClassifier;
 	}
+	
+	
+	public String getTimeClassifier() {
+		return this.timeClassifier;
+	}
+	
 	public String getTraceName(int traceId) {
 		return this.traceIDName.get(traceId);
 	}
@@ -92,8 +100,10 @@ public class TableEventLog implements java.io.Serializable{
 		
 		for (Integer traceIndex : traces.keySet()) {
 			List<String> trace = traces.get(traceIndex);
+			//List<Long> timestampTrace = timestampTraces.get(traceIndex);
 			for (int eventIndex = 0; eventIndex < trace.size(); eventIndex++) {
 				String currentEvent = trace.get(eventIndex);
+				//Long currentTimestamp = timestampTrace.get(eventIndex);
 				int activityIndex = activity2index.putIfAbsent(currentEvent, activity2index.size());
 				if (activityIndex == activity2index.getNoEntryValue()) {
 					// new activity
@@ -124,12 +134,12 @@ public class TableEventLog implements java.io.Serializable{
 	
 	
 	
-	private String buildUniqueTrace(DataRow row) {
+	private String buildUniqueTrace(DataRow row) throws Exception {
 		int indexOfClassifierTable = getClassifierIndexFromColumn(this.traceClassifier);
 		DataCell cell = row.getCell(indexOfClassifierTable);
 		return row.getCell(0).toString() + ";" + cell.toString();		
 	}
-	private Map<Integer, String>  traceIdToName() {
+	private Map<Integer, String>  traceIdToName() throws Exception {
 		/**
 		 * We use id to counter so we can have flexible types for trace identification
 		 */
@@ -153,11 +163,12 @@ public class TableEventLog implements java.io.Serializable{
 	}	
 	
 	
-	private Map<Integer, List<String>>  tableLogToMap() {
+	private void tableLogToTraces() throws Exception {
 		/**
 		 * We use id to counter so we can have flexible types for trace identification
 		 */
 				Map<Integer, List<String>> traces = new HashMap<Integer, List<String>>();
+				Map<Integer, List<String>> timeTraces = new HashMap<Integer, List<String>>();
 				Map<String, Integer> traceIDToCounter = new HashMap<String, Integer>();
 				int counter = 0;
 				for (DataRow row : log) {
@@ -165,19 +176,25 @@ public class TableEventLog implements java.io.Serializable{
 					String[] traceActvityEnc = activity.split(";");
 					String currentActivity = traceActvityEnc[1];
 					String currentTraceID = traceActvityEnc[0];
+					String time = traceActvityEnc[2];
 					if (traceIDToCounter.containsKey(currentTraceID)) {
 						int traceIndex = traceIDToCounter.get(currentTraceID);
 						traces.get(traceIndex).add(currentActivity);
+						timeTraces.get(traceIndex).add(time);
 					} else {
 						traceIDToCounter.put(currentTraceID, counter);
 						ArrayList<String> traceBeginning = new ArrayList<String>();
+						ArrayList<String> timeTraceBeginning = new ArrayList<String>();
 						traceBeginning.add(currentActivity);
+						timeTraceBeginning.add(time);
 						traces.put(counter, traceBeginning);
+						timeTraces.put(counter, timeTraceBeginning);
 						counter++;
 					}
 				}
-
-				return traces;
+				
+				this.traces = traces;
+				this.timestampTraces = timeTraces;
 	}
 	
 	
@@ -219,25 +236,28 @@ public class TableEventLog implements java.io.Serializable{
 		this.traceClassifier = traceClassifier;
 		
 	}
-	private int getClassifierIndexFromColumn(String classifier) {
+	private int getClassifierIndexFromColumn(String classifier) throws Exception {
 		String[] columns = log.getDataTableSpec().getColumnNames();
-		int indexOfClassifierInTable = 0;
 		for (int i = 0; i < columns.length; i++) {
-			if (columns[i] == classifier) {
-				indexOfClassifierInTable = i;
+			if (columns[i].equals(classifier)) {
+				return i;
 			}
 		}
-		return indexOfClassifierInTable;
+		throw new Exception("Classifier " + classifier + " not fount in the data table" + columns.toString());
 	}
 	
-	private String buildUniqueEvent(DataRow row) {
+	private String buildUniqueEvent(DataRow row) throws Exception {
+		int indexOfTraceClassifierTable = getClassifierIndexFromColumn(this.traceClassifier);
 		int indexOfClassifierTable = getClassifierIndexFromColumn(this.classifier);
+		int indexOfTimestamp = getClassifierIndexFromColumn(this.timeClassifier);
 		DataCell cell = row.getCell(indexOfClassifierTable);
-		String wholeCell ="";
-		for(int i = 0; i < row.getNumCells(); i++) {
-			wholeCell = wholeCell+row.getCell(i).toString()+";";
-		}
-		return row.getCell(0).toString() + ";" + cell.toString();
+		DataCell timeCell = row.getCell(indexOfTimestamp);
+		DataCell traceCell = row.getCell(indexOfTraceClassifierTable);
+//		String wholeCell ="";
+//		for(int i = 0; i < row.getNumCells(); i++) {
+//			wholeCell = wholeCell+row.getCell(i).toString()+";";
+//		}
+		return traceCell.toString() + ";" + cell.toString() + ";" + timeCell.toString();
 	}
 	
 	private String buildUniqueEventFullRow(DataRow row) {
@@ -259,4 +279,9 @@ public class TableEventLog implements java.io.Serializable{
 	public String getClassifier() {
 		return classifier;
 	}
+	public Map<Integer, List<String>> getTimeTraces() {
+		// TODO Auto-generated method stub
+		return this.timestampTraces;
+	}
+
 }

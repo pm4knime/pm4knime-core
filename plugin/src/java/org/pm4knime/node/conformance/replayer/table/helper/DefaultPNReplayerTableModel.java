@@ -2,6 +2,7 @@ package org.pm4knime.node.conformance.replayer.table.helper;
 
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -27,35 +28,26 @@ import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
 import org.pm4knime.portobject.RepResultPortObjectTable;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameter;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerILPRestrictedMoveModel;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
-import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
-import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
-import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
-import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
-import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 
 public class DefaultPNReplayerTableModel extends DefaultNodeModel{
-	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerNodeModel.class);
+	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerTableModel.class);
 	private static final  String message  = "Replayer In Default";	
 	public static String CFG_PARAMETER_NAME = "Parameter In " + message;
 	
 	protected static final int INPORT_LOG = 0;
 	protected static final int INPORT_PETRINET = 1;
 	
-	protected SMAlignmentReplayParameterTable m_parameter;
+	SMAlignmentReplayParameterTable m_parameter;
 	// it can't belong to this class
 	String evClassDummy;
 	
@@ -103,7 +95,8 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     	PetriNetPortObject netPO = (PetriNetPortObject) inData[INPORT_PETRINET];
     	String eventClassifier = m_parameter.getMClassifierName().getStringValue();
     	String traceClassifier = m_parameter.getMClassifierTrace().getStringValue();
-    	TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier); 
+    	String timeClassifier = m_parameter.getMClassifierTime().getStringValue();
+    	TableEventLog log = new TableEventLog(logPO, eventClassifier, traceClassifier, timeClassifier); 
     	AcceptingPetriNet anet = netPO.getANet();
     	
     	// here to change the operation on the classifier
@@ -186,6 +179,14 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
 		if(m_parameter.getMClassifierName().getStringValue().isEmpty())
 			throw new InvalidSettingsException("Event classifier is not set!");
 		
+		String timeClass = m_parameter.getMClassifierTime().getStringValue();
+		if(timeClass.isEmpty())
+			throw new InvalidSettingsException("Time attribute is not set!");
+		
+		DataTableSpec spec = (DataTableSpec) inSpecs[INPORT_LOG];
+		if(!spec.getColumnSpec(timeClass).getType().equals(ZonedDateTimeCellFactory.TYPE))
+    		throw new InvalidSettingsException("The time stamp doesn't have the required format in ZonedDateTime!");
+		
 		m_rSpec = new RepResultPortObjectSpecTable();
 		m_rSpec.setMParameter(m_parameter);
 		// one question, how to add the type information here to make them valid at first step??
@@ -217,6 +218,11 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
+    }
+    
+    @Override
+    protected void reset() {
+    	initializeParameter();
     }
     
 

@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Performance Checker (XLog)</name>
+	<name>Performance Checker</name>
 
 	<shortDescription>
 		Based on the replay result, this node computes the statistical performance information.
