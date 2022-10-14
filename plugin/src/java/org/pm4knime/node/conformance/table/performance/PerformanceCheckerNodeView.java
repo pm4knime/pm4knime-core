@@ -3,7 +3,6 @@ package org.pm4knime.node.conformance.table.performance;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.knime.core.node.NodeView;
@@ -21,9 +20,6 @@ import org.processmining.framework.util.ui.scalableview.ScalableComponent;
 import org.processmining.models.connections.GraphLayoutConnection;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.jgraph.ProMJGraph;
-import org.processmining.plugins.manifestanalysis.visualization.performance.ManifestPerfPanel;
-import org.processmining.plugins.manifestanalysis.visualization.performance.PerfCounter;
-import org.processmining.plugins.manifestanalysis.visualization.performance.ReliablePerfCounter;
 import org.processmining.plugins.manifestanalysis.visualization.performance.TransPerfDecorator;
 
 
@@ -99,7 +95,7 @@ public class PerformanceCheckerNodeView extends NodeView<PerformanceCheckerNodeM
  			// TODO Auto-generated catch block
  			e.printStackTrace();
  		}
-         return null;
+        return null;
     }
     
     

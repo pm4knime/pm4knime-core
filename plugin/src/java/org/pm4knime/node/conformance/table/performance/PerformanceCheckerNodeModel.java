@@ -17,6 +17,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.node.conformance.performance.PerfCheckerInfoAssistant;
@@ -26,8 +27,10 @@ import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PerfCounter
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ReliablePerfCounterTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayParameterTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TableEventLog;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestEvClassPatternTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestFactoryTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestTable;
+import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ManifestWithSerializerTable;
 //import org.pm4knime.portobject.ManifestWithSerializer;
 import org.pm4knime.portobject.RepResultPortObjectTable;
 import org.pm4knime.portobject.RepResultPortObjectSpecTable;
@@ -67,7 +70,7 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  *            +
  *            https://github.com/rapidprom/rapidprom-source/blob/master/src/main/java/org/rapidprom/operators/conformance/PerformanceConformanceAnalysisOperator.java
  */
-public class PerformanceCheckerNodeModel extends DefaultNodeModel{
+public class PerformanceCheckerNodeModel extends DefaultNodeModel implements PortObjectHolder {
 	private static final NodeLogger logger = NodeLogger.getLogger(PerformanceCheckerNodeModel.class);
 
 	private static final String CFG_MC_MANIFEST = "Model Content for Manifest";
@@ -79,6 +82,10 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 	private ManifestTable mResult;
 	private PerfCounterTable counter;
 	RepResultPortObjectTable repResultPO;
+
+	private File file;
+
+	private ExecutionMonitor exe;
 
 	protected PerformanceCheckerNodeModel() {
 
@@ -268,13 +275,9 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 		// TODO deserialize the manifest and other related data for view
-//		try {
-//			File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
-//			mResult = ManifestWithSerializer.loadFrom(manifestDir, exec);
-//		} catch (InvalidSettingsException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		file = nodeInternDir;
+		exe = exec;
+		
 	}
 	
 
@@ -286,7 +289,7 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 		// to serialize manifest with a dir
 		File manifestDir = new File(nodeInternDir, CFG_MC_MANIFEST);
 		manifestDir.mkdirs();
-//		ManifestWithSerializer.saveTo((ManifestEvClassPatternTable) mResult, manifestDir , exec);
+		ManifestWithSerializerTable.saveTo((ManifestEvClassPatternTable) mResult, manifestDir , exec);
 		
 	}
 	
@@ -296,6 +299,38 @@ public class PerformanceCheckerNodeModel extends DefaultNodeModel{
 		// TODO Auto-generated method stub
 		m_parameter.validateSettings(settings);
 	}
+	
+	public RepResultPortObjectTable getRepResultPO() {
+		// TODO Auto-generated method stub
+		return repResultPO;
+	}
+	
+	@Override
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		repResultPO = (RepResultPortObjectTable)portObjects[0];
+		try {
+			File manifestDir = new File(file, CFG_MC_MANIFEST);
+			TableEventLog log = repResultPO.getLog();
+			try {
+				mResult = ManifestWithSerializerTable.loadFrom(manifestDir, exe, log);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CanceledExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (InvalidSettingsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	@Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return new PortObject[] {repResultPO};
+	
+	}
 	
 }

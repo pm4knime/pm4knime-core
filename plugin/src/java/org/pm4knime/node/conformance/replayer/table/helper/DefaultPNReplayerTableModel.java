@@ -40,7 +40,7 @@ import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 
 public class DefaultPNReplayerTableModel extends DefaultNodeModel{
-	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerNodeModel.class);
+	private static final NodeLogger logger = NodeLogger.getLogger(DefaultPNReplayerTableModel.class);
 	private static final  String message  = "Replayer In Default";	
 	public static String CFG_PARAMETER_NAME = "Parameter In " + message;
 	

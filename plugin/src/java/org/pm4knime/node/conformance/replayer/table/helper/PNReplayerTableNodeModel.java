@@ -1,23 +1,9 @@
 package org.pm4knime.node.conformance.replayer.table.helper;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
-import org.pm4knime.node.conformance.replayer.DefaultPNReplayerNodeModel;
-import org.pm4knime.node.conformance.replayer.PNReplayerNodeModel;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.SMAlignmentReplayerParameterWithCTTable;
-import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
 
 /**
  * <code>NodeModel</code> for the "PNReplayerTable" node.
@@ -26,7 +12,7 @@ import org.pm4knime.settingsmodel.SMAlignmentReplayParameterWithCT;
  */
 public class PNReplayerTableNodeModel extends DefaultPNReplayerTableModel {
     
-	private static final NodeLogger logger = NodeLogger.getLogger(PNReplayerNodeModel.class);
+	private static final NodeLogger logger = NodeLogger.getLogger(PNReplayerTableNodeModel.class);
 	private static final  String message  = "Replayer With Cost Tables";	
 	
 	@Override

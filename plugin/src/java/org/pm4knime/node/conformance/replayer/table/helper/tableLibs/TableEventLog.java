@@ -37,9 +37,6 @@ public class TableEventLog implements java.io.Serializable{
 	private TObjectIntMap<String> activity2index;
 	private Map<Integer, String> traceIDName;
 	
-	private TableEventLog() {
-		
-	}
 /**
  * 
  * @param log the log as Table

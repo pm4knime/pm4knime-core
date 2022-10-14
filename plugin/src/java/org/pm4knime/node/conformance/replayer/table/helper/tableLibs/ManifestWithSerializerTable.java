@@ -8,18 +8,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.out.XSerializer;
-import org.deckfour.xes.out.XesXmlSerializer;
+import org.knime.core.data.util.NonClosableInputStream;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.ModelContent;
 import org.knime.core.node.ModelContentRO;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectZipInputStream;
+import org.knime.core.node.port.PortTypeRegistry;
+import org.knime.core.node.port.PortUtil;
+import org.knime.core.node.port.PortObject.PortObjectSerializer;
 import org.pm4knime.util.PetriNetUtil;
-import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.ReplayerUtil;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.ReplayerUtilTable;
+import org.pm4knime.portobject.RepResultPortObjectTable;
+import org.pm4knime.portobject.RepResultPortObjectTable.RepResultPortObjectSerializerTable;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
@@ -76,10 +80,9 @@ public class ManifestWithSerializerTable {
 	
 	public static void saveTo(ManifestEvClassPatternTable manifest, File internDir, ExecutionMonitor exec) throws IOException, CanceledExecutionException {
 		// log, use log serialize method for it
-		File logFile = new File(internDir, CFG_LOG_FILENAME);
-		TableEventLog log = manifest.getLog();		
-		FileOutputStream logOut = new FileOutputStream(logFile);
-		XSerializer serializer = new XesXmlSerializer();
+		
+//		FileOutputStream logOut = new FileOutputStream(logFile);
+//		XSerializer serializer = new XesXmlSerializer();
 //		try {
 //			serializer.serialize(log, logOut);
 //		} catch (IOException e) {
@@ -195,12 +198,8 @@ public class ManifestWithSerializerTable {
 	}
 
 	
-	public static ManifestEvClassPatternTable loadFrom(File internDir, ExecutionMonitor exec)
+	public static ManifestEvClassPatternTable loadFrom(File internDir, ExecutionMonitor exec, TableEventLog log)
 			throws IOException, CanceledExecutionException, InvalidSettingsException {
-		
-		File logFile = new File(internDir, CFG_LOG_FILENAME);
-		FileInputStream logIn = new FileInputStream(logFile);
-		TableEventLog log = null; //= XLogUtil.loadLog(logIn);
 		
 		File anetFile = new File(internDir, CFG_ANET_FILENAME);
 		FileInputStream anetIn = new FileInputStream(anetFile);
@@ -252,7 +251,7 @@ public class ManifestWithSerializerTable {
 
 		// build move log cost set
 		// have the event classes from the log?? How to we get it?
-		String[] eventNames = modelContent.getStringArray(CFG_MLCOST_KEYS);
+		//String[] eventNames = modelContent.getStringArray(CFG_MLCOST_KEYS);
 		int[] eIdx = modelContent.getIntArray(CFG_MLCOST_VALUES);
 		// to get the event classifier.. So at first, we need to save the event classifier here
 		
@@ -261,11 +260,9 @@ public class ManifestWithSerializerTable {
 //		Collection<S> eventClasses = logInfo.getEventClasses().getClasses();
 		String[] evClassEnc = log.getActivties();
 		Map<String, Integer> mapEvClass2Cost = new HashMap();
-		for(idx = 0; idx <eventNames.length; idx++ ) {
-			String name = eventNames[idx];
-			String ecls = name;
-			evClassEnc[idx] = ecls;
-			mapEvClass2Cost.put(ecls, eIdx[idx]);
+		for(idx = 0; idx <evClassEnc.length; idx++ ) {
+			String name = evClassEnc[idx];
+			mapEvClass2Cost.put(name, eIdx[idx]);
 		}
 		
 		
@@ -317,3 +314,4 @@ public class ManifestWithSerializerTable {
 	
 	
 }
+
