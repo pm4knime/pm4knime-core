@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Alignment-Based Replayer (XLog)</name>
+	<name>Alignment-Based Replayer (Event Log)</name>
 
 	<shortDescription>
 		This node implements the alignment-based replayer for constructing the optimal alignments by replaying an event log on a Petri net.
