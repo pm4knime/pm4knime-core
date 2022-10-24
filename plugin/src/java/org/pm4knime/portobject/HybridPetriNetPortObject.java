@@ -57,7 +57,7 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 
 	@Override
 	public String getSummary() {
-		return "This port contains a HybridPetriNet object";
+		return "Transitions: " + pn.getTransitions().size() + ", Places: " + pn.getPlaces().size();
 	}
 
 	public boolean equals(Object o) {

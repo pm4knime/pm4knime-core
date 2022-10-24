@@ -49,7 +49,7 @@ public class DfgMsdPortObject extends AbstractPortObject {
 	@Override
 	public String getSummary() {
 		// TODO Auto-generated method stub
-		return "DfgMsd PortObject";
+		return "Nodes: " + dfm.getDirectlyFollowsGraph().getNumberOfNodes();
 	}
 
 	@Override
