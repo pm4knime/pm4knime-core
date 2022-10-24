@@ -2,10 +2,8 @@ package org.pm4knime.node.discovery.dfgminer.knimeTable;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
-import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.pm4knime.node.discovery.dfgminer.DFM2PMNodeModel;
 
 /**
  * <code>NodeDialog</code> for the "InductiveMinerDFGTable" node.

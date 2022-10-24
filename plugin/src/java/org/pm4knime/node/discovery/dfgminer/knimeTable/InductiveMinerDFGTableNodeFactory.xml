@@ -23,7 +23,7 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="DFG">a directly-follows graph</inPort>
+        <inPort index="0" name="Directly-Follows Graph">a directly-follows graph</inPort>
         <!-- possibly more input ports here-->
       
         <outPort index="0" name="Process Tree">a process tree</outPort>

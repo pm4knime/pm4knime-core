@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Heuristics Miner (XLog)</name>
+	<name>Heuristics Miner (Event Log)</name>
 
 	<shortDescription>
 		This node implements the Heuristics Miner to discover a Petri net from an event log.
