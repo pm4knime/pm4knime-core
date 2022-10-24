@@ -72,7 +72,7 @@ public class PetriNetPortObject  implements PortObject{
 
 	@Override
 	public String getSummary() {
-		return "This port contains a Petri net object";
+		return "Transitions: " + m_anet.getNet().getTransitions().size() + ", Places: " + m_anet.getNet().getPlaces().size();
 	}
 
 	public boolean equals(Object o) {

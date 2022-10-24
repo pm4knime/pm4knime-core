@@ -68,7 +68,7 @@ public class CausalGraphPortObject extends AbstractPortObject{
 
 	@Override
 	public String getSummary() {
-		return "This port contains a CausalGraph object";
+		return "Nodes: " + cg.getNodes().size() + ", Edges: " + cg.getEdges().size();
 	}
 
 	public boolean equals(Object o) {

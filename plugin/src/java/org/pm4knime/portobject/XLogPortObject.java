@@ -63,7 +63,7 @@ public class XLogPortObject extends AbstractPortObject {
 
 	@Override
 	public String getSummary() {
-		return "This port represents an event log object (XLog)";
+		return "Traces: " + log.size();
 	}
 
 	public void setSpec(XLogPortObjectSpec spec) {

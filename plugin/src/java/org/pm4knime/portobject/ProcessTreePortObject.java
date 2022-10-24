@@ -47,7 +47,7 @@ public class ProcessTreePortObject implements PortObject{
 	@Override
 	public String getSummary() {
 		// TODO I guess this is used to describe the object
-		return "This is a process tree.";
+		return null;
 	}
 
 	@Override

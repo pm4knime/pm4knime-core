@@ -49,7 +49,7 @@ public class DFMPortObject extends AbstractPortObject {
 	@Override
 	public String getSummary() {
 		// TODO Auto-generated method stub
-		return "DirectlyFollowsModel PortObject";
+		return "Nodes: " + dfm.getDirectlyFollowsGraph().getNumberOfVertices();
 	}
 
 	@Override
