@@ -7,7 +7,7 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>This node is based on the result of alignment-based replayer. It outputs the statistical fitness information. 
+        <intro>This node computes the statistical fitness information based on the result of alignment-based replayer.
         </intro>
         
     </fullDescription>
