@@ -30,7 +30,8 @@
 
 	<extension point="org.knime.workbench.repository.nodes">
 		<!-- nodes in io-->
-		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory" />
+		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.log.writer.xes.XESWriterNodeFactory" />
+		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.log.writer.mxml.MXMLWriterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory" />
 		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory" />
@@ -103,12 +104,6 @@
         
         <!-- nodes in io-->
                         		
-        
-        
-        <node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.log.writer.XLogWriterNodeFactory"/>
-                        		
-        
-        
         <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>
                         		
         
