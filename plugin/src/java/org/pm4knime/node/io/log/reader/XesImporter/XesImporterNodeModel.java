@@ -132,7 +132,7 @@ public class XesImporterNodeModel extends DefaultNodeModel {
 	 * Create source model
 	 */
 	static final SettingsModelReaderFileChooser createSourceModel(final PortsConfiguration portsConfig) {
-		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, XesImporterNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS, "xes");
+		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, XesImporterNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS,  new String[]{".xes", ".xes.gz"});
 	}
 
 	@Override
