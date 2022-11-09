@@ -182,29 +182,30 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     	if(!spec.getClass().equals(XLogPortObjectSpec.class)) 
     		throw new InvalidSettingsException("Input is not a valid Event Log!");
     	
-    	if( spec.getGTraceAttrMap().isEmpty()|| spec.getClassifiersMap().isEmpty()) {
-    		throw new InvalidSettingsException("Log Spec Object is Empty. Probably because the reader node got reset");
-    	}
-    	
-    	
-
-    	
+//    	if( spec.getGTraceAttrMap().isEmpty()|| spec.getClassifiersMap().isEmpty()) {
+//    		throw new InvalidSettingsException("Log Spec Object is Empty. Probably because the reader node got reset");
+//    	}
+   	
 
     	m_inSpec = spec;
     	
-    	
-    	
-    	if(m_traceAttrSet.getIncludeList().isEmpty()) {
-        	Set<String> specTraceColumns = m_inSpec.getGTraceAttrMap().keySet();
-        	m_traceAttrSet.setIncludeList(specTraceColumns);
-        	m_traceAttrSet.setExcludeList(new String[0]);
+    	try {
+    		if(m_traceAttrSet.getIncludeList().isEmpty()) {
+            	Set<String> specTraceColumns = m_inSpec.getGTraceAttrMap().keySet();
+            	m_traceAttrSet.setIncludeList(specTraceColumns);
+            	m_traceAttrSet.setExcludeList(new String[0]);
+        	}
+        	
+        	if(m_eventAttrSet.getIncludeList().isEmpty()) {
+            	Set<String> specEventColumns = m_inSpec.getGEventAttrMap().keySet();
+            	m_eventAttrSet.setIncludeList(specEventColumns);
+            	m_eventAttrSet.setExcludeList(new String[0]);
+        	}
+    	} catch(Exception e) {
+    		e.printStackTrace();
     	}
     	
-    	if(m_eventAttrSet.getIncludeList().isEmpty()) {
-        	Set<String> specEventColumns = m_inSpec.getGEventAttrMap().keySet();
-        	m_eventAttrSet.setIncludeList(specEventColumns);
-        	m_eventAttrSet.setExcludeList(new String[0]);
-    	}
+    	
         return new PortObjectSpec[]{null};
     }
 
