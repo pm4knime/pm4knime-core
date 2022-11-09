@@ -8,14 +8,12 @@
     
     <fullDescription>
         <intro> 
-        This node wraps the first step of the ProM's plug-in "Mine efficient tree with Inductive Miner" from the package InductiveMiner.
         This node is used to discover a directly-follows graph (DFG) from an event table. 
         A DFG consists of nodes representing activities and directed edges connecting nodes to model the directly-follows relations between activities. 
         The green nodes represent the start activities, while the red ones are for the end activities.   
         </intro>
         <option name="Trace classifer">The column to be used as a trace classifier.</option>
         <option name="Event classifer">The column to be used as an event classifier.</option>
-        <option name="Variant">The variant of the DFG Miner to be used. </option>
        
         
     </fullDescription>

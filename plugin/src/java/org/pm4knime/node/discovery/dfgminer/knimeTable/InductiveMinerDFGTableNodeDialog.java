@@ -3,7 +3,6 @@ package org.pm4knime.node.discovery.dfgminer.knimeTable;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
  * <code>NodeDialog</code> for the "InductiveMinerDFGTable" node.
@@ -14,7 +13,7 @@ public class InductiveMinerDFGTableNodeDialog extends DefaultNodeSettingsPane {
 
 
 	private SettingsModelDoubleBounded m_noiseThreshold = null;
-	private SettingsModelString m_variant;
+//	private SettingsModelString m_variant;
     /**
      * New pane for configuring the InductiveMinerDFGTable node.
      */
