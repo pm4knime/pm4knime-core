@@ -8,8 +8,7 @@
     
     <fullDescription>
         <intro>
-        This node wraps the ProM's plug-in "Alpha Miner" from the package AlphaMiner. 
-        It implements the Alpha Miner to discover a Petri net from an event table.
+        This node implements the Alpha Miner to discover a Petri net from an event table.
 		</intro>
         
         <option name="Trace classifer">The column to be used as a trace classifier.</option>

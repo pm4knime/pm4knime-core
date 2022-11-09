@@ -8,8 +8,7 @@
     
     <fullDescription>
         <intro>
-        This node wraps the second step of the ProM's plug-in "Mine efficient tree with Inductive Miner" from the package InductiveMiner.
-        This node is used to discover a process tree from a directly-follows graph (DFG).
+        This node  is used to discover a process tree from a directly-follows graph (DFG).
         A process tree is a block-structured process model where the (inner) nodes are operators (such as sequence, choice, parallel, and loop) and the leaves are activities. 
         The inductive miner guarantees the discovery of a sound process model. 
 		The discovered process tree can be converted into a Petri net.

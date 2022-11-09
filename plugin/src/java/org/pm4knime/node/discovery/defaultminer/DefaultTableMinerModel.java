@@ -23,8 +23,8 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel implements
 	public static final String KEY_EVENT_CLASSIFIER = "Event Classifier";
 	public static final String KEY_CLASSIFIER_SET = "Classifier Set";
 	
-	protected String t_classifier =  "";
-	protected String e_classifier =  "";
+	protected String t_classifier;
+	protected String e_classifier;
 	
 	protected BufferedDataTable logPO;
 	
@@ -48,10 +48,13 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel implements
 		if (!inSpecs[0].getClass().equals(DataTableSpec.class))
 			throw new InvalidSettingsException("Input is not a valid Table!");
 		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];
+		if(e_classifier == null || t_classifier == null)
+			throw new InvalidSettingsException("Classifiers are not set!");
+		
 		return configureOutSpec(logSpec);
 	}
-	
-	
+
+
 	protected abstract PortObjectSpec[] configureOutSpec(DataTableSpec logSpec);	
 	
 	

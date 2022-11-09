@@ -11,7 +11,7 @@
 
 	<fullDescription>
 		<intro>
-		This node is based on the result of alignment-based replayer. It outputs the statistical performance information. The performance information is given as tables,
+		This node computes the statistical performance information based on the result of the alignment-based replayer. The performance information is given as tables,
 		 and the performance projection on the Petri net is shown as a view.  
 		<!--<br />
 			More information seen in the :
