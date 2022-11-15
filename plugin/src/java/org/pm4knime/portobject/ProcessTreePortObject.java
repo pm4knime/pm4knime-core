@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
@@ -27,6 +29,9 @@ public class ProcessTreePortObject implements PortObject{
 	// but we need to specify the input and output operator
 	
 	// private ProcessTreePortObjectSpec m_spec ;
+	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(ProcessTreePortObject.class);
+	public static final PortType TYPE_OPTIONAL =
+			PortTypeRegistry.getInstance().getPortType(ProcessTreePortObject.class, true);
 	private ProcessTree tree;
 	ProcessTreePortObjectSpec m_spec;
 	public ProcessTreePortObject(ProcessTree t) {
