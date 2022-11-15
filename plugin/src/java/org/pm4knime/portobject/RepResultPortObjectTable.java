@@ -25,6 +25,8 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.PNLogReplayResultVisPanelTable;
 import org.pm4knime.node.conformance.replayer.table.helper.tableLibs.TableEventLog;
 import org.pm4knime.util.PetriNetUtil;
@@ -39,6 +41,9 @@ import org.processmining.plugins.petrinet.replayresult.StepTypes;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 
 public class RepResultPortObjectTable implements PortObject {
+	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(RepResultPortObjectTable.class);
+	public static final PortType TYPE_OPTIONAL =
+			PortTypeRegistry.getInstance().getPortType(RepResultPortObjectTable.class, true);
 	private static final String ZIP_ENTRY_NAME = "RepResultPortObjectTable";
 	private static final String ZIP_ENTRY_LOG = "Log";
 	private static final String ZIP_ENTRY_NET = "Accepting Petri net";

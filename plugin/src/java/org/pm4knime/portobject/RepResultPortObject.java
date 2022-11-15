@@ -21,6 +21,8 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
@@ -45,6 +47,10 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
  *
  */
 public class RepResultPortObject implements PortObject {
+	
+	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(RepResultPortObject.class);
+	public static final PortType TYPE_OPTIONAL =
+			PortTypeRegistry.getInstance().getPortType(RepResultPortObject.class, true);
 
 	private static final String ZIP_ENTRY_NAME = "RepResultPortObject";
 	private static final String ZIP_ENTRY_LOG = "XLog";
