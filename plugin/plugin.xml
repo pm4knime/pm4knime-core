@@ -272,15 +272,8 @@
         <webResourceBundle debug="true" name="Graphviz JS" usesDefine="false" version="2.1.2" webResourceBundleID="Viz">
                                                                        
             
-            
-            
-            
-            <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/"> </webResource>
-                                   
-            
-            <importResource relativePath="js-libs/viz.js" type="JAVASCRIPT"> </importResource>
-                                   
-            
+            <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/"> </webResource>           
+            <importResource relativePath="js-libs/viz.js" type="JAVASCRIPT"> </importResource>   
             <importResource relativePath="js-libs/full.render.js" type="JAVASCRIPT"> </importResource>
                                 
         

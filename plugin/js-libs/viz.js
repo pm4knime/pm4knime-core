@@ -277,10 +277,19 @@ http://www.zlib.net/zlib_license.html
           files.push({
             path: images[i].path,
             data: '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg width="' + images[i].width + '" height="' + images[i].height + '"></svg>'
-          });
+          }); 
         }
 
         return this.wrapper.render(src, { format: format, engine: engine, files: files, images: images, yInvert: yInvert, nop: nop });
+      }
+    },  {
+      key: 'generate_url',
+      value: function generate_url(element) {  
+          var serializer = new XMLSerializer();
+          var source = serializer.serializeToString(element);
+          source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\r\n' + source;
+          var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+          return url;
       }
     }, {
       key: 'renderSVGElement',
@@ -289,7 +298,8 @@ http://www.zlib.net/zlib_license.html
 
         return this.renderString(src, _extends({}, options, { format: 'svg' })).then(function (str) {
           var parser = new DOMParser();
-          return parser.parseFromString(str, 'image/svg+xml').documentElement;
+          var parsed = parser.parseFromString(str, 'image/svg+xml').documentElement;
+          return parsed;
         });
       }
     }, {
