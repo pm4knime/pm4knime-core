@@ -1,6 +1,5 @@
 package org.pm4knime.node.visualizations.jsgraphviz;
 
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -10,32 +9,26 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.js.core.node.AbstractWizardNodeModel;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import org.processmining.plugins.graphviz.dot.Dot;
+import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.base.data.xml.SvgCell;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 
 
-/**
- * This is an example implementation of the node model of the
- * "JSGraphViz" node.
- * 
- * This example node performs simple number formatting
- * ({@link String#format(String, Object...)}) using a user defined format string
- * on all double columns of its input table.
- *
- * @author 
- */
-public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
+public class JSGraphVizAbstractModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = {PetriNetPortObject.TYPE};
-	private static final PortType[] OUT_TYPES = {};
-	PetriNetPortObject petrinet;
+	private static PortType[] OUT_TYPES = {ImagePortObject.TYPE};
+	private static PortType IN_TYPE;
+	AbstractDotPanelPortObject port_obj;
+	
 
-	public JSGraphVizPNNodeModel() {
-		super(IN_TYPES, OUT_TYPES, "JSGraphVizPN");
+	public JSGraphVizAbstractModel(PortType[] in_types, String view_name) {
+		super(in_types, OUT_TYPES, view_name);
+		IN_TYPE = in_types[0];
 	}
+	
 
 	@Override
 	public JSGraphVizViewRepresentation createEmptyViewRepresentation() {
@@ -70,36 +63,30 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 	public void saveCurrentValue(NodeSettingsWO content) {
 	}
 
-	
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 
-		if (!inSpecs[0].getClass().equals(PetriNetPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Petri net!");
-		return new PortObjectSpec[] {};
+		PortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+        
+        return new PortObjectSpec[]{imageSpec};
 	}
 
 	@Override
-	protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 		final String dotstr;
 		
 		JSGraphVizViewRepresentation representation = getViewRepresentation();
 
 		synchronized (getLock()) {
 			
-			petrinet = (PetriNetPortObject) inObjects[0];
+			port_obj = (AbstractDotPanelPortObject) inObjects[0];
 			//System.out.println(processtree.getSummary());
-			Dot dot =  petrinet.getDotPanel().getDot();
+			Dot dot =  port_obj.getDotPanel().getDot();
 			dotstr = dot.toString();
 
 		}
 		
 		representation.setDotstr(dotstr);
-
-		// The FlowVariablePortObject ports are a mockup. They are not actually
-		// necessary as the flow
-		// variables are shared across the workflow.
-		return new PortObject[] {};
 	}
 
 	@Override
@@ -123,11 +110,23 @@ public class JSGraphVizPNNodeModel extends AbstractWizardNodeModel<JSGraphVizVie
 	}
 	
 	public PortObject[] getInternalPortObjects() {
-		return new PortObject[] {petrinet};
+		return new PortObject[] {port_obj};
 	}
 
 	
 	public void setInternalPortObjects(PortObject[] portObjects) {
-		petrinet = (PetriNetPortObject) portObjects[0];
+		port_obj = (AbstractDotPanelPortObject) portObjects[0];
 	}
+	
+	@Override
+    protected boolean generateImage() {
+        return true;
+    }
+	
+	@Override
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{svgImageFromView};
+    }
+	
 }
