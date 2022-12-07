@@ -19,8 +19,8 @@
 		<maven>3.0</maven>
 	</prerequisites>
 	<properties>
-		<tycho.version>1.4.0</tycho.version>
-		<tycho.extras.version>1.4.0</tycho.extras.version>
+		<tycho.version>2.7.5</tycho.version>
+		<tycho.extras.version>2.7.5</tycho.extras.version>
 		<tycho.test.jvmArgs>-Xmx512m</tycho.test.jvmArgs>
 		<tycho.scmUrl>scm:git:https://github.com/pm4knime/pm4knime-development.git</tycho.scmUrl>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
