@@ -34,7 +34,7 @@ import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizPetriNet;
  * @author kefang-pads
  *
  */
-public class PetriNetPortObject  implements PortObject{
+public class PetriNetPortObject extends AbstractDotPanelPortObject {
 
 	/**
 	 * Define port type of objects of this class when used as PortObjects.
@@ -115,6 +115,7 @@ public class PetriNetPortObject  implements PortObject{
 		return new JComponent[] {};
 	}
 	
+	@Override
 	public DotPanel getDotPanel() {
 		
 		if(effTree != null) {
@@ -182,6 +183,21 @@ public class PetriNetPortObject  implements PortObject{
 			
 			return result;
 		}
+		
+	}
+
+
+	@Override
+	protected void save(PortObjectZipOutputStream out, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void load(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		// TODO Auto-generated method stub
 		
 	}
 }

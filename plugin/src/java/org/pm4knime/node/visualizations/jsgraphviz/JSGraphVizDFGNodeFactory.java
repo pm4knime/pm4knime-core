@@ -1,9 +1,12 @@
 package org.pm4knime.node.visualizations.jsgraphviz;
 
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.portobject.DfgMsdPortObject;
+import org.pm4knime.portobject.PetriNetPortObject;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.port.PortType;
 
 /**
  * This is an example implementation of the node factory of the
@@ -12,15 +15,16 @@ import org.knime.core.node.NodeView;
  * @author 
  */
 public class JSGraphVizDFGNodeFactory 
-        extends NodeFactory<JSGraphVizDFGNodeModel> implements WizardNodeFactoryExtension<JSGraphVizDFGNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+        extends NodeFactory<JSGraphVizAbstractModel> implements WizardNodeFactoryExtension<JSGraphVizAbstractModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public JSGraphVizDFGNodeModel createNodeModel() {
-		// Create and return a new node model.
-        return new JSGraphVizDFGNodeModel();
+    public JSGraphVizAbstractModel createNodeModel() {
+    	
+    	PortType[] IN_TYPES = {DfgMsdPortObject.TYPE};
+        return new JSGraphVizAbstractModel(IN_TYPES, "DFG JS View");
     }
 
     /**
@@ -36,8 +40,8 @@ public class JSGraphVizDFGNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<JSGraphVizDFGNodeModel> createNodeView(final int viewIndex,
-            final JSGraphVizDFGNodeModel nodeModel) {
+    public NodeView<JSGraphVizAbstractModel> createNodeView(final int viewIndex,
+            final JSGraphVizAbstractModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
 		return null;
     }

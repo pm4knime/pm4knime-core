@@ -2,6 +2,7 @@
 
     let _representation;
     let _value;
+    let _svg;
 
     let view = {};
 
@@ -23,8 +24,12 @@
 
         return _value;
     };
-
-
+    
+    view.getSVG = () => {
+        knimeService.inlineSvgStyles(_svg);
+        return (new XMLSerializer()).serializeToString(_svg);;
+    };
+    
     function addScript( src ) {
       var s = document.createElement( 'script' );
       s.setAttribute( 'src', src );
@@ -44,6 +49,8 @@
         viz.renderSVGElement(src)
           .then(function(element) { 
                
+           _svg = element;
+           
            var exportA = document.createElement('a');
            exportA.innerHTML = `<button type="button">Export</button>`;
            exportA.href = viz.generate_url(element);
