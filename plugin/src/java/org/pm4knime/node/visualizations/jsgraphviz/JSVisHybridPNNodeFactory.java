@@ -1,20 +1,24 @@
 package org.pm4knime.node.visualizations.jsgraphviz;
 
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.port.PortType;
 
 
 public class JSVisHybridPNNodeFactory 
-        extends NodeFactory<JSVisHybridPNNodeModel> implements WizardNodeFactoryExtension<JSVisHybridPNNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+        extends NodeFactory<JSGraphVizAbstractModel> implements WizardNodeFactoryExtension<JSGraphVizAbstractModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public JSVisHybridPNNodeModel createNodeModel() {
-        return new JSVisHybridPNNodeModel();
+    public JSGraphVizAbstractModel createNodeModel() {
+        
+    	PortType[] IN_TYPES = {HybridPetriNetPortObject.TYPE};
+        return new JSGraphVizAbstractModel(IN_TYPES, "Hybrid Petr iNet JS View");
     }
 
     /**
@@ -29,8 +33,8 @@ public class JSVisHybridPNNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<JSVisHybridPNNodeModel> createNodeView(final int viewIndex,
-            final JSVisHybridPNNodeModel nodeModel) {
+    public NodeView<JSGraphVizAbstractModel> createNodeView(final int viewIndex,
+            final JSGraphVizAbstractModel nodeModel) {
 		return null;
     }
 

@@ -40,7 +40,7 @@ import cern.colt.matrix.DoubleMatrix2D;
 import org.knime.core.node.port.AbstractPortObject;
 
 
-public class CausalGraphPortObject extends AbstractPortObject{
+public class CausalGraphPortObject extends AbstractDotPanelPortObject {
 
 	
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(CausalGraphPortObject.class);

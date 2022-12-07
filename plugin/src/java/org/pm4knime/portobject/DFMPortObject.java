@@ -25,7 +25,7 @@ import org.processmining.plugins.InductiveMiner.dfgOnly.DfgImpl;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizDirectlyFollowsGraph;
 
-public class DFMPortObject extends AbstractPortObject {
+public class DFMPortObject extends AbstractDotPanelPortObject {
 
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(DFMPortObject.class);
 	private static final String ZIP_ENTRY_NAME = "DFMPortObject";
