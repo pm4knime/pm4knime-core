@@ -21,7 +21,13 @@ import org.knime.core.util.FileUtil;
 import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.pm4knime.portobject.HybridPetriNetPortObjectSpec;
 import org.pm4knime.util.HybridPetriNetUtil;
+import org.pm4knime.util.connectors.prom.PM4KNIMEPluginContext;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.processmining.contexts.uitopia.UIContext;
+import org.processmining.contexts.uitopia.UIPluginContext;
+import org.processmining.extendedhybridminer.plugins.HybridPNExporter;
+import org.processmining.framework.plugin.GlobalContext;
+import org.processmining.framework.plugin.PluginContext;
 
 
 /**
@@ -71,10 +77,15 @@ public class HybridPetrinetWriterNodeModel extends DefaultNodeModel {
         	File f =  createFile(localPath, url);
         	checkCanceled(exec);
 			// we should also write the marking into disk
-        	FileOutputStream fout = new FileOutputStream(f);
-        	ObjectOutputStream oout = new ObjectOutputStream(fout);
-        	HybridPetriNetUtil.exportHybridPetrinetToFile(oout, hpnObj.getPN());
-    		oout.close();
+//        	FileOutputStream fout = new FileOutputStream(f);
+//        	ObjectOutputStream oout = new ObjectOutputStream(fout);
+//        	HybridPetriNetUtil.exportHybridPetrinetToFile(oout, hpnObj.getPN());
+        	
+        	HybridPNExporter hybridPNExporter = new HybridPNExporter();
+        	UIContext context = new UIContext();
+            UIPluginContext pContext = context.getMainPluginContext();
+			hybridPNExporter.exportPetriNetToPNMLFile(pContext, hpnObj.getPN(), f);
+//    		oout.close();
         }
         
         logger.info("End to write Petri net into pnml file");

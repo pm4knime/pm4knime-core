@@ -19,8 +19,12 @@ import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.pm4knime.portobject.HybridPetriNetPortObjectSpec;
 import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.processmining.contexts.uitopia.UIContext;
+import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
 // or extended hybridminer
+import org.processmining.extendedhybridminer.models.pnml.utils;
+import org.processmining.framework.plugin.PluginContext;
 
 /**
  * This is the model implementation of PetrinetReader.
@@ -67,9 +71,13 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
             
             checkCanceled(exec);
             // read the file and create fileInputStream
-            ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("HybridPetrinet");
             
-            HybridPetriNetUtil.importHybridPetrinetFromStream(new FileInputStream(m_spec.getFileName()), net);
+//            HybridPetriNetUtil.importHybridPetrinetFromStream(new FileInputStream(m_spec.getFileName()), net);
+            
+            ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("Hybrid Petrinet");
+            UIContext context = new UIContext();
+            UIPluginContext pContext = context.getMainPluginContext();
+        	utils.importHybridPetrinetFromStream(pContext, new FileInputStream(m_spec.getFileName()), net);
             checkCanceled(exec);
         	m_netPort = new HybridPetriNetPortObject(net);
         }

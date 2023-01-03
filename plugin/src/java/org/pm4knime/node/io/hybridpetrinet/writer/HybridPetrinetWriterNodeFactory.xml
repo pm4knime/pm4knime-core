@@ -16,7 +16,7 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Petri Net">a hybrid Petri net</inPort>
+        <inPort index="0" name="Hybrid Petri Net">a hybrid Petri net</inPort>
         
     </ports>      
 </knimeNode>

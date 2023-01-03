@@ -16,7 +16,7 @@
     
     <ports>
       
-        <outPort index="0" name="Petri Net">a hybrid Petri net</outPort>
+        <outPort index="0" name="Hybrid Petri Net">a hybrid Petri net</outPort>
         <!-- possibly more output ports here-->
     </ports>    
 </knimeNode>

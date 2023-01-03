@@ -10,13 +10,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/AccessCPN-unknown.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ActivityClusterArray-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ActivityClusterArrayCreator-latest.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Alignment-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AlphaMiner-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Animation-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-1.9.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/antlr4-runtime-4.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ApacheUtils-latest.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/approxlib-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/asm-5.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/autocomplete-2.5.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis-1.4.jar"/>
@@ -72,7 +70,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/EMF-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ETConformance-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ExtendedHybridMiner-latest.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EvolutionaryTreeMiner-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/exp4j-0.3.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/fastutil-7.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/FilterableSortableTablePanel-latest.jar"/>
@@ -124,7 +121,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/javailp-1.2a.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javassist-3.18.2-GA.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-api-2.4.0-b180830.0359.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jbpt-0.2.429.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.24.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jdom-legacy-1.1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jep-2.4.2.jar"/>
@@ -184,12 +180,10 @@
 	<classpathentry exported="true" kind="lib" path="lib/ProM-Plugins-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Properties-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/protobuf-java-2.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/PTMerge-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/reflectasm-1.10.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/reflections-0.9.10.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rhino-1.7.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rsyntaxtextarea-2.5.8.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/RTED-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Sat4j-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/saxon-9he.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/Saxon-latest.jar"/>
@@ -217,7 +211,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xstream-1.4.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/YAWL-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
-	<classpathentry kind="src" path="src/java/"/>
+	<classpathentry kind="src" path="src/java"/>
 	<classpathentry exported="true" kind="lib" path="lib/XESStandard-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/PNetReplayer-PM4KNIME.jar.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
