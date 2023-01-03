@@ -15,12 +15,12 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
-import org.pm4knime.portobject.PetriNetPortObject;
-import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.pm4knime.util.PetriNetUtil;
+import org.pm4knime.portobject.HybridPetriNetPortObject;
+import org.pm4knime.portobject.HybridPetriNetPortObjectSpec;
+import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
-import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-
+import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
+// or extended hybridminer
 
 /**
  * This is the model implementation of PetrinetReader.
@@ -34,10 +34,10 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
     private static final NodeLogger logger = NodeLogger
             .getLogger(HybridPetrinetReaderNodeModel.class);
     
-    public static final String CFG_FILE_NAME = "PetriNet FileName";
+    public static final String CFG_FILE_NAME = "HybridPetriNet FileName";
 
     // now we should assign one read types to the model
-    public static final String GFG_PETRINET_TYPE = "Petrinet Type";
+    public static final String GFG_PETRINET_TYPE = "HybridPetrinet Type";
     // don't know the use of this parameter
 	public static final String CFG_HISTORY_ID = "History ID";
 	
@@ -47,12 +47,12 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
 	private final SettingsModelString m_fileName = new SettingsModelString(HybridPetrinetReaderNodeModel.CFG_FILE_NAME, "");
 	private final SettingsModelString m_type = new SettingsModelString(GFG_PETRINET_TYPE, "");
 	
-	PetriNetPortObjectSpec m_spec = new PetriNetPortObjectSpec();
+	HybridPetriNetPortObjectSpec m_spec = new HybridPetriNetPortObjectSpec();
 	
     public HybridPetrinetReaderNodeModel() {
     
         // TODO as one of those tests
-        super(null, new PortType[] {PetriNetPortObject.TYPE});
+        super(null, new PortType[] {HybridPetriNetPortObject.TYPE});
     }
 
     /**
@@ -61,18 +61,20 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-    	PetriNetPortObject m_netPort = null;
+    	HybridPetriNetPortObject m_netPort = null;
         if(m_type.getStringValue().equals(defaultTypes[0])) {
             logger.info("Read Naive Petri net !");
             
             checkCanceled(exec);
             // read the file and create fileInputStream
-            AcceptingPetriNet anet = PetriNetUtil.importFromStream(new FileInputStream(m_spec.getFileName()));
+            ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("HybridPetrinet");
+            
+            HybridPetriNetUtil.importHybridPetrinetFromStream(new FileInputStream(m_spec.getFileName()), net);
             checkCanceled(exec);
-        	m_netPort = new PetriNetPortObject(anet);
+        	m_netPort = new HybridPetriNetPortObject(net);
         }
 		
-		logger.info("end of reading of Petri net");
+		logger.info("end of reading of Hybrid Petri net");
         return new PortObject[] {m_netPort};
     }
     
