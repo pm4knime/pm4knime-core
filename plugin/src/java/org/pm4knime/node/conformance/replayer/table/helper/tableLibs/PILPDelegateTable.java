@@ -118,7 +118,6 @@ public class PILPDelegateTable extends AbstractPILPDelegateTable<PILPTailTable> 
 	/**
 	 * For backwards compatibility
 	 */
-	@Deprecated
 	protected PILPDelegateTable(PetrinetGraph net, TableEventLog log, TransEvClassMappingTable map,
 			Map<Transition, Integer> mapTrans2Cost, Map<String, Integer> mapEvClass2Cost,
 			Map<Transition, Integer> mapSync2Cost, int delta, int threads, Marking... set) {
