@@ -62,6 +62,7 @@
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.inductiveminer.Table.InductiveMinerTableNodeFactory"/>
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.ilpminer.Table.ILPMinerTableNodeFactory"/>
         
         <!-- nodes in log-based discovery-->
 		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory" />
