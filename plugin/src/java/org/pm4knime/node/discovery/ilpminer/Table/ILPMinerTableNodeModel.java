@@ -16,12 +16,11 @@ import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.framework.plugin.PluginContext;
@@ -32,9 +31,9 @@ import org.processmining.models.semantics.petrinet.Marking;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.sort.BufferedDataTableSorter;
 import org.knime.core.node.BufferedDataTable;
-import org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeModel;
 import org.pm4knime.node.conversion.table2log.ToXLogConverter;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 
 /**
  * <code>NodeModel</code> for the "ILPMiner" node. 
@@ -79,7 +78,7 @@ import org.pm4knime.util.defaultnode.DefaultMinerNodeModel;
  * 1. to replace all the event log to the table(BufferedDataTable)
  * 
  */
-public class ILPMinerTableNodeModel extends DefaultMinerNodeModel {
+public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
 	
 	private static final NodeLogger logger = NodeLogger
             .getLogger(ILPMinerTableNodeModel.class);
@@ -90,9 +89,9 @@ public class ILPMinerTableNodeModel extends DefaultMinerNodeModel {
 	SMILPMinerParameter m_parameter; 
 	
 	public static final String CFG_KEY_CONFIG = "Table to event log conveter config";
-	SMTable2XLogConfig m_config =  new SMTable2XLogConfig(CFG_KEY_CONFIG);
 	
 	XLogPortObject logPO;
+	
     /**
      * Constructor for the node model.
      */
@@ -116,9 +115,11 @@ public class ILPMinerTableNodeModel extends DefaultMinerNodeModel {
 		
 		logger.info("Start : ILPMinerTable " );
 		checkCanceled(exec);
-		XEventClassifier classifier = getEventClassifier();
+		//XEventClassifier classifier = XLogUtil.getEventClassifier(convertedLog, m_classifier.getStringValue());
+		// what is log?
+		XLog convertedLog = Table2XLogConverter(table, exec);
 		
-		PortObject[] convertedLog = Table2XLogConverter(table, exec);
+		XEventClassifier classifier = XLogUtil.getEventClassifier(convertedLog, getEventClassifier());
 		
 		final String startLabel = "[start>@" + System.currentTimeMillis();
 		final String endLabel = "[end]@" + System.currentTimeMillis();
@@ -148,7 +149,7 @@ public class ILPMinerTableNodeModel extends DefaultMinerNodeModel {
 		
 	}
 	
-	protected PortObject[] Table2XLogConverter(final BufferedDataTable tableData,
+	protected XLog Table2XLogConverter(final BufferedDataTable tableData,
             final ExecutionContext exec) throws Exception {
     	logger.info("Start : Convert DataTable to Event Log" );
         // TODO: accept input DataTable, use the configuration columnNames, 
@@ -158,7 +159,7 @@ public class ILPMinerTableNodeModel extends DefaultMinerNodeModel {
     	
     	// sort the table w.r.t. caseID column
     	List<String> m_inclList = new ArrayList<String>();
-    	m_inclList.add(m_config.getMCaseID().getStringValue());
+    	m_inclList.add(getTraceClassifier());
     	// here we might need to make sure they mean this
     	boolean[] m_sortOrder = {true};
     	boolean m_missingToEnd = false;
@@ -169,30 +170,46 @@ public class ILPMinerTableNodeModel extends DefaultMinerNodeModel {
         sorter.setSortInMemory(m_sortInMemory);
         BufferedDataTable sortedTable = sorter.sort(exec);
     	
-        checkCanceled();
     	// convert the string to date and sort them according to caseID? So we can read them easier for rows
     	// it creates the corresponding column spec and create another DataTable for it.
     	// one thing to remember, it is not so important to have order of timestamp. 
     	ToXLogConverter handler = new ToXLogConverter();
+    	
+    	SMTable2XLogConfig m_config = new SMTable2XLogConfig(CFG_KEY_CONFIG);
+    	
+    	SettingsModelString m_caseID = new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, getTraceClassifier());
+    	SettingsModelString m_eventID = new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, getEventClassifier());
+    	
+    	
+    	m_config.setMCaseID(m_caseID);
+    	m_config.setMEventID(m_eventID);
     	handler.setConfig(m_config);
     	handler.setLogger(logger);
     	
     	handler.convertDataTable2Log(sortedTable, exec);
     	XLog log = handler.getXLog();
     	
-    	checkCanceled();
-    	logPO = new XLogPortObject(log);
-    	
-    	logger.info("End : Convert DataTable to Event Log" );
-        return new PortObject[]{logPO};
+        return log;
         
     }
     
-	private void checkCanceled() {
+	@Override
+	protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
 		// TODO Auto-generated method stub
-		
+		m_parameter.saveSettingsTo(settings);
 	}
 
+	@Override
+	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+		// TODO Auto-generated method stub
+		m_parameter.validateSettings(settings);
+	}
+
+	@Override
+	protected void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+		// TODO Auto-generated method stub
+		m_parameter.loadSettingsFrom(settings);
+	}
 
 
 }

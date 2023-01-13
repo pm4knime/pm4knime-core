@@ -2,6 +2,8 @@ package org.pm4knime.node.discovery.ilpminer.Table;
 
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
+import org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeModel;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerDialog;
 import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
@@ -25,8 +27,11 @@ import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
  * 
  * @author Kefang Ding
  */
-public class ILPMinerTableNodeDialog extends DefaultMinerNodeDialog {
+public class ILPMinerTableNodeDialog extends DefaultTableMinerDialog {
 
+	public ILPMinerTableNodeDialog(ILPMinerTableNodeModel n) {
+		super(n);
+	}
 	
 	SMILPMinerParameter m_parameter; 
     /**

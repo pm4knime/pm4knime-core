@@ -13,13 +13,15 @@ import org.knime.core.node.NodeView;
 public class ILPMinerTableNodeFactory 
         extends NodeFactory<ILPMinerTableNodeModel> {
 
+	ILPMinerTableNodeModel node;
     /**
      * {@inheritDoc}
      */
     @Override
     public ILPMinerTableNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new ILPMinerTableNodeModel();
+    	node = new ILPMinerTableNodeModel();
+        return node;
     }
 
     /**
@@ -56,7 +58,7 @@ public class ILPMinerTableNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new ILPMinerTableNodeDialog();
+        return new ILPMinerTableNodeDialog(node);
     }
 
 }
