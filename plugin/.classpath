@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -211,7 +211,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xstream-1.4.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/YAWL-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/YAWLEditor-2.3.5.wo.jgraph.jar"/>
-	<classpathentry kind="src" path="src/java/"/>
+	<classpathentry kind="src" path="src/java"/>
 	<classpathentry exported="true" kind="lib" path="lib/XESStandard-latest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/PNetReplayer-PM4KNIME.jar.zip"/>
 	<classpathentry kind="output" path="target/classes"/>

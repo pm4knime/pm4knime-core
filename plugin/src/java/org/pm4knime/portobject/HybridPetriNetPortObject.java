@@ -26,7 +26,7 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 
 
-public class HybridPetriNetPortObject extends AbstractPortObject{
+public class HybridPetriNetPortObject extends AbstractDotPanelPortObject {
 
 	/**
 	 * Define port type of objects of this class when used as PortObjects.
@@ -57,7 +57,7 @@ public class HybridPetriNetPortObject extends AbstractPortObject{
 
 	@Override
 	public String getSummary() {
-		return "This port contains a HybridPetriNet object";
+		return "Transitions: " + pn.getTransitions().size() + ", Places: " + pn.getPlaces().size();
 	}
 
 	public boolean equals(Object o) {

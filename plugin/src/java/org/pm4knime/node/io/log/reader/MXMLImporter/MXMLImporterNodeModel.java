@@ -127,7 +127,7 @@ public class MXMLImporterNodeModel extends DefaultNodeModel {
 	 * Create source model
 	 */
 	static final SettingsModelReaderFileChooser createSourceModel(final PortsConfiguration portsConfig) {
-		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, MXMLImporterNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS, "mxml");
+		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, MXMLImporterNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS, new String[]{".mxml", ".mxml.gz"});
 	}
 
 	@Override

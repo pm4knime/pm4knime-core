@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Alignment-Based Replayer</name>
+	<name>Alignment-Based Replayer (Event Log)</name>
 
 	<shortDescription>
 		This node implements the alignment-based replayer for constructing the optimal alignments by replaying an event log on a Petri net.
@@ -11,8 +11,7 @@
 
 	<fullDescription>
 		<intro>
-		This node wraps the ProM's plug-in "Replay a Log on Petri Net for Conformance Analysis" from the package PNetReplayer. 
-		It implements the alignment-based replayer, which accepts an event log and a Petri net as input and outputs the optimal alignments of the traces after replaying the event log on the Petri net.	
+		This node implements the alignment-based replayer, which accepts an event log and a Petri net as input and outputs the optimal alignments of the traces after replaying the event log on the Petri net.	
 		Alignment-based replay is the state-of-the-art technique in conformance checking.
 		Alignments provide a robust and detailed view on the deviations between the log and the model. 
 		

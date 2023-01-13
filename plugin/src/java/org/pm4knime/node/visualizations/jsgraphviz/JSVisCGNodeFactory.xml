@@ -22,6 +22,7 @@
     
    <ports>
         <inPort name="Causal Graph" index="0">a causal graph</inPort>
+        <outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 
 </knimeNode>

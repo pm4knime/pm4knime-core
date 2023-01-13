@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./Conformance-Precision-icon.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Precision Checker</name>
+    <name>Precision Checker (Event Log)</name>
     
     <shortDescription>
        Based on the replay result, this node computes the statistical precision information.
@@ -8,8 +8,7 @@
     
     <fullDescription>
         <intro>
-        This node wraps the ProM's plug-in "Check Precision based on Align-ETConformance" from the package ETConformance. 
-        This node is based on the result of alignment-based replayer. It computes the statistical precision information. 
+        This node computes the statistical precision information based on the result of the alignment-based replayer.
         Conceptually, the precision of a process model compared to one event log is supposed to be (1) high when the model 
         allows for few traces not seen in the log; and (2) low when it allows for many traces not seen in the log.   
  		<br />

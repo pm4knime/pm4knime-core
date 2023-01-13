@@ -1,9 +1,11 @@
 package org.pm4knime.node.visualizations.jsgraphviz;
 
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.portobject.ProcessTreePortObject;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.port.PortType;
 
 /**
  * This is an example implementation of the node factory of the
@@ -12,15 +14,16 @@ import org.knime.core.node.NodeView;
  * @author 
  */
 public class JSGraphVizPTNodeFactory 
-        extends NodeFactory<JSGraphVizPTNodeModel> implements WizardNodeFactoryExtension<JSGraphVizPTNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+        extends NodeFactory<JSGraphVizAbstractModel> implements WizardNodeFactoryExtension<JSGraphVizAbstractModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public JSGraphVizPTNodeModel createNodeModel() {
-		// Create and return a new node model.
-        return new JSGraphVizPTNodeModel();
+    public JSGraphVizAbstractModel createNodeModel() {
+    	
+    	PortType[] IN_TYPES = {ProcessTreePortObject.TYPE};
+        return new JSGraphVizAbstractModel(IN_TYPES, "Process Tree JS View");
     }
 
     /**
@@ -36,8 +39,8 @@ public class JSGraphVizPTNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<JSGraphVizPTNodeModel> createNodeView(final int viewIndex,
-            final JSGraphVizPTNodeModel nodeModel) {
+    public NodeView<JSGraphVizAbstractModel> createNodeView(final int viewIndex,
+            final JSGraphVizAbstractModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
 		return null;
     }
