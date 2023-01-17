@@ -46,7 +46,6 @@ public class PetriNetPortObject extends AbstractDotPanelPortObject {
 	private static final String ZIP_ENTRY_NAME = "PetriNetPortObject";
 	
 	// use AcceptingPetriNet as the model
-	// m_anet: a field that carries anet
 	AcceptingPetriNet m_anet ;
 	PetriNetPortObjectSpec m_spec;
 	private EfficientTree effTree;
