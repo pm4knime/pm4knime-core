@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Heuristics Miner (XLog)</name>
+	<name>Heuristics Miner (Event Log)</name>
 
 	<shortDescription>
 		This node implements the Heuristics Miner to discover a Petri net from an event log.
@@ -11,8 +11,7 @@
 
 	<fullDescription>
 		<intro>
-		This node wraps the ProM's plug-in "Mine for a Heuristics Net using Heuristics Miner" from the package HeuristicsMiner.
-			It implements the Heuristics Miner to discover a Petri net from an event log.
+		This node implements the Heuristics Miner to discover a Petri net from an event log.
 			The Heuristics Miner discovers a heuristics net, which is a directed graph with activities as nodes and edges connecting nodes to model dependencies between activities.
 			The discovered heuristics net is converted into a Petri net.
 		</intro>

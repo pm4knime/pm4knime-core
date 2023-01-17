@@ -1,21 +1,11 @@
 package org.pm4knime.node.discovery.alpha.xlog;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
-import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.pm4knime.node.discovery.dfgminer.DFM2PMNodeModel;
-import org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeModel;
-import org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeModel;
 import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 import org.processmining.alphaminer.parameters.AlphaVersion;
 

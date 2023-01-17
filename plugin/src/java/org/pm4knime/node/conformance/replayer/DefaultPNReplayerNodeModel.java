@@ -234,6 +234,12 @@ public class DefaultPNReplayerNodeModel extends DefaultNodeModel{
         // TODO: generated method stub
     }
     
+    @Override
+    protected void reset() {
+    	initializeParameter();
+    }
+
+    
 
 }
 

@@ -163,4 +163,3 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 		}
 
 }
-

@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
     <name>DFG Visualizer</name>
     
-    <shortDescription>JavaScript Visualizer for DFGs</shortDescription>
+    <shortDescription>JavaScript Visualizer for Directly-Follows Graphs</shortDescription>
     
     <fullDescription>
         <intro>
@@ -18,10 +18,11 @@
 
     </fullDescription>
     
-   <interactiveView name="DFG (JavaScript)"></interactiveView>
+   <interactiveView name="Directly-Follows Graph (JavaScript)"></interactiveView>
     
    <ports>
-        <inPort name="DFG" index="0">a directly follows graph</inPort>
+        <inPort name="Directly-Follows Graph" index="0">a directly follows graph</inPort>
+        <outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 	
 

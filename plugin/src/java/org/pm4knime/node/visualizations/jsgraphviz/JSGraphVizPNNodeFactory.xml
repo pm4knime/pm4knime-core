@@ -26,6 +26,7 @@
     
    <ports>
         <inPort name="Petri Net" index="0">a Petri net</inPort>
+        <outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 
 </knimeNode>

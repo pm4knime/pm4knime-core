@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Performance Checker</name>
+	<name>Performance Checker (Event Log)</name>
 
 	<shortDescription>
 		Based on the replay result, this node computes the statistical performance information.
@@ -11,7 +11,7 @@
 
 	<fullDescription>
 		<intro>
-		This node is based on the result of alignment-based replayer. It outputs the statistical performance information. The performance information is given as tables,
+		This node computes the statistical performance information based on the result of the alignment-based replayer. The performance information is given as tables,
 		 and the performance projection on the Petri net is shown as a view.  
 		<!--<br />
 			More information seen in the :

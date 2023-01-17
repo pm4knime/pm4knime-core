@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Development Build
 Bundle-SymbolicName: org.pm4knime.plugin;singleton:=true
-Bundle-Version: 1.1.6.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Fraunhofer Institute for Applied Information Technology
 Require-Bundle: org.eclipse.core.runtime,
@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.google.guava;bundle-version="19.0.0",
  net.sf.trove4j;bundle-version="[3.0.3,4.0.0)",
  org.knime.js.core;bundle-version="[4.0.1,5.0.0)",
- org.apache.commons.lang3;bundle-version="[3.9.0,4.0.0)"
+ org.apache.commons.lang3;bundle-version="[3.9.0,4.0.0)",
+ org.knime.ext.svg
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/AcceptingPetriNet-latest.jar,
  lib/AcceptingPetriNetClassicalReductor-latest.jar,
@@ -271,12 +272,12 @@ Export-Package: org.pm4knime.node.conformance.fitness,
  org.pm4knime.node.conversion.table2log,
  org.pm4knime.node.discovery.alpha.table,
  org.pm4knime.node.discovery.alpha.xlog,
- org.pm4knime.node.discovery.dfgminer,
  org.pm4knime.node.discovery.heuritsicsminer,
  org.pm4knime.node.discovery.ilpminer,
  org.pm4knime.node.discovery.inductiveminer,
  org.pm4knime.node.io.log.reader,
- org.pm4knime.node.io.log.writer,
+ org.pm4knime.node.io.log.writer.xes,
+ org.pm4knime.node.io.log.writer.mxml,
  org.pm4knime.node.io.petrinet.reader,
  org.pm4knime.node.io.petrinet.writer,
  org.pm4knime.node.io.processtree.reader,

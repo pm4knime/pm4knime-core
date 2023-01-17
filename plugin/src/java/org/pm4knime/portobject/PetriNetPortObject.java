@@ -34,7 +34,7 @@ import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizPetriNet;
  * @author kefang-pads
  *
  */
-public class PetriNetPortObject  implements PortObject{
+public class PetriNetPortObject extends AbstractDotPanelPortObject {
 
 	/**
 	 * Define port type of objects of this class when used as PortObjects.
@@ -46,6 +46,7 @@ public class PetriNetPortObject  implements PortObject{
 	private static final String ZIP_ENTRY_NAME = "PetriNetPortObject";
 	
 	// use AcceptingPetriNet as the model
+	// m_anet: a field that carries anet
 	AcceptingPetriNet m_anet ;
 	PetriNetPortObjectSpec m_spec;
 	private EfficientTree effTree;
@@ -72,7 +73,7 @@ public class PetriNetPortObject  implements PortObject{
 
 	@Override
 	public String getSummary() {
-		return "This port contains a Petri net object";
+		return "Transitions: " + m_anet.getNet().getTransitions().size() + ", Places: " + m_anet.getNet().getPlaces().size();
 	}
 
 	public boolean equals(Object o) {
@@ -115,6 +116,7 @@ public class PetriNetPortObject  implements PortObject{
 		return new JComponent[] {};
 	}
 	
+	@Override
 	public DotPanel getDotPanel() {
 		
 		if(effTree != null) {
@@ -182,6 +184,21 @@ public class PetriNetPortObject  implements PortObject{
 			
 			return result;
 		}
+		
+	}
+
+
+	@Override
+	protected void save(PortObjectZipOutputStream out, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void load(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		// TODO Auto-generated method stub
 		
 	}
 }
