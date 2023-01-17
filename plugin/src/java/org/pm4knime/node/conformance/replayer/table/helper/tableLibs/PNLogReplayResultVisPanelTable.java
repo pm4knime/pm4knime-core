@@ -83,7 +83,6 @@ public class PNLogReplayResultVisPanelTable extends JPanel {
 	public PNLogReplayResultVisPanelTable() {
 	}
 
-	@Deprecated
 	public PNLogReplayResultVisPanelTable(PetrinetGraph net, TableEventLog log, PNRepResult logReplayResult, Progress progress) {
 		this(log, logReplayResult, progress);
 	}
