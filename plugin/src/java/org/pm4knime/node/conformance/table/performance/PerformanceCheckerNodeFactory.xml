@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./Conformance-Performance-icon.png" type="Predictor"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Performance Checker</name>
+
+	<shortDescription>
+		Based on the replay result, this node computes the statistical performance information.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>
+		This node computes the statistical performance information based on the result of the alignment-based replayer. The performance information is given as tables,
+		 and the performance projection on the Petri net is shown as a view.  
+		<!--<br />
+			More information seen in the :
+			<a href="http://goo.gl/EmiDJ">paper</a> and
+			  <a href="https://svn.win.tue.nl/repos/prom/Packages/PetriNetReplayAnalysis/">codes</a>. -->
+		</intro>
+
+		<option name="Time stamp">The attribute to be used for the time stamp.
+		</option>
+		<option name="Consider performance in syn moves">Choose whether to consider syn moves. This option is enabled by default.</option>
+		<option name="Include unreliable replay results">Choose whether to include unreliable replay results. This option is enabled by default.
+		</option>
+		
+	</fullDescription>
+
+	<ports>
+		 <inPort index="0" name="Replay Result ">replay result</inPort>
+		<!-- possibly more input ports here -->
+		  <outPort index="0" name="Global Performance StatInfo">global performance statistical information</outPort>
+		<!-- <outPort index="1" name="Local Performance Statistics">
+		performance statistical information for the different patterns in the log
+		</outPort>-->
+		<outPort index="1" name="Transition Performance Statistics">
+		performance statistical information for the different transitions in the Petri net (waiting time, synchronization time, and sojourn time).
+		</outPort>
+		<outPort index="2" name="Place Performance Statistics">
+		performance statistical information for the different places in the Petri net (waiting time, synchronization time, and sojourn time). 
+		  	
+		</outPort>
+		<!-- possibly more output ports here -->
+	</ports>
+	<views>
+		<view index="0" name="Performance Projection on Model">Performance projection on the Petri net.</view>
+		<!--view index="1" name="name of second view">Description of second view...</view -->
+	</views>
+</knimeNode>

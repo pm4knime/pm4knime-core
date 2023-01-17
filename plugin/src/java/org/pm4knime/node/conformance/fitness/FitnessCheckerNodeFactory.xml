@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./Conformance-Fitness-icon.png" type="Predictor" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Fitness Checker</name>
+    <name>Fitness Checker (Event Log)</name>
     
     <shortDescription>
         Based on the replay result, this node outputs the statistical fitness information. 
     </shortDescription>
     
     <fullDescription>
-        <intro>This node is based on the result of alignment-based replayer. It outputs the statistical fitness information. 
+        <intro>This node computes the statistical fitness information based on the result of alignment-based replayer.
         </intro>
         
     </fullDescription>

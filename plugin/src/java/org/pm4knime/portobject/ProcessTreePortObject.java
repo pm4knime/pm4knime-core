@@ -3,14 +3,22 @@ package org.pm4knime.portobject;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
+import org.knime.core.node.port.PortObjectZipOutputStream;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.PortTypeRegistry;
+import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
@@ -21,12 +29,15 @@ import org.processmining.processtree.impl.ProcessTreeImpl;
 import org.processmining.processtree.ptml.Ptml;
 import org.processmining.processtree.ptml.importing.PtmlImportTree;
 
-public class ProcessTreePortObject implements PortObject{
+public class ProcessTreePortObject extends AbstractDotPanelPortObject {
 	// if we put save and load codes at this place, then we save codes for reader and writer,
 	// because we can use them directly.. so we put the save and load here
 	// but we need to specify the input and output operator
 	
 	// private ProcessTreePortObjectSpec m_spec ;
+	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(ProcessTreePortObject.class);
+	public static final PortType TYPE_OPTIONAL =
+			PortTypeRegistry.getInstance().getPortType(ProcessTreePortObject.class, true);
 	private ProcessTree tree;
 	ProcessTreePortObjectSpec m_spec;
 	public ProcessTreePortObject(ProcessTree t) {
@@ -47,7 +58,7 @@ public class ProcessTreePortObject implements PortObject{
 	@Override
 	public String getSummary() {
 		// TODO I guess this is used to describe the object
-		return "This is a process tree.";
+		return null;
 	}
 
 	@Override
@@ -160,6 +171,18 @@ public class ProcessTreePortObject implements PortObject{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+
+	@Override
+	protected void save(PortObjectZipOutputStream out, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		
+	}
+
+	@Override
+	protected void load(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
 		
 	}
 	

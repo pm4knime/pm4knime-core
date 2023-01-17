@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./Eventlog-Writer-icon.png" type="Sink" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>MXML Writer</name>
+    
+    <shortDescription>
+        This node exports an event log into an MXML file.
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>This node exports an event log into an MXML file or a compressed MXML file (gz).</intro>
+        
+        
+        <option name="Compress (gz)"> If checked, the output file is compressed (gz).</option>
+        <option name="Export Location">Location for the output file.</option>
+       
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Event Log">an event log</inPort>
+        
+    </ports>    
+   
+</knimeNode>

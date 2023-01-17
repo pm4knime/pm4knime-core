@@ -13,7 +13,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 
 
-public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
+public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	
 	public static final String DEFAULT_TRACE_CLASS = "#Trace Attribute#concept:name"; //"case:concept:name"
 	public static final String DEFAULT_EVENT_CLASS = "#Event Attribute#concept:name"; //"concept:name"
@@ -43,7 +43,9 @@ public abstract class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	}
 	
 	
-	public abstract void init() ;
+	public void init() {
+		
+	};
 	
 	
     @Override

@@ -20,6 +20,7 @@
     
    <ports>
         <inPort name="Hybrid Petri Net" index="0">a hybrid Petri net</inPort>
+        <outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 
 </knimeNode>

@@ -23,7 +23,7 @@ import org.processmining.plugins.inductiveminer2.plugins.DfgMsdImportPlugin;
 import org.processmining.plugins.inductiveminer2.plugins.DfgMsdVisualisationPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 
-public class DfgMsdPortObject extends AbstractPortObject {
+public class DfgMsdPortObject extends AbstractDotPanelPortObject {
 
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(DfgMsdPortObject.class);
 	private static final String ZIP_ENTRY_NAME = "DfgMsdPortObject";
@@ -49,7 +49,7 @@ public class DfgMsdPortObject extends AbstractPortObject {
 	@Override
 	public String getSummary() {
 		// TODO Auto-generated method stub
-		return "DfgMsd PortObject";
+		return "Nodes: " + dfm.getDirectlyFollowsGraph().getNumberOfNodes();
 	}
 
 	@Override

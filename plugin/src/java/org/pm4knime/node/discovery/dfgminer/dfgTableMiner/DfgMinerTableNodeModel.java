@@ -25,10 +25,10 @@ public class DfgMinerTableNodeModel extends DefaultTableMinerModel {
 	private static final NodeLogger logger = NodeLogger.getLogger(DfgMinerTableNodeModel.class);
 	// one parameter is the set noise, one is the classifier, those two like
 		// inductive miner
-		public static final String CFG_VARIANT_KEY= "Variant";
-		public static final String[] CFG_VARIANT_VALUES = {"use event classes - (IMd, IMfd, IMcd)"};
+//		public static final String CFG_VARIANT_KEY= "Variant";
+//		public static final String[] CFG_VARIANT_VALUES = {"use event classes - (IMd, IMfd, IMcd)"};
 		
-		SettingsModelString m_variant = new SettingsModelString(DfgMinerTableNodeModel.CFG_VARIANT_KEY, "");
+//		SettingsModelString m_variant = new SettingsModelString(DfgMinerTableNodeModel.CFG_VARIANT_KEY, "");
 //		public static List<String> sClfNames; 
 //		public static List<XEventClassifier> sClassifierList ;
 //		static {
@@ -71,7 +71,7 @@ public class DfgMinerTableNodeModel extends DefaultTableMinerModel {
 //				throw new Exception("not found variant type");
 //			}
 			//checkCanceled(exec);
-			IMLog imLog = new BufferedTableIMLog(log, getEventClassifier(), getTraceClassifier());
+			BufferedTableIMLog imLog = new BufferedTableIMLog(logPO, getEventClassifier(), getTraceClassifier());	
 			DfgMsd dfgmsd = Log2DfgMsd.convert(imLog);
 			checkCanceled(exec);
 			logger.info("End:  DFM Miner");
@@ -80,44 +80,30 @@ public class DfgMinerTableNodeModel extends DefaultTableMinerModel {
 		}
 		
 
-		
-	
-		
-//		@Override
-//		public String getEventClassifier() {
-//			String nClf = super.getEventClassifier();
-//			if(nClf != null) {
-//				return nClf;
-//			}
-//			return null;
-//		}
-
-
-
 		@Override
 		protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
 			// TODO Auto-generated method stub
-			m_variant.saveSettingsTo(settings);
+//			m_variant.saveSettingsTo(settings);
 		}
 
 		@Override
 		protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 			// TODO Auto-generated method stub
-			m_variant.validateSettings(settings);
+//			m_variant.validateSettings(settings);
 		}
 
 		@Override
 		protected void loadSpecificValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
 			// TODO Auto-generated method stub
-			m_variant.loadSettingsFrom(settings);
+//			m_variant.loadSettingsFrom(settings);
 		}
 
 
 		@Override
 		protected PortObjectSpec[] configureOutSpec(DataTableSpec logSpec) {
 			// TODO Auto-generated method stub
-				return new PortObjectSpec[] { new DfgMsdPortObjectSpec() };
-			
+				return new PortObjectSpec[] { new DfgMsdPortObjectSpec() };			
 		}
+
 }
 

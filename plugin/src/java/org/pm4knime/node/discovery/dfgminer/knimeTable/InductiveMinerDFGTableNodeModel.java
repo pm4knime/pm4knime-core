@@ -26,7 +26,6 @@ import org.processmining.framework.packages.PackageManager.Canceller;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
-import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerPlugin;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerWithoutLogPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMWithoutLog;
@@ -107,7 +106,7 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 
 		if (!inSpecs[0].getClass().equals(DfgMsdPortObjectSpec.class))
-			throw new InvalidSettingsException("Input is not a valid DfgMsd  model!");
+			throw new InvalidSettingsException("Input is not a valid DFG model!");
 
 		ProcessTreePortObjectSpec ptPOSpec = new ProcessTreePortObjectSpec();
 

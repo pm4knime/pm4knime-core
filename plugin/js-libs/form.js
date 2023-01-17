@@ -2,6 +2,7 @@
 
     let _representation;
     let _value;
+    let _svg;
 
     let view = {};
 
@@ -13,32 +14,28 @@
 
         console.log(representation.dotstr);
         console.log(representation);
-        visu(representation.dotstr);
-
+        vis = visu(representation.dotstr);
+        
+                  
     };
 
     view.getComponentValue = () => {
-        _value.firstName = document.getElementById("firstName").value;
-        _value.lastName = document.getElementById("lastName").value;
         _value.dot = document.getElementById("dot").value;
 
         return _value;
     };
-
-    function createUI() {
-        let body = document.getElementsByTagName("body")[0];
-        body.innerHTML = `<h2>Example JS form</h2>
-        <form>
-          <p>First name: <input id="firstName" type="text" value="Dick"></p>
-          <p>Last name: <input id="lastName" type="text" value="Grayson"></p>
-        </form>`;
-    }
-
+    
+    view.getSVG = () => {
+        knimeService.inlineSvgStyles(_svg);
+        return (new XMLSerializer()).serializeToString(_svg);;
+    };
+    
     function addScript( src ) {
       var s = document.createElement( 'script' );
       s.setAttribute( 'src', src );
       document.body.appendChild( s );
     }
+    
 
     function visu( src ) {
 
@@ -50,8 +47,57 @@
         var viz = new Viz();
 
         viz.renderSVGElement(src)
-          .then(function(element) {
-            document.body.appendChild(element);
+          .then(function(element) { 
+               
+           _svg = element;
+           
+           var exportA = document.createElement('a');
+           exportA.innerHTML = `<button type="button">Export</button>`;
+           exportA.href = viz.generate_url(element);
+           exportA.download = "js-view.svg";
+           
+           
+
+           var zoomIn = document.createElement('a');
+           zoomIn.innerHTML = `<button type="button">Zoom in</button>`;
+           zoomIn.addEventListener( 'click', function(){
+               element.setAttribute("max-height", "none"); 
+               element.setAttribute("max-width", "none"); 
+               var width = element.clientWidth*1.1; 
+               var height = element.clientHeight*1.1; 
+               element.setAttribute("width", width + "px"); 
+               element.setAttribute("height", height + "px"); 
+               
+           });
+           
+           var zoomOut = document.createElement('a');
+           zoomOut.innerHTML = `<button type="button">Zoom out</button>`;
+           zoomOut.addEventListener( 'click', function(){
+               element.setAttribute("max-height", "none"); 
+               element.setAttribute("max-width", "none"); 
+               var width = element.clientWidth*0.9; 
+               var height = element.clientHeight*0.9; 
+               element.setAttribute("width", width + "px"); 
+               element.setAttribute("height", height + "px"); 
+           });
+           
+           var parent1 = document.createElement("parent1");
+           parent1.style.top = "0px";
+           parent1.style.left = "0px";
+           parent1.style.position = "fixed";
+           parent1.style.border = "groove #e6e6e6";
+           parent1.appendChild(exportA);
+           parent1.appendChild(zoomIn);
+           parent1.appendChild(zoomOut);
+           document.body.appendChild(parent1);     
+                     
+           var parent2 = document.createElement("parent2");
+           parent2.style.top = "50px";
+           parent2.style.left = "0px";
+           parent2.style.position = "absolute";
+           parent2.appendChild(element);              
+           document.body.appendChild(parent2); 
+            
           })
           .catch(error => {
             // Create a new Viz instance (@see Caveats page for more info)
@@ -59,9 +105,13 @@
 
             // Possibly display the error
             console.error(error);
-          });
+          });     
+          
+          
 
     }
+    
+    
 
     return view;
 }());
