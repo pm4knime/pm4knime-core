@@ -34,6 +34,8 @@
 		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.log.writer.mxml.MXMLWriterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory" />
 		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory" />
+		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.hybridpetrinet.reader.HybridPetrinetReaderNodeFactory" />
+		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.hybridpetrinet.writer.HybridPetrinetWriterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory" />
 		<node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory" />
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory" />
