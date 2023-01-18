@@ -11,6 +11,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.pm4knime.util.defaultnode.TraceVariantRepresentation;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,6 +88,9 @@ public class TraceVariantVisNodeModel extends AbstractWizardNodeModel<TraceVaria
 			data[i+2] = columns[i];
 		}
 		representation.setData(data);
+		
+		TraceVariantRepresentation varinats = new TraceVariantRepresentation(table, t_classifier, e_classifier);
+		representation.setVariants(varinats);
 		
 		return new PortObject[] { };
 	}

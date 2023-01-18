@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 public class TraceVariant implements Comparable<TraceVariant> {
 
-    private ArrayList<String> activities;
-    private int frequency;
+    ArrayList<String> activities;
+    int frequency;
 
-    public TraceVariant(ArrayList<String> activities){
-    	new TraceVariant(activities, 1);
+    public TraceVariant(ArrayList<String> trace){
+    	this(trace, 1);
     }
     
-    public TraceVariant(ArrayList<String> activities, int freq) {
-    	this.activities = activities;
+    public TraceVariant(ArrayList<String> trace, int freq) {
+    	this.activities = trace;
         this.frequency = freq;
 	}
 

@@ -15,11 +15,12 @@ import org.knime.core.node.BufferedDataTable;
 
 public class TraceVariantRepresentation {
 
-	protected int indexOfEventClassifierTable;
-	protected int indexOfTraceClassifierTable;
-	protected ArrayList<TraceVariant> variants;
-	protected int numberOfTraces;
-	protected Set<String> activities = new HashSet<String>();
+	int indexOfEventClassifierTable;
+	int indexOfTraceClassifierTable;
+	public ArrayList<TraceVariant> variants;
+	public int numberOfTraces;
+	Set<String> activities = new HashSet<String>();
+	String delimiter = "#;#";
 
 	public TraceVariantRepresentation(BufferedDataTable table, String tClassifier, String eClassifier) {
 		indexOfEventClassifierTable = getClassifierIndexFromColumn(table, eClassifier);
@@ -66,6 +67,12 @@ public class TraceVariantRepresentation {
 	}
 	
 
+	public TraceVariantRepresentation(int numberOfTraces2, ArrayList<TraceVariant> tracevariants) {
+		this.numberOfTraces = numberOfTraces2;
+		this.variants = tracevariants;
+	}
+
+
 	private int getClassifierIndexFromColumn(BufferedDataTable table, String classifier) {
 		String[] columns = table.getDataTableSpec().getColumnNames();
 		
@@ -93,6 +100,9 @@ public class TraceVariantRepresentation {
 			variants.add(variant);
 		}		
 	}
+
+
+	
 
 }
 

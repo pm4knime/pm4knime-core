@@ -9,7 +9,7 @@
         _representation = representation;
         _value = value;
 
-        createUI(representation.data);
+        createUI(representation.data, representation.variants);
     };
 
     view.getComponentValue = () => {
@@ -19,7 +19,7 @@
         return _value;
     };
 
-    function createUI(data) {
+    function createUI(data, tracevariants) {
     let body = document.getElementsByTagName("body")[0];
     body.innerHTML = `<div class="container-fluid">
       <h1>Table Statistics</h1>
@@ -36,6 +36,18 @@
     }
     
     body.appendChild(tablestats);
+    
+    var variants = document.createElement('div');
+    variants.innerHTML = 
+            `<p>Trace Variants: </p>`;
+             
+    for (var i = 0; i <tracevariants.variants.length; i++) {
+        let trace = tracevariants.variants[i].activities;
+        let freq = tracevariants.variants[i].frequency;
+        variants.innerHTML += `<p>${i+1}. Variant with frequency ${freq}: ${trace}</p>`;             
+    }
+    
+    body.appendChild(variants);
 }
 
     return view;
