@@ -77,15 +77,16 @@ public class TraceVariantVisNodeModel extends AbstractWizardNodeModel<TraceVaria
 	@Override
 	protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 		table = (BufferedDataTable)inObjects[0];
-		
 		TraceVariantVisViewRepresentation representation = getViewRepresentation();
 		
-		String numrows = Long.toString(table.size());
-		
-		representation.setNumberRows(numrows);
-		
-		System.out.println("NumRows: " + representation.getNumberRows());
-		
+		String[] columns = table.getDataTableSpec().getColumnNames();
+		String [] data = new String[columns.length+2];
+		data[0] = Long.toString(table.size());
+		data[1] = Long.toString(columns.length);
+		for (int i=0; i<columns.length; i++) {
+			data[i+2] = columns[i];
+		}
+		representation.setData(data);
 		
 		return new PortObject[] { };
 	}

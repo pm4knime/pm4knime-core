@@ -11,14 +11,15 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class TraceVariantVisViewRepresentation extends JSONViewContent {
-
-	private String numrows;
-	private static final String NUM_ROWS = "numrows";
+	
+	String[] data;
+	String DATA = "data";
+	String delimiter = "#;#";
 
 	@Override
 	public void saveToNodeSettings(NodeSettingsWO settings) {
 		try {
-			settings.addString(NUM_ROWS, numrows);
+			settings.addString(DATA, String.join(delimiter, data));
 	    } catch (Exception ex) {
 	        // do nothing
 	    }
@@ -27,7 +28,7 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 	@Override
 	public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 		try {
-			numrows = settings.getString(NUM_ROWS);
+			data = settings.getString(DATA).split(delimiter);
 	    } catch (Exception ex) {
 	        // do nothing
 	    }  
@@ -46,21 +47,21 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 		}
 		TraceVariantVisViewRepresentation other = (TraceVariantVisViewRepresentation)obj;
 		return new EqualsBuilder()
-				.append(numrows, other.numrows)
+				.append(data, other.data)
                 .isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(numrows)
+		return new HashCodeBuilder().append(data)
 				 .toHashCode();
 	}
 
-	public void setNumberRows(String size) {
-		numrows = size;
+	public void setData(String[] size) {
+		data = size;
 	}
 	
-	public String getNumberRows() {
-		return numrows;
+	public String[] getData() {
+		return data;
 	}
 }

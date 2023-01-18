@@ -9,7 +9,7 @@
         _representation = representation;
         _value = value;
 
-        createUI("tttt");
+        createUI(representation.data);
     };
 
     view.getComponentValue = () => {
@@ -19,30 +19,23 @@
         return _value;
     };
 
-    function createUI(val1) {
+    function createUI(data) {
     let body = document.getElementsByTagName("body")[0];
     body.innerHTML = `<div class="container-fluid">
-      <form class="form-horizontal">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">First name</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="firstName">
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Last name</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="lastName">
-          </div>
-        </div>
-      </form>
-      
-        <div class="jumbotron text-center">
-             <h1>Table Statistics</h1>
-             <p>Number of Rows: ${val1}</p>
-        </div>
+      <h1>Table Statistics</h1>
     </div>`;
+    
+    var tablestats = document.createElement('div');
+    tablestats.innerHTML = 
+            `<p>Number Rows: ${data[0]}</p>
+             <p>Number Attributes: ${data[1]}</p>`;
+             
+    for (var i = 2; i <data.length; i++) {
+        let val = data[i];
+        tablestats.innerHTML += `<p>Attribute ${i-1}: ${val}</p>`;             
+    }
+    
+    body.appendChild(tablestats);
 }
 
     return view;
