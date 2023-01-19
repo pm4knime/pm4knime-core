@@ -3,7 +3,6 @@ package org.pm4knime.node.discovery.ilpminer.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -20,7 +19,10 @@ import org.pm4knime.settingsmodel.SMILPMinerParameter;
 import org.pm4knime.settingsmodel.SMTable2XLogConfig;
 import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
+import org.pm4knime.util.defaultnode.TraceVariantRepresentation;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
+import org.pm4knime.node.discovery.ilpminer.Table.util.TableHybridILPMinerParametersImpl;
+import org.pm4knime.node.discovery.ilpminer.Table.util.TableHybridILPMinerPlugin;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.framework.plugin.PluginContext;
@@ -111,39 +113,29 @@ public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
 	@Override
 	protected PortObject mine(BufferedDataTable table, final ExecutionContext exec) throws Exception {
 		
-		//BufferedDataTable copiedtable = new BufferedDataTable();
+        logger.info("Start : ILPMiner " );
+        
+        final String startLabel = "ARTIFICIAL_START";
+		final String endLabel = "ARTIFICIAL_END";
 		
-		logger.info("Start : ILPMinerTable " );
-		checkCanceled(exec);
-		//XEventClassifier classifier = XLogUtil.getEventClassifier(convertedLog, m_classifier.getStringValue());
-		// what is log?
-		XLog convertedLog = Table2XLogConverter(table, exec);
-		
-		XEventClassifier classifier = XLogUtil.getEventClassifier(convertedLog, getEventClassifier());
-		
-		final String startLabel = "[start>@" + System.currentTimeMillis();
-		final String endLabel = "[end]@" + System.currentTimeMillis();
-		
-		XLog artifLog = XLogUtil.addArtificialStartAndEnd(convertedLog, startLabel, endLabel, classifier);
-		
+		TraceVariantRepresentation log = new TraceVariantRepresentation(table, this.getTraceClassifier(), this.getEventClassifier());
+		TraceVariantRepresentation artifLog = TraceVariantRepresentation.addArtificialStartAndEnd(log.getNumberOfTraces(), log.getActivities(), log.getVariants(), startLabel, endLabel);
 		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
 		checkCanceled(context, exec);
         // create the parameter
-		XLogHybridILPMinerParametersImpl param = new XLogHybridILPMinerParametersImpl(context, artifLog);
+		TableHybridILPMinerParametersImpl param = new TableHybridILPMinerParametersImpl(context, artifLog);
 		// here put some values from m_parameter to param
 		m_parameter.updateParameter(param);
-		
-		param.setEventClassifier(classifier);
       
     	checkCanceled(context, exec);
-    	Object[] result = HybridILPMinerPlugin.discoverWithArtificialStartEnd(context, convertedLog, artifLog, param);
+    	Object[] result = TableHybridILPMinerPlugin.discoverWithArtificialStartEnd(context, log, artifLog, param);
         
     	// create the accepting Petri net and PortObject
     	AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1],  (Marking) result[2]);
     	checkCanceled(exec);
         PetriNetPortObject pnPO = new PetriNetPortObject(anet);
         
-    	logger.info("End : ILPMinerTable " );
+    	logger.info("End : ILPMiner " );
         return pnPO;
 		
 		
@@ -152,9 +144,6 @@ public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
 	protected XLog Table2XLogConverter(final BufferedDataTable tableData,
             final ExecutionContext exec) throws Exception {
     	logger.info("Start : Convert DataTable to Event Log" );
-        // TODO: accept input DataTable, use the configuration columnNames, 
-    	// convert the data into XLog
-    	// how to check the type for this?
     	BufferedDataTable tData = tableData;
     	
     	// sort the table w.r.t. caseID column

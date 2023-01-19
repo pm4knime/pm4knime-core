@@ -2,6 +2,7 @@ package org.pm4knime.node.visualizations.logviews.tracevariant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -89,6 +90,11 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 	
 	public void saveVariantsToNodeSettings(NodeSettingsWO settings) {
 		settings.addInt("numberOfTraces", variants.numberOfTraces);
+		
+		for (int i = 0; i < variants.getActivities().size(); i++){
+			settings.addString("SetOfActivities", String.join(delimiter, variants.getActivities()));
+		}
+		
 		settings.addInt("numberOfVariants", variants.variants.size());
         for (int i = 0; i < variants.variants.size(); i++){
 			settings.addString("Trace"+i, String.join(delimiter, variants.variants.get(i).getActivities()));
@@ -101,6 +107,9 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 	public void loadVariantsFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 		ArrayList<TraceVariant> tracevariants = new ArrayList<TraceVariant>();
 		int numberOfTraces = settings.getInt("numberOfTraces");
+		
+		HashSet<String> activities = new HashSet<String>(Arrays.asList(settings.getString("SetOfActivities").split(delimiter)));
+		
 		int numberOfVariants = settings.getInt("numberOfVariants");
 		for (int i = 0; i < numberOfVariants; i++){
 			System.out.println(settings.getString("Trace"+i));
@@ -110,7 +119,7 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 			tracevariants.add(variant);
 		}	
 		
-		this.variants = new TraceVariantRepresentation(numberOfTraces, tracevariants);
+		this.variants = new TraceVariantRepresentation(numberOfTraces, activities, tracevariants);
 
 		
 	}

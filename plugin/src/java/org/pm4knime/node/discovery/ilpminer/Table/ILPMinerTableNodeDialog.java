@@ -2,10 +2,8 @@ package org.pm4knime.node.discovery.ilpminer.Table;
 
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeModel;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerDialog;
 import org.pm4knime.settingsmodel.SMILPMinerParameter;
-import org.pm4knime.util.defaultnode.DefaultMinerNodeDialog;
 
 /**
  * <code>NodeDialog</code> for the "ILPMiner" node. Since in DefaultNodeSettingsPane, we can't override the methods 
@@ -33,14 +31,14 @@ public class ILPMinerTableNodeDialog extends DefaultTableMinerDialog {
 		super(n);
 	}
 	
-	SMILPMinerParameter m_parameter; 
+
     /**
      * New pane for configuring the ILPMiner node.
      */
 	
 	@Override
 	public void init() {
-		m_parameter = new SMILPMinerParameter(ILPMinerTableNodeModel.CFG_KEY_ILP_PARAMETER);
+		SMILPMinerParameter m_parameter = ((ILPMinerTableNodeModel) node).m_parameter;
   
     	DialogComponentStringSelection m_filterTypeComp = new DialogComponentStringSelection(
     			m_parameter.getMfilterType(), "Set Filter Type", SMILPMinerParameter.CFG_FILTER_TYPES);
