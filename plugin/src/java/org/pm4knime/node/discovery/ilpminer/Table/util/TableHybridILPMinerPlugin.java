@@ -5,13 +5,20 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import org.deckfour.xes.classification.XEventClasses;
+import org.deckfour.xes.model.XTrace;
+import org.pm4knime.util.defaultnode.TraceVariant;
 import org.pm4knime.util.defaultnode.TraceVariantRepresentation;
 import org.processmining.algorithms.BerthelotAlgorithm;
 import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalGraphBuilder.HeuristicsConfig;
 import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalGraphMiner;
 import org.processmining.dataawarecnetminer.model.EventRelationStorage;
 import org.processmining.dataawarecnetminer.model.EventRelationStorageImpl;
+import org.processmining.dataawarecnetminer.parallel.Command;
+import org.processmining.dataawarecnetminer.parallel.TaskExecutor;
 import org.processmining.framework.connections.Connection;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.util.Pair;
@@ -56,16 +63,37 @@ public class TableHybridILPMinerPlugin {
 		parameters.setApplyStructuralRedundantPlaceRemoval(true);
 		HeuristicsConfig heuristicsConfig = new HeuristicsConfig();
 		heuristicsConfig.setAllTasksConnected(true);
-		HeuristicsCausalGraphMiner miner = new HeuristicsCausalGraphMiner(new EventRelationStorageImpl(parameters.getEventClasses()));
-		System.out.println("COUNT EVENT: " + miner.getEventRelations().countEvents());
+		HeuristicsCausalGraphMiner miner = new HeuristicsCausalGraphMiner(createEventRelations(log, parameters.getEventClasses()));
 		miner.setHeuristicsConfig(heuristicsConfig);
 
 		context.getProgress().inc();
 		context.log("Discover Causal Graph");
 		SimpleCausalGraph scag = miner.mineCausalGraph();
-		System.out.println(scag.getCausalRelations().toString());
 		context.getProgress().inc();
 		return applyFlexHeur(context, log, new SimpleCausalGraphImpl(scag.getSetActivities(), scag.getCausalRelations()), parameters);
+	}
+	
+	
+	public static TableEventRelationStorageImpl createEventRelations(TraceVariantRepresentation log, XEventClasses eventClasses) {
+		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		final TableEventRelationStorageImpl relationStorage = new TableEventRelationStorageImpl(eventClasses);
+		try {
+            try {
+				
+				TaskExecutor.Factory.getInstance().execute(executor, log.getVariants(), new Command<TraceVariant>() {
+
+					public void execute(TraceVariant trace) {
+						relationStorage.addTrace(trace);
+					}
+				});
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		} finally {
+			executor.shutdown();
+		}
+		
+		return relationStorage;
 	}
 
 
