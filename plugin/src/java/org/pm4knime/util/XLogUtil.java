@@ -291,7 +291,6 @@ public class XLogUtil {
 	// refer to org.processmining.hybridilpminer.utils.XLogUtils , but allows the
 	// classifier to be specified
 	// to adapt the end use
-
 	public static XLog addArtificialStartAndEnd(XLog log, String artifStart, String artifEnd,
 			XEventClassifier eventClassifier) {
 		// TODO Auto-generated method stub
@@ -310,7 +309,6 @@ public class XLogUtil {
 			t.add(factory.createEvent(createArtificialAttributeMap(factory, classifiers, artifEnd)));
 			copy.add(t);
 		}
-		System.out.println(copy);
 		return copy;
 
 	}

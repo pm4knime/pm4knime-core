@@ -92,15 +92,10 @@ public class ILPMinerNodeModel extends DefaultMinerNodeModel {
 	protected PortObject mine(XLog log, final ExecutionContext exec) throws Exception {
 		// TODO Auto-generated method stub
 		logger.info("Start : ILPMiner " );
-		checkCanceled(exec);
+        
         XEventClassifier classifier = getEventClassifier();
         final String startLabel = "[start>@" + System.currentTimeMillis();
 		final String endLabel = "[end]@" + System.currentTimeMillis();
-		//explanation about this method:
-		/*
-		 * 
-		 * 
-		 */
 		XLog artifLog = XLogUtil.addArtificialStartAndEnd(log, startLabel, endLabel, classifier);
         
 		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
