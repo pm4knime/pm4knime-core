@@ -22,6 +22,7 @@
     
    <ports>
         <inPort name="Directly-Follows Graph" index="0">a directly follows graph</inPort>
+        <outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 	
 

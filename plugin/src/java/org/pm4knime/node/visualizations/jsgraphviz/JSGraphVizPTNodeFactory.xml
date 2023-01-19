@@ -30,6 +30,7 @@
     
    <ports>
         <inPort name="Process Tree" index="0">a process tree</inPort>
+        <outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 
 </knimeNode>

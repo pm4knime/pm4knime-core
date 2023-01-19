@@ -2,7 +2,7 @@
 <feature
       id="org.pm4knime.feature"
       label="Process Mining Extension"
-      version="1.1.6.qualifier"
+      version="1.2.0.qualifier"
       provider-name="Fraunhofer Institute for Applied Information Technology">
 
    <description url="https://github.com/pm4knime/pm4knime-document/wiki/Guideline-for-Normal-User">
@@ -11,7 +11,7 @@
    </description>
 
    <copyright url="https://github.com/pm4knime/pm4knime-document/wiki/PM4KNIME-Copyright">
-      Copyright © 2022 by Fraunhofer Institute for Applied Information Technology
+      Copyright © 2023 by Fraunhofer Institute for Applied Information Technology
    </copyright>
 
    <license url="https://www.apache.org/licenses/LICENSE-2.0.txt">
