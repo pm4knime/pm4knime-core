@@ -15,16 +15,14 @@ import org.knime.core.node.BufferedDataTable;
 
 public class TraceVariantRepresentation {
 
-	int indexOfEventClassifierTable;
-	int indexOfTraceClassifierTable;
 	public ArrayList<TraceVariant> variants;
 	public int numberOfTraces;
 	Set<String> activities = new HashSet<String>();
-	String delimiter = "#;#";
+	static String delimiter = "#;#";
 
 	public TraceVariantRepresentation(BufferedDataTable table, String tClassifier, String eClassifier) {
-		indexOfEventClassifierTable = getClassifierIndexFromColumn(table, eClassifier);
-		indexOfTraceClassifierTable = getClassifierIndexFromColumn(table, tClassifier);
+		int indexOfEventClassifierTable = getClassifierIndexFromColumn(table, eClassifier);
+		int indexOfTraceClassifierTable = getClassifierIndexFromColumn(table, tClassifier);
 		
 		this.variants = new ArrayList<TraceVariant>();
 		
@@ -33,8 +31,8 @@ public class TraceVariantRepresentation {
 		numberOfTraces = 0;
 		for (DataRow row : table) {
 			
-			String currentActivity = row.getCell(this.indexOfEventClassifierTable).toString();
-			String currentTraceID = row.getCell(this.indexOfTraceClassifierTable).toString();
+			String currentActivity = row.getCell(indexOfEventClassifierTable).toString();
+			String currentTraceID = row.getCell(indexOfTraceClassifierTable).toString();
 			activities.add(currentActivity);
 			
 			if (traceIDToCounter.containsKey(currentTraceID)) {
@@ -67,9 +65,14 @@ public class TraceVariantRepresentation {
 	}
 	
 
-	public TraceVariantRepresentation(int numberOfTraces2, ArrayList<TraceVariant> tracevariants) {
+	public TraceVariantRepresentation(int numberOfTraces2, Set<String> activities, ArrayList<TraceVariant> tracevariants) {
 		this.numberOfTraces = numberOfTraces2;
+		this.activities = activities;
 		this.variants = tracevariants;
+	}
+	
+	public TraceVariantRepresentation(int numberOfTraces) {
+		this.numberOfTraces = numberOfTraces;
 	}
 
 
@@ -100,9 +103,47 @@ public class TraceVariantRepresentation {
 			variants.add(variant);
 		}		
 	}
-
-
 	
+	
+	public static TraceVariantRepresentation addArtificialStartAndEnd(int numTraces, Set<String> activities, ArrayList<TraceVariant> tracevariants, String startAct, String endAct) {
+		TraceVariantRepresentation res = new TraceVariantRepresentation(numTraces);
+		res.activities = new HashSet<String>();
+		res.activities.add(startAct);
+		res.activities.add(endAct);
+		res.activities.addAll(activities);
+		res.variants = new ArrayList<TraceVariant>();
+		for (int i = 0; i < tracevariants.size(); i++) {
+			ArrayList<String> trace = new ArrayList<String>();
+			trace.add(startAct);
+			trace.addAll(tracevariants.get(i).getActivities());
+			trace.add(endAct);
+			TraceVariant variant = new TraceVariant(trace, tracevariants.get(i).getFrequency());
+			res.variants.add(variant);
+		}		
+		return res;
+	}
+
+
+	public Set<String> getActivities() {
+		return this.activities;
+	}
+	
+	public ArrayList<TraceVariant> getVariants() {
+		return this.variants;
+	}
+	
+	public int getNumberOfTraces() {
+		return this.numberOfTraces;
+	}
+	
+	public void print() {
+		for (TraceVariant v : this.variants) {
+			ArrayList<String> trace = v.getActivities();
+			int freq = v.getFrequency();
+			System.out.println(freq + " times " + trace.toString());
+		}
+	}
+
 
 }
 
