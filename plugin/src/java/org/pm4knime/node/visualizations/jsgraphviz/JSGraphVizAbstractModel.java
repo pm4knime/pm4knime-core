@@ -83,7 +83,6 @@ public class JSGraphVizAbstractModel extends AbstractSVGWizardNodeModel<JSGraphV
 			//System.out.println(processtree.getSummary());
 			Dot dot =  port_obj.getDotPanel().getDot();
 			dotstr = dot.toString();
-
 		}
 		
 		representation.setDotstr(dotstr);

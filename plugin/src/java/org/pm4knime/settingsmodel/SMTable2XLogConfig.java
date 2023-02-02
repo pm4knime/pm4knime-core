@@ -124,6 +124,10 @@ public class SMTable2XLogConfig extends SettingsModel{
 		this.m_caseID = m_caseID;
 	}
 	
+	public void setMEventID(SettingsModelString m_eventClass) {
+		this.m_eventClass = m_eventClass;
+	}
+	
 	public SettingsModelString getMTimeStamp() {
 		return m_timeStamp;
 	}
