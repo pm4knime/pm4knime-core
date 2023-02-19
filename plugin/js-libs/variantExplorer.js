@@ -42,10 +42,17 @@
     body.appendChild(tablestats);
     */
     
+    
+    
     var variants = document.createElement('table');
     
     variants.style.cssText = 'border-spacing: 5px 10px; border: 1px solid black; align: left;';
     
+    var totalfrequency = tracevariants.variants.map(function(value) {
+  
+  		return value.frequency;
+		
+	}).reduce((a, b) => a + b, 0);
     
     for (var i = 0; i <tracevariants.variants.length; i++) {
         let trace = tracevariants.variants[i].activities;
@@ -82,6 +89,29 @@
     }
     
     body.appendChild(variants);
+    
+    //var obj = JSON.stringify(tracevariants.variants, ['frequency']);
+    
+    //var values = obj.map(function(a) {return a.frequency;});
+    
+   	/*
+   	
+   	const getSumByKey = (arr, key) => {
+   	
+   		return arr.reduce((accumulator, current) => accumulator + Number(current[key]), 0)
+   	
+   	};
+   	
+    */
+    var dummy = document.createElement('div');
+    
+    
+    //this dummy shows e.g. kind of experimental object
+    //dummy.style.cssText = 'border-spacing: 5px 10px; border: 1px solid black; align: left;';
+    
+    //dummy.innerHTML  += `${obj}`
+    
+    body.appendChild(dummy);
  
 }
 
