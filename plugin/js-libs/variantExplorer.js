@@ -53,35 +53,60 @@
   		return value.frequency;
 		
 	}).reduce((a, b) => a + b, 0);
+	/*
+	IDEA TO GENERATE A SEQUENCE OF POLYGONS:
+	
+	var svg = document.getElementById("svg");
+	var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+	
+	svg.appendChild(polygon);
+
+	var array = arr = [ [ 0,0 ], 
+    			        [ 50,50 ],
+             			[ 25,25 ], ];
+
+	for (value of array) {
+  		
+  		var point = svg.createSVGPoint();
+  		point.x = value[0];
+  		point.y = value[1];
+  		polygon.points.appendItem(point);
+	
+	}
+	
+	*/
     
     for (var i = 0; i <tracevariants.variants.length; i++) {
         let trace = tracevariants.variants[i].activities;
         let freq = tracevariants.variants[i].frequency;
+        let pct = (freq/totalfrequency*100).toFixed(2);
         variants.innerHTML += 
-        
-        	`<tr>
+        //remove margin-left
+			`<tr>
         	
-        		<td style ="text-align: right;border: 1px solid black; white-space:nowrap; width:auto; margin-left: auto;">Case</td>
+        		<td style ="text-align: right;border: 1px solid black;padding-left:0; white-space:pre;color: #595959;font-size:14px;">${freq} Cases
+${pct}% Log</td>
         		
-        		<td style ="text-align: left; border: 1px solid black; white-space:nowrap;">
-    
-    				<svg height="50px" width="120px" border = "1px solid #000000" overflow="hidden" text-overflow = "ellipsis" white-space = "nowrap">
+        		<td style ="text-align: left; border: 1px solid black; white-space:nowrap; valign:middle;  align:center;">
+    		
+    				<svg height="60px" width="120px" border = "1px solid #000000" overflow="hidden" text-overflow = "ellipsis" white-space = "nowrap";>
         	
-  						<polygon points="5,5 5,45 75,45 100,25 75,5" 	style="fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;"/>
+  						<polygon points="5,10 5,55 75,55 100,32.5 75,10" 	style="fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;"/>
  				
-                			<g>
-    
+                			<g margin-top="15px">
+    		
     							<foreignObject x="15%" y="30%" width="300" height="50">
-	
-    								<div style =  "width: 70px; height: 20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap">I love     SVG!Sorry, your browser does not support inline SVG.
+			
+    								<div style =  "width: 70px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:20px;">
+    								${trace[0]}
   									</div>
-        
+        	
     							</foreignObject>
-        
+        	
     						</g>
                 
 					</svg>
-    
+    		
     			</td>
         	
         	</tr>`;
@@ -89,29 +114,16 @@
     }
     
     body.appendChild(variants);
-    
-    //var obj = JSON.stringify(tracevariants.variants, ['frequency']);
-    
-    //var values = obj.map(function(a) {return a.frequency;});
-    
-   	/*
-   	
-   	const getSumByKey = (arr, key) => {
-   	
-   		return arr.reduce((accumulator, current) => accumulator + Number(current[key]), 0)
-   	
-   	};
-   	
-    */
-    var dummy = document.createElement('div');
+   
+    //var dummy = document.createElement('div');
     
     
     //this dummy shows e.g. kind of experimental object
     //dummy.style.cssText = 'border-spacing: 5px 10px; border: 1px solid black; align: left;';
     
-    //dummy.innerHTML  += `${obj}`
+    //dummy.innerHTML  += `${totalfrequency}`
     
-    body.appendChild(dummy);
+    //body.appendChild(dummy);
  
 }
 
