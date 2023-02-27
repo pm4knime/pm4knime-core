@@ -58,6 +58,7 @@
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
 		
 		<!-- nodes in table-based discovery-->
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.heuritsicsminer.table.HeuristicsMinerTableNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.alpha.table.AlphaMinerTableNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
