@@ -1,9 +1,5 @@
 package org.pm4knime.node.discovery.ilpminer.Table;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.deckfour.xes.model.XLog;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -14,10 +10,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.pm4knime.portobject.XLogPortObject;
 import org.pm4knime.settingsmodel.SMILPMinerParameter;
-import org.pm4knime.settingsmodel.SMTable2XLogConfig;
-import org.pm4knime.util.XLogUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.pm4knime.util.defaultnode.TraceVariantRepresentation;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
@@ -26,16 +19,10 @@ import org.pm4knime.node.discovery.ilpminer.Table.util.TableHybridILPMinerPlugin
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetImpl;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.hybridilpminer.parameters.XLogHybridILPMinerParametersImpl;
-import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.sort.BufferedDataTableSorter;
 import org.knime.core.node.BufferedDataTable;
-import org.pm4knime.node.conversion.table2log.ToXLogConverter;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 
 /**
  * <code>NodeModel</code> for the "ILPMiner" node. 
@@ -91,8 +78,7 @@ public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
 	SMILPMinerParameter m_parameter; 
 	
 	public static final String CFG_KEY_CONFIG = "Table to event log conveter config";
-	
-	XLogPortObject logPO;
+
 	
     /**
      * Constructor for the node model.
@@ -141,47 +127,7 @@ public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
 		
 	}
 	
-	protected XLog Table2XLogConverter(final BufferedDataTable tableData,
-            final ExecutionContext exec) throws Exception {
-    	logger.info("Start : Convert DataTable to Event Log" );
-    	BufferedDataTable tData = tableData;
-    	
-    	// sort the table w.r.t. caseID column
-    	List<String> m_inclList = new ArrayList<String>();
-    	m_inclList.add(getTraceClassifier());
-    	// here we might need to make sure they mean this
-    	boolean[] m_sortOrder = {true};
-    	boolean m_missingToEnd = false;
-    	boolean m_sortInMemory = false;
-    	BufferedDataTableSorter sorter = new BufferedDataTableSorter(
-    			tData, m_inclList, m_sortOrder, m_missingToEnd);
-    	
-        sorter.setSortInMemory(m_sortInMemory);
-        BufferedDataTable sortedTable = sorter.sort(exec);
-    	
-    	// convert the string to date and sort them according to caseID? So we can read them easier for rows
-    	// it creates the corresponding column spec and create another DataTable for it.
-    	// one thing to remember, it is not so important to have order of timestamp. 
-    	ToXLogConverter handler = new ToXLogConverter();
-    	
-    	SMTable2XLogConfig m_config = new SMTable2XLogConfig(CFG_KEY_CONFIG);
-    	
-    	SettingsModelString m_caseID = new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, getTraceClassifier());
-    	SettingsModelString m_eventID = new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, getEventClassifier());
-    	
-    	
-    	m_config.setMCaseID(m_caseID);
-    	m_config.setMEventID(m_eventID);
-    	handler.setConfig(m_config);
-    	handler.setLogger(logger);
-    	
-    	handler.convertDataTable2Log(sortedTable, exec);
-    	XLog log = handler.getXLog();
-    	
-        return log;
-        
-    }
-    
+
 	@Override
 	protected void saveSpecificSettingsTo(NodeSettingsWO settings) {
 		// TODO Auto-generated method stub
