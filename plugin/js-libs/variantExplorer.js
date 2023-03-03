@@ -132,8 +132,8 @@
         var newforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
         //to set the attributes of newforeignObject
-        newforeignObject.setAttribute("x", 10 + 100*j);
-        newforeignObject.setAttribute("y", 15 + 100*j);
+        newforeignObject.setAttribute("x", 10);
+        newforeignObject.setAttribute("y", 15);
         newforeignObject.setAttribute("width", "65px");
         newforeignObject.setAttribute("height", "35px");
         newforeignObject.style.cssText = `border: 1px solid blue; align-items: center; display: flex;`;
@@ -141,11 +141,16 @@
         newforeignObject.appendChild(newdiv);
         
         //the "g" that contains "foreignobject" 
-        var newg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        
+        var svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");  
+        svg2.setAttribute("x", 100*j);
+        
+        var newg = document.createElementNS("http://www.w3.org/2000/svg", "g");  
         newg.style.cssText = `margin-top: 15px; border: 20px solid green`;
-
         newg.appendChild(newforeignObject);
-        newsvg.appendChild(newg);
+        svg2.appendChild(newg);
+        
+        newsvg.appendChild(svg2);
         
         j++;
         
