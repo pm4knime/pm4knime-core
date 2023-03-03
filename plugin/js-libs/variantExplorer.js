@@ -63,6 +63,16 @@
         let trace = tracevariants.variants[i].activities;
         let freq = tracevariants.variants[i].frequency;
         let pct = (freq/totalfrequency*100).toFixed(2);
+        
+        let tracelen = trace.length;
+        //the array for the coordinates of polygons
+        var coords = Array();
+        
+        coords[0] = [
+        				[5, 10], [5, 55], [75, 55], [100, 32.5], [75, 10]		
+        			];
+       
+        
  
         var newTr = document.createElement('tr'); 
         newTr.style.cssText = `padding: 0; margin: 0`;
@@ -75,6 +85,14 @@
         var newTdSvg = document.createElement('td'); 
         newTdSvg.style.cssText = `text-align: left; border: 1px solid black; white-space:nowrap; valign:middle;  align:center; padding: 0; margin: 0;`;
         
+        
+        
+        
+    
+    	
+    		
+        
+        
         //the "svg" that will contain "polygon"
         var newsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");  
         
@@ -85,32 +103,21 @@
         
         newsvg.setAttributeNS(null,"width", svg_dymwidth);
 
+            
+     var j = 0;
         
+     while (j < trace.length) {
         //the "polygon" that will contain the polygon object with coordinates
         var newpolygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
         
         newpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;`;
    
-        newpolygon.setAttribute("points", "5,10 5,55 75,55 100,32.5 75,10");
+        newpolygon.setAttribute("points", (5+ 100*j) + ",10 " + (5+ 100*j) + ",55 " + (75+ 100*j) + ",55 " + (100+ 100*j) + ",32.5 " + (75+ 100*j) + ",10");
         
         //var newactivity = document.createTextNode(${trace[0]});
         
         newsvg.appendChild(newpolygon);
-        
-        //this loop does do exact the same thing below
-        
-        /*
-        for (value of coords[0]) {
 
-  			var point = newsvg.createSVGPoint();
-  			point.x = value[0];
-  			point.y = value[1];
-  			newpolygon.points.appendItem(point);
-  		
-  		}
-        */
-        newsvg.appendChild(newpolygon);
-        
         
         //the "div" that contains the name of activity
         var newdiv = document.createElement('div');
@@ -118,15 +125,15 @@
         
         //to assign the style of newdiv
         newdiv.style.cssText = `width: 60px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; border: 1px solid red; margin-top: 1px; margin-left: 1px; padding-top: 3px;`;
-        newdiv.innerHTML += `${trace[0]}`;
+        newdiv.innerHTML += `${trace[j]}`;
 
         
         //the "foreignobject" that will contain the above div 
         var newforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
         //to set the attributes of newforeignObject
-        newforeignObject.setAttribute("x", "10");
-        newforeignObject.setAttribute("y", "15");
+        newforeignObject.setAttribute("x", 10 + 100*j);
+        newforeignObject.setAttribute("y", 15 + 100*j);
         newforeignObject.setAttribute("width", "65px");
         newforeignObject.setAttribute("height", "35px");
         newforeignObject.style.cssText = `border: 1px solid blue; align-items: center; display: flex;`;
@@ -140,10 +147,15 @@
         newg.appendChild(newforeignObject);
         newsvg.appendChild(newg);
         
+        j++;
+        
+     }   
+        
+        newTdSvg.appendChild(newsvg);
         
 
         
-          newTdSvg.appendChild(newsvg);
+          
     	  newTr.appendChild(newTdSvg);
     	
           variants.appendChild(newTr);
