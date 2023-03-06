@@ -1,9 +1,5 @@
 package org.pm4knime.node.logmanipulation.sample.knimetable;
 
-import java.util.Set;
-
-import org.deckfour.xes.model.XLog;
-import org.knime.core.data.DataCell;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -16,9 +12,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.pm4knime.util.defaultnode.DefaultTableNodeModel;
 
 /**
