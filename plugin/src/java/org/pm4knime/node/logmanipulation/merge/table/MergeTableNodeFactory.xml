@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./Eventlog-Merge-icon.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+    <name>Merge Event Tables</name>
+    
+    <shortDescription>
+        Merge two event tables
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Merge two event tables</intro>
+        
+        <option name="Trace Classifier First Table">The column to be used as a trace classifier for the first event table.</option>
+        <option name="Trace Classifier Second Table">The column to be used as a trace classifier for the second event table.</option>
+        <option name="Merging Strategy">The merging strategy. The following strategies are available:
+        <ul>
+        	<li>Separate Traces: traces with the same caseID are added to the merged event table as separate traces.  
+        	</li>
+        	<li>Ignore Second Trace: for traces with the same caseID, only the traces from the first event table are added to the merged event table.</li>
+	        <li>Merge Traces: traces with the same caseID are merge into a single trace containing all events from these traces.
+            </li>
+        </ul>
+        </option>
+        
+       
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Table">first event table to be merged (used as the base event table)</inPort>
+        <inPort index="1" name="Table">second event table to merge</inPort>
+        <!-- possibly more input ports here-->
+        <outPort index="0" name="Table">merged event table</outPort>
+        <!-- possibly more output ports here-->
+    </ports>    
+    
+</knimeNode>

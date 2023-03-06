@@ -49,6 +49,7 @@
 
         <!-- nodes in table manipulation-->
         <node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
+        <node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.merge.table.MergeTableNodeFactory" />
 		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
 		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
 
