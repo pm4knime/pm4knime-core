@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
@@ -20,6 +22,7 @@ import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.pm4knime.util.XLogUtil;
 
 public class MergeTableUtil {
 	public static final String CFG_ATTRIBUTE_SUFFIX = "-new";
@@ -35,7 +38,7 @@ public class MergeTableUtil {
 		DataTableSpec spec_0 = log0.getDataTableSpec();
 		DataTableSpec spec_1 = log1.getDataTableSpec();
 		
-        DataTableSpec outSpec = createSpec(spec_0, spec_1, caseID1, caseID1);
+        DataTableSpec outSpec = createSpec(spec_0, spec_1, caseID0, caseID1);
         String[] columns = outSpec.getColumnNames();
     	
     	BufferedDataContainer bufCon = exec.createDataContainer(outSpec, false);
@@ -50,18 +53,14 @@ public class MergeTableUtil {
         	for (int index = 0; index<columns.length; index++) {
         		String current_col = columns[index];
         		DataCell cell;
-        		System.out.println(current_col);
         		if (caseID0.equals(current_col)) {
-        			System.out.println("CASE ID");
         			cell = row.getCell(spec_0.findColumnIndex(current_col));
         			cell = new StringCell(LOG_0_PREFIX + cell);
         		}
         		else if (columns_0.contains(current_col)) {
-        			System.out.println("other");
         			cell = row.getCell(spec_0.findColumnIndex(current_col));
         		} else {
         			cell = new MissingCell("");
-        			System.out.println("empty");
         		}
         		allCells[index] = cell;
         	}
@@ -78,19 +77,15 @@ public class MergeTableUtil {
         	
         	for (int index = 0; index<columns.length; index++) {
         		String current_col = columns[index];
-        		System.out.println(current_col);
         		DataCell cell;
         		if (caseID0.equals(current_col)) {
-        			System.out.println("CASE ID");
         			cell = row.getCell(spec_1.findColumnIndex(caseID1));
         			cell = new StringCell(LOG_1_PREFIX + cell);
         		}
         		else if (columns_1.contains(current_col)) {
         			cell = row.getCell(spec_1.findColumnIndex(current_col));
-        			System.out.println("other");
         		} else {
         			cell = new MissingCell("");
-        			System.out.println("empty");
         		}
         		allCells[index] = cell;
         	}
@@ -104,6 +99,8 @@ public class MergeTableUtil {
         bufCon.close();
 	    return bufCon.getTable();
 	}
+	
+	
 	
     public static DataTableSpec createSpec(DataTableSpec spec0, DataTableSpec spec1, String caseID0, String caseID1) {
     	
@@ -135,5 +132,76 @@ public class MergeTableUtil {
 		
     	return outSpec;
     }
+
+
+
+	public static BufferedDataTable mergeLogsIgnoreTrace(BufferedDataTable log0, BufferedDataTable log1,
+			String caseID0, String caseID1, List<String> tKeys, ExecutionContext exec) {
+		DataTableSpec spec_0 = log0.getDataTableSpec();
+		DataTableSpec spec_1 = log1.getDataTableSpec();
+		
+        DataTableSpec outSpec = createSpec(spec_0, spec_1, caseID0, caseID1);
+        String[] columns = outSpec.getColumnNames();
+    	
+    	BufferedDataContainer bufCon = exec.createDataContainer(outSpec, false);
+    	
+    	List<String> allCaseIDs= new ArrayList<String>();
+    	
+    	int eventCount = 0;
+    	List<String> columns_0 = Arrays.asList(spec_0.getColumnNames());
+        for (DataRow row : log0) {
+        	DataCell[] allCells = new DataCell[columns.length];
+        	allCaseIDs.add(row.getCell(spec_0.findColumnIndex(caseID0)).toString());
+        	
+        	for (int index = 0; index<columns.length; index++) {
+        		String current_col = columns[index];
+        		DataCell cell;
+        		if (caseID0.equals(current_col)) {
+        			cell = row.getCell(spec_0.findColumnIndex(current_col));
+        		}
+        		else if (columns_0.contains(current_col)) {
+        			cell = row.getCell(spec_0.findColumnIndex(current_col));
+        		} else {
+        			cell = new MissingCell("");
+        		}
+        		allCells[index] = cell;
+        	}
+	    	DataRow eventRow = new DefaultRow("Event " + (eventCount++), allCells);	
+	    	bufCon.addRowToTable(eventRow);
+	    	eventCount++;
+		}
+        
+        List<String> columns_1 = Arrays.asList(spec_1.getColumnNames());
+        for (DataRow row : log1) {
+        	DataCell[] allCells = new DataCell[columns.length];
+        	String current_case_id = row.getCell(spec_1.findColumnIndex(caseID1)).toString();
+        	if (!allCaseIDs.contains(current_case_id)) {
+        		for (int index = 0; index<columns.length; index++) {
+            		String current_col = columns[index];
+            		DataCell cell;
+            		if (caseID0.equals(current_col)) {
+            			cell = row.getCell(spec_1.findColumnIndex(caseID1));
+            		}
+            		else if (columns_1.contains(current_col)) {
+            			cell = row.getCell(spec_1.findColumnIndex(current_col));
+            		} else {
+            			cell = new MissingCell("");
+            		}
+            		allCells[index] = cell;
+            	}
+        		DataRow eventRow = new DefaultRow("Event " + (eventCount++), allCells);	
+    	    	bufCon.addRowToTable(eventRow);
+    	    	eventCount++;
+   		
+        	}
+        	
+        	
+	    	
+		}
+        
+        bufCon.close();
+	    return bufCon.getTable();
+	}
+	
     
 }

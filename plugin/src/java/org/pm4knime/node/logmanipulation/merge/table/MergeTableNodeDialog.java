@@ -77,16 +77,16 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 	
 	SettingsModelString m_strategy;
 	
-	SettingsModelString[] m_traceIDs;
+//	SettingsModelString[] m_traceIDs;
 	SettingsModelString[] m_eventIDs;
-	SettingsModelFilterString m_traceAttrSet , m_eventAttrSet;
+	SettingsModelFilterString m_eventAttrSet;
 	DialogComponentAttributesFilter m_traceAttrFilterComp, m_eventAttrFilterComp;
 	protected SettingsModelString t_classifier_0;
 	protected SettingsModelString t_classifier_1;
 	protected DialogComponentStringSelection trace_classifierComp_0;	
 	protected DialogComponentStringSelection trace_classifierComp_1;
 	
-	private DialogComponentStringSelection[] tIDComps, eIDComps;
+	private DialogComponentStringSelection[] eIDComps;
     /**
      * New pane for configuring the MergeLog node.
      */
@@ -112,31 +112,31 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
     	
     	// add additional equation to choose the comparison
     	
-    	m_traceIDs = new SettingsModelString[MergeTableNodeModel.CGF_INPUTS_NUM];
+//    	m_traceIDs = new SettingsModelString[MergeTableNodeModel.CGF_INPUTS_NUM];
     	m_eventIDs = new SettingsModelString[MergeTableNodeModel.CGF_INPUTS_NUM];
-    	tIDComps = new DialogComponentStringSelection[MergeTableNodeModel.CGF_INPUTS_NUM];
+//    	tIDComps = new DialogComponentStringSelection[MergeTableNodeModel.CGF_INPUTS_NUM];
     	eIDComps = new DialogComponentStringSelection[MergeTableNodeModel.CGF_INPUTS_NUM];
     	
     	// create the trace ID mapping for the event logs
-    	this.setHorizontalPlacement(true);
-    	for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    		
-    		m_traceIDs[i] = new SettingsModelString(MergeTableNodeModel.CFG_KEY_CASE_ID[i], "");
-    		// create comp for this traeID to make them equal
-    		int j = i+1;
-    		tIDComps[i] = new DialogComponentStringSelection(m_traceIDs[i],"CaseID for log " + j, new String[]{""});
-    		addDialogComponent(tIDComps[i]);
-    		
-    	}
-    	this.setHorizontalPlacement(false);
+//    	this.setHorizontalPlacement(true);
+//    	for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    		
+////    		m_traceIDs[i] = new SettingsModelString(MergeTableNodeModel.CFG_KEY_CASE_ID[i], "");
+//    		// create comp for this traeID to make them equal
+//    		int j = i+1;
+////    		tIDComps[i] = new DialogComponentStringSelection(m_traceIDs[i],"CaseID for log " + j, new String[]{""});
+//    		addDialogComponent(tIDComps[i]);
+//    		
+//    	}
+//    	this.setHorizontalPlacement(false);
     	// create the event ID mapping for the event logs
     	
     	// create the group to choose trace attributes. Do we allow attributes with same names in trace?? 
     	// If it is not allowed, we check it at the configuration steps..
     	this.createNewGroup("Trace Attribute Set");
-    	m_traceAttrSet = new SettingsModelFilterString(MergeTableNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
-    	m_traceAttrFilterComp = new DialogComponentAttributesFilter (m_traceAttrSet,  true);
-    	addDialogComponent(m_traceAttrFilterComp);
+//    	m_traceAttrSet = new SettingsModelFilterString(MergeTableNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
+//    	m_traceAttrFilterComp = new DialogComponentAttributesFilter (m_traceAttrSet,  true);
+//    	addDialogComponent(m_traceAttrFilterComp);
     	this.closeCurrentGroup();
     	
     	this.setHorizontalPlacement(true);
@@ -155,7 +155,7 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(m_eventAttrFilterComp);
     	this.closeCurrentGroup();
     	
-    	checkEnableStates();
+//    	checkEnableStates();
     	
     	// we always ignore the repeated caseId from second log
     	m_strategy.addChangeListener(new ChangeListener() {
@@ -163,7 +163,7 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				// TODO 
-				checkEnableStates();
+//				checkEnableStates();
 				// other stuff we need to do here is to get traceAttrset and eventAttr 
 				
 			}
@@ -174,54 +174,54 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
     }
     
     // this 
-    private void checkEnableStates() {
-    	
-    	if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[0])) {
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_traceIDs[i].setEnabled(false);
-    		}
-			m_traceAttrSet.setEnabled(false);
-			
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_eventIDs[i].setEnabled(false);
-    		}
-			m_eventAttrSet.setEnabled(false);
-		}else if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[1])) {
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_traceIDs[i].setEnabled(true);
-    		}
-			
-			m_traceAttrSet.setEnabled(false);
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_eventIDs[i].setEnabled(false);
-    		}
-			m_eventAttrSet.setEnabled(false);
-		} else  if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[2])) {
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_traceIDs[i].setEnabled(true);
-    		}
-			
-			m_traceAttrSet.setEnabled(true);
-			
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_eventIDs[i].setEnabled(false);
-    		}
-			m_eventAttrSet.setEnabled(false);
-			// m_compositePanel.repaint();
-		}else if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[3])) {
-			// internal event merge
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_traceIDs[i].setEnabled(true);
-    		}
-			m_traceAttrSet.setEnabled(true);
-			
-			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    			m_eventIDs[i].setEnabled(true);
-    		}
-			m_eventAttrSet.setEnabled(true);
-		}
-    	
-    }
+//    private void checkEnableStates() {
+//    	
+//    	if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[0])) {
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_traceIDs[i].setEnabled(false);
+//    		}
+//			m_traceAttrSet.setEnabled(false);
+//			
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_eventIDs[i].setEnabled(false);
+//    		}
+//			m_eventAttrSet.setEnabled(false);
+//		}else if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[1])) {
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_traceIDs[i].setEnabled(true);
+//    		}
+//			
+//			m_traceAttrSet.setEnabled(false);
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_eventIDs[i].setEnabled(false);
+//    		}
+//			m_eventAttrSet.setEnabled(false);
+//		} else  if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[2])) {
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_traceIDs[i].setEnabled(true);
+//    		}
+//			
+//			m_traceAttrSet.setEnabled(true);
+//			
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_eventIDs[i].setEnabled(false);
+//    		}
+//			m_eventAttrSet.setEnabled(false);
+//			// m_compositePanel.repaint();
+//		}else if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[3])) {
+//			// internal event merge
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_traceIDs[i].setEnabled(true);
+//    		}
+//			m_traceAttrSet.setEnabled(true);
+//			
+//			for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    			m_eventIDs[i].setEnabled(true);
+//    		}
+//			m_eventAttrSet.setEnabled(true);
+//		}
+//    	
+//    }
     
     
 	@Override
@@ -229,7 +229,7 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 		
 		this.node.t_classifier_0 = this.t_classifier_0.getStringValue();
 		this.node.t_classifier_1 = this.t_classifier_1.getStringValue();
-		m_traceAttrSet.saveSettingsTo(settings);
+//		m_traceAttrSet.saveSettingsTo(settings);
 		m_eventAttrSet.saveSettingsTo(settings);
 	}
 	
@@ -305,13 +305,13 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 	    	// assign the traceIDs and event IDs there..Where can they have such values?
 	    	// it is just the first one in the list. So, totally fine for it..
 	    	for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-	    		tIDComps[i].replaceListItems(specTAArrays[i], specTAArrays[i].get(0));
+//	    		tIDComps[i].replaceListItems(specTAArrays[i], specTAArrays[i].get(0));
 	    		eIDComps[i].replaceListItems(specEAArrays[i], specEAArrays[i].get(0));
 
-	    		if(!specTAArrays[i].contains(m_traceIDs[i].getStringValue())) {
-	    			// we assign it the new value from spec, the first one
-	    			m_traceIDs[i].setStringValue(specTAArrays[i].get(0));
-	    		}
+//	    		if(!specTAArrays[i].contains(m_traceIDs[i].getStringValue())) {
+//	    			// we assign it the new value from spec, the first one
+//	    			m_traceIDs[i].setStringValue(specTAArrays[i].get(0));
+//	    		}
 	    		
 	    		if(!specEAArrays[i].contains(m_eventIDs[i].getStringValue())) {
 	    			// we assign it the new value from spec, the first one
@@ -324,8 +324,8 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 	    	// put all the attributes available to use. Then the users choose which to use.
 	    	// if they choose all the attributes, all attributes will be used too.  Attributes will have suffix there
 	    	
-	    	List<String> configTraceAttrColumns = new ArrayList<String>(m_traceAttrSet.getIncludeList());
-	    	configTraceAttrColumns.addAll(m_traceAttrSet.getExcludeList());
+//	    	List<String> configTraceAttrColumns = new ArrayList<String>(m_traceAttrSet.getIncludeList());
+//	    	configTraceAttrColumns.addAll(m_traceAttrSet.getExcludeList());
 	    	List<String> configEventAttrColumns = new ArrayList<String>(m_eventAttrSet.getIncludeList());
 	    	configEventAttrColumns.addAll(m_eventAttrSet.getExcludeList());
 	    	
@@ -333,13 +333,13 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 	    	// With Set, if they have the same names, only one is added. So change the strategy
 	    	// add some prefix to the generation of the values
 	    	
-	    	if(!specTraceColumns.containsAll(configTraceAttrColumns) 
-	    		|| !configTraceAttrColumns.containsAll(specTraceColumns)) {
-	    		// here how to know if it has some changes, we have the excluded list there
-	    		m_traceAttrSet.setIncludeList(specTraceColumns);
-		    	m_traceAttrSet.setExcludeList(new String[0]);
-		    	
-	    	}
+//	    	if(!specTraceColumns.containsAll(configTraceAttrColumns) 
+//	    		|| !configTraceAttrColumns.containsAll(specTraceColumns)) {
+//	    		// here how to know if it has some changes, we have the excluded list there
+////	    		m_traceAttrSet.setIncludeList(specTraceColumns);
+////		    	m_traceAttrSet.setExcludeList(new String[0]);
+//		    	
+//	    	}
 	    	
 	    	
 	    	if(!specEventColumns.containsAll(configEventAttrColumns) 
@@ -351,7 +351,7 @@ public class MergeTableNodeDialog extends DefaultNodeSettingsPane {
 	    	
 	    	// reload the configuration.. 
 	    	for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-	    		m_traceIDs[i].loadSettingsFrom(settings);
+//	    		m_traceIDs[i].loadSettingsFrom(settings);
 	    		m_eventIDs[i].loadSettingsFrom(settings);
 	    		
 	    	}

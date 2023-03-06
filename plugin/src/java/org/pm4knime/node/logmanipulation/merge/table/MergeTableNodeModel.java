@@ -41,16 +41,16 @@ public class MergeTableNodeModel extends DefaultNodeModel {
 	public static final String CFG_KEY_TRACE_ATTRSET = "Trace Attribute Set";
 	public static final String CFG_KEY_EVENT_ATTRSET = "Event Attribute Set";
 
-	public static final String[] CFG_KEY_CASE_ID = {"CaseID 1", "CaseID 2"};
+//	public static final String[] CFG_KEY_CASE_ID = {"CaseID 1", "CaseID 2"};
 	public static final String[] CFG_KEY_EVENT_ID = {"EventID 1", "EventID 2"};
 	
 	SettingsModelString m_strategy =  new SettingsModelString(CFG_KEY_TRACE_STRATEGY, CFG_TRACE_STRATEGY[0]);
 	// create attributes to store the caseID and eventID for those two logs
 	// then we use the keys for it !!
-	SettingsModelString[] m_traceIDs = new SettingsModelString[CGF_INPUTS_NUM];
+//	SettingsModelString[] m_traceIDs = new SettingsModelString[CGF_INPUTS_NUM];
 	SettingsModelString[] m_eventIDs = new SettingsModelString[CGF_INPUTS_NUM];
 	
-	SettingsModelFilterString m_traceAttrSet, m_eventAttrSet;
+	SettingsModelFilterString m_eventAttrSet;
 	
 	protected String t_classifier_0;
 	protected String t_classifier_1;
@@ -63,21 +63,21 @@ public class MergeTableNodeModel extends DefaultNodeModel {
         super(new PortType[] { BufferedDataTable.TYPE, BufferedDataTable.TYPE }, new PortType[] { BufferedDataTable.TYPE });
         
         for(int i=0; i< CGF_INPUTS_NUM; i++) {
-    		m_traceIDs[i] = new SettingsModelString(MergeTableNodeModel.CFG_KEY_CASE_ID[i], "");
+//    		m_traceIDs[i] = new SettingsModelString(MergeTableNodeModel.CFG_KEY_CASE_ID[i], "");
     		m_eventIDs[i] = new SettingsModelString(MergeTableNodeModel.CFG_KEY_EVENT_ID[i], "");	
         }
-        m_traceAttrSet = new SettingsModelFilterString(MergeTableNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
+//        m_traceAttrSet = new SettingsModelFilterString(MergeTableNodeModel.CFG_KEY_TRACE_ATTRSET, new String[]{}, new String[]{}, true );
         m_eventAttrSet = new SettingsModelFilterString(MergeTableNodeModel.CFG_KEY_EVENT_ATTRSET, new String[]{}, new String[]{}, false );
     	
         // due to strategy is 0
-        for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-			m_traceIDs[i].setEnabled(false);
-		}
+//        for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//			m_traceIDs[i].setEnabled(false);
+//		}
 		
 		for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
 			m_eventIDs[i].setEnabled(false);
 		}
-        m_traceAttrSet.setEnabled(false);
+//        m_traceAttrSet.setEnabled(false);
         m_eventAttrSet.setEnabled(false);
         
         
@@ -120,13 +120,13 @@ public class MergeTableNodeModel extends DefaultNodeModel {
 			// the traces are separately merged， even if they have the same identifiers
 			// then global trace, they should have their different ones. To merge them
 			mlog = MergeTableUtil.mergeTablesSeparate(log0, log1, this.t_classifier_0, this.t_classifier_1, exec);
+		} else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[1])) {
+			// ignore the traces with same identifier from the second event log
+			
+			mlog = MergeTableUtil.mergeLogsIgnoreTrace(log0, log1, this.t_classifier_0, this.t_classifier_1, tKeys, exec);
+			
 		}
-//		else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[1])) {
-//			// ignore the traces with same identifier from the second event log
-//			
-//			mlog = MergeUtil.mergeLogsIgnoreTrace(log0, log1, tKeys, exec);
-//			
-//		}else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[2])) {
+//		else if(m_strategy.getStringValue().equals(CFG_TRACE_STRATEGY[2])) {
 //			// need to merge according to its trace attributes
 //			// for this choice, only trace attributes are availabel
 //			List<String> exTraceAttrList0 = getExAttrs(0, tAttrList0, m_traceAttrSet.getExcludeList());
@@ -201,16 +201,16 @@ public class MergeTableNodeModel extends DefaultNodeModel {
     	if(t_classifier_0 == null || t_classifier_1 == null)
 			throw new InvalidSettingsException("Case IDs are not set!");
     	
-    	for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
-    		if((m_traceIDs[i].isEnabled()&&m_traceIDs[i].getStringValue().isEmpty()) || 
-    				(m_traceIDs[i].isEnabled()&&m_eventIDs[i].getStringValue().isEmpty()))
-    			throw new InvalidSettingsException("Trace or event ID can't be empty");
-    	}
-    	
-    	if(m_traceAttrSet.isEnabled()) {
-    		if(m_traceAttrSet.getIncludeList().isEmpty())
-        		throw new InvalidSettingsException("The Merge is not configured right");
-    	}
+//    	for(int i=0; i< MergeTableNodeModel.CGF_INPUTS_NUM; i++) {
+//    		if((m_traceIDs[i].isEnabled()&&m_traceIDs[i].getStringValue().isEmpty()) || 
+//    				(m_traceIDs[i].isEnabled()&&m_eventIDs[i].getStringValue().isEmpty()))
+//    			throw new InvalidSettingsException("Trace or event ID can't be empty");
+//    	}
+//    	
+//    	if(m_traceAttrSet.isEnabled()) {
+//    		if(m_traceAttrSet.getIncludeList().isEmpty())
+//        		throw new InvalidSettingsException("The Merge is not configured right");
+//    	}
     	if(m_eventAttrSet.isEnabled()) {
 	    	if(m_eventAttrSet.getIncludeList().isEmpty())
 	    		throw new InvalidSettingsException("The Merge is not configured right");
@@ -232,11 +232,11 @@ public class MergeTableNodeModel extends DefaultNodeModel {
     	m_strategy.saveSettingsTo(settings);
     	
     	for(int i=0; i< CGF_INPUTS_NUM; i++) {
-    		m_traceIDs[i].saveSettingsTo(settings);
+//    		m_traceIDs[i].saveSettingsTo(settings);
     		m_eventIDs[i].saveSettingsTo(settings);
     	}
 //    	if(m_traceAttrSet.isEnabled())
-    		m_traceAttrSet.saveSettingsTo(settings);
+//    		m_traceAttrSet.saveSettingsTo(settings);
 //    	if(m_eventAttrSet.isEnabled())
     		m_eventAttrSet.saveSettingsTo(settings);
     }
@@ -253,23 +253,23 @@ public class MergeTableNodeModel extends DefaultNodeModel {
     	m_strategy.loadSettingsFrom(settings);
 
 		if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[2])) {
-    		m_traceAttrSet.setEnabled(true);
+//    		m_traceAttrSet.setEnabled(true);
     		m_eventAttrSet.setEnabled(false);
 		}else if(m_strategy.getStringValue().equals(MergeTableNodeModel.CFG_TRACE_STRATEGY[3])) {
-    		m_traceAttrSet.setEnabled(true);
+//    		m_traceAttrSet.setEnabled(true);
     		m_eventAttrSet.setEnabled(true);
     	}else {
-    		m_traceAttrSet.setEnabled(false);
+//    		m_traceAttrSet.setEnabled(false);
     		m_eventAttrSet.setEnabled(false);
     	}
     	
     	for(int i=0; i< CGF_INPUTS_NUM; i++) {
-    		m_traceIDs[i].loadSettingsFrom(settings);
+//    		m_traceIDs[i].loadSettingsFrom(settings);
     		m_eventIDs[i].loadSettingsFrom(settings);
     	}
     	
-    	if(m_traceAttrSet.isEnabled())
-    		m_traceAttrSet.loadSettingsFrom(settings);
+//    	if(m_traceAttrSet.isEnabled())
+//    		m_traceAttrSet.loadSettingsFrom(settings);
     	if(m_eventAttrSet.isEnabled())
     		m_eventAttrSet.loadSettingsFrom(settings);
     }
