@@ -9,28 +9,18 @@
     <fullDescription>
         <intro>Merge two event tables</intro>
         
-        <option name="CaseID 1">The attribute used as a CaseId in the first event table.</option>
-        <option name="EventID 1">The attribute used as an EventID in the first event table.</option>
-        
-        <option name="CaseID 2">The attribute used as a CaseId in the second event table.</option>
-        <option name="EventID 2">The attribute used as an EventID in the second event table.</option>
-        
+        <option name="Trace Classifier First Table">The column to be used as a trace classifier for the first event table.</option>
+        <option name="Trace Classifier Second Table">The column to be used as a trace classifier for the second event table.</option>
         <option name="Merging Strategy">The merging strategy. The following strategies are available:
         <ul>
-        	<li>Separate Trace: traces with the same caseID are added to the merged event table as separate traces.  
+        	<li>Separate Traces: traces with the same caseID are added to the merged event table as separate traces.  
         	</li>
-        	<li>Ignore Trace:  traces with the same caseID from both tables, only the traces from the first event table are added to the merged event table.</li>
-	        <li>Internal Trace Merge: traces with the same caseID are merge into a single trace containing all events from these traces.
+        	<li>Ignore Second Trace: for traces with the same caseID, only the traces from the first event table are added to the merged event table.</li>
+	        <li>Merge Traces: traces with the same caseID are merge into a single trace containing all events from these traces.
             </li>
-	        <li>Internal Event Merge: traces with the same caseID are merge into a single trace, and the events with same eventID in this trace are merge into a single event.</li>
         </ul>
         </option>
         
-        <option name="Trace Attribute Set"> The trace attributes to be included in the merged event table.
-        </option>
-        
-        <option name="Event Attribute Set"> The event attributes to be included in the merged event table.
-        </option>
        
     </fullDescription>
     
