@@ -88,7 +88,7 @@
         //to assign the style to the svg
         newsvg.style.cssText = `height: 60px;overflow: hidden; text-overflow: ellipsis; white-space : nowrap;`;
         
-        var svg_dymwidth = trace.length * 120;
+        var svg_dymwidth = trace.length * 180;
         
         newsvg.setAttributeNS(null,"width", svg_dymwidth);
         
@@ -96,24 +96,24 @@
         
         firstpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;`;
 
-        firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "75,55 " + "90,32.5 " + "75,10");
+        firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
         
         newsvg.appendChild(firstpolygon);
         
         var firstdiv = document.createElement('div');
         firstdiv.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
         
-        firstdiv.style.cssText = `width: 60px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; border: 1px solid red; margin-top: 1px; margin-left: 1px; padding-top: 3px;`;
+        firstdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
         firstdiv.innerHTML += `${trace[0]}`;
         
         var firstforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
         firstforeignObject.setAttribute("x", 10);
         firstforeignObject.setAttribute("y", 15);
-        firstforeignObject.setAttribute("width", "65px");
+        firstforeignObject.setAttribute("width", "135px");
         firstforeignObject.setAttribute("height", "35px");
         
-        firstforeignObject.style.cssText = `border: 1px solid blue; align-items: center; display: flex;`;
+        firstforeignObject.style.cssText = ` align-items: center; display: flex;`;
         
         firstforeignObject.appendChild(firstdiv);
         
@@ -131,12 +131,12 @@
         
         newpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;`;
    		
-        newpolygon.setAttribute("points", (85*j - 5)   + ",10 "   + 
-        								  (80 + 85*j -5)  + ",10 "   +
-        								  (95+ 85*j -5) + ",32.5 " +
-        								  (80+ 85*j -5)  + ",55 "   + 
-        								  (85*j -5)   + ",55 "   + 
-        								  (85*j + 10)  + ", 32.5 " );
+        newpolygon.setAttribute("points", (160*j - 10)   + ",10 "   + 
+        								  (145 + 160*j )  + ",10 "   +
+        								  (160 + 160*j ) + ",32.5 " +
+        								  (145 + 160*j )  + ",55 "   + 
+        								  (160*j - 10)   + ",55 "   + 
+        								  (160*j + 5)  + ", 32.5 " );
         
         newsvg.appendChild(newpolygon);
 
@@ -145,7 +145,7 @@
         newdiv.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
         
         //to assign the style of newdiv
-        newdiv.style.cssText = `width: 60px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; border: 1px solid red; margin-top: 1px; margin-left: 1px; padding-top: 3px;`;
+        newdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
         newdiv.innerHTML += `${trace[j]}`;
 
         
@@ -153,11 +153,11 @@
         var newforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
         //to set the attributes of newforeignObject
-        newforeignObject.setAttribute("x", 10 + 85*j);
+        newforeignObject.setAttribute("x", 10 + 160*j);
         newforeignObject.setAttribute("y", 15);
-        newforeignObject.setAttribute("width", "65px");
+        newforeignObject.setAttribute("width", "135px");
         newforeignObject.setAttribute("height", "35px");
-        newforeignObject.style.cssText = `border: 1px solid blue; align-items: center; display: flex;`;
+        newforeignObject.style.cssText = ` align-items: center; display: flex;`;
 
         newforeignObject.appendChild(newdiv);
         
