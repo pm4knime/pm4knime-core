@@ -63,7 +63,25 @@
 	by using tracevariants.activities
 	
 	*/
+	
+	//idea to generate the random colors
+	var colors = Array(tracevariants.activities.length).fill().map((_, i) => (i+Math.floor(Math.random()*16777215)));
+	
+	//to determine the brightness of each color in colors
+	//then assign the font color(either black or white)
+	var brightnesses = colors.map(x => 
+            ((x >> 16)&0xff)*0.2126 + 
+            ((x >> 8)&0xff)*0.7152 + 
+            ((x >> 0)&0xff)*0.0722);
     
+    brightnesses = (brightnesses > 125) ? "black" : "white";
+    
+    //color codes of the generated color
+    var colorcodes = colors.map(x => 
+            "#" + x.toString(16)
+            );
+
+   	//beasts.indexOf('bison')    
     for (var i = 0; i <tracevariants.variants.length; i++) {
         let trace = tracevariants.variants[i].activities;
         let freq = tracevariants.variants[i].frequency;
@@ -94,9 +112,11 @@
         
         var firstpolygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
         
-        firstpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;`;
+        firstpolygon.style.cssText = `stroke:black;stroke-width:1;  border = 1px solid #000000;`;
 
         firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
+        
+        firstpolygon.style.fill = colorcodes[tracevariants.activities.indexOf(trace[0])];
         
         newsvg.appendChild(firstpolygon);
         
@@ -106,6 +126,7 @@
         firstdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
         firstdiv.innerHTML += `${trace[0]}`;
         
+        firstdiv.style.color = brightnesses[tracevariants.activities.indexOf(trace[0])];
         var firstforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
         firstforeignObject.setAttribute("x", 10);
@@ -129,7 +150,7 @@
         //the "polygon" that will contain the polygon object with coordinates
         var newpolygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
         
-        newpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;  border = 1px solid #000000;`;
+        newpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;border = 1px solid #000000;`;
    		
         newpolygon.setAttribute("points", (160*j - 10)   + ",10 "   + 
         								  (145 + 160*j )  + ",10 "   +
@@ -137,7 +158,9 @@
         								  (145 + 160*j )  + ",55 "   + 
         								  (160*j - 10)   + ",55 "   + 
         								  (160*j + 5)  + ", 32.5 " );
-        
+        								  
+       	newpolygon.style.fill = colorcodes[tracevariants.activities.indexOf(trace[j])];
+
         newsvg.appendChild(newpolygon);
 
         //the "div" that contains the name of activity
@@ -147,7 +170,7 @@
         //to assign the style of newdiv
         newdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
         newdiv.innerHTML += `${trace[j]}`;
-
+		newdiv.style.color = brightnesses[tracevariants.activities.indexOf(trace[j])];
         
         //the "foreignobject" that will contain the above div 
         var newforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
