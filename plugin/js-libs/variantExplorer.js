@@ -42,8 +42,6 @@
     body.appendChild(tablestats);
     */
     
-    
-    
     var variants = document.createElement('table');
     
     variants.style.cssText = 'border-spacing: 5px 10px; border: 1px solid black; align: left;';
@@ -54,34 +52,37 @@
 		
 	}).reduce((a, b) => a + b, 0);
 	
-	
 	//var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 
+	var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((Math.floor(Math.random()*16777215)) * (360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
 	/*
-	
-	Now, to assign an unique color to each activity!
-	by using tracevariants.activities
-	
+	hslToHex = function(h, s, l) {
+  		
+  		l /= 100;
+  		const a = s * Math.min(l, 1 - l) / 100;
+  		const f = n => {
+    	const k = (n + h / 30) % 12;
+    	const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    	
+    	return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+  		
+  		}
+  	
+  		return `#${f(0)}${f(8)}${f(4)}`;
+		
+	};
 	*/
-	
-	//idea to generate the random colors
-	var colors = Array(tracevariants.activities.length).fill().map((_, i) => (i+Math.floor(Math.random()*16777215)));
+	//var rgbs = colors.map(x => x.match(/\d+/g).map(Number)).map(x => hslToHex(x[0], x[1], x[2]));
 	
 	//to determine the brightness of each color in colors
 	//then assign the font color(either black or white)
-	var brightnesses = colors.map(x => 
-            ((x >> 16)&0xff)*0.2126 + 
-            ((x >> 8)&0xff)*0.7152 + 
-            ((x >> 0)&0xff)*0.0722);
+	//var brightnesses = rgbs.map(x => ((parseInt(x.substring(1)) >> 16) & 0xff)*0.2126 +
+    //                           ((parseInt(x.substring(1)) >> 8) & 0xff)*0.7152 +
+    //                           ((parseInt(x.substring(1)) >> 0) & 0xff)*0.0722
+    //                           );
     
-    brightnesses = (brightnesses > 125) ? "black" : "white";
-    
-    //color codes of the generated color
-    var colorcodes = colors.map(x => 
-            "#" + x.toString(16)
-            );
-
-   	//beasts.indexOf('bison')    
+    //brightnesses = (brightnesses < 60) ? 0 : 1;
+   
     for (var i = 0; i <tracevariants.variants.length; i++) {
         let trace = tracevariants.variants[i].activities;
         let freq = tracevariants.variants[i].frequency;
@@ -116,17 +117,20 @@
 
         firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
         
-        firstpolygon.style.fill = colorcodes[tracevariants.activities.indexOf(trace[0])];
+        firstpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[0])];
         
         newsvg.appendChild(firstpolygon);
         
         var firstdiv = document.createElement('div');
+        
         firstdiv.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
         
-        firstdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
+        //firstdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
+        
         firstdiv.innerHTML += `${trace[0]}`;
         
-        firstdiv.style.color = brightnesses[tracevariants.activities.indexOf(trace[0])];
+        //firstdiv.style.cssText = (brightnesses[tracevariants.activities.indexOf(trace[0])] == 1) ? `color: black;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center` : `color: white;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`; 
+
         var firstforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
         firstforeignObject.setAttribute("x", 10);
@@ -159,7 +163,7 @@
         								  (160*j - 10)   + ",55 "   + 
         								  (160*j + 5)  + ", 32.5 " );
         								  
-       	newpolygon.style.fill = colorcodes[tracevariants.activities.indexOf(trace[j])];
+       	newpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[j])];
 
         newsvg.appendChild(newpolygon);
 
@@ -170,7 +174,7 @@
         //to assign the style of newdiv
         newdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
         newdiv.innerHTML += `${trace[j]}`;
-		newdiv.style.color = brightnesses[tracevariants.activities.indexOf(trace[j])];
+		//newdiv.style.color = brightnesses[tracevariants.activities.indexOf(trace[j])];
         
         //the "foreignobject" that will contain the above div 
         var newforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
