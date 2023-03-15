@@ -46,8 +46,5 @@
 		<outPort index="0" name="Petri Net">a Petri net</outPort>
 
 	</ports>
-	<views>
-		<view index="0" name="Heuristics Net">Visualization of the intermediate Heuristics Net.</view>
-
-	</views>
+	
 </knimeNode>

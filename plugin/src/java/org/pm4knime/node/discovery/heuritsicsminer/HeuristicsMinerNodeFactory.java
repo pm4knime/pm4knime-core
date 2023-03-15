@@ -33,7 +33,7 @@ public class HeuristicsMinerNodeFactory
     @Override
     public int getNrNodeViews() {
 		// The number of views the node should have, in this cases there is none.
-        return 1;
+        return 0;
     }
 
     /**
@@ -43,11 +43,12 @@ public class HeuristicsMinerNodeFactory
     public NodeView<HeuristicsMinerNodeModel> createNodeView(final int viewIndex,
             final HeuristicsMinerNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
-    	JPanel viewPanel = new JPanel();
-		viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
-		viewPanel.setPreferredSize(new Dimension(1000,600));
-		viewPanel.setName("Heuristics Net");
-    	return new HeuristicsMinerNodeView(nodeModel, viewPanel);
+//    	JPanel viewPanel = new JPanel();
+//		viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
+//		viewPanel.setPreferredSize(new Dimension(1000,600));
+//		viewPanel.setName("Heuristics Net");
+//    	return new HeuristicsMinerNodeView(nodeModel, viewPanel);
+    	return null;
 		
     }
 

@@ -49,6 +49,7 @@
 
         <!-- nodes in table manipulation-->
         <node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.sample.knimetable.SampleLogTableNodeFactory" />
+        <node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.merge.table.MergeTableNodeFactory" />
 		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByFrequencyTableNodeFactory" />
 		<node category-path="/community/processmining/manipulation/table" factory-class="org.pm4knime.node.logmanipulation.filter.knimetable.FilterByLengthTableNodeFactory" />
 
@@ -58,10 +59,12 @@
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
 		
 		<!-- nodes in table-based discovery-->
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.heuritsicsminer.table.HeuristicsMinerTableNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.alpha.table.AlphaMinerTableNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeFactory" />
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.dfgminer.dfgTableMiner.DfgMinerTableNodeFactory"/>
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.inductiveminer.Table.InductiveMinerTableNodeFactory"/>
+		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.ilpminer.Table.ILPMinerTableNodeFactory"/>
         
         <!-- nodes in log-based discovery-->
 		<node category-path="/community/processmining/discovery/log" factory-class="org.pm4knime.node.discovery.heuritsicsminer.HeuristicsMinerNodeFactory" />
@@ -211,7 +214,9 @@
         
         <javascriptComponent getComponentValue-method-name="getComponentValue" implementationBundleID="org.pm4knime.node.visualizations.jsgraphviz.component.bundle" init-method-name="init" javascriptComponentID="org.pm4knime.node.visualizations.jsgraphviz.component" name="Java Script GraphViz Visualizer" namespace="jsgraphviz">
          </javascriptComponent>
-                                            
+                                   
+        <javascriptComponent getComponentValue-method-name="getComponentValue" implementationBundleID="org.pm4knime.node.visualizations.logviews.tracevariant.component.bundle" init-method-name="init" javascriptComponentID="org.pm4knime.node.visualizations.logviews.tracevariant.component" name="Trace Variant Explorer" namespace="varExplorer">
+         </javascriptComponent>         
     
     
     
@@ -265,6 +270,17 @@
         
         
         
+        </webResourceBundle>
+        
+        
+        
+        <webResourceBundle debug="true" name="Java Script GraphViz Visualizer" usesDefine="false" version="1.0.0" webResourceBundleID="org.pm4knime.node.visualizations.logviews.tracevariant.component.bundle">
+             <webResource relativePathSource="js-libs/" relativePathTarget="js-libs/">
+       		</webResource>
+            <importResource relativePath="js-libs/variantExplorer.js" type="JAVASCRIPT"/>
+            <importResource relativePath="js-libs/variantExplorer.css" type="CSS"/>
+            <webDependency webResourceBundleID="bootstrap_3.3.6"> </webDependency>
+            <webDependency webResourceBundleID="RequireJS_2.3.3"> </webDependency>
         </webResourceBundle>
                                                 
         

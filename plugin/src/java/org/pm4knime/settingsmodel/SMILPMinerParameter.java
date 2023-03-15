@@ -14,6 +14,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
+import org.pm4knime.node.discovery.ilpminer.Table.util.TableHybridILPMinerParametersImpl;
 import org.processmining.hybridilpminer.parameters.DiscoveryStrategy;
 import org.processmining.hybridilpminer.parameters.DiscoveryStrategyType;
 import org.processmining.hybridilpminer.parameters.LPConstraintType;
@@ -173,6 +174,25 @@ public class SMILPMinerParameter extends SettingsModel
 	// due to the default values are already there, so we can have it directly..But need to distinguish if we 
 	// use the advanced settings, or not 
 	public XLogHybridILPMinerParametersImpl updateParameter(XLogHybridILPMinerParametersImpl param) {
+		// set default values to param here, others we need to count it later
+		param.setDiscoveryStrategy(new DiscoveryStrategy(DiscoveryStrategyType.valueOf(m_ds.getStringValue())));
+		param.setObjectiveType(LPObjectiveType.valueOf(m_lpObj.getStringValue()));
+		param.setVariableType(LPVariableType.valueOf(m_lpVar.getStringValue()));
+		// set the filter type
+		LPFilter filter = new LPFilter(LPFilterType.valueOf(m_filterType.getStringValue()),
+				m_filterThreshold.getDoubleValue());
+		param.setFilter(filter);
+		
+		// in default settings
+		param.setNetClass(NetClass.PT_NET);
+		param.getLPConstraintTypes().add(LPConstraintType.EMPTY_AFTER_COMPLETION);
+		param.setFindSink(true); // add sink to model
+		param.setEngineType(EngineType.LPSOLVE);
+		param.setApplyStructuralRedundantPlaceRemoval(false);
+		return param;
+	} 
+	
+	public TableHybridILPMinerParametersImpl updateParameter(TableHybridILPMinerParametersImpl param) {
 		// set default values to param here, others we need to count it later
 		param.setDiscoveryStrategy(new DiscoveryStrategy(DiscoveryStrategyType.valueOf(m_ds.getStringValue())));
 		param.setObjectiveType(LPObjectiveType.valueOf(m_lpObj.getStringValue()));

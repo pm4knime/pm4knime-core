@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./HM-icon.png" type="Learner"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Heuristics Miner</name>
+
+	<shortDescription>
+		This node implements the Heuristics Miner to discover a Petri net from an event table.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>
+		This node implements the Heuristics Miner to discover a Petri net from an event table.
+			The Heuristics Miner discovers a heuristics net, which is a directed graph with activities as nodes and edges connecting nodes to model dependencies between activities.
+			The discovered heuristics net is converted into a Petri net.
+		</intro>
+
+
+		<option name="Event classifer">
+		The attribute to be used as an event classifier.</option>
+		<option name="All tasks connected">
+		If enabled, every task must have at least one input and one output arc (except the initial and the final activity).
+		</option>
+		<option name="Long distance dependency">
+		If enabled, long distance dependencies are shown in the model.
+		</option>
+        <option name="Threshold: Relative-to-best">
+        The percentage for the admissible distance between directly follows relations for an activity and the activity's best one. 
+        At 0, only the best directly follows relation will be shown for every activity. 
+        At 100, all will be shown.
+		</option>
+		<option name="Threshold: Dependency">A threshold for the strength of the directly follows relation.
+		</option>
+		<option name="Threshold: Length-One-loops">A threshold for the L1L metric.
+		</option>
+		<option name="Threshold: Length-Two-loops">A threshold for the L1L metric.
+		</option>
+		<option name="Threshold: Long Distance">A threshold for the strength of the eventually follows relation.
+		</option>
+
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Table">a table</inPort>
+		<outPort index="0" name="Petri Net">a Petri net</outPort>
+
+	</ports>
+</knimeNode>

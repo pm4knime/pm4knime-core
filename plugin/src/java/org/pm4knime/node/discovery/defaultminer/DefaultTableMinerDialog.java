@@ -72,7 +72,7 @@ public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
     }
 
     
-	private String getDefaultTraceClassifier(String[] currentClasses, String oldValue) {		
+	public static String getDefaultTraceClassifier(String[] currentClasses, String oldValue) {		
 		String res = currentClasses[0];
 		for (String s: currentClasses) {
 			if (s.equals(oldValue)) {
@@ -86,7 +86,7 @@ public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	}
     
 	
-    private String getDefaultEventClassifier(String[] currentClasses, String oldValue) {		
+	public static String getDefaultEventClassifier(String[] currentClasses, String oldValue) {		
     	String res;
     	if (currentClasses.length > 1) {
 			res = currentClasses[1];
