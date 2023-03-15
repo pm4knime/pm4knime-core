@@ -8,7 +8,7 @@ import org.knime.core.node.NodeView;
  * This is an example implementation of the node factory of the
  * "MergeLog" node.
  *
- * @author 
+ * @author Kefang Ding
  */
 public class MergeTableNodeFactory 
         extends NodeFactory<MergeTableNodeModel> {

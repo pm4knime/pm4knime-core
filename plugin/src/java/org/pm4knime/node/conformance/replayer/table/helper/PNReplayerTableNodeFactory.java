@@ -6,23 +6,20 @@ import org.knime.core.node.NodeView;
 
 /**
  * This is an example implementation of the node factory of the
- * "MergeLog" node.
+ * "PNReplayerTable" node.
  *
  * @author 
  */
-public class MergeTableNodeFactory 
-        extends NodeFactory<MergeTableNodeModel> {
+public class PNReplayerTableNodeFactory 
+        extends NodeFactory<PNReplayerTableNodeModel> {
 
-    MergeTableNodeModel node;
-
-	/**
+    /**
      * {@inheritDoc}
      */
     @Override
-    public MergeTableNodeModel createNodeModel() {
+    public PNReplayerTableNodeModel createNodeModel() {
 		// Create and return a new node model.
-    	node = new MergeTableNodeModel();
-    	return node;
+        return new PNReplayerTableNodeModel();
     }
 
     /**
@@ -38,8 +35,8 @@ public class MergeTableNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<MergeTableNodeModel> createNodeView(final int viewIndex,
-            final MergeTableNodeModel nodeModel) {
+    public NodeView<PNReplayerTableNodeModel> createNodeView(final int viewIndex,
+            final PNReplayerTableNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
 		return null;
     }
@@ -59,7 +56,7 @@ public class MergeTableNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new MergeTableNodeDialog(this.node);
+        return new PNReplayerTableNodeDialog();
     }
 
 }
