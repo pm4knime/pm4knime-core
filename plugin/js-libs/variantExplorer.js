@@ -47,27 +47,9 @@
         (
             (Math.floor(Math.random()*16777215)) * 
             ((360 / activitylen) + 
-            (i*(activitylen**2)))) % 
+            (i*(activitylen + i**2)))) % 
             360) + ",100%,70%)")
     );
-	
-	hslToHex = function(h, s, l) {
-  		
-  		l /= 100;
-  		const a = s * Math.min(l, 1 - l) / 100;
-  		const f = n => {
-    	const k = (n + h / 30) % 12;
-    	const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    	
-    	return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
-  		
-  		}
-  	
-  		return `#${f(0)}${f(8)}${f(4)}`;
-		
-	};
-	
-	var rgbs = colors.map(x => x.match(/\d+/g).map(Number)).map(x => hslToHex(x[0], x[1], x[2]));
 	
 	function shuffle(array) {
   
@@ -90,7 +72,6 @@
   		return array;
 		}
 
-	rgbs = shuffle(rgbs);
     
    	var hues = colors.map(x => x.substring(4, x.length-1)
          .replace(/ /g, '')
