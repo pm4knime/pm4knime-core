@@ -27,20 +27,6 @@
     
     let body = document.getElementsByTagName("body")[0];
     body.innerHTML = `<div class="container-fluid"></div>`;
-   
-    /*
-    var tablestats = document.createElement('div');
-    tablestats.innerHTML = 
-            `<p>Number Rows: ${data[0]}</p>
-             <p>Number Attributes: ${data[1]}</p>`;
-             
-    for (var i = 2; i <data.length; i++) {
-        let val = data[i];
-        tablestats.innerHTML += `<p>Attribute ${i-1}: ${val}</p>`;
-    }
-    
-    body.appendChild(tablestats);
-    */
     
     var variants = document.createElement('table');
     
@@ -51,10 +37,8 @@
   		return value.frequency;
 		
 	}).reduce((a, b) => a + b, 0);
-	
-	//var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 
-	var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((Math.floor(Math.random()*16777215)) * (360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
+	//var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((Math.floor(Math.random()*16777215)) * (360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
 	/*
 	hslToHex = function(h, s, l) {
   		
@@ -117,7 +101,9 @@
 
         firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
         
-        firstpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[0])];
+        //firstpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[0])];
+        
+        firstpolygon.style.fill = "white";
         
         newsvg.appendChild(firstpolygon);
         
@@ -125,7 +111,7 @@
         
         firstdiv.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
         
-        //firstdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
+        firstdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
         
         firstdiv.innerHTML += `${trace[0]}`;
         
@@ -163,7 +149,7 @@
         								  (160*j - 10)   + ",55 "   + 
         								  (160*j + 5)  + ", 32.5 " );
         								  
-       	newpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[j])];
+       	//newpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[j])];
 
         newsvg.appendChild(newpolygon);
 
