@@ -42,13 +42,13 @@
 	
 	var activitylen = tracevariants.activities.length;
 	
-	var colors = Array(10).fill().map((_, i) => ("hsl("+ 
+	var colors = Array(activitylen).fill().map((_, i) => ("hsl("+ 
     ( 
         (
             (Math.floor(Math.random()*16777215)) * 
-            ((360 / 10) + 
-            (i*(10**2)))) % 
-            360) + ",100%,75%)")
+            ((360 / activitylen) + 
+            (i*(activitylen**2)))) % 
+            360) + ",100%,70%)")
     );
 	
 	hslToHex = function(h, s, l) {
@@ -91,16 +91,12 @@
 		}
 
 	rgbs = shuffle(rgbs);
-
-	//to determine the brightness of each color in colors
-	//then assign the font color(either black or white)
-	var brightnesses = rgbs.map(x => ((parseInt(x.substring(1)) >> 16) & 0xff)*0.2126 +
-                               ((parseInt(x.substring(1)) >> 8) & 0xff)*0.7152 +
-                               ((parseInt(x.substring(1)) >> 0) & 0xff)*0.0722
-                               );
     
-    brightnesses = (brightnesses < 5) ? 0 : 1;
-    
+   	var hues = colors.map(x => x.substring(4, x.length-1)
+         .replace(/ /g, '')
+         .split(',')[0]).map(x => parseInt(x));
+         
+    var brightnesses = hues.map(x => (x == 0 || (x >= 220 && x <= 280)) ? 0 : 1);
    
     for (var i = 0; i <tracevariants.variants.length; i++) {
         let trace = tracevariants.variants[i].activities;
@@ -134,7 +130,7 @@
         
         firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
         
-        firstpolygon.style.fill = rgbs[tracevariants.activities.indexOf(trace[0])];
+        firstpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[0])];
         
         //firstpolygon.style.fill = "white";
         
@@ -148,7 +144,7 @@
         
         firstdiv.innerHTML += `${trace[0]}`;
         
-        firstdiv.style.cssText = (brightnesses[tracevariants.activities.indexOf(trace[0])] == 1) ? `color: black;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center` : `color: white;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`; 
+        firstdiv.style.cssText = brightnesses[tracevariants.activities.indexOf(trace[0])] == 1 ? `color: black;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center` : `color: white;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`; 
 
         var firstforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
@@ -180,7 +176,7 @@
         								  (160*j - 10)   + ",55 "   + 
         								  (160*j + 5)  + ", 32.5 " );
         								  
-       	newpolygon.style.fill = rgbs[tracevariants.activities.indexOf(trace[j])];
+       	newpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[j])];
 
         newsvg.appendChild(newpolygon);
 
@@ -189,7 +185,7 @@
         newdiv.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
         
         //to assign the style of newdiv
-        newdiv.style.cssText = `width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`;
+        newdiv.style.cssText = brightnesses[tracevariants.activities.indexOf(trace[j])] == 1 ? `color: black;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center` : `color: white;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`; 
         newdiv.innerHTML += `${trace[j]}`;
 		//newdiv.style.color = brightnesses[tracevariants.activities.indexOf(trace[j])];
         
