@@ -39,7 +39,18 @@
 	}).reduce((a, b) => a + b, 0);
 
 	//var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((Math.floor(Math.random()*16777215)) * (360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
-	/*
+	
+	var activitylen = tracevariants.activities.length;
+	
+	var colors = Array(10).fill().map((_, i) => ("hsl("+ 
+    ( 
+        (
+            (Math.floor(Math.random()*16777215)) * 
+            ((360 / 10) + 
+            (i*(10**2)))) % 
+            360) + ",100%,75%)")
+    );
+	
 	hslToHex = function(h, s, l) {
   		
   		l /= 100;
@@ -55,17 +66,41 @@
   		return `#${f(0)}${f(8)}${f(4)}`;
 		
 	};
-	*/
-	//var rgbs = colors.map(x => x.match(/\d+/g).map(Number)).map(x => hslToHex(x[0], x[1], x[2]));
 	
+	var rgbs = colors.map(x => x.match(/\d+/g).map(Number)).map(x => hslToHex(x[0], x[1], x[2]));
+	
+	function shuffle(array) {
+  
+  		let currentIndex = array.length,  randomIndex;
+
+  		// While there remain elements to shuffle.
+  		while (currentIndex != 0) {
+
+    		// Pick a remaining element.
+    		randomIndex = Math.floor(Math.random() * currentIndex);
+    		currentIndex--;
+
+    		// And swap it with the current element.
+    	
+    		[array[currentIndex], array[randomIndex]] = [
+      			array[randomIndex], array[currentIndex]];
+  			
+  			}
+
+  		return array;
+		}
+
+	rgbs = shuffle(rgbs);
+
 	//to determine the brightness of each color in colors
 	//then assign the font color(either black or white)
-	//var brightnesses = rgbs.map(x => ((parseInt(x.substring(1)) >> 16) & 0xff)*0.2126 +
-    //                           ((parseInt(x.substring(1)) >> 8) & 0xff)*0.7152 +
-    //                           ((parseInt(x.substring(1)) >> 0) & 0xff)*0.0722
-    //                           );
+	var brightnesses = rgbs.map(x => ((parseInt(x.substring(1)) >> 16) & 0xff)*0.2126 +
+                               ((parseInt(x.substring(1)) >> 8) & 0xff)*0.7152 +
+                               ((parseInt(x.substring(1)) >> 0) & 0xff)*0.0722
+                               );
     
-    //brightnesses = (brightnesses < 60) ? 0 : 1;
+    brightnesses = (brightnesses < 5) ? 0 : 1;
+    
    
     for (var i = 0; i <tracevariants.variants.length; i++) {
         let trace = tracevariants.variants[i].activities;
@@ -78,12 +113,12 @@
         newTr.style.cssText = `padding: 0; margin: 0`;
         
         var newTdStat = document.createElement('td'); 
-        newTdStat.style.cssText = `text-align: right;border: 1px solid black; white-space:pre;color: #595959;font-size:14px;`;
+        newTdStat.style.cssText = `text-align: right;white-space:pre;color: #595959;font-size:14px;`;
         newTdStat.innerHTML += ` ${freq} Cases <br> ${pct}% Log `;
         newTr.appendChild(newTdStat);
         
         var newTdSvg = document.createElement('td'); 
-        newTdSvg.style.cssText = `text-align: left; border: 1px solid black; white-space:nowrap; valign:middle;  align:center; padding: 0; margin: 0;`;
+        newTdSvg.style.cssText = `text-align: left; white-space:nowrap; valign:middle;  align:center; padding: 0; margin: 0;`;
         
         //the "svg" that will contain "polygon"
         var newsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");  
@@ -97,13 +132,11 @@
         
         var firstpolygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
         
-        firstpolygon.style.cssText = `stroke:black;stroke-width:1;  border = 1px solid #000000;`;
-
         firstpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
         
-        //firstpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[0])];
+        firstpolygon.style.fill = rgbs[tracevariants.activities.indexOf(trace[0])];
         
-        firstpolygon.style.fill = "white";
+        //firstpolygon.style.fill = "white";
         
         newsvg.appendChild(firstpolygon);
         
@@ -115,7 +148,7 @@
         
         firstdiv.innerHTML += `${trace[0]}`;
         
-        //firstdiv.style.cssText = (brightnesses[tracevariants.activities.indexOf(trace[0])] == 1) ? `color: black;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center` : `color: white;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`; 
+        firstdiv.style.cssText = (brightnesses[tracevariants.activities.indexOf(trace[0])] == 1) ? `color: black;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center` : `color: white;width: 130px; height: 30px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;font-size:15px; margin-top: 1px; margin-left: 1px; padding-top: 5px; text-align: center`; 
 
         var firstforeignObject = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject');
         
@@ -140,8 +173,6 @@
         //the "polygon" that will contain the polygon object with coordinates
         var newpolygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
         
-        newpolygon.style.cssText = `fill:rgb(255,255,255);stroke:black;stroke-width:1;border = 1px solid #000000;`;
-   		
         newpolygon.setAttribute("points", (160*j - 10)   + ",10 "   + 
         								  (145 + 160*j )  + ",10 "   +
         								  (160 + 160*j ) + ",32.5 " +
@@ -149,7 +180,7 @@
         								  (160*j - 10)   + ",55 "   + 
         								  (160*j + 5)  + ", 32.5 " );
         								  
-       	//newpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[j])];
+       	newpolygon.style.fill = rgbs[tracevariants.activities.indexOf(trace[j])];
 
         newsvg.appendChild(newpolygon);
 
