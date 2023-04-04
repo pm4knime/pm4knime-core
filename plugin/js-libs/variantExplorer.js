@@ -40,18 +40,31 @@
 		
 	}).reduce((a, b) => a + b, 0);
 
-	//var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((Math.floor(Math.random()*16777215)) * (360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
+	//var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
 	
 	var activitylen = tracevariants.activities.length;
 	
-	var colors = Array(activitylen).fill().map((_, i) => ("hsl("+ 
-    ( 
-        (
-            (Math.floor(Math.random()*16777215)) * 
-            ((360 / activitylen) + 
-            (i*(activitylen + i**2)))) % 
-            360) + ",100%,70%)")
-    );
+	const colorslist = [
+  "#FFB6C1", // lightpink
+  "#FFA07A", // lightsalmon
+  "#FFDAB9", // peachpuff
+  "#FFE4E1", // mistyrose
+  "#B0E0E6", // powderblue
+  "#ADD8E6", // lightblue
+  "#87CEFA", // lightskyblue
+  "#00BFFF", // deepskyblue
+  "#98FB98", // palegreen
+  "#90EE90", // lightgreen
+  "#00FA9A", // mediumspringgreen
+  "#FA8072", // salmon
+  "#FFC0CB", // pink
+  "#FFB347", // darkorange
+  "#FFD700", // gold
+];
+
+
+    var colors = Array(activitylen).fill().map((_, i) => colorslist[i % colorslist.length]);
+
 	
 	function shuffle(array) {
   
