@@ -10,6 +10,7 @@
         _value = value;
 
         createUI(representation.data, representation.variants);
+       	visu();
     };
 
     view.getComponentValue = () => {
@@ -18,17 +19,36 @@
 
         return _value;
     };
+    
+    function addScript( src ) {
+      var s = document.createElement( 'script' );
+      s.setAttribute( 'src', src );
+      document.body.appendChild( s );
+    }
 
     function createUI(data, tracevariants) {
 
         const script = document.createElement('script');
         script.src = 'https://d3js.org/d3.v4.min.js';
         document.getElementsByTagName("head")[0].appendChild(script);
-
+        
+        const domtoimg = document.createElement('script');
+        domtoimg.src = 'dom-to-image.min.js';
+        document.getElementsByTagName("head")[0].appendChild(domtoimg);
+        
+        const ajax = document.createElement('script');
+        ajax.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js';
+        document.getElementsByTagName("head")[0].appendChild(ajax);
+        
+        const jsdelivr = document.createElement('script');
+        jsdelivr.src = 'http://cdn.jsdelivr.net/g/filesaver.js';
+        document.getElementsByTagName("head")[0].appendChild(jsdelivr);
+	
         let body = document.getElementsByTagName("body")[0];
         body.innerHTML = `<div class="container-fluid"></div>`;
 
         var variants = document.createElement('table');
+        variants.setAttribute("id", "varianttable");
 
         variants.style.cssText = 'border-spacing: 5px 10px; border: 1px solid black; align: left;';
         variants.style.backgroundColor = '#f2f2f2';
@@ -231,11 +251,40 @@
             variants.appendChild(newTr);
 
         }
-
+ 
+        //<button id="export-btn">Export as image</button>
+        exporta = document.createElement('a');
+        exporta.id = "export-a";
+        exportbtn = document.createElement('button');
+        exportbtn.id = "export-btn";
+        exportbtn.innerHTML += `Export`;
+        exporta.appendChild(exportbtn)
+        body.appendChild(exporta);
+        
         body.appendChild(variants);
-
-
+		
     }
+    
+    function visu() {
+    
+		var table = document.getElementById("varianttable");
 
+		domtoimage.toSvg(table)
+  		.then(function (dataUrl) {
+      		
+      		var exportA = document.getElementById("export-a");
+      		exportA.href = dataUrl;
+      		exportA.download = "varianttable.svg";
+      		
+      		
+  		}).catch(function (error) {
+      
+      		console.error('oops, something went wrong!', error);
+  
+  		});
+    	
+		
+	}
+	
     return view;
 }());

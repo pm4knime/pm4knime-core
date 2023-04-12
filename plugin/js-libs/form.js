@@ -16,7 +16,6 @@
         console.log(representation);
         vis = visu(representation.dotstr);
         
-                  
     };
 
     view.getComponentValue = () => {
@@ -35,8 +34,7 @@
       s.setAttribute( 'src', src );
       document.body.appendChild( s );
     }
-    
-
+  
     function visu( src ) {
 
         //addScript( '/Users/Ralf/Documents/Git/knime/pm4knime-core/pm4knime-core/plugin/js-lib/viz/full.render.js')
