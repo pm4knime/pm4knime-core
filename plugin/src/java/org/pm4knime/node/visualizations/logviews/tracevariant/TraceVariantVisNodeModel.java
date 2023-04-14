@@ -1,5 +1,6 @@
 package org.pm4knime.node.visualizations.logviews.tracevariant;
 
+import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -72,6 +73,10 @@ public class TraceVariantVisNodeModel extends AbstractWizardNodeModel<TraceVaria
 
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+		if (!inSpecs[0].getClass().equals(DataTableSpec.class))
+			throw new InvalidSettingsException("Input is not a valid Table!");
+		if(e_classifier == null || t_classifier == null)
+			throw new InvalidSettingsException("Classifiers are not set!");
 		return new PortObjectSpec[] { };
 	}
 
