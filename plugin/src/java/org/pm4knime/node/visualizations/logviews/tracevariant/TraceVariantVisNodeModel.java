@@ -1,5 +1,6 @@
 package org.pm4knime.node.visualizations.logviews.tracevariant;
 
+import org.knime.base.data.xml.SvgCell;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -10,20 +11,21 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.util.defaultnode.TraceVariantRepresentation;
-import org.processmining.plugins.graphviz.dot.Dot;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 
-public class TraceVariantVisNodeModel extends AbstractWizardNodeModel<TraceVariantVisViewRepresentation, TraceVariantVisViewValue> implements PortObjectHolder {
+public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVariantVisViewRepresentation, TraceVariantVisViewValue> implements PortObjectHolder {
 
 	// Input and output port types
-	private static final PortType[] IN_TYPES = {BufferedDataTable.TYPE};
-	private static final PortType[] OUT_TYPES = {};
+	private static PortType[] IN_TYPES = {BufferedDataTable.TYPE};
+	private static PortType[] OUT_TYPES = {ImagePortObject.TYPE};
+	AbstractDotPanelPortObject port_obj;
 	
 	public static final String KEY_TRACE_CLASSIFIER = "Trace Classifier";
 	public static final String KEY_EVENT_CLASSIFIER = "Event Classifier";
@@ -77,11 +79,14 @@ public class TraceVariantVisNodeModel extends AbstractWizardNodeModel<TraceVaria
 			throw new InvalidSettingsException("Input is not a valid Table!");
 		if(e_classifier == null || t_classifier == null)
 			throw new InvalidSettingsException("Classifiers are not set!");
-		return new PortObjectSpec[] { };
+        PortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+        
+        return new PortObjectSpec[]{imageSpec};
+
 	}
 
 	@Override
-	protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 		table = (BufferedDataTable)inObjects[0];
 		TraceVariantVisViewRepresentation representation = getViewRepresentation();
 		
@@ -96,9 +101,18 @@ public class TraceVariantVisNodeModel extends AbstractWizardNodeModel<TraceVaria
 		
 		TraceVariantRepresentation varinats = new TraceVariantRepresentation(table, t_classifier, e_classifier);
 		representation.setVariants(varinats);
-		
-		return new PortObject[] { };
 	}
+	
+	@Override
+    protected boolean generateImage() {
+        return true;
+    }
+	
+	@Override
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{svgImageFromView};
+    }
 
 	@Override
 	protected void performReset() {

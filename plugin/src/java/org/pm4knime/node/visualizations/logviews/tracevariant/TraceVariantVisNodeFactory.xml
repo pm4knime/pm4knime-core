@@ -15,5 +15,6 @@
 
 	<ports>
 		<inPort index="0" name="Table">an event table</inPort>
+		<outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 </knimeNode>

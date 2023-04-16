@@ -1,7 +1,8 @@
-(varExplorer = function() {
+varExplorer = (function() {
 
     let _representation;
     let _value;
+    let _svg;
 
     let view = {};
 
@@ -10,42 +11,22 @@
         _value = value;
 
         createUI(representation.data, representation.variants);
-       	visu();
+        visu();
     };
+
 
     view.getComponentValue = () => {
-        _value.firstName = document.getElementById("firstName").value;
-        _value.lastName = document.getElementById("lastName").value;
-
         return _value;
     };
-    
-    function addScript( src ) {
-      var s = document.createElement( 'script' );
-      s.setAttribute( 'src', src );
-      document.body.appendChild( s );
-    }
+
+    view.getSVG = () => {
+        return _svg;
+
+    };
 
     function createUI(data, tracevariants) {
 
-        const script = document.createElement('script');
-        script.src = 'https://d3js.org/d3.v4.min.js';
-        document.getElementsByTagName("head")[0].appendChild(script);
-        
-        const domtoimg = document.createElement('script');
-        domtoimg.src = 'dom-to-image.min.js';
-        document.getElementsByTagName("head")[0].appendChild(domtoimg);
-        
-        const ajax = document.createElement('script');
-        ajax.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js';
-        document.getElementsByTagName("head")[0].appendChild(ajax);
-        
-        const jsdelivr = document.createElement('script');
-        jsdelivr.src = 'http://cdn.jsdelivr.net/g/filesaver.js';
-        document.getElementsByTagName("head")[0].appendChild(jsdelivr);
-	
         let body = document.getElementsByTagName("body")[0];
-        body.innerHTML = `<div class="container-fluid"></div>`;
 
         var variants = document.createElement('table');
         variants.setAttribute("id", "varianttable");
@@ -144,8 +125,6 @@
 
             newsvg.setAttributeNS(null, "width", svg_dymwidth);
 
-            
-
             var j = trace.length - 1;
 
             while (j >= 0) {
@@ -153,20 +132,20 @@
                 //the "polygon" that will contain the polygon object with coordinates
                 var newpolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 
-                
+
                 if (j === 0) {
-                   newpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
-                
+                    newpolygon.setAttribute("points", "5,10 " + "5,55 " + "145,55 " + "160,32.5 " + "145,10");
+
                 } else {
                     newpolygon.setAttribute("points", (160 * j - 10) + ",10 " +
-                    (145 + 160 * j) + ",10 " +
-                    (160 + 160 * j) + ",32.5 " +
-                    (145 + 160 * j) + ",55 " +
-                    (160 * j - 10) + ",55 " +
-                    (160 * j + 5) + ", 32.5 ");
+                        (145 + 160 * j) + ",10 " +
+                        (160 + 160 * j) + ",32.5 " +
+                        (145 + 160 * j) + ",55 " +
+                        (160 * j - 10) + ",55 " +
+                        (160 * j + 5) + ", 32.5 ");
                 }
-                
-                
+
+
 
                 newpolygon.style.fill = colors[tracevariants.activities.indexOf(trace[j])];
 
@@ -183,9 +162,6 @@
                 var newrect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                 hoverg.appendChild(newrect);
                 hoverg.appendChild(newtext);
-                
-                
-
 
                 //the "div" that contains the name of activity
                 var newdiv = document.createElement('div');
@@ -213,8 +189,8 @@
                 newg.style.cssText = `margin-top: 15px; border: 20px solid green`;
 
                 newg.appendChild(newforeignObject);
-                
-                
+
+
                 loopg.appendChild(newpolygon);
                 loopg.appendChild(newg);
                 loopg.appendChild(hoverg);
@@ -236,8 +212,8 @@
                     this.getElementsByTagName("g")[1].getElementsByTagName("rect")[0].setAttribute("fill", "none");
 
                 });
-                
-                
+
+
                 newsvg.appendChild(loopg);
 
                 j--;
@@ -251,7 +227,7 @@
             variants.appendChild(newTr);
 
         }
- 
+
         //<button id="export-btn">Export as image</button>
         exporta = document.createElement('a');
         exporta.id = "export-a";
@@ -260,31 +236,66 @@
         exportbtn.innerHTML += `Export`;
         exporta.appendChild(exportbtn)
         body.appendChild(exporta);
-        
-        body.appendChild(variants);
-		
-    }
-    
-    function visu() {
-    
-		var table = document.getElementById("varianttable");
 
-		domtoimage.toSvg(table)
-  		.then(function (dataUrl) {
-      		
-      		var exportA = document.getElementById("export-a");
-      		exportA.href = dataUrl;
-      		exportA.download = "varianttable.svg";
-      		
-      		
-  		}).catch(function (error) {
-      
-      		console.error('oops, something went wrong!', error);
-  
-  		});
-    	
-		
-	}
-	
+        body.appendChild(variants);
+
+    }
+
+
+    function visu() {
+        var table = document.getElementById("varianttable");
+        var exportA = document.getElementById("export-a");
+
+        domtoimage.toSvg(table, {
+                bgcolor: 'white'
+            })
+            .then(function(dataUrl) {
+
+                console.log("print dataUrl");
+                console.log(dataUrl);
+                exportA.href = dataUrl;
+                exportA.download = "varianttable.svg";
+                var img = new Image();
+                img.src = dataUrl;
+                img.onload = function() {
+                    var canvas = document.createElement("canvas");
+                    var originalWidth = img.width;
+                    var originalHeight = img.height;
+                    var maxWidth = 10000;
+                    var maxHeight = 10000;
+                    var widthScaleFactor = maxWidth / originalWidth;
+                    var heightScaleFactor = maxHeight / originalHeight;
+                    var scaleFactor = Math.min(widthScaleFactor, heightScaleFactor, 10);
+                    var scaleFactor = Math.max(scaleFactor, 5);
+                    console.log("scaleFactor");
+                    console.log(scaleFactor);
+                    canvas.width = originalWidth * scaleFactor;
+                    canvas.height = originalHeight * scaleFactor;
+                    console.log("canvas.width");
+                    console.log(canvas.width);
+                    console.log("canvas.height");
+                    console.log(canvas.height);
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                    svg.setAttribute("width", originalWidth);
+                    svg.setAttribute("height", originalHeight);
+                    var image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+                    var actualLink = exportA.getAttribute('href');
+
+                    image.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", canvas.toDataURL("image/png"));
+                    image.setAttribute("width", originalWidth);
+                    image.setAttribute("height", originalHeight);
+                    svg.appendChild(image);
+                    _svg = (new XMLSerializer()).serializeToString(svg);
+                    console.log('print stringSVG ', _svg);
+                };
+
+            })
+            .catch(function(error) {
+                console.error('oops, something went wrong!', error);
+            });
+    }
     return view;
 }());
