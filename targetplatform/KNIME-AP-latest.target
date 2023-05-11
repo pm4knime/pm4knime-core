@@ -24,6 +24,7 @@
 <unit id="org.knime.features.xml.feature.group" version="0.0.0"/>
 <unit id="org.knime.targetPlatform.feature.group" version="0.0.0"/>
 <unit id="org.knime.features.ext.svg.feature.group" version="0.0.0"/>
+<unit id="org.knime.features.python3.nodes.feature.group" version="0.0.0"/>
 <repository location="https://update.knime.com/analytics-platform/latest/"/>
 </location>
 </locations>
@@ -50,6 +51,8 @@
 --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
 --add-opens=java.base/sun.nio=ALL-UNNAMED
 --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED
---add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED</vmArgs>
+--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED
+-Dknime.python.extension.config="C:\Users\kourani\git\pm4knime-core\targetplatform\pythoncode\basic\config.yml"
+</vmArgs>
 </launcherArgs>
 </target>
