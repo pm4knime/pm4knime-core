@@ -13,9 +13,9 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.core.node.port.inactive.InactiveBranchPortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
-import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.util.defaultnode.TraceVariantRepresentation;
 
@@ -33,6 +33,7 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 	
 	protected String t_classifier;
 	protected String e_classifier;
+	protected Boolean generate_image = false;
 	
 	protected BufferedDataTable table;
 
@@ -79,10 +80,14 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 			throw new InvalidSettingsException("Input is not a valid Table!");
 		if(e_classifier == null || t_classifier == null)
 			throw new InvalidSettingsException("Classifiers are not set!");
-        PortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
-        
-        return new PortObjectSpec[]{imageSpec};
-
+		PortObjectSpec imageSpec;
+		imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+//		return new PortObjectSpec[]{imageSpec};
+        if (generateImage()) {
+        	return new PortObjectSpec[]{new ImagePortObjectSpec(SvgCell.TYPE)};
+        } else {
+        	return new PortObjectSpec[]{InactiveBranchPortObjectSpec.INSTANCE};
+        }
 	}
 
 	@Override
@@ -104,8 +109,9 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 	}
 	
 	@Override
-    protected boolean generateImage() {
-        return true;
+	protected boolean generateImage() {
+//		return true;
+        return generate_image;
     }
 	
 	@Override
@@ -122,8 +128,12 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 	protected void useCurrentValueAsDefault() {
 	}
 
+
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
+//		settings.addString(KEY_TRACE_CLASSIFIER, t_classifier);
+//		settings.addString(KEY_EVENT_CLASSIFIER, e_classifier);
+//		settings.addBoolean("generate_image", generate_image);
 	}
 
 	@Override
@@ -132,6 +142,9 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+//		t_classifier = settings.getString(KEY_TRACE_CLASSIFIER);
+//		e_classifier = settings.getString(KEY_EVENT_CLASSIFIER);
+//		generate_image = settings.getBoolean("generate_image", false);
 	}
 
 	public PortObject[] getInternalPortObjects() {

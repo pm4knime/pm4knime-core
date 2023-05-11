@@ -44,6 +44,8 @@ varExplorer = (function() {
         //var colors = Array(tracevariants.activities.length).fill().map((_, i) => ("hsl("+ ( ((360 / tracevariants.activities.length) + (i*(tracevariants.activities.length**2))) % 360) + ",85%,40%)")
 
         var activitylen = tracevariants.activities.length;
+        console.log("activitylen");
+        console.log(activitylen);
 
         const colorslist = [
             "#FFB6C1", // lightpink

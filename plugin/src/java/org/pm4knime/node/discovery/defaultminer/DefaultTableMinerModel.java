@@ -1,5 +1,6 @@
 package org.pm4knime.node.discovery.defaultminer;
 
+import org.knime.base.node.image.ImageToTableNodeFactory;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -18,6 +19,7 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel implements
 	protected DefaultTableMinerModel(PortType[] inPortTypes, PortType[] outPortTypes) {
 		super(inPortTypes, outPortTypes);
 	}
+	
 	
 	public static final String KEY_TRACE_CLASSIFIER = "Trace Classifier";
 	public static final String KEY_EVENT_CLASSIFIER = "Event Classifier";
