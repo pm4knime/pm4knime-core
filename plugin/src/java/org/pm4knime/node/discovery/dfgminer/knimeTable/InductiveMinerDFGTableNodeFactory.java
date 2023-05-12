@@ -3,6 +3,9 @@ package org.pm4knime.node.discovery.dfgminer.knimeTable;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
 /**
  * This is an example implementation of the node factory of the
@@ -10,8 +13,7 @@ import org.knime.core.node.NodeView;
  *
  * @author 
  */
-public class InductiveMinerDFGTableNodeFactory 
-        extends NodeFactory<InductiveMinerDFGTableNodeModel> {
+public class InductiveMinerDFGTableNodeFactory extends NodeFactory<InductiveMinerDFGTableNodeModel> implements WizardNodeFactoryExtension<InductiveMinerDFGTableNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
     /**
      * {@inheritDoc}

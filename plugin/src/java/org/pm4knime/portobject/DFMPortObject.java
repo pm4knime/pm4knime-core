@@ -67,9 +67,10 @@ public class DFMPortObject extends AbstractDotPanelPortObject {
 	public JComponent[] getViews() {
 		// TODO it has view which is
 		// we need to change the steps..
-		JComponent viewPanel = GraphvizDirectlyFollowsGraph.visualise(dfm);
-		viewPanel.setName("Directly Follows Model");
-		return new JComponent[] { viewPanel };
+//		JComponent viewPanel = GraphvizDirectlyFollowsGraph.visualise(dfm);
+//		viewPanel.setName("Directly Follows Model");
+//		return new JComponent[] { viewPanel };
+		return new JComponent[] {};
 	}
 	
 	public DotPanel getDotPanel() {

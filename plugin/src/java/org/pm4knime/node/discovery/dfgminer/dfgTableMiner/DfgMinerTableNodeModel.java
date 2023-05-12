@@ -51,14 +51,13 @@ public class DfgMinerTableNodeModel extends DefaultTableMinerModel {
 	    protected DfgMinerTableNodeModel() {
 	    
 	        // TODO: Specify the amount of input and output ports needed.
-	    	super( new PortType[]{BufferedDataTable.TYPE }, new PortType[] { DfgMsdPortObject.TYPE }); 
+	    	super( new PortType[]{BufferedDataTable.TYPE }, new PortType[] { DfgMsdPortObject.TYPE }, "DFG JS View"); 
 	    	}
 
 		@Override
 		protected PortObject mine(BufferedDataTable log, final ExecutionContext exec) throws Exception {
 			// TODO Auto-generated method stub
 			logger.info("Begin:  DFM Miner");
-			checkCanceled(exec);
 			
 			//String activityClassifier = getEventClassifier();
 			// according to the variant values, there is different implementation
@@ -73,7 +72,6 @@ public class DfgMinerTableNodeModel extends DefaultTableMinerModel {
 			//checkCanceled(exec);
 			BufferedTableIMLog imLog = new BufferedTableIMLog(logPO, getEventClassifier(), getTraceClassifier());	
 			DfgMsd dfgmsd = Log2DfgMsd.convert(imLog);
-			checkCanceled(exec);
 			logger.info("End:  DFM Miner");
 			DfgMsdPortObject dfgMsdObj = new DfgMsdPortObject(dfgmsd);
 			return dfgMsdObj;

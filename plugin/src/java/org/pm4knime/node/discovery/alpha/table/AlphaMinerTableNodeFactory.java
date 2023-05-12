@@ -3,8 +3,11 @@ package org.pm4knime.node.discovery.alpha.table;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
-public class AlphaMinerTableNodeFactory extends NodeFactory<AlphaMinerTableNodeModel> {
+public class AlphaMinerTableNodeFactory extends NodeFactory<AlphaMinerTableNodeModel> implements WizardNodeFactoryExtension<AlphaMinerTableNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 	AlphaMinerTableNodeModel node;
 
 	@Override

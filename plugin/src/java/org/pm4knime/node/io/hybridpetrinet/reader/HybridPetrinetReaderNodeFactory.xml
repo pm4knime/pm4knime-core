@@ -14,8 +14,8 @@
     
     </fullDescription>
     
+    <interactiveView name="Hybrid Petri Net"></interactiveView>
     <ports>
-      
         <outPort index="0" name="Hybrid Petri Net">a hybrid Petri net</outPort>
         <!-- possibly more output ports here-->
     </ports>    

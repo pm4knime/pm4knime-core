@@ -14,6 +14,8 @@
        
     </fullDescription>
     
+    <interactiveView name="Process Tree"></interactiveView>
+    
     <ports>
         <outPort index="0" name="Process Tree">a process tree</outPort>
         <!-- possibly more output ports here-->

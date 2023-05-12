@@ -24,6 +24,8 @@
 		</option>
 
 	</fullDescription>
+	
+	<interactiveView name="Hybrid Petri Net"></interactiveView>
 
 	<ports>
 		<inPort index="0" name="Causal Graph">a causal graph</inPort>

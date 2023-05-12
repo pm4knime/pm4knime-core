@@ -99,19 +99,19 @@ public class PetriNetPortObject extends AbstractDotPanelPortObject {
 	 */
 	@Override
 	public JComponent[] getViews() {
-		if(effTree != null) {
-			JComponent viewPanel = getDotPanel();
-			viewPanel.setName("Petri net");
-			return new JComponent[] { viewPanel };	
-		}
-		
-		if (m_anet != null) {
-			
-			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-			JComponent view = VisualizeAcceptingPetriNetPlugin.visualize(context, m_anet);
-			view.setName("Petri net");
-			return new JComponent[] {view};
-		}
+//		if(effTree != null) {
+//			JComponent viewPanel = getDotPanel();
+//			viewPanel.setName("Petri net");
+//			return new JComponent[] { viewPanel };	
+//		}
+//		
+//		if (m_anet != null) {
+//			
+//			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
+//			JComponent view = VisualizeAcceptingPetriNetPlugin.visualize(context, m_anet);
+//			view.setName("Petri net");
+//			return new JComponent[] {view};
+//		}
 		
 		return new JComponent[] {};
 	}

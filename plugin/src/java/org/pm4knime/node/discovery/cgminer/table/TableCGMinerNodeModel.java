@@ -1,18 +1,6 @@
 package org.pm4knime.node.discovery.cgminer.table;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.container.filter.TableFilter;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -23,8 +11,11 @@ import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.web.ValidationError;
 import org.pm4knime.node.discovery.cgminer.CGMinerNodeModel;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 import org.pm4knime.portobject.CausalGraphPortObject;
 import org.pm4knime.portobject.CausalGraphPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
@@ -53,20 +44,21 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	
 	protected TableCGMinerNodeModel() {
         super(new PortType[] { BufferedDataTable.TYPE }, 
-        		new PortType[] { CausalGraphPortObject.TYPE });
+        		new PortType[] { CausalGraphPortObject.TYPE },
+        		"Causal Graph JS View");
     }
 
 	
-	@Override
-	protected PortObject[] execute(final PortObject[] inObjects,
-	            final ExecutionContext exec) throws Exception {
-		logPO = (BufferedDataTable)inObjects[0];
-    	checkCanceled(null, exec);
-		PortObject pmPO = mine(logPO, exec);
-		checkCanceled(null, exec);
-		return new PortObject[] {pmPO};
-	
-    }
+//	@Override
+//	protected PortObject[] execute(final PortObject[] inObjects,
+//	            final ExecutionContext exec) throws Exception {
+//		logPO = (BufferedDataTable)inObjects[0];
+//    	checkCanceled(null, exec);
+//		PortObject pmPO = mine(logPO, exec);
+//		checkCanceled(null, exec);
+//		return new PortObject[] {pmPO};
+//	
+//    }
 	
 	protected PortObject mine(BufferedDataTable table, final ExecutionContext exec) throws Exception{
     	logger.info("Begin: Causal Graph Miner (Table)");
@@ -74,13 +66,13 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
     	String eClassifier = getEventClassifier();
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(HybridCGMinerPlugin.class);
-    	checkCanceled(pluginContext, exec);
+//    	checkCanceled(pluginContext, exec);
     	HybridCGMinerSettings settings = getConfiguration();
 		TraceVariantsLog variants = new TraceVariantsTable(table, settings, tClassifier, eClassifier);
 		HybridCGMiner miner = new HybridCGMiner(null, null, variants, settings);
 		ExtendedCausalGraph cg = miner.mineFCG();
     	
-    	checkCanceled(pluginContext, exec);
+//    	checkCanceled(pluginContext, exec);
     	CausalGraphPortObject pnPO = new CausalGraphPortObject(cg);
     	
     	logger.info("End: Causal Graph miner");
@@ -129,14 +121,11 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
         t_longDep.loadSettingsFrom(settings);
         weight.loadSettingsFrom(settings);
 	}
-     
-	
+
 
 	@Override
 	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 	}
-
-
    
 }
 

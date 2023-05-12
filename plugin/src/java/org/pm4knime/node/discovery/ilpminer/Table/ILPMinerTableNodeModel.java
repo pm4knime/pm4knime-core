@@ -84,7 +84,7 @@ public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
      * Constructor for the node model.
      */
     protected ILPMinerTableNodeModel() {
-    	super(new PortType[] {BufferedDataTable.TYPE}, new PortType[] {PetriNetPortObject.TYPE} );
+    	super(new PortType[] {BufferedDataTable.TYPE}, new PortType[] {PetriNetPortObject.TYPE}, "Petri Net JS View");
     	
     	m_parameter = new SMILPMinerParameter(ILPMinerTableNodeModel.CFG_KEY_ILP_PARAMETER);
     }
@@ -107,18 +107,15 @@ public class ILPMinerTableNodeModel extends DefaultTableMinerModel {
 		TraceVariantRepresentation log = new TraceVariantRepresentation(table, this.getTraceClassifier(), this.getEventClassifier());
 		TraceVariantRepresentation artifLog = TraceVariantRepresentation.addArtificialStartAndEnd(log.getNumberOfTraces(), log.getActivities(), log.getVariants(), startLabel, endLabel);
 		PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-		checkCanceled(context, exec);
         // create the parameter
 		TableHybridILPMinerParametersImpl param = new TableHybridILPMinerParametersImpl(context, artifLog);
 		// here put some values from m_parameter to param
 		m_parameter.updateParameter(param);
       
-    	checkCanceled(context, exec);
     	Object[] result = TableHybridILPMinerPlugin.discoverWithArtificialStartEnd(context, log, artifLog, param);
         
     	// create the accepting Petri net and PortObject
     	AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1],  (Marking) result[2]);
-    	checkCanceled(exec);
         PetriNetPortObject pnPO = new PetriNetPortObject(anet);
         
     	logger.info("End : ILPMiner " );

@@ -3,10 +3,13 @@ package org.pm4knime.node.discovery.cgminer.table;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
 
 public class TableCGMinerNodeFactory 
-        extends NodeFactory<TableCGMinerNodeModel> {
+        extends NodeFactory<TableCGMinerNodeModel> implements WizardNodeFactoryExtension<TableCGMinerNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 	TableCGMinerNodeModel node;
 
     /**
@@ -15,7 +18,7 @@ public class TableCGMinerNodeFactory
     @Override
     public TableCGMinerNodeModel createNodeModel() {
 		node = new TableCGMinerNodeModel();
-		return node;
+		return node;	
     }
 
     /**

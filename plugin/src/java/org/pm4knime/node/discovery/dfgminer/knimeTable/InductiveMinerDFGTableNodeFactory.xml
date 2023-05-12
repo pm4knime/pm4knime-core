@@ -21,6 +21,8 @@
       
     </fullDescription>
     
+    <interactiveView name="Process Tree"></interactiveView>
+    
     <ports>
         <inPort index="0" name="Directly-Follows Graph">a directly-follows graph</inPort>
         <!-- possibly more input ports here-->

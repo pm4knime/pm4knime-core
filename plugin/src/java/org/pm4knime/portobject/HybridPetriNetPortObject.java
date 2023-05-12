@@ -78,22 +78,22 @@ public class HybridPetriNetPortObject extends AbstractDotPanelPortObject {
 	
 	@Override
 	public JComponent[] getViews() {
-		if (pn != null) {
-			
-			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-			JComponent view = null;
-			try {
-				view = HybridPetrinetVisualizer.visualize(context, pn);
-				int n = view.getComponents().length - 1;
-				view.remove(n);
-				view.remove(n-1);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			view.setName("Hybrid Petri Net");
-			return new JComponent[] {view};
-		}
+//		if (pn != null) {
+//			
+//			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
+//			JComponent view = null;
+//			try {
+//				view = HybridPetrinetVisualizer.visualize(context, pn);
+//				int n = view.getComponents().length - 1;
+//				view.remove(n);
+//				view.remove(n-1);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			view.setName("Hybrid Petri Net");
+//			return new JComponent[] {view};
+//		}
 		
 		return new JComponent[] {};
 	}
