@@ -6,13 +6,13 @@ Bundle-Version: 1.3.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Fraunhofer Institute for Applied Information Technology
 Require-Bundle: org.eclipse.core.runtime,
- org.knime.workbench.core;bundle-version="[4.0.0,5.0.0)",
- org.knime.workbench.repository;bundle-version="[4.0.0,5.0.0)",
- org.knime.base;bundle-version="[4.0.0,5.0.0)",
- org.knime.time;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workbench.core;bundle-version="[4.0.0,6.0.0)",
+ org.knime.workbench.repository;bundle-version="[4.0.0,6.0.0)",
+ org.knime.base;bundle-version="[4.0.0,6.0.0)",
+ org.knime.time;bundle-version="[4.0.0,6.0.0)",
  com.google.guava;bundle-version="19.0.0",
  net.sf.trove4j;bundle-version="[3.0.3,4.0.0)",
- org.knime.js.core;bundle-version="[4.0.1,5.0.0)",
+ org.knime.js.core;bundle-version="[4.0.1,6.0.0)",
  org.apache.commons.lang3;bundle-version="[3.9.0,4.0.0)",
  org.knime.ext.svg
 Bundle-ActivationPolicy: lazy
