@@ -1,6 +1,5 @@
 package org.pm4knime.node.discovery.defaultminer;
 
-import org.knime.base.node.image.ImageToTableNodeFactory;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -11,13 +10,19 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.processmining.plugins.graphviz.dot.Dot;
 
+//public abstract class DefaultTableMinerModel extends DefaultNodeModel implements PortObjectHolder {
+public abstract class DefaultTableMinerModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 
-public abstract class DefaultTableMinerModel extends DefaultNodeModel implements PortObjectHolder {
-
-	protected DefaultTableMinerModel(PortType[] inPortTypes, PortType[] outPortTypes) {
-		super(inPortTypes, outPortTypes);
+	protected DefaultTableMinerModel(PortType[] inPortTypes, PortType[] outPortTypes, String view_name) {
+		super(inPortTypes, outPortTypes, view_name);
 	}
 	
 	
@@ -29,16 +34,32 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel implements
 	protected String e_classifier;
 	
 	protected BufferedDataTable logPO;
+	protected PortObject pmPO;
+	
 	
 	@Override
-	protected PortObject[] execute(final PortObject[] inObjects,
-	            final ExecutionContext exec) throws Exception {
-		logPO = (BufferedDataTable)inObjects[0];
-		checkCanceled(null, exec);
-		PortObject pmPO = mine(logPO, exec);
-		checkCanceled(null, exec);
-		return new PortObject[] {pmPO};	
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{pmPO};
     }
+	
+	@Override
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+		
+		logPO = (BufferedDataTable)inObjects[0];
+		pmPO = mine(logPO, exec);
+		
+		final String dotstr;
+		JSGraphVizViewRepresentation representation = getViewRepresentation();
+
+		synchronized (getLock()) {
+			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pmPO;
+			Dot dot =  port_obj.getDotPanel().getDot();
+			dotstr = dot.toString();
+		}
+		representation.setDotstr(dotstr);
+
+	}
 	
 	
 	protected abstract PortObject mine(BufferedDataTable log, final ExecutionContext exec) throws Exception; 
@@ -120,5 +141,53 @@ public abstract class DefaultTableMinerModel extends DefaultNodeModel implements
 		e_classifier = c;
 	}
 	
+	@Override
+	protected void performReset() {
+	}
+
+	@Override
+	protected void useCurrentValueAsDefault() {
+	}
+
+	
+	@Override
+    protected boolean generateImage() {
+        return false;
+    }
+	
+	
+	@Override
+	public JSGraphVizViewRepresentation createEmptyViewRepresentation() {
+		return new JSGraphVizViewRepresentation();
+	}
+
+	@Override
+	public JSGraphVizViewValue createEmptyViewValue() {
+		return new JSGraphVizViewValue();
+	}
+	
+	@Override
+	public boolean isHideInWizard() {
+		return false;
+	}
+
+	@Override
+	public void setHideInWizard(boolean hide) {
+	}
+
+	@Override
+	public ValidationError validateViewValue(JSGraphVizViewValue viewContent) {
+		return null;
+	}
+
+	@Override
+	public void saveCurrentValue(NodeSettingsWO content) {
+	}
+	
+	
+	@Override
+	public String getJavascriptObjectID() {
+		return "org.pm4knime.node.visualizations.jsgraphviz.component";
+	}
 	
 }

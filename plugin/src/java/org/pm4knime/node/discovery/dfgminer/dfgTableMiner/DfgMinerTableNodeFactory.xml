@@ -18,6 +18,8 @@
         
     </fullDescription>
     
+    <interactiveView name="Directly-Follows Graph"></interactiveView>
+    
     <ports>
        <inPort index="0" name="Table">an event table</inPort>
        <outPort index="0" name="Directly-Follows Graph">a directly-follows graph</outPort>

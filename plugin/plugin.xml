@@ -178,7 +178,7 @@
         <portType hidden="false" name="Hybrid Petri Net" objectClass="org.pm4knime.portobject.HybridPetriNetPortObject" objectSerializer="org.pm4knime.portobject.HybridPetriNetPortObject$HybridPetriNetPortObjectSerializer" specClass="org.pm4knime.portobject.HybridPetriNetPortObjectSpec" specSerializer="org.pm4knime.portobject.HybridPetriNetPortObjectSpec$HybridPetriNetPortObjectSpecSerializer" color="#E5B941"/>
                		
         
-        <portType hidden="false" name="Process Tree" objectClass="org.pm4knime.portobject.ProcessTreePortObject" objectSerializer="org.pm4knime.portobject.ProcessTreePortObjectSerializer" specClass="org.pm4knime.portobject.ProcessTreePortObjectSpec" specSerializer="org.pm4knime.portobject.ProcessTreePortObjectSpecSerializer" color="#C1876B"/>
+        <portType hidden="false" name="Process Tree" objectClass="org.pm4knime.portobject.ProcessTreePortObject" objectSerializer="org.pm4knime.portobject.ProcessTreePortObject$ProcessTreePortObjectSerializer" specClass="org.pm4knime.portobject.ProcessTreePortObjectSpec" specSerializer="org.pm4knime.portobject.ProcessTreePortObjectSpec$ProcessTreePortObjectSpecSerializer" color="#C1876B"/>
                                         		
         
         

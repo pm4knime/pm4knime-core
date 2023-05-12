@@ -12,19 +12,23 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.pm4knime.portobject.HybridPetriNetPortObjectSpec;
-import org.pm4knime.util.HybridPetriNetUtil;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.contexts.uitopia.UIContext;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
 // or extended hybridminer
 import org.processmining.extendedhybridminer.models.pnml.utils;
-import org.processmining.framework.plugin.PluginContext;
+import org.processmining.plugins.graphviz.dot.Dot;
 
 /**
  * This is the model implementation of PetrinetReader.
@@ -32,7 +36,7 @@ import org.processmining.framework.plugin.PluginContext;
  *
  * @author KFDing
  */
-public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
+public class HybridPetrinetReaderNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
     
     // the logger instance
     private static final NodeLogger logger = NodeLogger
@@ -52,24 +56,28 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
 	private final SettingsModelString m_type = new SettingsModelString(GFG_PETRINET_TYPE, "");
 	
 	HybridPetriNetPortObjectSpec m_spec = new HybridPetriNetPortObjectSpec();
+
+	protected HybridPetriNetPortObject m_netPort;
 	
     public HybridPetrinetReaderNodeModel() {
     
         // TODO as one of those tests
-        super(null, new PortType[] {HybridPetriNetPortObject.TYPE});
+        super(null, new PortType[] {HybridPetriNetPortObject.TYPE}, "Hybrid Petri Net JS View");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws Exception {
-    	HybridPetriNetPortObject m_netPort = null;
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{m_netPort};
+    }
+	
+	@Override
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+		
         if(m_type.getStringValue().equals(defaultTypes[0])) {
             logger.info("Read Naive Petri net !");
             
-            checkCanceled(exec);
+            exec.checkCanceled();
             // read the file and create fileInputStream
             
 //            HybridPetriNetUtil.importHybridPetrinetFromStream(new FileInputStream(m_spec.getFileName()), net);
@@ -78,13 +86,24 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
             UIContext context = new UIContext();
             UIPluginContext pContext = context.getMainPluginContext();
         	utils.importHybridPetrinetFromStream(pContext, new FileInputStream(m_spec.getFileName()), net);
-            checkCanceled(exec);
+        	exec.checkCanceled();
         	m_netPort = new HybridPetriNetPortObject(net);
         }
 		
-		logger.info("end of reading of Hybrid Petri net");
-        return new PortObject[] {m_netPort};
-    }
+		logger.info("end of reading of Hybrid Petri net");	
+		
+		final String dotstr;
+		JSGraphVizViewRepresentation representation = getViewRepresentation();
+
+		synchronized (getLock()) {
+			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) m_netPort;
+			Dot dot =  port_obj.getDotPanel().getDot();
+			dotstr = dot.toString();
+		}
+		representation.setDotstr(dotstr);
+
+	}
+
     
     /**
      * we need to define our own Spec for the Petri net and not DataTableSpec
@@ -187,6 +206,68 @@ public class HybridPetrinetReaderNodeModel extends DefaultNodeModel {
     	m_fileName.validateSettings(settings);
     	m_type.validateSettings(settings);
     }
+    
+    @Override
+	protected void performReset() {
+	}
+
+	@Override
+	protected void useCurrentValueAsDefault() {
+	}
+
+	
+	@Override
+    protected boolean generateImage() {
+        return false;
+    }
+	
+	
+	@Override
+	public JSGraphVizViewRepresentation createEmptyViewRepresentation() {
+		return new JSGraphVizViewRepresentation();
+	}
+
+	@Override
+	public JSGraphVizViewValue createEmptyViewValue() {
+		return new JSGraphVizViewValue();
+	}
+	
+	@Override
+	public boolean isHideInWizard() {
+		return false;
+	}
+
+	@Override
+	public void setHideInWizard(boolean hide) {
+	}
+
+	@Override
+	public ValidationError validateViewValue(JSGraphVizViewValue viewContent) {
+		return null;
+	}
+
+	@Override
+	public void saveCurrentValue(NodeSettingsWO content) {
+	}
+	
+	
+	@Override
+	public String getJavascriptObjectID() {
+		return "org.pm4knime.node.visualizations.jsgraphviz.component";
+	}
+
+
+	@Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return new PortObject[] {};
+	}
+
+
+	@Override
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		
+	}
     
 
 }

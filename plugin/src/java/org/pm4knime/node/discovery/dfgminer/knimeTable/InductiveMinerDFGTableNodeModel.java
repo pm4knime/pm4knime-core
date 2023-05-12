@@ -14,18 +14,23 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.portobject.DfgMsdPortObject;
 import org.pm4knime.portobject.DfgMsdPortObjectSpec;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.framework.packages.PackageManager.Canceller;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
+import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.inductiveminer2.plugins.InductiveMinerWithoutLogPlugin;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMWithoutLog;
@@ -36,7 +41,7 @@ import org.processmining.processtree.ProcessTree;
  *
  * @author
  */
-public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
+public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 
 	private static final NodeLogger logger = NodeLogger.getLogger(InductiveMinerDFGTableNodeModel.class);
 	public static final String CFG_VARIANT_KEY = "Variant";
@@ -48,23 +53,30 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 
 	SettingsModelString m_variant = new SettingsModelString(CFG_VARIANT_KEY, "");
 	SettingsModelDoubleBounded m_noiseThreshold = new SettingsModelDoubleBounded(CFGKEY_NOISE_THRESHOLD, 0.8, 0, 1.0);
+	protected ProcessTreePortObject ptpo;
+	protected DfgMsdPortObject dfgMsdPO;
 
 	/**
 	 * Constructor for the node model.
 	 */
 	protected InductiveMinerDFGTableNodeModel() {
 
-		super(new PortType[] { DfgMsdPortObject.TYPE }, new PortType[] { ProcessTreePortObject.TYPE });
+		super(new PortType[] { DfgMsdPortObject.TYPE }, new PortType[] { ProcessTreePortObject.TYPE }, "Process Tree JS View");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	
 	@Override
-	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{ptpo};
+    }
+	
+	@Override
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+		
 		logger.info("Begin:  Inductive miner Miner");
 
-		DfgMsdPortObject dfgMsdPO = (DfgMsdPortObject) inData[0];
+		dfgMsdPO = (DfgMsdPortObject) inObjects[0];
 
 		DfgMsd dfmMsd = dfgMsdPO.getDfgMsd();
 
@@ -75,7 +87,7 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 				new Canceller() {
 					public boolean isCancelled() {
 						try {
-							checkCanceled(exec);
+							exec.checkCanceled();
 						} catch (final CanceledExecutionException ce) {
 							return true;
 						}
@@ -85,19 +97,22 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 
 		ProcessTree tree = EfficientTree2processTree.convert(ptEff);
 
-		checkCanceled(exec);
-		ProcessTreePortObject petriObj = new ProcessTreePortObject(tree);
+		ptpo = new ProcessTreePortObject(tree);
 		logger.info("End:  Inductive Miner");
-		return new PortObject[] { petriObj };
+		
+		final String dotstr;
+		JSGraphVizViewRepresentation representation = getViewRepresentation();
+
+		synchronized (getLock()) {
+			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) ptpo;
+			Dot dot =  port_obj.getDotPanel().getDot();
+			dotstr = dot.toString();
+		}
+		representation.setDotstr(dotstr);
+
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void reset() {
-		// TODO: generated method stub
-	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -108,9 +123,9 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 		if (!inSpecs[0].getClass().equals(DfgMsdPortObjectSpec.class))
 			throw new InvalidSettingsException("Input is not a valid DFG model!");
 
-		ProcessTreePortObjectSpec ptPOSpec = new ProcessTreePortObjectSpec();
+		DfgMsdPortObjectSpec dfgSpec = new DfgMsdPortObjectSpec();
 
-		return new ProcessTreePortObjectSpec[] { ptPOSpec };
+		return new PortObjectSpec[]{new ProcessTreePortObjectSpec()};
 	}
 
 	/**
@@ -153,6 +168,64 @@ public class InductiveMinerDFGTableNodeModel extends DefaultNodeModel {
 	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 		// TODO: generated method stub
+	}
+	
+	@Override
+	protected void performReset() {
+	}
+
+	@Override
+	protected void useCurrentValueAsDefault() {
+	}
+
+	
+	@Override
+    protected boolean generateImage() {
+        return false;
+    }
+	
+	
+	@Override
+	public JSGraphVizViewRepresentation createEmptyViewRepresentation() {
+		return new JSGraphVizViewRepresentation();
+	}
+
+	@Override
+	public JSGraphVizViewValue createEmptyViewValue() {
+		return new JSGraphVizViewValue();
+	}
+	
+	@Override
+	public boolean isHideInWizard() {
+		return false;
+	}
+
+	@Override
+	public void setHideInWizard(boolean hide) {
+	}
+
+	@Override
+	public ValidationError validateViewValue(JSGraphVizViewValue viewContent) {
+		return null;
+	}
+
+	@Override
+	public void saveCurrentValue(NodeSettingsWO content) {
+	}
+	
+	
+	@Override
+	public String getJavascriptObjectID() {
+		return "org.pm4knime.node.visualizations.jsgraphviz.component";
+	}
+
+
+	public PortObject[] getInternalPortObjects() {
+		return new PortObject[] {dfgMsdPO};
+	}
+
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		dfgMsdPO = (DfgMsdPortObject) portObjects[0];
 	}
 
 }

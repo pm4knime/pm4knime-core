@@ -68,9 +68,10 @@ public class DfgMsdPortObject extends AbstractDotPanelPortObject {
 		// TODO it has view which is
 		// we need to change the steps..
 		//JComponent viewPanel = DfgMsdVisualisationPlugin.fancy((DirectlyFollowsGraph) dfm);
-		JComponent viewPanel = getDotPanel();
-		viewPanel.setName("Directly Follows Model");
-		return new JComponent[] { viewPanel };
+//		JComponent viewPanel = getDotPanel();
+//		viewPanel.setName("Directly Follows Model");
+//		return new JComponent[] { viewPanel };
+		return new JComponent[] { };
 	}
 	
 	public DotPanel getDotPanel() {

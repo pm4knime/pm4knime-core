@@ -11,12 +11,18 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
+import org.processmining.plugins.graphviz.dot.Dot;
 
 /**
  * This is the model implementation of ProcessTreeReader.
@@ -24,7 +30,7 @@ import org.pm4knime.util.defaultnode.DefaultNodeModel;
  *
  * @author DKF
  */
-public class ProcessTreeReaderNodeModel extends DefaultNodeModel {
+public class ProcessTreeReaderNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 	
 	private static final NodeLogger logger = NodeLogger
             .getLogger(ProcessTreeReaderNodeModel.class);
@@ -32,33 +38,44 @@ public class ProcessTreeReaderNodeModel extends DefaultNodeModel {
 	private final SettingsModelString m_fileName = ProcessTreeReaderNodeDialog.createFileNameModel();
 	
 	ProcessTreePortObjectSpec m_spec = new ProcessTreePortObjectSpec();
+
+	protected ProcessTreePortObject m_ptPort;
     /**
      * Constructor for the node model.
      */
     protected ProcessTreeReaderNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
-        super(new PortType[] {}, new PortType[] {ProcessTreePortObject.TYPE});
+        super(new PortType[] {}, new PortType[] {ProcessTreePortObject.TYPE}, "Process Tree JS View");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws Exception {
-        // TODO: import process tree from file 
-    	logger.info("begin of reading of Petri net");
-    	ProcessTreePortObject m_ptPort = new ProcessTreePortObject();
-    	// this is something different, becauser here we have in?? but how it this type now?
-    	// m_ptPort.setSpec(m_spec);
-    	checkCanceled(exec);
-    	m_ptPort.loadFrom(m_spec.getFileName());
-    	checkCanceled(exec);
-    	logger.info("end of reading of Petri net");
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
         return new PortObject[]{m_ptPort};
-    } 
+    }
+	
+	@Override
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+		
+		logger.info("begin of reading of Process Tree");
+    	exec.checkCanceled();
+    	m_ptPort = new ProcessTreePortObject();
+    	m_ptPort.loadFrom(m_spec.getFileName());
+    	exec.checkCanceled();
+    	logger.info("end of reading of Process Tree");
+		
+		final String dotstr;
+		JSGraphVizViewRepresentation representation = getViewRepresentation();
 
+		synchronized (getLock()) {
+			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) m_ptPort;
+			Dot dot =  port_obj.getDotPanel().getDot();
+			dotstr = dot.toString();
+		}
+		representation.setDotstr(dotstr);
+
+	}
     
 
     /**
@@ -152,5 +169,68 @@ public class ProcessTreeReaderNodeModel extends DefaultNodeModel {
     	m_fileName.validateSettings(settings);
     }
     
+    @Override
+	protected void performReset() {
+	}
+
+	@Override
+	protected void useCurrentValueAsDefault() {
+	}
+
+	
+	@Override
+    protected boolean generateImage() {
+        return false;
+    }
+	
+	
+	@Override
+	public JSGraphVizViewRepresentation createEmptyViewRepresentation() {
+		return new JSGraphVizViewRepresentation();
+	}
+
+	@Override
+	public JSGraphVizViewValue createEmptyViewValue() {
+		return new JSGraphVizViewValue();
+	}
+	
+	@Override
+	public boolean isHideInWizard() {
+		return false;
+	}
+
+	@Override
+	public void setHideInWizard(boolean hide) {
+	}
+
+	@Override
+	public ValidationError validateViewValue(JSGraphVizViewValue viewContent) {
+		return null;
+	}
+
+	@Override
+	public void saveCurrentValue(NodeSettingsWO content) {
+	}
+	
+	
+	@Override
+	public String getJavascriptObjectID() {
+		return "org.pm4knime.node.visualizations.jsgraphviz.component";
+	}
+
+
+	@Override
+	public PortObject[] getInternalPortObjects() {
+		// TODO Auto-generated method stub
+		return new PortObject[] {};
+	}
+
+
+	@Override
+	public void setInternalPortObjects(PortObject[] portObjects) {
+		
+	}
+    
+
 }
 

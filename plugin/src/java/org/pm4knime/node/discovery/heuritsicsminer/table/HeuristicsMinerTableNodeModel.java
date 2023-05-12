@@ -68,7 +68,7 @@ public class HeuristicsMinerTableNodeModel extends DefaultTableMinerModel {
     
         // TODO: Specify the amount of input and output ports needed.
         super(new PortType[] { BufferedDataTable.TYPE }, 
-        		new PortType[] { PetriNetPortObject.TYPE });
+        		new PortType[] { PetriNetPortObject.TYPE }, "Petri Net JS View");
     }
 
     
@@ -78,7 +78,6 @@ public class HeuristicsMinerTableNodeModel extends DefaultTableMinerModel {
     	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(FlexibleHeuristicsMinerPlugin.class);
-    	checkCanceled(pluginContext, exec);
     	
     	TraceVariantRepresentation variants = new TraceVariantRepresentation(log, this.getTraceClassifier(), this.getEventClassifier());
     	
@@ -88,12 +87,10 @@ public class HeuristicsMinerTableNodeModel extends DefaultTableMinerModel {
 
     	hnet = fhm.mine();
     	
-    	checkCanceled(pluginContext, exec);
     	Object[] result = HeuristicsNetToPetriNetConverter.converter(pluginContext, hnet);
     	
     	AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1]);
     	
-    	checkCanceled(exec);
     	PetriNetPortObject pnPO = new PetriNetPortObject(anet);
     	
     	logger.info("End: Heuristics miner");

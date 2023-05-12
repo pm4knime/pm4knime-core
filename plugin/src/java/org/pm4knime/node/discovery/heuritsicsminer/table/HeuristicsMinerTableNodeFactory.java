@@ -8,7 +8,11 @@ import javax.swing.JPanel;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeModel;
 import org.pm4knime.node.discovery.ilpminer.Table.ILPMinerTableNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
 /**
  * This is an example implementation of the node factory of the
@@ -16,8 +20,7 @@ import org.pm4knime.node.discovery.ilpminer.Table.ILPMinerTableNodeModel;
  *
  * @author Kefang Ding
  */
-public class HeuristicsMinerTableNodeFactory 
-        extends NodeFactory<HeuristicsMinerTableNodeModel> {
+public class HeuristicsMinerTableNodeFactory extends NodeFactory<HeuristicsMinerTableNodeModel> implements WizardNodeFactoryExtension<HeuristicsMinerTableNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 	
 	HeuristicsMinerTableNodeModel node;
 

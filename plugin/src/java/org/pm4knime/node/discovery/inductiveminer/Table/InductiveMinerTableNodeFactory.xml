@@ -21,6 +21,7 @@ xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd"
       
     </fullDescription>
     
+    <interactiveView name="Process Tree"></interactiveView>
     <ports>
         <inPort index="0" name="Table">an event table</inPort>
         <outPort index="0" name="Process Tree">a process tree</outPort>

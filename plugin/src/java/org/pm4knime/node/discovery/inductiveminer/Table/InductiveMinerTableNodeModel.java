@@ -64,7 +64,7 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 				InductiveMinerNodeModel.CFGKEY_NOISE_THRESHOLD, 0.0, 0, 1.0);
 
 		protected InductiveMinerTableNodeModel() {
-			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { ProcessTreePortObject.TYPE });
+			super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { ProcessTreePortObject.TYPE }, "Process Tree JS View");
 		}
 
 		@Override
@@ -82,7 +82,6 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 			// Now, it is just fine
 			// the same effort to use it
 			logger.info("Begin: Inductive Miner");
-			checkCanceled(exec);
 			String activityClassifier = getEventClassifier();
 			IMLog imlog =  new BufferedTableIMLog(log, activityClassifier, getTraceClassifier());
 			System.out.println("End of Generating Log");
@@ -92,11 +91,6 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 			Instant start = Instant.now();
 			EfficientTree ptE = InductiveMinerPlugin.mineTree(imlog, param,  new Canceller() {
 				public boolean isCancelled() {
-					try {
-						checkCanceled(exec);
-					}catch (final CanceledExecutionException ce) {
-						return true;
-					}
 					return false;
 				}
 			});
@@ -106,7 +100,6 @@ public class InductiveMinerTableNodeModel extends DefaultTableMinerModel {
 			System.out.println("End of Inductive Miner");
 			ProcessTree tree = EfficientTree2processTree.convert(ptE);
 
-			checkCanceled(exec);
 			ProcessTreePortObject treeObj = new ProcessTreePortObject(tree);
 			logger.info("End:  Inductive Miner");
 			return  treeObj;

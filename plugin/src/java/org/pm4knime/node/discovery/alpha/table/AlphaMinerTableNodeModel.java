@@ -52,7 +52,7 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 	SettingsModelBoolean m_ignore_ll = new SettingsModelBoolean(AlphaMinerTableNodeModel.CFG_IGNORE_LL, false);
 	
 	protected AlphaMinerTableNodeModel() {
-		super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE });
+		super( new PortType[]{BufferedDataTable.TYPE } , new PortType[] { PetriNetPortObject.TYPE }, "Petri Net JS View");
 		
 		m_noiseTLF.setEnabled(false);
     	m_noiseTMF.setEnabled(false);
@@ -83,7 +83,6 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 		}
 		PluginContext context = PM4KNIMEGlobalContext.instance().getFutureResultAwarePluginContext(AlphaMinerPlugin.class);
 		
-		checkCanceled(context, exec);
 		TraceVariantRep variants = new TraceVariantRep(table, getTraceClassifier(), getEventClassifier());
 		Object[] result = AlphaAbstraction.apply(context, variants, getEventClassifier(), alphaParams);
 		
@@ -91,7 +90,6 @@ public class AlphaMinerTableNodeModel extends DefaultTableMinerModel {
 		Set<Marking> fmSet = PetriNetUtil.guessFinalMarking((Petrinet) result[0]); // new HashMap();
 		
 		AcceptingPetriNet anet = new AcceptingPetriNetImpl((Petrinet) result[0], (Marking) result[1], fmSet);
-		checkCanceled(exec);
 		PetriNetPortObject pnPO = new PetriNetPortObject(anet);
 		logger.info("End: Alpha Miner");
 		return pnPO;

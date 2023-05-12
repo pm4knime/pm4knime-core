@@ -46,6 +46,7 @@
         
     </fullDescription>
     
+    <interactiveView name="Petri Net"></interactiveView>
     <ports>
          <inPort index="0" name="Table">a table</inPort>
         <!-- possibly more input ports here-->

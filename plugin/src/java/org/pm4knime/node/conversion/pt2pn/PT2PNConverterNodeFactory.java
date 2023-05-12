@@ -3,6 +3,11 @@ package org.pm4knime.node.conversion.pt2pn;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.discovery.hybridminer.HybridMinerNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
 /**
  * This is an example implementation of the node factory of the
@@ -10,16 +15,18 @@ import org.knime.core.node.NodeView;
  *
  * @author Kefang Ding
  */
-public class PT2PNConverterNodeFactory 
-        extends NodeFactory<PT2PNConverterNodeModel> {
+public class PT2PNConverterNodeFactory extends NodeFactory<PT2PNConverterNodeModel> implements WizardNodeFactoryExtension<PT2PNConverterNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
-    /**
+    
+	PT2PNConverterNodeModel node;
+	
+	/**
      * {@inheritDoc}
      */
     @Override
     public PT2PNConverterNodeModel createNodeModel() {
-		// Create and return a new node model.
-        return new PT2PNConverterNodeModel();
+    	node = new PT2PNConverterNodeModel();
+		return node;
     }
 
     /**
@@ -46,8 +53,7 @@ public class PT2PNConverterNodeFactory
      */
     @Override
     public boolean hasDialog() {
-		// Indication whether the node has a dialog or not.
-        return false;
+		return false;
     }
 
     /**
@@ -55,7 +61,6 @@ public class PT2PNConverterNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
         return null;
     }
 

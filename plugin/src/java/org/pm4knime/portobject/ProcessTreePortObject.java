@@ -8,17 +8,14 @@ import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.AbstractPortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
-import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
@@ -38,10 +35,15 @@ public class ProcessTreePortObject extends AbstractDotPanelPortObject {
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(ProcessTreePortObject.class);
 	public static final PortType TYPE_OPTIONAL =
 			PortTypeRegistry.getInstance().getPortType(ProcessTreePortObject.class, true);
-	private ProcessTree tree;
+	
+	private static final String ZIP_ENTRY_NAME = "ProcessTreePortObject";
+	String FILE_NAME = "ProcessTreeObject.ptml";
+	
+	ProcessTree tree;
 	ProcessTreePortObjectSpec m_spec;
+	
 	public ProcessTreePortObject(ProcessTree t) {
-		tree = t;
+		this.tree = t;
 	}
 	
 	public ProcessTreePortObject() {
@@ -57,48 +59,48 @@ public class ProcessTreePortObject extends AbstractDotPanelPortObject {
 	
 	@Override
 	public String getSummary() {
-		// TODO I guess this is used to describe the object
 		return null;
+	}
+	
+	public boolean equals(Object o) {
+		return tree.equals(o);
 	}
 
 	@Override
 	public PortObjectSpec getSpec() {
-		// TODO Auto-generated method stub
 		if(m_spec!=null)
 			return m_spec;
-		
 		return new ProcessTreePortObjectSpec();
 	}
 	
 	
 	public void setSpec(PortObjectSpec spec) {
-		// TODO Auto-generated method stub
 		m_spec = (ProcessTreePortObjectSpec) spec;
 	}
 
 	@Override
 	public JComponent[] getViews() {
 		// TODO this is used to show the process tree
-		if(tree != null) {
-			
-			JPanel viewPanel;
-			try {
-				viewPanel = new DotPanel(GraphvizProcessTree.convert(tree));
-				viewPanel.setName("Generated process tree");
-				return new JComponent[] { viewPanel };
-			} catch (NotYetImplementedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
+//		if(tree != null) {
+//			
+//			JPanel viewPanel;
+//			try {
+//				viewPanel = new DotPanel(GraphvizProcessTree.convert(tree));
+//				viewPanel.setName("Generated process tree");
+//				return new JComponent[] { viewPanel };
+//			} catch (NotYetImplementedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//		}
 		
 		return new JComponent[] {};
 	}
 	
 	public DotPanel getDotPanel() {
 		
-	if(tree != null) {
+	    if(tree != null) {
 			
 			DotPanel navDot;
 			try {
@@ -177,13 +179,60 @@ public class ProcessTreePortObject extends AbstractDotPanelPortObject {
 	@Override
 	protected void save(PortObjectZipOutputStream out, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
-		
+		out.putNextEntry(new ZipEntry(FILE_NAME));
+		out.write(toText().getBytes());
 	}
 
 	@Override
 	protected void load(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
+		String entryName = in.getNextEntry().getName();
+		
+		if (!entryName.equals(FILE_NAME)) {
+            throw new IOException("Found unexpected zip entry "
+                    + entryName + "! Expected " + FILE_NAME);
+        }
+		try {
+			loadFromDefault((ProcessTreePortObjectSpec)spec, in);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
+	
+	public static class ProcessTreePortObjectSerializer extends AbstractPortObject.AbstractPortObjectSerializer<ProcessTreePortObject> {
+//		String FILE_NAME = "ProcessTreeObject.ptml";
+//		
+//		@Override
+//		public void savePortObject(ProcessTreePortObject portObject, PortObjectZipOutputStream out, ExecutionMonitor exec)
+//				throws IOException, CanceledExecutionException {
+//			// TODO save port object into one out
+//			out.putNextEntry(new ZipEntry(FILE_NAME));
+//			out.write(portObject.toText().getBytes());
+//		}
+//
+//		@Override
+//		public ProcessTreePortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
+//				throws IOException, CanceledExecutionException {
+//			// TODO load process tree from file
+//			String entryName = in.getNextEntry().getName();
+//			
+//			if (!entryName.equals(FILE_NAME)) {
+//	            throw new IOException("Found unexpected zip entry "
+//	                    + entryName + "! Expected " + FILE_NAME);
+//	        }
+//			ProcessTreePortObject portObj = null;
+//			try {// here we need to take care about the environment, we need to create a context, because we don't have one
+//	            portObj = new ProcessTreePortObject();
+//	            portObj.loadFromDefault((ProcessTreePortObjectSpec)spec, in);
+//	        } catch (Exception e) {
+//	            throw new IOException(e);
+//	        }
+//	        return portObj;
+//			
+//		}
+
+    }
 	
 }

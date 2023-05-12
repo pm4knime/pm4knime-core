@@ -17,17 +17,22 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
+import org.pm4knime.portobject.AbstractDotPanelPortObject;
 import org.pm4knime.portobject.CausalGraphPortObject;
 import org.pm4knime.portobject.CausalGraphPortObjectSpec;
 import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.pm4knime.portobject.HybridPetriNetPortObjectSpec;
 import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.connections.petrinets.behavioral.FinalMarkingConnection;
 import org.processmining.models.connections.petrinets.behavioral.InitialMarkingConnection;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.extendedhybridminer.algorithms.cg2hpn.CGToHybridPN;
 import org.processmining.extendedhybridminer.models.causalgraph.ExtendedCausalGraph;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
@@ -36,7 +41,7 @@ import org.processmining.extendedhybridminer.plugins.HybridPNMinerPlugin;
 import org.processmining.extendedhybridminer.plugins.HybridPNMinerSettings;
 
 
-public class HybridMinerNodeModel extends DefaultNodeModel implements PortObjectHolder {
+public class HybridMinerNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 	
 	private final NodeLogger logger = NodeLogger
             .getLogger(HybridMinerNodeModel.class);
@@ -56,23 +61,38 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 	public final SettingsModelString type_fitness = new SettingsModelString(FITNESS_TYPE, FITNESS_TYPES.get("global")); 
 	public final SettingsModelDoubleBounded t_fitness = new SettingsModelDoubleBounded(THRESHOLD_FITNESS, 0.8, 0, 1);
 	
-	private ExtendedHybridPetrinet pn;
-	protected CausalGraphPortObject cgPO = null;
+	protected PortObject hpnPO;
+	protected CausalGraphPortObject cgPO;
 
 	protected HybridMinerNodeModel() {
         super(new PortType[] { CausalGraphPortObject.TYPE }, 
-        		new PortType[] { HybridPetriNetPortObject.TYPE });
+        		new PortType[] { HybridPetriNetPortObject.TYPE }, "Hybrid Petri Net JS View");
     }
 	
 	
+	
 	@Override
-	protected PortObject[] execute(final PortObject[] inObjects,
-	            final ExecutionContext exec) throws Exception {
+    protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
+        final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{hpnPO};
+    }
+	
+	@Override
+	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+		
 		cgPO = (CausalGraphPortObject) inObjects[0];
-		checkCanceled(null, exec);
-		PortObject pmPO = mine(cgPO.getCG(), exec);
-		checkCanceled(null, exec);
-		return new PortObject[] { pmPO};
+		hpnPO = mine(cgPO.getCG(), exec);
+		
+		final String dotstr;
+		JSGraphVizViewRepresentation representation = getViewRepresentation();
+
+		synchronized (getLock()) {
+			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) hpnPO;
+			Dot dot =  port_obj.getDotPanel().getDot();
+			dotstr = dot.toString();
+		}
+		representation.setDotstr(dotstr);
+
 	}
 	
 	@Override
@@ -108,22 +128,15 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 		loadSpecificValidatedSettingsFrom(settings);
 	}
 
-	
-	public CausalGraphPortObject getCGPO() {
-    	return cgPO; 
-    }
-    
     
     protected PortObject mine(ExtendedCausalGraph cg, final ExecutionContext exec) throws Exception{
     	logger.info("Begin: Hybrid Petri Net Miner");
     	
     	PluginContext pluginContext = PM4KNIMEGlobalContext.instance()
 				.getFutureResultAwarePluginContext(HybridPNMinerPlugin.class);
-    	checkCanceled(pluginContext, exec);
     	HybridPNMinerSettings settings = getConfiguration();
     	ExtendedHybridPetrinet pn = CGToHybridPN.fuzzyCGToFuzzyPN(cg, settings);
         pn = addMarkings(pluginContext, pn);
-    	checkCanceled(pluginContext, exec);
     	HybridPetriNetPortObject pnPO = new HybridPetriNetPortObject(pn);
     	logger.info("End: Hybrid Petri Net miner");
     	return pnPO;
@@ -146,10 +159,6 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
         context.addConnection(new FinalMarkingConnection(pn, fm));
         return pn;
 	}
-
-	public ExtendedHybridPetrinet getPN() {
-    	return pn; 
-    }
     
     
     HybridPNMinerSettings getConfiguration() {
@@ -203,6 +212,54 @@ public class HybridMinerNodeModel extends DefaultNodeModel implements PortObject
 		type_fitness.loadSettingsFrom(settings); 
 	}
      
+	@Override
+	protected void performReset() {
+	}
+
+	@Override
+	protected void useCurrentValueAsDefault() {
+	}
+
+	
+	@Override
+    protected boolean generateImage() {
+        return false;
+    }
+	
+	
+	@Override
+	public JSGraphVizViewRepresentation createEmptyViewRepresentation() {
+		return new JSGraphVizViewRepresentation();
+	}
+
+	@Override
+	public JSGraphVizViewValue createEmptyViewValue() {
+		return new JSGraphVizViewValue();
+	}
+	
+	@Override
+	public boolean isHideInWizard() {
+		return false;
+	}
+
+	@Override
+	public void setHideInWizard(boolean hide) {
+	}
+
+	@Override
+	public ValidationError validateViewValue(JSGraphVizViewValue viewContent) {
+		return null;
+	}
+
+	@Override
+	public void saveCurrentValue(NodeSettingsWO content) {
+	}
+	
+	
+	@Override
+	public String getJavascriptObjectID() {
+		return "org.pm4knime.node.visualizations.jsgraphviz.component";
+	}
    
 }
 

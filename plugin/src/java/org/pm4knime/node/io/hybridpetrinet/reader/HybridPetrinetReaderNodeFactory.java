@@ -3,6 +3,9 @@ package org.pm4knime.node.io.hybridpetrinet.reader;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
+import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
 /**
  * <code>NodeFactory</code> for the "PetrinetReader" Node. read Petri net from
@@ -10,7 +13,7 @@ import org.knime.core.node.NodeView;
  *
  * @author KFDing
  */
-public class HybridPetrinetReaderNodeFactory extends NodeFactory<HybridPetrinetReaderNodeModel> {
+public class HybridPetrinetReaderNodeFactory extends NodeFactory<HybridPetrinetReaderNodeModel> implements WizardNodeFactoryExtension<HybridPetrinetReaderNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	/**
 	 * {@inheritDoc}

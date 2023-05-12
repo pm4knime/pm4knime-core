@@ -41,6 +41,7 @@
 
 	</fullDescription>
 
+	<interactiveView name="Petri Net"></interactiveView>
 	<ports>
 		<inPort index="0" name="Table">a table</inPort>
 		<outPort index="0" name="Petri Net">a Petri net</outPort>

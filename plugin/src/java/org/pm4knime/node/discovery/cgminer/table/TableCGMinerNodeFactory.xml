@@ -32,6 +32,8 @@
 		<option name="Causality weight threshold">High values mean more emphasis on the split and join behavior of activities; low values mean more emphasis on the detection of concurrency and loops.</option>
 
 	</fullDescription>
+	
+	<interactiveView name="Causal Graph"></interactiveView>
 
 	<ports>
 		<inPort index="0" name="Table">an event table</inPort>

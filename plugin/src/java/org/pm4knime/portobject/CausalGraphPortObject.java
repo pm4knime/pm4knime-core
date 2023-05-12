@@ -20,7 +20,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.pm4knime.node.discovery.cgminer.table.TraceVariantsTable;
 import org.pm4knime.node.visualizations.jsgraphviz.util.GraphvizCausalGraph;
-import org.pm4knime.util.connectors.prom.PM4KNIMEGlobalContext;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariant;
 import org.processmining.extendedhybridminer.algorithms.preprocessing.TraceVariantsLog;
 import org.processmining.extendedhybridminer.models.causalgraph.ExtendedCausalGraph;
@@ -29,9 +28,7 @@ import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedGr
 import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedLongDepGraphEdge;
 import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedSureGraphEdge;
 import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedUncertainGraphEdge;
-import org.processmining.extendedhybridminer.models.causalgraph.gui.HybridCausalGraphVisualizer;
 import org.processmining.extendedhybridminer.plugins.HybridCGMinerSettings;
-import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
 
 import cern.colt.matrix.DoubleFactory2D;
@@ -88,21 +85,35 @@ public class CausalGraphPortObject extends AbstractDotPanelPortObject {
 	
 	@Override
 	public JComponent[] getViews() {
-		if (cg != null) {
-			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
-			JComponent view = HybridCausalGraphVisualizer.visualize(context, cg);
-			view.remove(14);
-			view.remove(13);
-			view.remove(10);
-			view.remove(9);
-			view.remove(8);
-			view.remove(7);
-			view.validate();
-			view.repaint();
-			view.setName("Causal Graph");
-			return new JComponent[] {view};
-		}	
+//		if (cg != null) {
+//			PluginContext context = PM4KNIMEGlobalContext.instance().getPluginContext();
+//			JComponent view = HybridCausalGraphVisualizer.visualize(context, cg);
+//			view.remove(14);
+//			view.remove(13);
+//			view.remove(10);
+//			view.remove(9);
+//			view.remove(8);
+//			view.remove(7);
+//			view.validate();
+//			view.repaint();
+//			view.setName("Causal Graph");
+//			return new JComponent[] {view};
+//		}	
 		return new JComponent[] {};
+	}
+	
+    public DotPanel getDotPanel() {
+		
+		if(cg != null) {
+			
+			DotPanel navDot;
+			navDot = new DotPanel(GraphvizCausalGraph.convert(cg));
+			navDot.setName("Generated Causal Graph");
+			return navDot;
+			
+		}
+		return null;
+		
 	}
 
 	@Override
@@ -359,19 +370,7 @@ public class CausalGraphPortObject extends AbstractDotPanelPortObject {
 
 	}
 
-public DotPanel getDotPanel() {
-		
-		if(cg != null) {
-			
-			DotPanel navDot;
-			navDot = new DotPanel(GraphvizCausalGraph.convert(cg));
-			navDot.setName("Generated Causal Graph");
-			return navDot;
-			
-		}
-		return null;
-		
-	}
+
 
 
 }

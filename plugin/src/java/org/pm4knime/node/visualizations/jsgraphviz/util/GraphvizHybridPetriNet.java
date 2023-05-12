@@ -61,10 +61,10 @@ public class GraphvizHybridPetriNet {
 			boolean inFinalMarking = false;
 			Marking initialMarking = petrinet.initialMarking;
 			Collection<Marking> finalMarkings = petrinet.finalMarkings;
-			Marking fMarking = (Marking) finalMarkings.toArray()[0];
-			if (fMarking.size() == 0) {
-				fMarking.add(petrinet.getPlace("end"));
-			}
+//			Marking fMarking = (Marking) finalMarkings.toArray()[0];
+//			if (fMarking.size() == 0) {
+//				fMarking.add(petrinet.getPlace("end"));
+//			}
 			//Marking finalMarking = new Marking();
 			
 			if (finalMarkings != null) {

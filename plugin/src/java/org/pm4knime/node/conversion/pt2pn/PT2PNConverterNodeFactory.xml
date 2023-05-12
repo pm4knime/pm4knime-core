@@ -20,6 +20,8 @@
         </intro>
     </fullDescription>
     
+    <interactiveView name="Petri net"></interactiveView>
+    
     <ports>
         <inPort index="0" name="Process Tree">a process tree</inPort>
         <!-- possibly more input ports here-->
