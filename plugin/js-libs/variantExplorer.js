@@ -21,10 +21,12 @@ varExplorer = (function() {
     };
 
     view.getSVG = () => {
-                var img = new Image();
-                img.src = _dataUrl;
-                img.onload = function() {
-                    var canvas = document.createElement("canvas");
+   
+        
+       var img = new Image();
+       img.src = _dataUrl;
+       img.onload = function() {
+       var canvas = document.createElement("canvas");
                     var originalWidth = img.width;
                     var originalHeight = img.height;
                     var maxWidth = 10000;
@@ -32,31 +34,27 @@ varExplorer = (function() {
                     var widthScaleFactor = maxWidth / originalWidth;
                     var heightScaleFactor = maxHeight / originalHeight;
                     var scaleFactor = Math.min(widthScaleFactor, heightScaleFactor, 10);
-                    var scaleFactor = Math.max(scaleFactor, 5);
-                    console.log("scaleFactor");
-                    console.log(scaleFactor);
                     canvas.width = originalWidth * scaleFactor;
                     canvas.height = originalHeight * scaleFactor;
-                    console.log("canvas.width");
-                    console.log(canvas.width);
-                    console.log("canvas.height");
-                    console.log(canvas.height);
                     var ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
                     svg.setAttribute("width", originalWidth);
                     svg.setAttribute("height", originalHeight);
                     var image = document.createElementNS("http://www.w3.org/2000/svg", "image");
-                    var actualLink = exportA.getAttribute('href');
-
                     image.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", canvas.toDataURL("image/png"));
                     image.setAttribute("width", originalWidth);
                     image.setAttribute("height", originalHeight);
-                    svg.appendChild(image);
-                    _svg = (new XMLSerializer()).serializeToString(svg);
-                    console.log('print stringSVG ', _svg);
-                                };
+        svg.appendChild(image);
+        _svg = (new XMLSerializer()).serializeToString(svg);     
+        console.log('print stringSVG ', _svg);
+                                
+        };
+                                
+                                
+        
+                                
         return _svg;
 
     };
