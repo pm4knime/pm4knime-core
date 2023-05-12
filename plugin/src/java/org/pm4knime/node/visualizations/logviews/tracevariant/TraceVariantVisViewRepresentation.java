@@ -38,10 +38,13 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 	@Override
 	public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 		try {
+//			System.out.println("LOADING");
 			data = settings.getString(DATA).split(delimiter);
+//			System.out.println("DATA LOADED:");
+//			System.out.println(data.toString());
 			loadVariantsFromNodeSettings(settings);
 	    } catch (Exception ex) {
-	        // do nothing
+	        System.out.println(ex.toString());
 	    }  
 	}
 
@@ -109,18 +112,22 @@ public class TraceVariantVisViewRepresentation extends JSONViewContent {
 		int numberOfTraces = settings.getInt("numberOfTraces");
 		
 		HashSet<String> activities = new HashSet<String>(Arrays.asList(settings.getString("SetOfActivities").split(delimiter)));
-		
+//		System.out.println("Activities LOADED:");
+//		System.out.println(activities.toString());
 		int numberOfVariants = settings.getInt("numberOfVariants");
 		for (int i = 0; i < numberOfVariants; i++){
-			System.out.println(settings.getString("Trace"+i));
-			ArrayList<String> trace = (ArrayList<String>) Arrays.asList(settings.getString("Trace"+i).split(delimiter));
-			System.out.println(trace.toString());
+//			System.out.println(settings.getString("Trace"+i));
+			ArrayList<String> trace = new ArrayList<>(Arrays.asList(settings.getString("Trace" + i).split(delimiter)));
+//            System.out.println(trace.toString());
 			TraceVariant variant = new TraceVariant(trace, settings.getInt("Freq"+i));
 			tracevariants.add(variant);
 		}	
+//		System.out.println("Activity Sequences LOADED:");
+//		System.out.println(tracevariants.toString());
 		
 		this.variants = new TraceVariantRepresentation(numberOfTraces, activities, tracevariants);
-
+//		System.out.println("TVR LOADED:");
+//		System.out.println(this.variants.toString());
 		
 	}
 }
