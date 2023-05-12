@@ -16,7 +16,6 @@
         console.log(representation);
         vis = visu(representation.dotstr);
         
-                  
     };
 
     view.getComponentValue = () => {
@@ -26,6 +25,7 @@
     };
     
     view.getSVG = () => {
+
         knimeService.inlineSvgStyles(_svg);
         return (new XMLSerializer()).serializeToString(_svg);;
     };
@@ -35,8 +35,7 @@
       s.setAttribute( 'src', src );
       document.body.appendChild( s );
     }
-    
-
+  
     function visu( src ) {
 
         //addScript( '/Users/Ralf/Documents/Git/knime/pm4knime-core/pm4knime-core/plugin/js-lib/viz/full.render.js')
@@ -50,6 +49,9 @@
           .then(function(element) { 
                
            _svg = element;
+           console.log("print svg");
+           console.log((new XMLSerializer()).serializeToString(_svg).slice(0,500));
+           console.log((new XMLSerializer()).serializeToString(_svg).slice(-500));
            
            var exportA = document.createElement('a');
            exportA.innerHTML = `<button type="button">Export</button>`;

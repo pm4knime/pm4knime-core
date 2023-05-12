@@ -4,7 +4,7 @@
     <booleanAttribute key="askclear" value="false"/>
     <booleanAttribute key="automaticAdd" value="true"/>
     <booleanAttribute key="automaticValidate" value="true"/>
-    <stringAttribute key="bootstrap" value=""/>
+    <stringAttribute key="bootstrap" value="true"/>
     <stringAttribute key="checked" value="[NONE]"/>
     <booleanAttribute key="clearConfig" value="false"/>
     <booleanAttribute key="clearws" value="false"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="" type="Source" deprecated="false"
+<knimeNode icon="trace.png" type="Source" deprecated="false"
 	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
 	<name>Trace Variant Explorer</name>
@@ -8,12 +8,19 @@
 
 	<fullDescription>
 		<intro>
+			This node implements the trace variant explorer. The trace variant explorer represents an event log as a multi-set of unique activity sequences (called trace variants).
 		</intro>
+        <option name="Trace classifer">The column to be used as a trace classifier.</option>
+		<option name="Event classifer">The column to be used as an event classifier.</option>
+		<option name="Create image at outport">If this box is checked, an SVG image of the visualization will be created at the outport.</option>
+
 	</fullDescription>
+
 	
 	<interactiveView name="Trace Variant Explorer"></interactiveView>
 
 	<ports>
 		<inPort index="0" name="Table">an event table</inPort>
+		<outPort name="Image" index="0">an SVG image</outPort>
 	</ports>
 </knimeNode>

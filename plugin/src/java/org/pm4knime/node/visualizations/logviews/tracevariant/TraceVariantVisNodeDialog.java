@@ -1,44 +1,66 @@
 package org.pm4knime.node.visualizations.logviews.tracevariant;
 
+
 import java.util.Arrays;
 
+import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
+import org.knime.core.node.defaultnodesettings.DialogComponentColumnNameSelection;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
+import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.util.ColumnFilter;
 import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 
 
 public class TraceVariantVisNodeDialog extends DefaultNodeSettingsPane {
 	
-	public static final String DEFAULT_TRACE_CLASS = "#Trace Attribute#concept:name"; //"case:concept:name"
-	public static final String DEFAULT_EVENT_CLASS = "#Event Attribute#concept:name"; //"concept:name"
+	public static final String[] DEFAULT_TRACE_CLASSES = new String [] {"#Trace Attribute#concept:name", "case:concept:name", "case"};
+	public static final String[] DEFAULT_EVENT_CLASSES = new String [] {"#Event Attribute#concept:name", "concept:name", "activity"};
 	
 	protected TraceVariantVisNodeModel node;
-	protected SettingsModelString e_classifier ;
-	protected DialogComponentStringSelection event_classifierComp ;
-	protected SettingsModelString t_classifier ;
-	protected DialogComponentStringSelection trace_classifierComp;	
+	protected DialogComponentColumnNameSelection event_classifierComp ;
+	protected DialogComponentColumnNameSelection trace_classifierComp;	
+	protected DialogComponentBoolean m_generateImageCheckBox;
+	protected SettingsModelString t_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, null);
+	protected SettingsModelString e_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, null);
+	protected SettingsModelBoolean create_image = new SettingsModelBoolean("Create image at outport", false);
 	
 	public TraceVariantVisNodeDialog(TraceVariantVisNodeModel n) {
 		
 		node = n;
-		t_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, "");
-		e_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, "");
-		String[] classifierSet = new String[] {""};
 		
-		trace_classifierComp = new DialogComponentStringSelection(t_classifier,
-				"Trace Classifier", classifierSet);
+//		String[] classifierSet = new String[] {};
+		final ColumnFilter filter = new ColumnFilter() {
+            @Override
+            public boolean includeColumn(final DataColumnSpec colSpec) {
+//                return VariableAndDataCellUtil.isTypeCompatible(colSpec.getType());
+            	  return true;
+            }
+
+            @Override
+            public String allFilteredMsg() {
+                return "No columns compatible";
+//                    + Arrays.stream(VariableAndDataCellUtil.getSupportedVariableTypes())
+//                        .map(t -> t.getIdentifier().toLowerCase()).collect(Collectors.joining(", "))
+//                    + ".";
+            }
+        };
+		trace_classifierComp = new DialogComponentColumnNameSelection(t_classifier,
+				"Trace Classifier", 0, filter);
 	    addDialogComponent(trace_classifierComp);
 		
-		event_classifierComp = new DialogComponentStringSelection(e_classifier,
-				"Event Classifier", classifierSet);
+		event_classifierComp = new DialogComponentColumnNameSelection(e_classifier,
+				"Event Classifier", 0, filter);
 	    addDialogComponent(event_classifierComp);
+	    m_generateImageCheckBox = new DialogComponentBoolean(create_image, "Create image at outport");
+	    addDialogComponent(m_generateImageCheckBox);
 	}
 
 	
@@ -59,10 +81,11 @@ public class TraceVariantVisNodeDialog extends DefaultNodeSettingsPane {
 	        }
 			String tClassifier = getDefaultTraceClassifier(currentClasses, this.node.t_classifier);
 			String eClassifier = getDefaultEventClassifier(currentClasses, this.node.e_classifier);
+			t_classifier.setStringValue(tClassifier);
+			e_classifier.setStringValue(eClassifier);
 			this.node.setTraceClassifier(tClassifier);
 			this.node.setEventClassifier(eClassifier);
-			trace_classifierComp.replaceListItems(Arrays.asList(currentClasses), tClassifier);
-			event_classifierComp.replaceListItems(Arrays.asList(currentClasses), eClassifier);
+			this.create_image.setBooleanValue(this.node.generate_image);
 		}	
     }
 
@@ -73,8 +96,8 @@ public class TraceVariantVisNodeDialog extends DefaultNodeSettingsPane {
 			if (s.equals(oldValue)) {
 				return oldValue;
 			}
-			if (s.equals(DEFAULT_TRACE_CLASS)) {
-				res = DEFAULT_TRACE_CLASS;
+			if (Arrays.asList(DEFAULT_TRACE_CLASSES).contains(s)) {
+				res = s;
 			}
 		}
 		return res;
@@ -92,8 +115,8 @@ public class TraceVariantVisNodeDialog extends DefaultNodeSettingsPane {
     		if (s.equals(oldValue)) {
 				return oldValue;
 			}
-			if (s.equals(DEFAULT_EVENT_CLASS)) {
-				res = DEFAULT_EVENT_CLASS;
+			if (Arrays.asList(DEFAULT_EVENT_CLASSES).contains(s)) {
+				res = s;
 			}
 		}   	
     	return res;
@@ -105,6 +128,7 @@ public class TraceVariantVisNodeDialog extends DefaultNodeSettingsPane {
 	            throws InvalidSettingsException {
 	    this.node.t_classifier = this.t_classifier.getStringValue();
 		this.node.e_classifier = this.e_classifier.getStringValue();
+		this.node.generate_image = this.create_image.getBooleanValue();
 		this.node.saveSettingsTo(settings);	    
 	}
 }

@@ -1,7 +1,5 @@
 package org.pm4knime.util.defaultnode;
 
-import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XLog;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -12,9 +10,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.pm4knime.portobject.XLogPortObject;
-import org.pm4knime.portobject.XLogPortObjectSpec;
-import org.pm4knime.util.XLogUtil;
 
 public abstract class DefaultTableNodeModel extends DefaultNodeModel {
 	
@@ -31,9 +26,9 @@ public abstract class DefaultTableNodeModel extends DefaultNodeModel {
 	// set the classifier here , what if there is no explicit classifier there?? What to do then??
 	// we need to use the default ones!! Let us check it and fill it later??
 
-	protected SettingsModelString m_variantCase =  new SettingsModelString(CFG_KEY_COLUMN_CASE, "#Trace Attribute#concept:name");
-	protected SettingsModelString m_variantTime =  new SettingsModelString(CFG_KEY_COLUMN_TIME, "#Event Attribute#time:timestamp");
-	protected SettingsModelString m_variantActivity =  new SettingsModelString(CFG_KEY_COLUMN_ACTIVITY, "#Event Attribute#concept:name");
+	protected SettingsModelString m_variantCase =  new SettingsModelString(CFG_KEY_COLUMN_CASE, "");
+	protected SettingsModelString m_variantTime =  new SettingsModelString(CFG_KEY_COLUMN_TIME, "");
+	protected SettingsModelString m_variantActivity =  new SettingsModelString(CFG_KEY_COLUMN_ACTIVITY, "");
 	// we need a list to store the classifierList for each node. Not as static attributes there
 	SettingsModelStringArray classifierSet = new SettingsModelStringArray(CFG_KEY_COLUMN_SET, new String[] {""}) ;
 	
@@ -52,11 +47,11 @@ public abstract class DefaultTableNodeModel extends DefaultNodeModel {
 		// why m_classifier is empty?? Because NodeDialog is not called without opening the configuration
 		// to change it, we force it to configure the even log here
 		if(m_variantCase.getStringValue().isEmpty())
-			throw new InvalidSettingsException("Case is not set");
+			throw new InvalidSettingsException("Case column is not set!");
 		if(m_variantTime.getStringValue().isEmpty())
-			throw new InvalidSettingsException("Time is not set");
+			throw new InvalidSettingsException("Time column is not set");
 		if(m_variantActivity.getStringValue().isEmpty())
-			throw new InvalidSettingsException("Activity is not set");
+			throw new InvalidSettingsException("Activity column is not set");
 		
 		
 		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];

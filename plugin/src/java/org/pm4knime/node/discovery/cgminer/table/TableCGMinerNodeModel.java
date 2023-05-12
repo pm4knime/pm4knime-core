@@ -131,14 +131,7 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
 	}
      
 	
-	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		if (!inSpecs[0].getClass().equals(DataTableSpec.class))
-			throw new InvalidSettingsException("Input is not a valid Table Log!");	
-		DataTableSpec logSpec = (DataTableSpec) inSpecs[0];
-		return configureOutSpec(logSpec);
-	}
-	
+
 	@Override
 	protected void validateSpecificSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 	}

@@ -24,7 +24,9 @@
 <unit id="org.knime.features.xml.feature.group" version="0.0.0"/>
 <unit id="org.knime.targetPlatform.feature.group" version="0.0.0"/>
 <unit id="org.knime.features.ext.svg.feature.group" version="0.0.0"/>
+<unit id="org.knime.features.python3.nodes.feature.group" version="0.0.0"/>
 <repository location="https://update.knime.com/analytics-platform/latest/"/>
+	<unit id="org.knime.features.js.views.labs.feature.group" version="4.7.0.v202207221134"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
