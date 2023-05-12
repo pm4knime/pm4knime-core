@@ -131,9 +131,9 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-//		settings.addString(KEY_TRACE_CLASSIFIER, t_classifier);
-//		settings.addString(KEY_EVENT_CLASSIFIER, e_classifier);
-//		settings.addBoolean("generate_image", generate_image);
+		settings.addString(KEY_TRACE_CLASSIFIER, t_classifier);
+		settings.addString(KEY_EVENT_CLASSIFIER, e_classifier);
+		settings.addBoolean("generate_image", generate_image);
 	}
 
 	@Override
@@ -142,9 +142,9 @@ public class TraceVariantVisNodeModel extends AbstractSVGWizardNodeModel<TraceVa
 
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-//		t_classifier = settings.getString(KEY_TRACE_CLASSIFIER);
-//		e_classifier = settings.getString(KEY_EVENT_CLASSIFIER);
-//		generate_image = settings.getBoolean("generate_image", false);
+		t_classifier = settings.getString(KEY_TRACE_CLASSIFIER);
+		e_classifier = settings.getString(KEY_EVENT_CLASSIFIER);
+		generate_image = settings.getBoolean("generate_image", false);
 	}
 
 	public PortObject[] getInternalPortObjects() {

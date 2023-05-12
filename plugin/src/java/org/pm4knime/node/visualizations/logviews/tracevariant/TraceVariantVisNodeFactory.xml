@@ -8,8 +8,14 @@
 
 	<fullDescription>
 		<intro>
+			This node implements the trace variant explorer. The trace variant explorer represents an event log as a multi-set of unique activity sequences (called trace variants).
 		</intro>
+        <option name="Trace classifer">The column to be used as a trace classifier.</option>
+		<option name="Event classifer">The column to be used as an event classifier.</option>
+		<option name="Create image at outport">If this box is checked, an SVG image of the visualization will be created at the outport.</option>
+
 	</fullDescription>
+
 	
 	<interactiveView name="Trace Variant Explorer"></interactiveView>
 
