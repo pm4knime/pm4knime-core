@@ -1,25 +1,18 @@
-package org.pm4knime.node.conversion.log2table;
+package org.pm4knime.node.conversion.pn2table;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
-/**
- * This is an example implementation of the node factory of the
- * "Xlog2TableConverter" node.
- *
- * @author Kefang
- */
-public class XLog2TableConverterNodeFactory 
-        extends NodeFactory<XLog2TableConverterNodeModel> {
+public class PetriNet2TableConverterNodeFactory extends NodeFactory<PetriNet2TableConverterNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public XLog2TableConverterNodeModel createNodeModel() {
+    public PetriNet2TableConverterNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new XLog2TableConverterNodeModel();
+        return new PetriNet2TableConverterNodeModel();
     }
 
     /**
@@ -35,8 +28,8 @@ public class XLog2TableConverterNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<XLog2TableConverterNodeModel> createNodeView(final int viewIndex,
-            final XLog2TableConverterNodeModel nodeModel) {
+    public NodeView<PetriNet2TableConverterNodeModel> createNodeView(final int viewIndex,
+            final PetriNet2TableConverterNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
 		return null;
     }
@@ -47,7 +40,7 @@ public class XLog2TableConverterNodeFactory
     @Override
     public boolean hasDialog() {
 		// Indication whether the node has a dialog or not.
-        return true;
+        return false;
     }
     //set this false
 
@@ -57,7 +50,7 @@ public class XLog2TableConverterNodeFactory
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new XLog2TableConverterNodeDialog();
+        return null;
     }
     //set this null
 

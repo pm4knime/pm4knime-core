@@ -75,6 +75,7 @@ public class XLog2TableConverterNodeModel extends NodeModel {
     }
 
     /**
+     * 
      * {@inheritDoc}
      */
     @Override
