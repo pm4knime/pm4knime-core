@@ -49,7 +49,6 @@ public class XLog2TableConverterNodeFactory
 		// Indication whether the node has a dialog or not.
         return true;
     }
-    //set this false
 
     /**
      * {@inheritDoc}
@@ -59,7 +58,6 @@ public class XLog2TableConverterNodeFactory
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
         return new XLog2TableConverterNodeDialog();
     }
-    //set this null
 
 }
 
