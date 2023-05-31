@@ -6,7 +6,6 @@ import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
 
-import org.knime.core.data.DataType;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
@@ -19,8 +18,6 @@ public class PetriNetPortObjectSpec implements PortObjectSpec   {
 	
 	private static final String ZIP_ENTRY_NAME = "PetriNetPortObjectSpec";
 	String fileName = "PetrinetSpec.txt";
-	
-	private DataType m_type;
 	
 	public PetriNetPortObjectSpec() {}
 
@@ -49,16 +46,10 @@ public class PetriNetPortObjectSpec implements PortObjectSpec   {
 			}
 			
 			return new PetriNetPortObjectSpec();
-			
 		}
 		
 	}
 	
-	/*
-	public DataType getDataType() {
-        return m_type;
-    }
-	*/
 	public String getFileName() {
 		// TODO Auto-generated method stub
 		return fileName;

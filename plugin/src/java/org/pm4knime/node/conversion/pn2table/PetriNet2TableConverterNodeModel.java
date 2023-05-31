@@ -84,12 +84,11 @@ public class PetriNet2TableConverterNodeModel extends NodeModel {
 	
 	private DataTableSpec createSpec() {
 		
-		
 		List<String> attrNames = new ArrayList();
 		List<DataType> attrTypes = new ArrayList();
 		
 		attrNames.add("Petri Net(serialized)");
-		
+	
 		attrTypes.add(StringCell.TYPE);
 		
 		DataTableSpec outSpec = new DataTableSpec(CFG_TABLE_NAME, 
@@ -113,7 +112,6 @@ public class PetriNet2TableConverterNodeModel extends NodeModel {
 //    		throw new InvalidSettingsException("Log Spec Object is Empty. Probably because the reader node got reset");
 //    	}
    	
-
     	m_inSpec = spec;
     	
         return new PortObjectSpec[]{null};
