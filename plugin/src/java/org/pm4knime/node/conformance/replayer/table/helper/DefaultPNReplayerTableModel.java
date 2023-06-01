@@ -2,6 +2,7 @@ package org.pm4knime.node.conformance.replayer.table.helper;
 
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
 import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -184,8 +185,8 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
 			throw new InvalidSettingsException("Time attribute is not set!");
 		
 		DataTableSpec spec = (DataTableSpec) inSpecs[INPORT_LOG];
-		if(!spec.getColumnSpec(timeClass).getType().equals(ZonedDateTimeCellFactory.TYPE))
-    		throw new InvalidSettingsException("The time stamp doesn't have the required format in ZonedDateTime!");
+		if(!spec.getColumnSpec(timeClass).getType().equals(ZonedDateTimeCellFactory.TYPE) && !spec.getColumnSpec(timeClass).getType().equals(LocalDateTimeCellFactory.TYPE))
+    		throw new InvalidSettingsException("The time stamp doesn't have the required format in LocalDateTime or ZonedDateTime!");
 		
 		m_rSpec = new RepResultPortObjectSpecTable();
 		m_rSpec.setMParameter(m_parameter);

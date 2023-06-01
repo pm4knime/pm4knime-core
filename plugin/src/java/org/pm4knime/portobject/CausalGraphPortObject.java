@@ -105,7 +105,6 @@ public class CausalGraphPortObject extends AbstractDotPanelPortObject {
     public DotPanel getDotPanel() {
 		
 		if(cg != null) {
-			
 			DotPanel navDot;
 			navDot = new DotPanel(GraphvizCausalGraph.convert(cg));
 			navDot.setName("Generated Causal Graph");
