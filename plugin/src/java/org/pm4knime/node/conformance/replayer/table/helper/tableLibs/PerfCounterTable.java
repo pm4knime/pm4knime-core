@@ -11,7 +11,10 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,6 +26,8 @@ import java.util.Map;
 
 import nl.tue.astar.util.ShortShortMultiset;
 
+import org.knime.core.data.time.localdatetime.LocalDateTimeCellFactory;
+import org.knime.core.data.time.zoneddatetime.ZonedDateTimeCellFactory;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
@@ -514,15 +519,14 @@ public class PerfCounterTable {
 	 * @return
 	 */
 	protected long extractTimestamp(String timestamp) {
-//		if (bindedClass.equals(ZonedDateTimeCellFactory.class)) {
-	//		return ZonedDateTimeCellFactory (String)
-		//} else if (bindedClass.equals(LocalDateTimeCellFactory.class)) {
-//			return ((XAttributeDiscrete) currEvent.getAttributes().get(timeAtt)).getValue();
-//		} else if (bindedClass.equals(Double.class)) {
+		try {
+			return ZonedDateTime.parse(timestamp).toInstant().toEpochMilli();
+		} catch (DateTimeParseException e) {
+			return LocalDateTime.parse(timestamp).toInstant(ZoneOffset.UTC).toEpochMilli();
+		} 
+//			else if (bindedClass.equals(Double.class)) {
 //			return (long) ((XAttributeContinuous) currEvent.getAttributes().get(timeAtt)).getValue();
 //		}
-		ZonedDateTime zonedDateTime = ZonedDateTime.parse(timestamp);
-		return zonedDateTime.toInstant().toEpochMilli();
 		//return Timestamp.valueOf(timestamp).getTime();//con(currEvent)).getValue().getTime();
 
 		//throw new IllegalArgumentException("Only date, double, and integer datatype are supported");
