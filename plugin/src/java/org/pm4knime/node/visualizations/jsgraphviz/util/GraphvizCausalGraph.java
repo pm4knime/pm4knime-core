@@ -1,7 +1,11 @@
 package org.pm4knime.node.visualizations.jsgraphviz.util;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import org.processmining.extendedhybridminer.models.causalgraph.ExtendedCausalGraph;
 import org.processmining.extendedhybridminer.models.causalgraph.HybridDirectedGraphEdge;
@@ -42,7 +46,9 @@ public class GraphvizCausalGraph {
 		
 
 		//add transitions
-		for (HybridDirectedGraphNode t : cg.getNodes()) {
+		List<HybridDirectedGraphNode> sortedNodes = new ArrayList<>(cg.getNodes());
+		Collections.sort(sortedNodes, Comparator.comparing(HybridDirectedGraphNode::getLabel));
+		for (HybridDirectedGraphNode t : sortedNodes) {
 			DotNode transition;
 			transition = new LocalDotTransition(t.getLabel());
 			dot.addNode(transition);
