@@ -58,6 +58,7 @@
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pn2table.PetriNet2TableConverterNodeFactory" />
+		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2pn.Table2PetriNetConverterNodeFactory" />
 		
 		<!-- nodes in table-based discovery-->
 		<node category-path="/community/processmining/discovery/table" factory-class="org.pm4knime.node.discovery.heuritsicsminer.table.HeuristicsMinerTableNodeFactory" />
@@ -205,10 +206,6 @@
     
     
     </extension>
-                    	
-    
-    
-    
     
     <extension point="org.knime.js.core.javascriptComponents">
                                                 

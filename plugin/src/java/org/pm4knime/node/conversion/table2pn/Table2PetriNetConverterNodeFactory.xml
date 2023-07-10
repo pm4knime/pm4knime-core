@@ -3,14 +3,14 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-	<name>Petri Net to Table</name>
+	<name>Table to Petri Net</name>
 
 	<shortDescription>
-		Convert a Petri net into a KNIME Data Table
+		Convert a KNIME Data Table into a Petri net
 	</shortDescription>
 
 	<fullDescription>
-		<intro>This node converts a Petri net into a KNIME data table.
+		<intro>This node converts a KNIME Data Table into a Petri net.
 		</intro>
 		<!-- if we use the attributes, it means we need to have the log spec in 
 			advance and serialization for it. I think I have done this, right?? Let me 
@@ -18,9 +18,9 @@
 	</fullDescription>
 
 	<ports>
-		<inPort index="0" name="Petri Net">a Petri net</inPort>
+		<inPort index="0" name="Table">an event table</inPort>
 		<!-- possibly more input ports here -->
-		<outPort index="0" name="Table">an event table</outPort>
+		<outPort index="0" name="Petri Net">a Petri net</outPort>
 		<!-- possibly more output ports here -->
 	</ports>
 

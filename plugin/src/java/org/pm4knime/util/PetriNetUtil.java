@@ -1,5 +1,6 @@
 package org.pm4knime.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -281,5 +282,10 @@ public class PetriNetUtil {
 		if(name.endsWith(TRANSITION_TAU_SUFFIX))
 			return true;
 		return false;
+	}
+
+	public static AcceptingPetriNet stringToPetriNet(String stringPN) {
+		InputStream input = new ByteArrayInputStream(stringPN.getBytes());
+		return importFromStream(input);
 	}
 }

@@ -9,16 +9,12 @@ import org.processmining.models.semantics.petrinet.Marking;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.CanceledExecutionException;
 import org.processmining.plugins.pnml.base.FullPnmlElementFactory;
 import org.processmining.plugins.pnml.base.Pnml;
 import org.processmining.plugins.pnml.base.Pnml.PnmlType;
 import org.processmining.plugins.pnml.base.PnmlElementFactory;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 public class PN2XmlConverter {
 	
