@@ -309,6 +309,16 @@
     
     
     </extension>
+    <extension
+          point="org.knime.core.DataType">
+       <DataType
+             cellClass="pm4knime.plugin.DataCell:1">
+          <serializer
+                cellClass="org.pm4knime.node.conversion.pn2table.PetriNetCell"
+                serializerClass="org.pm4knime.node.conversion.pn2table.PetriNetCell$PetriNetSerializer">
+          </serializer>
+       </DataType>
+    </extension>
                                     
 
 

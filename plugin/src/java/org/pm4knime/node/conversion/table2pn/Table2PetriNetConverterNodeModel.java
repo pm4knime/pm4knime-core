@@ -20,9 +20,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
-import org.pm4knime.node.conversion.pn2table.PetriNet2TableConverterNodeModel;
 import org.pm4knime.node.conversion.pn2table.PetriNetCell;
-import org.pm4knime.node.conversion.pn2table.PetriNetValue;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 import org.pm4knime.portobject.AbstractDotPanelPortObject;
@@ -59,7 +57,7 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
         if (columnIndex < 0) {
             columnIndex = findPetriNetColumnIndex(inSpec);
             if (columnIndex >= 0) {
-                setWarningMessage("Found Petri net column '" + inSpec.getColumnSpec(columnIndex).getName() + "'.");
+//                setWarningMessage("Found Petri net column '" + inSpec.getColumnSpec(columnIndex).getName() + "'.");
             }
         }
 
@@ -69,7 +67,7 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
             throw new InvalidSettingsException(error);
         }
         DataColumnSpec columnSpec = inSpec.getColumnSpec(columnIndex);
-        if (!columnSpec.getType().isCompatible(PetriNetValue.class)) {
+        if (!columnSpec.getType().getCellClass().equals(PetriNetCell.class)) {
             throw new InvalidSettingsException("Column \"" + column + "\" does not contain Petri nets");
         }
 
@@ -108,8 +106,6 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
         while (it.hasNext()) {
             DataRow row = it.next();
             DataCell cell = row.getCell(columnIndex);
-            System.out.println("CELL");
-            System.out.println(cell.toString());
             if (!cell.isMissing()) {
                 String stringPN = ((PetriNetCell)cell).getStringValue();
 
@@ -137,10 +133,11 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
 
 
 	private static int findPetriNetColumnIndex(final DataTableSpec spec) {
-        for (int i = 0; i < spec.getNumColumns(); i++) {
-            if (spec.getColumnSpec(i).getType().isCompatible(PetriNetValue.class))
+        for (int i = 0; i < spec.getNumColumns(); i++) {     
+//        	System.out.println(spec.getColumnSpec(i).getType());
+            if (spec.getColumnSpec(i).getType().getCellClass().equals(PetriNetCell.class))
             {
-                return i;
+            	return i;
             }
         }
         return -1;

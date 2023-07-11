@@ -20,9 +20,10 @@ import org.knime.core.data.DataCellSerializer;
 import org.knime.core.data.DataType;
 import org.knime.core.data.DataValue;
 import org.knime.core.data.StringValue;
+import org.knime.core.data.image.png.PNGImageCell;
 
 @SuppressWarnings("serial")
-public class PetriNetCell extends DataCell implements PetriNetValue, StringValue {
+public class PetriNetCell extends DataCell {
 	
 	
     String pnString;
@@ -52,6 +53,8 @@ public class PetriNetCell extends DataCell implements PetriNetValue, StringValue
             return new PetriNetCell(s);
         }
     }
+    
+    PNGImageCell ic;
 
     private static final Collection<String> SVG_TEXT_CONTENT_NOT_IGNORED_TAGS =
             Arrays.asList("text", "tspan", "textPath");
@@ -78,9 +81,9 @@ public class PetriNetCell extends DataCell implements PetriNetValue, StringValue
 //        }
 //    };
 
-    private SoftReference<String> m_xmlString;
+//    private SoftReference<String> m_xmlString;
 
-    private final ReentrantLock m_lock = new ReentrantLock();
+//    private final ReentrantLock m_lock = new ReentrantLock();
 
 //    private final SvgImageContent m_content;
 
@@ -104,10 +107,6 @@ public class PetriNetCell extends DataCell implements PetriNetValue, StringValue
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String toString() {
         return getStringValue();
     }
@@ -138,14 +137,8 @@ public class PetriNetCell extends DataCell implements PetriNetValue, StringValue
     	return pnString.hashCode();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getStringValue() {
         return pnString;
     }
-
-
-
+    
 }

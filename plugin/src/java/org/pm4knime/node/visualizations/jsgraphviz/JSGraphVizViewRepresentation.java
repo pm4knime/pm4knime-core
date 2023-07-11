@@ -74,19 +74,19 @@ public class JSGraphVizViewRepresentation extends JSONViewContent {
 	}
 
 	public void setDotstr(final String dotstr) {
-		System.out.println(dotstr);
+//		System.out.println(dotstr);
 		HashMap<String, String> idMap = new HashMap<String, String>();
         Pattern pattern = Pattern.compile("e[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
         Matcher matcher = pattern.matcher(dotstr);
 
         int idCounter = 0;
         while (matcher.find()) {
-        	System.out.println(matcher.toString());
+//        	System.out.println(matcher.toString());
             String oldId = matcher.group();
-            System.out.println("OLD ID" + oldId);
+//            System.out.println("OLD ID" + oldId);
             if (!idMap.containsKey(oldId)) {
                 String newId = "id" + idCounter;
-                System.out.println("New ID" + newId);
+//                System.out.println("New ID" + newId);
                 idMap.put(oldId, newId);
                 idCounter++;
             }
@@ -104,8 +104,8 @@ public class JSGraphVizViewRepresentation extends JSONViewContent {
             String id = edgeMatcher.group();
             finalDotString = finalDotString.replace(id, "id=\"\"");
         }
-        System.out.println("NEW DOT");
-        System.out.println(finalDotString);
+//        System.out.println("NEW DOT");
+//        System.out.println(finalDotString);
         
         String[] lines = finalDotString.split("\\n");
 
@@ -152,8 +152,8 @@ public class JSGraphVizViewRepresentation extends JSONViewContent {
         }
 
         finalDotString = sortedDot.toString();
-        System.out.println("LAST DOT");
-        System.out.println(finalDotString);
+//        System.out.println("LAST DOT");
+//        System.out.println(finalDotString);
 
 		this.m_dotstr = finalDotString;
 	}
