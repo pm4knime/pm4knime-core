@@ -4,6 +4,7 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import org.pm4knime.node.discovery.ilpminer.Table.ILPMinerTableNodeDialog;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
@@ -46,7 +47,7 @@ public class Table2PetriNetConverterNodeFactory extends NodeFactory<Table2PetriN
     @Override
     public boolean hasDialog() {
 		// Indication whether the node has a dialog or not.
-        return false;
+        return true;
     }
     //set this false
 
@@ -56,7 +57,7 @@ public class Table2PetriNetConverterNodeFactory extends NodeFactory<Table2PetriN
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return null;
+        return new Table2PetriNetConverterNodeDialog(node);
     }
 
 }

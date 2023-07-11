@@ -21,16 +21,10 @@ import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 import org.pm4knime.portobject.AbstractDotPanelPortObject;
-import org.pm4knime.portobject.HybridPetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
-import org.pm4knime.util.defaultnode.DefaultNodeModel;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.contexts.uitopia.UIContext;
-import org.processmining.contexts.uitopia.UIPluginContext;
-import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
-import org.processmining.extendedhybridminer.models.pnml.utils;
 import org.processmining.plugins.graphviz.dot.Dot;
 
 

@@ -151,24 +151,6 @@ public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		// TODO: generated method stub
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void loadInternals(final File internDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO: generated method stub
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO: generated method stub
-	}
 	
 	@Override
 	protected void performReset() {

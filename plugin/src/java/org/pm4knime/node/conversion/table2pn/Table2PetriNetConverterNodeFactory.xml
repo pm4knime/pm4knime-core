@@ -16,7 +16,7 @@
 			advance and serialization for it. I think I have done this, right?? Let me 
 			check it -->
 	</fullDescription>
-
+    <interactiveView name="Petri Net"></interactiveView>
 	<ports>
 		<inPort index="0" name="Table">an event table</inPort>
 		<!-- possibly more input ports here -->

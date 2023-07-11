@@ -2,11 +2,7 @@ package org.pm4knime.node.conversion.table2pn;
 
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
 import java.io.File;
 import java.io.IOException;
 import org.knime.core.data.DataCell;
@@ -14,13 +10,18 @@ import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.RowIterator;
+import org.pm4knime.node.conversion.pn2table.PetriNetCell;
+
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
-import org.pm4knime.node.conversion.pn2table.PetriNetCell;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 import org.pm4knime.portobject.AbstractDotPanelPortObject;
@@ -30,13 +31,13 @@ import org.pm4knime.util.PetriNetUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.plugins.graphviz.dot.Dot;
 
-
 class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 	
 //	private SettingsModelString m_pnColSettingsModel =
 //			Table2PetriNetConverterNodeDialog.getPetriNetColumnSettingsModel();
 
-	protected PortObject pnPO;
+	PetriNetPortObjectSpec m_spec = new PetriNetPortObjectSpec();
+	protected PetriNetPortObject pnPO;
 	protected BufferedDataTable inTable;
     public Table2PetriNetConverterNodeModel() {
         super(new PortType[]{BufferedDataTable.TYPE},
@@ -71,7 +72,7 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
             throw new InvalidSettingsException("Column \"" + column + "\" does not contain Petri nets");
         }
 
-        return new PortObjectSpec[]{new PetriNetPortObjectSpec() };
+        return new PortObjectSpec[]{m_spec};
     }
 
 
@@ -111,23 +112,21 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
 
                 AcceptingPetriNet pn = PetriNetUtil.stringToPetriNet(stringPN);
                 pnPO = new PetriNetPortObject(pn);
-                final String dotstr;
-        		JSGraphVizViewRepresentation representation = getViewRepresentation();
-
-        		synchronized (getLock()) {
-        			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pnPO;
-        			Dot dot =  port_obj.getDotPanel().getDot();
-        			dotstr = dot.toString();
-        		}
-        		representation.setDotstr(dotstr);
-        		return;
+        		break;
 
             } else {
                 setWarningMessage("Found missing Petri net cell, skipping it...");
             }
         }
-        throw new IllegalArgumentException(
-                "Input table contains only missing cells.");
+        String dotstr;
+		JSGraphVizViewRepresentation representation = getViewRepresentation();
+
+		AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pnPO;
+		Dot dot =  port_obj.getDotPanel().getDot();
+		dotstr = dot.toString();
+		representation.setDotstr(dotstr);
+//        throw new IllegalArgumentException(
+//                "Input table contains only missing cells.");
         		
 	}    
 
@@ -169,25 +168,6 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
 //    	m_pnColSettingsModel.loadSettingsFrom(settings);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File nodeInternDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // Nothing to do ...
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File nodeInternDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // Nothing to do ...
-    }
     
     
     @Override

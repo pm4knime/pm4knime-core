@@ -35,9 +35,6 @@ import org.processmining.processtree.ProcessTree;
  * @author Kefang Ding
  */
 public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
-	// the logger instance
-    private static final NodeLogger logger = NodeLogger
-            .getLogger(PT2PNConverterNodeModel.class);
 	protected PortObject pnPO;
 	protected ProcessTreePortObject ptPO;
     /**
@@ -69,14 +66,12 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
 		pnPO = new PetriNetPortObject(anet);
         
 		
-		final String dotstr;
+		String dotstr;
 		JSGraphVizViewRepresentation representation = getViewRepresentation();
 
-		synchronized (getLock()) {
-			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pnPO;
-			Dot dot =  port_obj.getDotPanel().getDot();
-			dotstr = dot.toString();
-		}
+		AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pnPO;
+		Dot dot =  port_obj.getDotPanel().getDot();
+		dotstr = dot.toString();
 		representation.setDotstr(dotstr);
 
 	}
@@ -129,26 +124,7 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
         // TODO: generated method stub
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
+        
     @Override
 	protected void performReset() {
 	}
