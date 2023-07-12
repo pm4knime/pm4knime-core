@@ -57,8 +57,10 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
 		
     	ptPO = (ProcessTreePortObject) inObjects[0];
     	ProcessTree tree = ptPO.getTree();
+    	
+    	ProcessTree2Petrinet converter = new ProcessTree2Petrinet();
 
-    	ProcessTree2Petrinet.PetrinetWithMarkings pn = ProcessTree2Petrinet.convert(tree, false);
+    	ProcessTree2Petrinet.PetrinetWithMarkings pn = converter.convert(tree, false);
 
 		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet(pn.petrinet, pn.initialMarking,
 				pn.finalMarking);
@@ -69,9 +71,11 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
 		String dotstr;
 		JSGraphVizViewRepresentation representation = getViewRepresentation();
 
-		AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pnPO;
-		Dot dot =  port_obj.getDotPanel().getDot();
-		dotstr = dot.toString();
+		synchronized (getLock()) {
+			AbstractDotPanelPortObject port_obj = (AbstractDotPanelPortObject) pnPO;
+			Dot dot =  port_obj.getDotPanel().getDot();
+			dotstr = dot.toString();
+		}
 		representation.setDotstr(dotstr);
 
 	}

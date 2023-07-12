@@ -2,8 +2,12 @@ package org.pm4knime.node.conversion.pn2table;
 
 import java.io.IOException;
 import java.lang.ref.SoftReference;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 //import org.knime.base.data.xml.Element;
@@ -21,12 +25,24 @@ import org.knime.core.data.DataType;
 import org.knime.core.data.DataValue;
 import org.knime.core.data.StringValue;
 import org.knime.core.data.image.png.PNGImageCell;
+import org.knime.core.node.CanceledExecutionException;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
+import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
+import org.processmining.models.graphbased.directed.petrinet.elements.Place;
+import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
+import org.processmining.models.semantics.petrinet.Marking;
 
 @SuppressWarnings("serial")
 public class PetriNetCell extends DataCell {
 	
 	
     String pnString;
+    List<String> places;
+    List<String> transitions;
+    List<String> edges;
+	String iMarking;
+	List<String> fMarking;
     public static final DataType TYPE = DataType.getType(PetriNetCell.class);
 
     public static final class PetriNetSerializer implements DataCellSerializer<PetriNetCell> {
@@ -36,11 +52,28 @@ public class PetriNetCell extends DataCell {
         @Override
         public void serialize(final PetriNetCell cell, final DataCellDataOutput output) throws IOException {
             try {
-                output.writeUTF(cell.getStringValue());
+                output.writeUTF(cell.pnString);
+                output.writeInt(cell.places.size());
+                for (int i = 0; i < cell.places.size(); i++) {
+                	output.writeUTF(cell.places.get(i));
+                }
+                output.writeInt(cell.transitions.size());
+                for (int i = 0; i < cell.transitions.size(); i++) {
+                	output.writeUTF(cell.transitions.get(i));
+                }
+                output.writeInt(cell.edges.size());
+                for (int i = 0; i < cell.edges.size(); i++) {
+                	output.writeUTF(cell.edges.get(i));
+                }
+                output.writeUTF(cell.iMarking);
+                output.writeInt(cell.fMarking.size());
+                for (int i = 0; i < cell.fMarking.size(); i++) {
+                	output.writeUTF(cell.fMarking.get(i));
+                }
             } catch (IOException ex) {
                 throw ex;
             } catch (Exception ex) {
-                throw new IOException("Could not serialize SVG", ex);
+                throw new IOException("Could not serialize Petri Net", ex);
             }
         }
 
@@ -49,12 +82,34 @@ public class PetriNetCell extends DataCell {
          */
         @Override
         public PetriNetCell deserialize(final DataCellDataInput input) throws IOException {
-            String s = input.readUTF();
-            return new PetriNetCell(s);
+            String pnString = input.readUTF();
+            int num_places = input.readInt();
+            List<String> places = new ArrayList<String>();
+    		for (int i = 0; i < num_places; i++) {
+    			places.add(input.readUTF());
+    		}
+    		int num_transitions = input.readInt();
+    		List<String> transitions = new ArrayList<String>();
+    		for (int i = 0; i < num_transitions; i++) {
+    			transitions.add(input.readUTF());
+    		}
+    		int num_edges = input.readInt();
+    		List<String> edges = new ArrayList<String>();
+    		for (int i = 0; i < num_edges; i++) {
+    			edges.add(input.readUTF());
+    		}
+    		String iM = input.readUTF();
+     		int num_fM = input.readInt();
+             List<String> fM = new ArrayList<String>();
+     		for (int i = 0; i < num_fM; i++) {
+     			fM.add(input.readUTF());
+     		}
+            return new PetriNetCell(pnString, places, transitions, edges, iM, fM);
         }
     }
     
-    PNGImageCell ic;
+//    PNGImageCell ic;
+	
 
     private static final Collection<String> SVG_TEXT_CONTENT_NOT_IGNORED_TAGS =
             Arrays.asList("text", "tspan", "textPath");
@@ -92,33 +147,86 @@ public class PetriNetCell extends DataCell {
         return new PetriNetSerializer();
     }
 
-    /**
-     * Creates a new PetriNetCell by parsing the passed string. It must contain a valid SVG document, including all XML
-     * headers.
-     *
-     * Please consider using {@link PetriNetCellFactory#create(String)} instead of this constructor as the latter dynamically
-     * decides if a in-table cell or a blob cell is created (depending on the size).
-     *
-     * @param xmlString an SVG document
-     * @throws IOException if an error occurs while reading the XML string.
-     */
-    public PetriNetCell(final String xmlString) throws IOException {
-    	pnString = xmlString;
-    }
+    public PetriNetCell(AcceptingPetriNet anet) {
+    	try {
+    		pnString = PN2XmlConverter.convert(anet);
+    		places = new ArrayList<String>();
+    		Iterator<Place> it = anet.getNet().getPlaces().iterator();
+    		for (int i = 0; i < anet.getNet().getPlaces().size(); i++) {
+    			places.add(it.next().getLabel());
+    		}
+    		transitions = new ArrayList<String>();
+    		Iterator<Transition> it_2 = anet.getNet().getTransitions().iterator();
+    		for (int i = 0; i < anet.getNet().getTransitions().size(); i++) {
+    			transitions.add(it_2.next().getLabel());
+    		}
+    		edges = new ArrayList<String>();
+    		Iterator<PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>> it_edges = anet.getNet().getEdges().iterator();
+    		for (int i = 0; i < anet.getNet().getEdges().size(); i++) {
+    			PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode> e = it_edges.next();
+    			edges.add(e.getSource().getLabel() + " --> " + e.getTarget().getLabel());
+    		}
+    		iMarking = anet.getInitialMarking().toString();
+    		fMarking = new ArrayList<String>();
+    		Iterator<Marking> it_fm = anet.getFinalMarkings().iterator();
+    		for (int i = 0; i < anet.getFinalMarkings().size(); i++) {
+    			fMarking.add(it_fm.next().toString());
+    		}
+    		Collections.sort(places);
+    		Collections.sort(transitions);
+    		Collections.sort(edges);
+    		Collections.sort(fMarking);
+    		
+		} catch (CanceledExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	public PetriNetCell(String pnString2, List<String> placeList, List<String> transitionList, List<String> edgeList, String iM, List<String> fM) {
+		pnString = pnString2;
+		places = placeList;
+		transitions = transitionList;
+		edges = edgeList;
+		iMarking = iM;
+		fMarking = fM;
+		Collections.sort(places);
+		Collections.sort(transitions);
+		Collections.sort(edges);
+		Collections.sort(fMarking);
+	}
 
-    public String toString() {
-        return getStringValue();
+	public String toString() {
+//		StringBuilder sb = new StringBuilder();
+//	    sb.append("Petri Net: \n");
+//	    sb.append("Places: ").append(places.size()).append(" elements \n");
+//        for (int i = 0; i < places.size(); i++) {
+//            sb.append("  ").append(places.get(i)).append(" \n");
+//        }
+//        sb.append("Initial Marking:").append(" \n");
+//        sb.append("  ").append(iMarking).append(" \n");
+//        sb.append("Final Markings:").append(" \n");
+//        for (int i = 0; i < fMarking.size(); i++) {
+//            sb.append("  ").append(fMarking.get(i)).append(" \n");
+//        }
+//        sb.append("Transitions: ").append(transitions.size()).append(" elements \n");
+//        for (int i = 0; i < transitions.size(); i++) {
+//            sb.append("  ").append(transitions.get(i)).append(" \n");
+//        }
+//        sb.append("Arcs: ").append(edges.size()).append(" elements \n");
+//        for (int i = 0; i < edges.size(); i++) {
+//            sb.append("  ").append(edges.get(i)).append(" \n");
+//        }          
+//        return sb.toString();
+		return pnString;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean equalsDataCell(final DataCell dc) {
-        PetriNetCell cell = (PetriNetCell)dc;
-
-        return pnString.equals(cell.getStringValue());
+    protected boolean equalsDataCell(final DataCell cell) {
+    	return this.equalContent(cell);  
     }
 
     /**
@@ -126,7 +234,12 @@ public class PetriNetCell extends DataCell {
      */
     @Override
     protected boolean equalContent(final DataValue otherValue) {
-        return pnString.equals(otherValue);
+    	if (otherValue instanceof PetriNetCell) {
+    		PetriNetCell cell = (PetriNetCell) otherValue;
+    		return places.equals(cell.places) && transitions.equals(cell.transitions) && edges.equals(cell.edges) && iMarking.equals(cell.iMarking) && fMarking.equals(cell.fMarking);
+    	} else {
+    		return false;
+    	}
     }
 
     /**
@@ -134,11 +247,12 @@ public class PetriNetCell extends DataCell {
      */
     @Override
     public int hashCode() {
-    	return pnString.hashCode();
+    	return places.hashCode() + transitions.hashCode() + edges.hashCode() + iMarking.hashCode() + fMarking.hashCode();
     }
 
-    public String getStringValue() {
-        return pnString;
-    }
+	public String getStringValue() {
+		// TODO Auto-generated method stub
+		return this.pnString;
+	}
     
 }

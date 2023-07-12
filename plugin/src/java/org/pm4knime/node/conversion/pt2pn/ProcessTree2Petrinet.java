@@ -36,9 +36,9 @@ import org.processmining.processtree.impl.AbstractTask;
 
 public class ProcessTree2Petrinet {
 
-	public static AtomicInteger placeCounter = new AtomicInteger();
+	public AtomicInteger placeCounter = new AtomicInteger();
 
-	public static class PetrinetWithMarkings {
+	public class PetrinetWithMarkings {
 		public Petrinet petrinet;
 		public Marking initialMarking;
 		public Marking finalMarking;
@@ -46,15 +46,15 @@ public class ProcessTree2Petrinet {
 		public Map<Transition, UnfoldedNode> mapTransition2Path;
 	}
 
-	public static class NotYetImplementedException extends Exception {
+	public class NotYetImplementedException extends Exception {
 		private static final long serialVersionUID = 5670717125585354907L;
 	}
 
-	public static class InvalidProcessTreeException extends Exception {
+	public class InvalidProcessTreeException extends Exception {
 		private static final long serialVersionUID = 4973293024906004929L;
 	}
 
-	public static class UnfoldedNode {
+	public class UnfoldedNode {
 		private final List<Node> path;
 
 		public UnfoldedNode(Node root) {
@@ -118,17 +118,17 @@ public class ProcessTree2Petrinet {
 	 * Input: ProcessTree Output: PetrinetWithMarkings (contains Petri net,
 	 * initial Marking, final Marking)
 	 */
-	public static PetrinetWithMarkings convert(ProcessTree tree)
+	public PetrinetWithMarkings convert(ProcessTree tree)
 			throws NotYetImplementedException, InvalidProcessTreeException {
 		return convert(tree, false);
 	}
 
-	public static PetrinetWithMarkings convertKeepStructure(ProcessTree tree)
+	public PetrinetWithMarkings convertKeepStructure(ProcessTree tree)
 			throws NotYetImplementedException, InvalidProcessTreeException {
 		return convert(tree, true);
 	}
 
-	public static PetrinetWithMarkings convert(ProcessTree tree, boolean keepStructure)
+	public PetrinetWithMarkings convert(ProcessTree tree, boolean keepStructure)
 			throws NotYetImplementedException, InvalidProcessTreeException {
 		Petrinet petrinet = new PetrinetImpl(tree.getName());
 		Place source = petrinet.addPlace("source " + placeCounter.incrementAndGet());
@@ -153,7 +153,7 @@ public class ProcessTree2Petrinet {
 		return result;
 	}
 
-	private static void convertNode(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertNode(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -191,7 +191,7 @@ public class ProcessTree2Petrinet {
 		}
 	}
 
-	private static void convertTau(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertTau(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path) {
 		Transition t = petrinet.addTransition("tau from tree");
@@ -201,7 +201,7 @@ public class ProcessTree2Petrinet {
 		petrinet.addArc(t, sink);
 	}
 
-	private static void convertTask(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertTask(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path) {
 		Transition t = petrinet.addTransition(unode.getNode().getName());
@@ -210,7 +210,7 @@ public class ProcessTree2Petrinet {
 		petrinet.addArc(t, sink);
 	}
 
-	private static void convertXor(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertXor(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -221,7 +221,7 @@ public class ProcessTree2Petrinet {
 		}
 	}
 
-	private static void convertSeq(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertSeq(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -244,7 +244,7 @@ public class ProcessTree2Petrinet {
 		}
 	}
 
-	private static void convertAnd(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertAnd(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -273,7 +273,7 @@ public class ProcessTree2Petrinet {
 		}
 	}
 
-	private static void convertXorLoop(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertXorLoop(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -305,7 +305,7 @@ public class ProcessTree2Petrinet {
 				keepStructure, mapPath2Transitions, mapTransition2Path);
 	}
 
-	private static void convertOr(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertOr(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -365,7 +365,7 @@ public class ProcessTree2Petrinet {
 	}
 
 	@SuppressWarnings("unused")
-	private static String getEventLabel(Event e) throws NotYetImplementedException {
+	private String getEventLabel(Event e) throws NotYetImplementedException {
 		if (e instanceof Message) {
 			return "message " + e.getMessage();
 		} else if (e instanceof TimeOut) {
@@ -374,7 +374,7 @@ public class ProcessTree2Petrinet {
 		throw new NotYetImplementedException();
 	}
 
-	private static void convertDeferredChoice(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertDeferredChoice(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -405,7 +405,7 @@ public class ProcessTree2Petrinet {
 		}
 	}
 
-	private static void convertDeferredLoop(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
+	private void convertDeferredLoop(UnfoldedNode unode, Place source, Place sink, Petrinet petrinet,
 			boolean forbiddenToPutTokensInSource, boolean keepStructure,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path)
 			throws NotYetImplementedException, InvalidProcessTreeException {
@@ -468,7 +468,7 @@ public class ProcessTree2Petrinet {
 				mapPath2Transitions, mapTransition2Path);
 	}
 
-	protected static void addTransition(UnfoldedNode unode, Transition t,
+	protected void addTransition(UnfoldedNode unode, Transition t,
 			Map<UnfoldedNode, Set<Transition>> mapPath2Transitions, Map<Transition, UnfoldedNode> mapTransition2Path) {
 		if (mapPath2Transitions.get(unode) == null) {
 			mapPath2Transitions.put(unode, new HashSet<Transition>());
@@ -478,7 +478,7 @@ public class ProcessTree2Petrinet {
 		mapTransition2Path.put(t, unode);
 	}
 
-	protected static void debug(String x) {
+	protected void debug(String x) {
 		//		System.out.println(x);
 	}
 }

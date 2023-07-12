@@ -79,9 +79,8 @@ public class PetriNet2TableConverterNodeModel extends NodeModel {
             rowKey = new RowKey(rowKeyValue);
         }
     	
-    	String pnText = PN2XmlConverter.convert(anet, bufCon, exec);
     	
-    	DataRow eventRow = new DefaultRow(rowKey, createDataCell(pnText));
+    	DataRow eventRow = new DefaultRow(rowKey, new PetriNetCell(anet));
 //    	DataRow eventRow = new DefaultRow(rowKey, StringCellFactory.create(imageText));
     	
     	bufCon.addRowToTable(eventRow);
@@ -91,16 +90,6 @@ public class PetriNet2TableConverterNodeModel extends NodeModel {
         return new BufferedDataTable[]{bufCon.getTable()};      
         
     }
-	
-	public DataCell createDataCell(String pnText) {
-		try {
-			return new PetriNetCell(pnText);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return null;
-	}
 
 	private DataTableSpec createSpec() {
 		
