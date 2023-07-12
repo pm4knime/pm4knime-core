@@ -4,8 +4,6 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
-import org.pm4knime.node.discovery.cgminer.table.TableCGMinerNodeModel;
-import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerDialog;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
@@ -57,7 +55,7 @@ public class DfgMinerTableNodeFactory extends NodeFactory<DfgMinerTableNodeModel
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-		return new DefaultTableMinerDialog(this.node);
+		return new DfgMinerTableNodeDialog(node);
     }
 
 }

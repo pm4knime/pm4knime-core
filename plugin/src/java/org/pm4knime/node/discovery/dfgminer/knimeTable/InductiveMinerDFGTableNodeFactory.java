@@ -15,13 +15,16 @@ import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
  */
 public class InductiveMinerDFGTableNodeFactory extends NodeFactory<InductiveMinerDFGTableNodeModel> implements WizardNodeFactoryExtension<InductiveMinerDFGTableNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
-    /**
+    private InductiveMinerDFGTableNodeModel node;
+
+	/**
      * {@inheritDoc}
      */
     @Override
     public InductiveMinerDFGTableNodeModel createNodeModel() {
 		// Create and return a new node model.
-        return new InductiveMinerDFGTableNodeModel();
+        node = new InductiveMinerDFGTableNodeModel();
+        return node;
     }
 
     /**
@@ -58,7 +61,7 @@ public class InductiveMinerDFGTableNodeFactory extends NodeFactory<InductiveMine
     @Override
     public NodeDialogPane createNodeDialogPane() {
 		// This example node has a dialog, hence we create and return it here. Also see "hasDialog()".
-        return new InductiveMinerDFGTableNodeDialog();
+        return new InductiveMinerDFGTableNodeDialog(node);
     }
 
 }

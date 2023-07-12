@@ -10,6 +10,7 @@ import java.util.Set;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.InvalidSettingsException;
 import org.processmining.framework.util.ArrayUtils;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 import org.processmining.plugins.inductiveminer2.logs.IMEvent;
@@ -39,7 +40,7 @@ public class BufferedTableIMLog implements IMLog {
 	private int indexOfTraceClassifierTable = 0;
 	private int indexOfEventClassifierTable = 0;
 
-	public BufferedTableIMLog(BufferedDataTable log, String aClassifier, String tClassifier) {
+	public BufferedTableIMLog(BufferedDataTable log, String aClassifier, String tClassifier) throws InvalidSettingsException {
 		this.log = log;
 		String activityColumn = aClassifier;
 		indexOfEventClassifierTable = getClassifierIndexFromColumn(aClassifier);
@@ -50,13 +51,16 @@ public class BufferedTableIMLog implements IMLog {
 		this.activtiesString = this.activitiesList.stream().map(s -> s.toString()).toArray(String[]::new);
 	}
 
-	private int getClassifierIndexFromColumn(String classifier) {
+	private int getClassifierIndexFromColumn(String classifier) throws InvalidSettingsException {
 		String[] columns = log.getDataTableSpec().getColumnNames();
-		int indexOfClassifierInTable = 0;
+		int indexOfClassifierInTable = -1;
 		for (int i = 0; i < columns.length; i++) {
-			if (columns[i] == classifier) {
+			if (columns[i].equals(classifier)) {
 				indexOfClassifierInTable = i;
 			}
+		}
+		if (indexOfClassifierInTable < 0) {
+			throw new InvalidSettingsException("Classifiers are not set!");
 		}
 		return indexOfClassifierInTable;
 	}

@@ -15,8 +15,8 @@ import org.knime.core.node.port.PortObjectSpec;
 
 public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	
-	public static final String DEFAULT_TRACE_CLASS = "#Trace Attribute#concept:name"; //"case:concept:name"
-	public static final String DEFAULT_EVENT_CLASS = "#Event Attribute#concept:name"; //"concept:name"
+	public static String DEFAULT_TRACE_CLASS = "#Trace Attribute#concept:name"; //"case:concept:name"
+	public static String DEFAULT_EVENT_CLASS = "#Event Attribute#concept:name"; //"concept:name"
 	
 	protected DefaultTableMinerModel node;
 	protected SettingsModelString e_classifier ;
