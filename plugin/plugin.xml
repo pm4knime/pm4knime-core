@@ -42,7 +42,7 @@
 		<node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory"  />
 		
 		<!-- nodes in log manipulation-->
-		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory" />
+		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.sample.SampleLogNodeFactory"/>
 		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.merge.MergeLogNodeFactory" />
 		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.filter.FilterLogByLengthNodeFactory" />
 		<node category-path="/community/processmining/manipulation/log" factory-class="org.pm4knime.node.logmanipulation.filter.FilterByFrequencyNodeFactory" />
@@ -86,7 +86,7 @@
 		<node category-path="/community/processmining/conformance/log" factory-class="org.pm4knime.node.conformance.precision.PrecisionCheckerNodeFactory" />
 		
 		
-		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" id="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory"/>
+		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.replayer.table.helper.PNReplayerTableNodeFactory" />
 		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.table.fitness.FitnessCheckerNodeFactory" />
 		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.table.performance.PerformanceCheckerNodeFactory" />
 		<node category-path="/community/processmining/conformance/table" factory-class="org.pm4knime.node.conformance.table.precision.PrecisionCheckerNodeFactory" />
@@ -104,67 +104,7 @@
             	
     
     
-    <extension point="org.knime.workbench.repository.nodes">
-                        		
-        
-        
-        <!-- nodes in io-->
-                        		
-        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.petrinet.reader.PetrinetReaderNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.petrinet.writer.PetrinetWriterNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.processtree.reader.ProcessTreeReaderNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/io/ioWrite" factory-class="org.pm4knime.node.io.processtree.writer.ProcessTreeWriterNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory" id="org.pm4knime.node.io.log.reader.XesImporter.XesImporterNodeFactory"/>
-                        		
-        
-        <node category-path="/community/processmining/io/ioRead" factory-class="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory" id="org.pm4knime.node.io.log.reader.MXMLImporter.MXMLImporterNodeFactory"/>
-
-                        		
-        
-        
-        
-                        		
-        
-        
-        <!-- nodes in conversion-->
-                        		
-        
-        
-        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2log.Table2XLogConverterNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.log2table.XLog2TableConverterNodeFactory"/>
-                        		
-        
-        
-        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory"/>
-                        		
-                        		
-        <node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pn2table.PetriNet2TableConverterNodeFactory" />
-        
-        
-        
-            
-    
-    </extension>
-                    	
-    
-    
-    
-    
+  
     <extension point="org.knime.core.PortType">
                                         		
         
@@ -190,7 +130,7 @@
         
         <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObject" objectSerializer="org.pm4knime.portobject.RepResultPortObject$RepResultPortObjectSerializer" specClass="org.pm4knime.portobject.RepResultPortObjectSpec" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpec$RepResultPortObjectSpecSerializer" color="#E04DF0"/>
                                         		
-         <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObjectTable" objectSerializer="org.pm4knime.portobject.RepResultPortObjectTable$RepResultPortObjectSerializerTable" specClass="org.pm4knime.portobject.RepResultPortObjectSpecTable" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpecTable$RepResultPortObjectSpecSerializerTable" color="#FF0000"/>
+        <portType hidden="false" name="Replay Result in Alignment" objectClass="org.pm4knime.portobject.RepResultPortObjectTable" objectSerializer="org.pm4knime.portobject.RepResultPortObjectTable$RepResultPortObjectSerializerTable" specClass="org.pm4knime.portobject.RepResultPortObjectSpecTable" specSerializer="org.pm4knime.portobject.RepResultPortObjectSpecTable$RepResultPortObjectSpecSerializerTable" color="#FF0000"/>
         
         
         
