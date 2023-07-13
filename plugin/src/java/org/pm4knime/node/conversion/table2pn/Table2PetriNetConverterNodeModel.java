@@ -1,10 +1,6 @@
 package org.pm4knime.node.conversion.table2pn;
 
 import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionMonitor;
-import java.io.File;
-import java.io.IOException;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
@@ -45,9 +41,6 @@ class Table2PetriNetConverterNodeModel extends AbstractSVGWizardNodeModel<JSGrap
                 "Petri Net JS View");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {

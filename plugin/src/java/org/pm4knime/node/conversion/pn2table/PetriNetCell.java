@@ -24,7 +24,7 @@ import org.knime.core.data.DataCellSerializer;
 import org.knime.core.data.DataType;
 import org.knime.core.data.DataValue;
 import org.knime.core.data.StringValue;
-import org.knime.core.data.image.png.PNGImageCell;
+import org.knime.core.data.image.png.PNGImageCellFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
