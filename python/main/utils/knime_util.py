@@ -64,6 +64,9 @@ def is_binary(column: knext.Column) -> bool:
 def is_local_date(column: knext.Column) -> bool:
     return __is_type_x(column, "org.knime.core.data.v2.time.LocalDateTimeValueFactory")
 
+def is_petri_net(column: knext.Column) -> bool:
+    return __is_type_x(column, "org.pm4knime.node.conversion.pn2table.PetriNetCell")
+
 
 def __is_type_x(column: knext.Column, type: str) -> bool:
     return (
