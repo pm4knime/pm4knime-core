@@ -5,6 +5,7 @@ import pandas as pd
 import pytz
 import logging
 
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -39,17 +40,15 @@ class TemplateNode:
         for par in [self.column_param_case, self.column_param_time, self.column_param_activity]:
             if par is None or par == "":
                 raise ValueError("Parameters not set!")
-        return input_schema_1
+        return None
 
     def execute(self, exec_context, input_1, input_2):
         event_log = input_1.to_pandas()
         net_table = input_2.to_pandas()
-        exec_context.set_warning("This is a warning")
-        exec_context.set_warning(net_table['Petri Net'].iloc[0])
-        net, initial_marking, final_marking = pm4py.read_pnml(net_table.iloc[0, 0])
-
         # exec_context.set_warning("This is a warning")
-        # LOGGER.warning(event_log.dtypes)
+        # exec_context.set_warning(net_table['Petri Net'].iloc[0].stringPN)
+        pnCell = net_table['Petri Net'].iloc[0]
+
         event_log[self.column_param_time + "UTC"] = pd.to_datetime(event_log[self.column_param_time],
                                                                    format='%Y-%m-%d %H:%M:%S').dt.tz_localize(pytz.utc)
         event_log = event_log.sort_values(by=[self.column_param_case, self.column_param_time + "UTC"])
@@ -57,11 +56,11 @@ class TemplateNode:
        
 
         fitness = pm4py.fitness_token_based_replay(log=event_log,
-                                                   petri_net=net,
-                                                   initial_marking=initial_marking,
-                                                   final_marking=final_marking,
+                                                   petri_net=pnCell.net,
+                                                   initial_marking=pnCell.initial_marking,
+                                                   final_marking=pnCell.final_marking,
                                                    activity_key=self.column_param_activity,
                                                    case_id_key=self.column_param_case,
                                                    timestamp_key=self.column_param_time + "UTC")
-        res = pd.DataFrame.from_dict(fitness)
+        res = df = pd.DataFrame.from_dict(fitness, orient='index', columns=['Value'])
         return knext.Table.from_pandas(res)

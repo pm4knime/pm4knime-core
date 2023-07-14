@@ -1,6 +1,8 @@
 package org.pm4knime.node.conversion.pn2table;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +26,10 @@ import org.knime.core.data.DataCellSerializer;
 import org.knime.core.data.DataType;
 import org.knime.core.data.DataValue;
 import org.knime.core.data.StringValue;
+import org.knime.core.data.convert.DataCellFactoryMethod;
 import org.knime.core.data.image.png.PNGImageCellFactory;
 import org.knime.core.node.CanceledExecutionException;
+import org.pm4knime.util.PetriNetUtil;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetEdge;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
@@ -147,6 +151,7 @@ public class PetriNetCell extends DataCell {
         return new PetriNetSerializer();
     }
 
+    
     public PetriNetCell(AcceptingPetriNet anet) {
     	try {
     		pnString = PN2XmlConverter.convert(anet);
@@ -254,5 +259,7 @@ public class PetriNetCell extends DataCell {
 		// TODO Auto-generated method stub
 		return this.pnString;
 	}
+	
+
     
 }

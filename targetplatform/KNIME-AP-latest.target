@@ -2,7 +2,7 @@
 <?pde version="3.8"?>
 <target name="KNIME Analytics Platform (latest release)" sequenceNumber="1512743963">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.knime.features.explorer.serverspace.feature.group" version="0.0.0"/>
 <unit id="org.knime.features.base.feature.group" version="0.0.0"/>
 <unit id="org.knime.features.browser.cef.feature.group" version="0.0.0"/>
@@ -27,6 +27,9 @@
 <unit id="org.knime.features.js.views.labs.feature.group" version="0.0.0"/>
 <unit id="org.knime.features.core.columnar.feature.group" version="0.0.0"/>
 <unit id="org.knime.features.python3.nodes.feature.group" version="0.0.0"/>
+<unit id="org.knime.features.python3.types.feature.group" version="0.0.0"/>
+<unit id="org.knime.features.base.filehandling.feature.group" version="0.0.0"/>
+<unit id="org.knime.time" version="0.0.0"/>
 <repository location="https://update.knime.com/analytics-platform/5.1/"/>
 	
 </location>

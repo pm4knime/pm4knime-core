@@ -252,12 +252,38 @@
     <extension
           point="org.knime.core.DataType">
        <DataType
-             cellClass="pm4knime.plugin.DataCell:1">
-          <serializer
-                cellClass="org.pm4knime.node.conversion.pn2table.PetriNetCell"
-                serializerClass="org.pm4knime.node.conversion.pn2table.PetriNetCell$PetriNetSerializer">
-          </serializer>
-       </DataType>
+            cellClass="org.pm4knime.node.conversion.pn2table.PetriNetCell"
+            factoryClass="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory">
+         <serializer
+               cellClass="org.pm4knime.node.conversion.pn2table.PetriNetCell"
+               serializerClass="org.pm4knime.node.conversion.pn2table.PetriNetCell$PetriNetSerializer">
+         </serializer>
+         <ValueFactory
+               deprecated="false"
+               valueFactoryClass="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory">
+         </ValueFactory>      
+      </DataType>
+    </extension>
+
+    
+    <extension
+         point="org.knime.python3.types.PythonValueFactory">
+      <Module 
+         modulePath="python/main" moduleName="utils.petri_net_type">
+         <PythonValueFactory
+               PythonClassName="PetriNetPythonFactory"
+               ValueFactory="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory"
+               ValueTypeName="utils.petri_net_type.PetriNetPythonCell">
+         </PythonValueFactory>
+         <FromPandasColumnConverter
+               PythonClassName="FromPetriNetPandasColumnConverter"
+               ValueTypeName="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory">
+         </FromPandasColumnConverter>
+         <ToPandasColumnConverter
+               PythonClassName="ToPetriNetPandasColumnConverter"
+               ValueFactory="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory">
+         </ToPandasColumnConverter>
+      </Module>
     </extension>
                                     
 
