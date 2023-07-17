@@ -16,7 +16,7 @@ class FilteringModes(knext.EnumParameterOptions):
               " This option might lead to incomplete traces.")
 
 
-@knext.node(name="Filtering Event Table by Time",
+@knext.node(name="Filter Event Table by Time",
             node_type=knext.NodeType.MANIPULATOR,
             icon_path="icons/category-manipulation.png",
             category="/community/processmining/manipulation")
