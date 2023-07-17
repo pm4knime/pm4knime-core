@@ -9,18 +9,19 @@ import logging
 LOGGER = logging.getLogger(__name__)
 
 
-@knext.node(name="Token-Based Fitness Evaluator",
+@knext.node(name="Token-Based Precision Checker",
             node_type=knext.NodeType.LEARNER,
             icon_path="category-conformance.png",
             category="/community/processmining/conformance/table")
 @knime_util.create_node_description(
-    short_description="Evaluate the fitness of a Petri net with respect to an event log.",
-    description="This node evaluates the fitness of the input Petri net with respect to the input event log. The fitness is computed using the token-based reply method (https://pm4py.fit.fraunhofer.de/documentation#item-8-1)." 
+    short_description="Evaluate the precision of a Petri net with respect to an event log.",
+    description="This node evaluates the precision of the input Petri net with respect to the input event log. The precision is computed using the token-based reply method (https://pm4py.fit.fraunhofer.de/documentation#item-8-2)." 
 )
 @knext.input_table(name="Event Table", description="An Event Table.")
 @knext.input_table(name="Petri Net Table", description="A Petri Net Table.")
-@knext.output_table(name="Metrics Table", description="A metrics table with three fitness scores: the average fitness score over all traces in the log, the log fitness, and the percentage of perfectly fitting traces. The computed scores are numbers between 0 and 1, where 0 stands for the lowest fitness and 1 stands for the highest fitness.")
-class FitnessChecker:
+@knext.output_table(name="Metrics Table", description="A metrics table with a precision score. The computed score is a number between 0 and 1, where 0 stands for the lowest precision and 1 stands for the highest precision.")
+
+class PrecisionChecker:
     column_param_case = knext.ColumnParameter(label="Case Column",
                                               description="The column that contains the case identifiers.",
                                               port_index=0)
@@ -55,15 +56,12 @@ class FitnessChecker:
 
        
 
-        fitness = pm4py.fitness_token_based_replay(log=event_log,
+        precision = pm4py.precision_token_based_replay(log=event_log,
                                                    petri_net=pnCell.net,
                                                    initial_marking=pnCell.initial_marking,
                                                    final_marking=pnCell.final_marking,
                                                    activity_key=self.column_param_activity,
                                                    case_id_key=self.column_param_case,
                                                    timestamp_key=self.column_param_time + "UTC")
-        res_dict = {"average trace fitness" : fitness["average_trace_fitness"],
-                    "log fitness": fitness["log_fitness"],
-                    "percentage of fitting traces": fitness["percentage_of_fitting_traces"]/100}
-        res = pd.DataFrame.from_dict(res_dict, orient='index', columns=['Value'])
+        res = pd.DataFrame.from_dict({"precision": precision}, orient='index', columns=['Value'])
         return knext.Table.from_pandas(res)
