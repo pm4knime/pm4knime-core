@@ -280,7 +280,7 @@ http://www.zlib.net/zlib_license.html
           }); 
         }
 
-        return this.wrapper.render(src, { format: format, engine: engine, files: files, images: images, yInvert: yInvert, nop: nop });
+        return this.wrapper.render(src, { format: format, engine: engine, files: files, images: images, yInvert: yInvert, nop: nop, seed: 12345});
       }
     },  {
       key: 'generate_url',
@@ -296,7 +296,7 @@ http://www.zlib.net/zlib_license.html
       value: function renderSVGElement(src) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-        return this.renderString(src, _extends({}, options, { format: 'svg' })).then(function (str) {
+        return this.renderString(src, _extends({}, options, { format: 'svg', engine: 'dot' })).then(function (str) {
           var parser = new DOMParser();
           var parsed = parser.parseFromString(str, 'image/svg+xml').documentElement;
           return parsed;

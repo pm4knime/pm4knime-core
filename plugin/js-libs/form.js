@@ -25,8 +25,6 @@
     };
     
     view.getSVG = () => {
-
-        knimeService.inlineSvgStyles(_svg);
         return (new XMLSerializer()).serializeToString(_svg);;
     };
     
@@ -83,7 +81,7 @@
                element.setAttribute("height", height + "px"); 
            });
            
-           var parent1 = document.createElement("parent1");
+           var parent1 = document.createElement("div");
            parent1.style.top = "0px";
            parent1.style.left = "0px";
            parent1.style.position = "fixed";
@@ -93,7 +91,7 @@
            parent1.appendChild(zoomOut);
            document.body.appendChild(parent1);     
                      
-           var parent2 = document.createElement("parent2");
+           var parent2 = document.createElement("div");
            parent2.style.top = "50px";
            parent2.style.left = "0px";
            parent2.style.position = "absolute";
