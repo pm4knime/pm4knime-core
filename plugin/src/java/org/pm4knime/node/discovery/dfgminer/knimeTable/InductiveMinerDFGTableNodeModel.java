@@ -133,7 +133,8 @@ public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<
 	 */
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) {
-		// TODO: generated method stub
+		m_noiseThreshold.saveSettingsTo(settings);
+		m_variant.saveSettingsTo(settings);
 	}
 
 	/**
@@ -141,7 +142,8 @@ public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<
 	 */
 	@Override
 	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
-		// TODO: generated method stub
+		m_noiseThreshold.loadSettingsFrom(settings);
+		m_variant.loadSettingsFrom(settings);
 	}
 
 	/**
@@ -149,24 +151,6 @@ public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<
 	 */
 	@Override
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-		// TODO: generated method stub
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void loadInternals(final File internDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// TODO: generated method stub
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
 		// TODO: generated method stub
 	}
 	

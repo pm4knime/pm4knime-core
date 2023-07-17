@@ -173,7 +173,7 @@ public class PetriNetPortObject extends AbstractDotPanelPortObject {
 				// they put layout information into context, if we want to show the them, 
 				// we need to keep the context the same in load and save program. But how to do this??
 				// that's why there is context in portObject. If we also save the context, what can be done??
-				AcceptingPetriNet anet =PetriNetUtil.importFromStream(in);
+				AcceptingPetriNet anet = PetriNetUtil.importFromStream(in);
 				result = new PetriNetPortObject(anet);
 				result.setSpec(spec);
 			} catch (Exception e) {

@@ -35,9 +35,6 @@ import org.processmining.processtree.ProcessTree;
  * @author Kefang Ding
  */
 public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
-	// the logger instance
-    private static final NodeLogger logger = NodeLogger
-            .getLogger(PT2PNConverterNodeModel.class);
 	protected PortObject pnPO;
 	protected ProcessTreePortObject ptPO;
     /**
@@ -60,8 +57,10 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
 		
     	ptPO = (ProcessTreePortObject) inObjects[0];
     	ProcessTree tree = ptPO.getTree();
+    	
+    	ProcessTree2Petrinet converter = new ProcessTree2Petrinet();
 
-    	ProcessTree2Petrinet.PetrinetWithMarkings pn = ProcessTree2Petrinet.convert(tree, false);
+    	ProcessTree2Petrinet.PetrinetWithMarkings pn = converter.convert(tree, false);
 
 		AcceptingPetriNet anet = AcceptingPetriNetFactory.createAcceptingPetriNet(pn.petrinet, pn.initialMarking,
 				pn.finalMarking);
@@ -69,7 +68,7 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
 		pnPO = new PetriNetPortObject(anet);
         
 		
-		final String dotstr;
+		String dotstr;
 		JSGraphVizViewRepresentation representation = getViewRepresentation();
 
 		synchronized (getLock()) {
@@ -129,26 +128,7 @@ public class PT2PNConverterNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
         // TODO: generated method stub
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File internDir,
-            final ExecutionMonitor exec) throws IOException,
-            CanceledExecutionException {
-        // TODO: generated method stub
-    }
-    
+        
     @Override
 	protected void performReset() {
 	}

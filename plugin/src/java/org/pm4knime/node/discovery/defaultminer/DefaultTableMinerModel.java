@@ -26,9 +26,9 @@ public abstract class DefaultTableMinerModel extends AbstractSVGWizardNodeModel<
 	}
 	
 	
-	public static final String KEY_TRACE_CLASSIFIER = "Trace Classifier";
-	public static final String KEY_EVENT_CLASSIFIER = "Event Classifier";
-	public static final String KEY_CLASSIFIER_SET = "Classifier Set";
+	public static String KEY_TRACE_CLASSIFIER = "Trace Classifier";
+	public static String KEY_EVENT_CLASSIFIER = "Event Classifier";
+	public static String KEY_CLASSIFIER_SET = "Classifier Set";
 	
 	protected String t_classifier;
 	protected String e_classifier;

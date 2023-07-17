@@ -3,9 +3,7 @@ package org.pm4knime.node.conversion.pt2pn;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
-import org.pm4knime.node.discovery.hybridminer.HybridMinerNodeModel;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 

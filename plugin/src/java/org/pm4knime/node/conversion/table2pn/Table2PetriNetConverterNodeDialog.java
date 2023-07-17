@@ -1,4 +1,4 @@
-package org.pm4knime.node.discovery.defaultminer;
+package org.pm4knime.node.conversion.table2pn;
 
 import java.util.Arrays;
 
@@ -11,21 +11,22 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerDialog;
+import org.pm4knime.node.discovery.defaultminer.DefaultTableMinerModel;
 
+public class Table2PetriNetConverterNodeDialog extends DefaultNodeSettingsPane {
 
-public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
+	public static final String DEFAULT_TRACE_CLASS = "#Trace Attribute#concept:name"; //"case:concept:name"
+	public static final String DEFAULT_EVENT_CLASS = "#Event Attribute#concept:name"; //"concept:name"
 	
-	public static String DEFAULT_TRACE_CLASS = "#Trace Attribute#concept:name"; //"case:concept:name"
-	public static String DEFAULT_EVENT_CLASS = "#Event Attribute#concept:name"; //"concept:name"
-	
-	protected DefaultTableMinerModel node;
+	protected Table2PetriNetConverterNodeModel node;
 	protected SettingsModelString e_classifier ;
 	protected DialogComponentStringSelection event_classifierComp ;
 	protected SettingsModelString t_classifier ;
 	protected DialogComponentStringSelection trace_classifierComp;	
 	
 	
-	public DefaultTableMinerDialog(DefaultTableMinerModel n) {
+	public Table2PetriNetConverterNodeDialog(Table2PetriNetConverterNodeModel n) {
 		node = n;
 		t_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_TRACE_CLASSIFIER, "");
 		e_classifier =  new SettingsModelString(DefaultTableMinerModel.KEY_EVENT_CLASSIFIER, "");
@@ -62,12 +63,6 @@ public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	        } catch (InvalidSettingsException e) {
 	        	System.out.println("Exception:" + e.toString());
 	        }
-			String tClassifier = getDefaultTraceClassifier(currentClasses, this.node.t_classifier);
-			String eClassifier = getDefaultEventClassifier(currentClasses, this.node.e_classifier);
-			this.node.setTraceClassifier(tClassifier);
-			this.node.setEventClassifier(eClassifier);
-			trace_classifierComp.replaceListItems(Arrays.asList(currentClasses), tClassifier);
-			event_classifierComp.replaceListItems(Arrays.asList(currentClasses), eClassifier);
 		}	
     }
 
@@ -108,9 +103,10 @@ public class DefaultTableMinerDialog extends DefaultNodeSettingsPane {
 	@Override
 	 public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
 	            throws InvalidSettingsException {
-	    this.node.t_classifier = this.t_classifier.getStringValue();
-		this.node.e_classifier = this.e_classifier.getStringValue();
-		this.node.saveSettingsTo(settings);	    
+		
+	
 	}
+	
+	
 
 }
