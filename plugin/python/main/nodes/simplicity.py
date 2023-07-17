@@ -9,9 +9,9 @@ LOGGER = logging.getLogger(__name__)
 
 
 @knext.node(name="Simplicity Evaluator",
-            node_type=knext.NodeType.LEARNER,
-            icon_path="category-conformance.png",
-            category="/community/processmining/conformance/table")
+            node_type=knext.NodeType.OTHER,
+            icon_path="icons/category-conformance.png",
+            category="/community/processmining/conformance")
 @knime_util.create_node_description(
     short_description="Evaluate the simplicity of a Petri net.",
     description="This node evaluates the simplicity of the input Petri net. The criteria used for simplicity is the inverse arc degree (https://pm4py.fit.fraunhofer.de/documentation#item-8-4)."
