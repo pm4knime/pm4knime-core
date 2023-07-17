@@ -18,8 +18,8 @@ class FilteringModes(knext.EnumParameterOptions):
 
 @knext.node(name="Filtering Event Table by Time",
             node_type=knext.NodeType.MANIPULATOR,
-            icon_path="category-manipulation.png",
-            category="/community/processmining/manipulation/table")
+            icon_path="icons/category-manipulation.png",
+            category="/community/processmining/manipulation")
 @knime_util.create_node_description(
     short_description="Filter an event table on a time interval.",
     description="This node is used to filter an event table on a time interval. Several filtering modes are supported."

@@ -10,9 +10,9 @@ LOGGER = logging.getLogger(__name__)
 
 
 @knext.node(name="Token-Based Precision Checker",
-            node_type=knext.NodeType.LEARNER,
-            icon_path="category-conformance.png",
-            category="/community/processmining/conformance/table")
+            node_type=knext.NodeType.OTHER,
+            icon_path="icons/category-conformance.png",
+            category="/community/processmining/conformance")
 @knime_util.create_node_description(
     short_description="Evaluate the precision of a Petri net with respect to an event log.",
     description="This node evaluates the precision of the input Petri net with respect to the input event log. The precision is computed using the token-based reply method (https://pm4py.fit.fraunhofer.de/documentation#item-8-2)." 

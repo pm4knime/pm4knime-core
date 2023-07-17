@@ -11,9 +11,9 @@ LOGGER = logging.getLogger(__name__)
 
 
 @knext.node(name="Generalization Evaluator",
-            node_type=knext.NodeType.LEARNER,
-            icon_path="category-conformance.png",
-            category="/community/processmining/conformance/table")
+            node_type=knext.NodeType.OTHER,
+            icon_path="icons/category-conformance.png",
+            category="/community/processmining/conformance")
 @knime_util.create_node_description(
     short_description="Evaluate the generalization of a Petri net with respect to an event log.",
     description="This node evaluates the generalization of the input Petri net with respect to the input event log. A model is considered to be general if the elements of the model are visited enough often during replaying the log on the model (https://pm4py.fit.fraunhofer.de/documentation#item-8-3)."
