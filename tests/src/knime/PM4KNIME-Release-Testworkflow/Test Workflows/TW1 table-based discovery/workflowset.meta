@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file is auto-generated and is overwritten each time the workflow is saved.
+    The metadata have moved to the `workflow-metadata.xml` file.-->
+<KNIMEMetaInfo nrOfElements="4" xmlns="http://www.knime.org/2.9/metainfo">
+    <element form="text" name="Author" read-only="false">PM4KNIME</element>
+    <element form="date" name="Creation Date" read-only="false">3/7/2022/12:00:01 +02:00</element>
+    <element form="multiline" name="Comments" read-only="false">There has been no title set for this workflow's metadata.
+
+Discovery of Hybrid Process Models
+
+Applying process mining to discover a hybrid Petri net and a causal graph from real-life data. The event log records business lawsuits from the Court of Justice of the State of Sao Paulo in Brazil.
+
+URL: Data Set https://data.4tu.nl/articles/dataset/Event_log_belonging_to_the_publication_Process_Mining-Enabled_Jurimetrics_Analysis_of_a_Brazilian_Court_s_Judicial_Performance_in_the_Business_Law_Processing/14593857
+
+TAGS: Process Mining</element>
+    <element form="text" name="Last Edited" read-only="true">2023-07-28 15:46:27 +0200</element>
+</KNIMEMetaInfo>
