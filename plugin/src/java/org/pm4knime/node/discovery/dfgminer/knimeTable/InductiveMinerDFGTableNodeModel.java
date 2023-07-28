@@ -44,14 +44,12 @@ import org.processmining.processtree.ProcessTree;
 public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 
 	private static final NodeLogger logger = NodeLogger.getLogger(InductiveMinerDFGTableNodeModel.class);
-	public static final String CFG_VARIANT_KEY = "Variant";
 	public static final String[] CFG_VARIANT_VALUES = { "Inductive Miner - directly follows (IMd)",
 			"Inductive Miner - infrequent - directly follows (IMfd)",
 			"Inductive Miner - incompleteness - directly follows (IMcd)" };
 
 	public static final String CFGKEY_NOISE_THRESHOLD = "Noise Threshold";
 
-	SettingsModelString m_variant = new SettingsModelString(CFG_VARIANT_KEY, "");
 	SettingsModelDoubleBounded m_noiseThreshold = new SettingsModelDoubleBounded(CFGKEY_NOISE_THRESHOLD, 0.8, 0, 1.0);
 	protected ProcessTreePortObject ptpo;
 	protected DfgMsdPortObject dfgMsdPO;
@@ -134,7 +132,6 @@ public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) {
 		m_noiseThreshold.saveSettingsTo(settings);
-		m_variant.saveSettingsTo(settings);
 	}
 
 	/**
@@ -143,7 +140,6 @@ public class InductiveMinerDFGTableNodeModel extends AbstractSVGWizardNodeModel<
 	@Override
 	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
 		m_noiseThreshold.loadSettingsFrom(settings);
-		m_variant.loadSettingsFrom(settings);
 	}
 
 	/**
