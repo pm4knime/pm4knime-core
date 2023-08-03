@@ -220,11 +220,11 @@ public class DefaultPNReplayerTableModel extends DefaultNodeModel{
             throws InvalidSettingsException {
         // TODO: generated method stub
     }
-    
-    @Override
-    protected void reset() {
-    	initializeParameter();
-    }
+//    
+//    @Override
+//    protected void reset() {
+//    	initializeParameter();
+//    }
     
 
 }

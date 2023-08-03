@@ -18,7 +18,7 @@ public class SampleUtil {
 
 	public static List<Integer> sample(int bound, int num) {
 		ArrayList<Integer> idx_list = new ArrayList<>();
-		Random random = new Random();
+		Random random = new Random(44444);
 		int index;
 		while (num > 0) {
 			index = random.nextInt(bound);

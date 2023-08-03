@@ -42,7 +42,7 @@ public class SMTable2XLogConfig extends SettingsModel{
 	public static final String CFG_KEY_LIFECYCLE = "Life Cycle";
 	public static final String CFG_KEY_TIMESTAMP = "Time stamp";
 //	public static final String CFG_KEY_TS_FORMAT = "Time stamp format";
-	public static final String CFG_NO_OPTION = "NO AVAILABLE";
+	public static final String CFG_NO_OPTION = "MISSING";
 	
 	public static final String CFG_KEY_COLUMN_SET = "Column Set";
 	private SettingsModelStringArray m_columnSet = new SettingsModelStringArray(CFG_KEY_COLUMN_SET, new String[] {""});

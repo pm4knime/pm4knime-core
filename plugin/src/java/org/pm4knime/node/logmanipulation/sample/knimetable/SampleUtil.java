@@ -27,7 +27,7 @@ public class SampleUtil {
 		ArrayList<DataCell> idx_list = new ArrayList<>();
 		ArrayList<DataCell> trace_list = new ArrayList<DataCell>();
 		trace_list.addAll(traceIds);
-		Random random = new Random();
+		Random random = new Random(44444);
 		int index;
 		while (num > 0) {
 			
