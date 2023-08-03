@@ -1,11 +1,19 @@
 package org.pm4knime.node.io.petrinet.reader;
 
+import java.awt.Component;
+
 import javax.swing.JFileChooser;
 
+import org.knime.core.node.context.ports.PortsConfiguration;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.util.FilesHistoryPanel;
+import org.knime.filehandling.core.data.location.variable.FSLocationVariableType;
+import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.DialogComponentReaderFileChooser;
+import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.SettingsModelReaderFileChooser;
+
 
 /**
  * <code>NodeDialog</code> for the "PetrinetReader" Node. read Petri net from
@@ -20,20 +28,25 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  */
 public class PetrinetReaderNodeDialog extends DefaultNodeSettingsPane {
 
-	private final SettingsModelString m_fileName;
-	private final SettingsModelString m_type;
+	protected PetrinetReaderNodeDialog(PortsConfiguration portsConfiguration) {
+	
+		SettingsModelReaderFileChooser m_source = PetrinetReaderNodeModel.createSourceModel(portsConfiguration);
+		this.setHorizontalPlacement(true);
 
-	protected PetrinetReaderNodeDialog() {
-		m_fileName = new SettingsModelString(PetrinetReaderNodeModel.CFG_FILE_NAME, "");
+		DialogComponentReaderFileChooser fileCompAdvanced = new DialogComponentReaderFileChooser(m_source,
+				"copy-source",
+				createFlowVariableModel(m_source.getKeysForFSLocation(), FSLocationVariableType.INSTANCE));
+		Component[] compArray = fileCompAdvanced.getComponentPanel().getComponents();
+		Component tmp = null;
 
-		DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(m_fileName,
-				PetrinetReaderNodeModel.CFG_HISTORY_ID, JFileChooser.OPEN_DIALOG, false,
-				createFlowVariableModel(m_fileName), ".pnml");
-		fileChooser.setBorderTitle("Input Location");
-		addDialogComponent(fileChooser);
-		String[] defaultValue = PetrinetReaderNodeModel.defaultTypes;
-		m_type = new SettingsModelString(PetrinetReaderNodeModel.GFG_PETRINET_TYPE, defaultValue[0]);
-		addDialogComponent(new DialogComponentStringSelection(m_type, "Select Import Petri net Type", defaultValue));
+		for (Component c : compArray) {
+			if (c instanceof FilesHistoryPanel) {
+				tmp = c;
+				break;
+			}
+		}
+		final FilesHistoryPanel filePanel = (FilesHistoryPanel) tmp;
+		addDialogComponent(fileCompAdvanced);
 
 	}
 }
