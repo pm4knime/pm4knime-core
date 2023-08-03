@@ -3,6 +3,7 @@ package org.pm4knime.util;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.knime.core.node.CanceledExecutionException;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.extendedhybridminer.models.hybridpetrinet.ExtendedHybridPetrinet;
 import org.processmining.extendedhybridminer.models.pnml.HybridPnml;
 import org.processmining.extendedhybridminer.models.pnml.PnmlHybridArc;
@@ -206,6 +209,32 @@ public class HybridPetriNetUtil {
 		}
 		page.setLists(nodeList, arcList);
 		return page;
+	}
+	
+	public static String convertHybridPetriNetToString(ExtendedHybridPetrinet net) throws CanceledExecutionException {
+		
+		GraphLayoutConnection  layout = new GraphLayoutConnection(net);
+		PnmlElementFactory factory = new FullPnmlElementFactory();
+		HybridPnml pnml = new HybridPnml();
+		pnml.setFactory(factory);
+		synchronized (factory) {
+			HybridPetriNetUtil.convertNetToPnml(net, pnml, layout, factory);
+			pnml.setType(PnmlType.PNML);
+		}
+		String text = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" + pnml.exportElement(pnml);
+		return text;
+	}
+	
+	public static ExtendedHybridPetrinet stringToHybridPetriNet(String stringHPN) {
+		InputStream input = new ByteArrayInputStream(stringHPN.getBytes());
+		ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("Hybrid Petri Net");
+		try {
+			importHybridPetrinetFromStream(input, net);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return net;
 	}
 	
 }

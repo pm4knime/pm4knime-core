@@ -1,24 +1,23 @@
-package org.pm4knime.node.conversion.table2pn;
+package org.pm4knime.node.conversion.table2hpn;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
-import org.pm4knime.node.discovery.ilpminer.Table.ILPMinerTableNodeDialog;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 
-public class Table2PetriNetConverterNodeFactory extends NodeFactory<Table2PetriNetConverterNodeModel> implements WizardNodeFactoryExtension<Table2PetriNetConverterNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
+public class Table2HybridPetriNetConverterNodeFactory extends NodeFactory<Table2HybridPetriNetConverterNodeModel> implements WizardNodeFactoryExtension<Table2HybridPetriNetConverterNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
-	Table2PetriNetConverterNodeModel node;
+	Table2HybridPetriNetConverterNodeModel node;
 	
 	/**
      * {@inheritDoc}
      */
     @Override
-    public Table2PetriNetConverterNodeModel createNodeModel() {
+    public Table2HybridPetriNetConverterNodeModel createNodeModel() {
 		// Create and return a new node model.
-        node = new Table2PetriNetConverterNodeModel();
+        node = new Table2HybridPetriNetConverterNodeModel();
         return node;
     }
 
@@ -35,8 +34,8 @@ public class Table2PetriNetConverterNodeFactory extends NodeFactory<Table2PetriN
      * {@inheritDoc}
      */
     @Override
-    public NodeView<Table2PetriNetConverterNodeModel> createNodeView(final int viewIndex,
-            final Table2PetriNetConverterNodeModel nodeModel) {
+    public NodeView<Table2HybridPetriNetConverterNodeModel> createNodeView(final int viewIndex,
+            final Table2HybridPetriNetConverterNodeModel nodeModel) {
 		// We return null as this example node does not provide a view. Also see "getNrNodeViews()".
 		return null;
     }
@@ -49,7 +48,6 @@ public class Table2PetriNetConverterNodeFactory extends NodeFactory<Table2PetriN
 		// Indication whether the node has a dialog or not.
         return false;
     }
-    //set this false
 
     /**
      * {@inheritDoc}

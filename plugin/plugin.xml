@@ -65,6 +65,8 @@
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pt2pn.PT2PNConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.pn2table.PetriNet2TableConverterNodeFactory" />
 		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2pn.Table2PetriNetConverterNodeFactory" />
+		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.hpn2table.HybridPetriNet2TableConverterNodeFactory" />
+		<node category-path="/community/processmining/conversion" factory-class="org.pm4knime.node.conversion.table2hpn.Table2HybridPetriNetConverterNodeFactory" />
 		
 		<!-- nodes in table-based discovery-->
 		<node category-path="/community/processmining/discovery" factory-class="org.pm4knime.node.discovery.heuritsicsminer.table.HeuristicsMinerTableNodeFactory" />
@@ -267,6 +269,18 @@
          <ValueFactory
                deprecated="false"
                valueFactoryClass="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory">
+         </ValueFactory>      
+      </DataType>
+      <DataType
+            cellClass="org.pm4knime.node.conversion.hpn2table.HybridPetriNetCell"
+            factoryClass="org.pm4knime.node.conversion.hpn2table.HybridPetriNetCellFactory">
+         <serializer
+               cellClass="org.pm4knime.node.conversion.hpn2table.HybridPetriNetCell"
+               serializerClass="org.pm4knime.node.conversion.hpn2table.HybridPetriNetCell$HybridPetriNetSerializer">
+         </serializer>
+         <ValueFactory
+               deprecated="false"
+               valueFactoryClass="org.pm4knime.node.conversion.hpn2table.HybridPetriNetCellFactory">
          </ValueFactory>      
       </DataType>
     </extension>
