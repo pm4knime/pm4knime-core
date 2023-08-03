@@ -6,11 +6,6 @@
         <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
     </config>
     <config key="model">
-        <config key="&lt;html&gt;&lt;b&gt;Fitness threshold for the place evaluation method&lt;/b&gt;&lt;/html&gt;_Internals">
-            <entry key="SettingsModelID" type="xstring" value="SMID_double"/>
-            <entry key="EnabledStatus" type="xboolean" value="true"/>
-        </config>
-        <entry key="&lt;html&gt;&lt;b&gt;Fitness threshold for the place evaluation method&lt;/b&gt;&lt;/html&gt;" type="xdouble" value="0.8"/>
         <config key="&lt;html&gt;&lt;b&gt;Threshold for early cancellation of place iterator:&lt;/b&gt;&lt;br&gt;after x consecutive rejected places, the place iterator is canceled.&lt;/html&gt;_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_integer"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
@@ -21,6 +16,11 @@
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
         <entry key="&lt;html&gt;&lt;b&gt;Place evaluation method&lt;/b&gt;&lt;/html&gt;" type="xstring" value="local evaluation with global fitness guarantee"/>
+        <config key="&lt;html&gt;&lt;b&gt;Fitness threshold for the place evaluation method&lt;/b&gt;&lt;/html&gt;_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_double"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
+        <entry key="&lt;html&gt;&lt;b&gt;Fitness threshold for the place evaluation method&lt;/b&gt;&lt;/html&gt;" type="xdouble" value="0.8"/>
     </config>
     <config key="nodeAnnotation">
         <entry key="text" type="xstring" value=""/>
@@ -80,6 +80,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="2b5d6add-88dd-4f0d-9516-a5b58a95dfc8"/>
+        <entry key="file_store_id" type="xstring" value="29dc5687-5a6a-458d-bb6c-b029e46aadac"/>
     </config>
 </config>

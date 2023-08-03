@@ -15,8 +15,8 @@
                 <config key="file_system_chooser__Internals">
                     <entry key="has_fs_port" type="xboolean" value="false"/>
                     <entry key="overwritten_by_variable" type="xboolean" value="false"/>
-                    <entry key="convenience_fs_category" type="xstring" value="MOUNTPOINT"/>
-                    <entry key="relative_to" type="xstring" value="knime.workflow.data"/>
+                    <entry key="convenience_fs_category" type="xstring" value="RELATIVE"/>
+                    <entry key="relative_to" type="xstring" value="knime.workflow"/>
                     <entry key="mountpoint" type="xstring" value="LOCAL"/>
                     <entry key="spaceId" type="xstring" value=""/>
                     <entry key="spaceName" type="xstring" value=""/>
@@ -25,9 +25,9 @@
                 </config>
                 <config key="path">
                     <entry key="location_present" type="xboolean" value="true"/>
-                    <entry key="file_system_type" type="xstring" value="MOUNTPOINT"/>
-                    <entry key="file_system_specifier" type="xstring" value="LOCAL"/>
-                    <entry key="path" type="xstring" value="/Test Workflows/test_log.csv"/>
+                    <entry key="file_system_type" type="xstring" value="RELATIVE"/>
+                    <entry key="file_system_specifier" type="xstring" value="knime.workflow"/>
+                    <entry key="path" type="xstring" value="../../../Test Workflows/test_log.csv"/>
                 </config>
                 <config key="filter_mode_Internals">
                     <entry key="SettingsModelID" type="xstring" value="SMID_FilterMode"/>
@@ -71,7 +71,7 @@
         <config key="table_spec_config_Internals">
             <entry key="version" type="xstring" value="V4_4"/>
             <config key="individual_specs">
-                <config key="/Test Workflows/test_log.csv">
+                <config key="../../../Test Workflows/test_log.csv">
                     <entry key="num_columns" type="xint" value="16"/>
                     <config key="0">
                         <entry key="name" type="xstring" value="Case ID"/>
@@ -603,7 +603,7 @@
                     <entry key="force_type" type="xboolean" value="false"/>
                 </config>
             </config>
-            <entry key="source_group_id" type="xstring" value="/Test Workflows/test_log.csv"/>
+            <entry key="source_group_id" type="xstring" value="../../../Test Workflows/test_log.csv"/>
             <config key="config_id">
                 <config key="multi_table_read">
                     <config key="settings">
@@ -712,6 +712,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="796dd86d-0229-4f14-aec3-0c6a90dd5217"/>
+        <entry key="file_store_id" type="xstring" value="e23d0b04-d508-49ab-b7ab-e2cc8f57ace4"/>
     </config>
 </config>

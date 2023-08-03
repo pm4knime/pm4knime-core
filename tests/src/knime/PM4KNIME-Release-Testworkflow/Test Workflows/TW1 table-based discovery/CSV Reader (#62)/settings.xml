@@ -6,72 +6,10 @@
         <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
     </config>
     <config key="model">
-        <config key="settings">
-            <config key="file_selection_Internals">
-                <entry key="SettingsModelID" type="xstring" value="SMID_ReaderFileChooser"/>
-                <entry key="EnabledStatus" type="xboolean" value="true"/>
-            </config>
-            <config key="file_selection">
-                <config key="file_system_chooser__Internals">
-                    <entry key="has_fs_port" type="xboolean" value="false"/>
-                    <entry key="overwritten_by_variable" type="xboolean" value="false"/>
-                    <entry key="convenience_fs_category" type="xstring" value="MOUNTPOINT"/>
-                    <entry key="relative_to" type="xstring" value="knime.workflow.data"/>
-                    <entry key="mountpoint" type="xstring" value="LOCAL"/>
-                    <entry key="spaceId" type="xstring" value=""/>
-                    <entry key="spaceName" type="xstring" value=""/>
-                    <entry key="custom_url_timeout" type="xint" value="1000"/>
-                    <entry key="connected_fs" type="xboolean" value="true"/>
-                </config>
-                <config key="path">
-                    <entry key="location_present" type="xboolean" value="true"/>
-                    <entry key="file_system_type" type="xstring" value="MOUNTPOINT"/>
-                    <entry key="file_system_specifier" type="xstring" value="LOCAL"/>
-                    <entry key="path" type="xstring" value="/Test Workflows/test_log.csv"/>
-                </config>
-                <config key="filter_mode_Internals">
-                    <entry key="SettingsModelID" type="xstring" value="SMID_FilterMode"/>
-                    <entry key="EnabledStatus" type="xboolean" value="true"/>
-                </config>
-                <config key="filter_mode">
-                    <entry key="filter_mode" type="xstring" value="FILE"/>
-                    <entry key="include_subfolders" type="xboolean" value="false"/>
-                    <config key="filter_options">
-                        <entry key="filter_files_extension" type="xboolean" value="false"/>
-                        <entry key="files_extension_expression" type="xstring" value=""/>
-                        <entry key="files_extension_case_sensitive" type="xboolean" value="false"/>
-                        <entry key="filter_files_name" type="xboolean" value="false"/>
-                        <entry key="files_name_expression" type="xstring" value="*"/>
-                        <entry key="files_name_case_sensitive" type="xboolean" value="false"/>
-                        <entry key="files_name_filter_type" type="xstring" value="WILDCARD"/>
-                        <entry key="include_hidden_files" type="xboolean" value="false"/>
-                        <entry key="include_special_files" type="xboolean" value="true"/>
-                        <entry key="filter_folders_name" type="xboolean" value="false"/>
-                        <entry key="folders_name_expression" type="xstring" value="*"/>
-                        <entry key="folders_name_case_sensitive" type="xboolean" value="false"/>
-                        <entry key="folders_name_filter_type" type="xstring" value="WILDCARD"/>
-                        <entry key="include_hidden_folders" type="xboolean" value="false"/>
-                        <entry key="follow_links" type="xboolean" value="true"/>
-                    </config>
-                </config>
-            </config>
-            <entry key="has_column_header" type="xboolean" value="true"/>
-            <entry key="has_row_id" type="xboolean" value="false"/>
-            <entry key="support_short_data_rows" type="xboolean" value="false"/>
-            <entry key="skip_empty_data_rows" type="xboolean" value="false"/>
-            <entry key="prepend_file_idx_to_row_id" type="xboolean" value="false"/>
-            <entry key="comment_char" type="xstring" value="#"/>
-            <entry key="column_delimiter" type="xstring" value=","/>
-            <entry key="quote_char" type="xstring" value="&quot;"/>
-            <entry key="quote_escape_char" type="xstring" value="&quot;"/>
-            <entry key="use_line_break_row_delimiter" type="xboolean" value="true"/>
-            <entry key="row_delimiter" type="xstring" value="%%00010"/>
-            <entry key="autodetect_buffer_size" type="xint" value="1048576"/>
-        </config>
         <config key="table_spec_config_Internals">
             <entry key="version" type="xstring" value="V4_4"/>
             <config key="individual_specs">
-                <config key="/Test Workflows/test_log.csv">
+                <config key="../test_log.csv">
                     <entry key="num_columns" type="xint" value="16"/>
                     <config key="0">
                         <entry key="name" type="xstring" value="Case ID"/>
@@ -603,7 +541,7 @@
                     <entry key="force_type" type="xboolean" value="false"/>
                 </config>
             </config>
-            <entry key="source_group_id" type="xstring" value="/Test Workflows/test_log.csv"/>
+            <entry key="source_group_id" type="xstring" value="../test_log.csv"/>
             <config key="config_id">
                 <config key="multi_table_read">
                     <config key="settings">
@@ -632,6 +570,68 @@
                         <entry key="number_of_lines_to_skip" type="xlong" value="1"/>
                         <entry key="skip_data_rows" type="xboolean" value="false"/>
                         <entry key="number_of_rows_to_skip" type="xlong" value="1"/>
+                    </config>
+                </config>
+            </config>
+        </config>
+        <config key="settings">
+            <entry key="has_column_header" type="xboolean" value="true"/>
+            <entry key="has_row_id" type="xboolean" value="false"/>
+            <entry key="support_short_data_rows" type="xboolean" value="false"/>
+            <entry key="skip_empty_data_rows" type="xboolean" value="false"/>
+            <entry key="prepend_file_idx_to_row_id" type="xboolean" value="false"/>
+            <entry key="comment_char" type="xstring" value="#"/>
+            <entry key="column_delimiter" type="xstring" value=","/>
+            <entry key="quote_char" type="xstring" value="&quot;"/>
+            <entry key="quote_escape_char" type="xstring" value="&quot;"/>
+            <entry key="use_line_break_row_delimiter" type="xboolean" value="true"/>
+            <entry key="row_delimiter" type="xstring" value="%%00010"/>
+            <entry key="autodetect_buffer_size" type="xint" value="1048576"/>
+            <config key="file_selection_Internals">
+                <entry key="SettingsModelID" type="xstring" value="SMID_ReaderFileChooser"/>
+                <entry key="EnabledStatus" type="xboolean" value="true"/>
+            </config>
+            <config key="file_selection">
+                <config key="file_system_chooser__Internals">
+                    <entry key="has_fs_port" type="xboolean" value="false"/>
+                    <entry key="overwritten_by_variable" type="xboolean" value="false"/>
+                    <entry key="convenience_fs_category" type="xstring" value="RELATIVE"/>
+                    <entry key="relative_to" type="xstring" value="knime.workflow"/>
+                    <entry key="mountpoint" type="xstring" value="LOCAL"/>
+                    <entry key="spaceId" type="xstring" value=""/>
+                    <entry key="spaceName" type="xstring" value=""/>
+                    <entry key="custom_url_timeout" type="xint" value="1000"/>
+                    <entry key="connected_fs" type="xboolean" value="true"/>
+                </config>
+                <config key="path">
+                    <entry key="location_present" type="xboolean" value="true"/>
+                    <entry key="file_system_type" type="xstring" value="RELATIVE"/>
+                    <entry key="file_system_specifier" type="xstring" value="knime.workflow"/>
+                    <entry key="path" type="xstring" value="../test_log.csv"/>
+                </config>
+                <config key="filter_mode_Internals">
+                    <entry key="SettingsModelID" type="xstring" value="SMID_FilterMode"/>
+                    <entry key="EnabledStatus" type="xboolean" value="true"/>
+                </config>
+                <config key="filter_mode">
+                    <entry key="filter_mode" type="xstring" value="FILE"/>
+                    <entry key="include_subfolders" type="xboolean" value="false"/>
+                    <config key="filter_options">
+                        <entry key="filter_files_extension" type="xboolean" value="false"/>
+                        <entry key="files_extension_expression" type="xstring" value=""/>
+                        <entry key="files_extension_case_sensitive" type="xboolean" value="false"/>
+                        <entry key="filter_files_name" type="xboolean" value="false"/>
+                        <entry key="files_name_expression" type="xstring" value="*"/>
+                        <entry key="files_name_case_sensitive" type="xboolean" value="false"/>
+                        <entry key="files_name_filter_type" type="xstring" value="WILDCARD"/>
+                        <entry key="include_hidden_files" type="xboolean" value="false"/>
+                        <entry key="include_special_files" type="xboolean" value="true"/>
+                        <entry key="filter_folders_name" type="xboolean" value="false"/>
+                        <entry key="folders_name_expression" type="xstring" value="*"/>
+                        <entry key="folders_name_case_sensitive" type="xboolean" value="false"/>
+                        <entry key="folders_name_filter_type" type="xstring" value="WILDCARD"/>
+                        <entry key="include_hidden_folders" type="xboolean" value="false"/>
+                        <entry key="follow_links" type="xboolean" value="true"/>
                     </config>
                 </config>
             </config>

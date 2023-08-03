@@ -6,12 +6,16 @@
         <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
     </config>
     <config key="model">
-        <entry key="Trace Classifier" type="xstring" value="Case ID"/>
-        <entry key="Event Classifier" type="xstring" value="Activity"/>
-        <config key="ILP Parameter_Internals">
-            <entry key="SettingsModelID" type="xstring" value="SMID_ILP Parameter"/>
+        <config key="Trace Classifier_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
+        <entry key="Trace Classifier" type="xstring" value="Case ID"/>
+        <config key="Event Classifier_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
+        <entry key="Event Classifier" type="xstring" value="Activity"/>
         <config key="Filter Type_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
@@ -21,22 +25,26 @@
             <entry key="SettingsModelID" type="xstring" value="SMID_double"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="Noise Threshold" type="xdouble" value="0.0"/>
+        <entry key="Noise Threshold" type="xdouble" value="0.5"/>
         <config key="LP Objective_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="LP Objective" type="xstring" value="WEIGHTED_ABSOLUTE_PARIKH"/>
+        <entry key="LP Objective" type="xstring" value="UNWEIGHTED_PARIKH"/>
         <config key="LP Variable_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="LP Variable" type="xstring" value="DUAL"/>
+        <entry key="LP Variable" type="xstring" value="SINGLE"/>
         <config key="Discovery Strategy_Internals">
             <entry key="SettingsModelID" type="xstring" value="SMID_string"/>
             <entry key="EnabledStatus" type="xboolean" value="true"/>
         </config>
-        <entry key="Discovery Strategy" type="xstring" value="CAUSAL_FLEX_HEUR"/>
+        <entry key="Discovery Strategy" type="xstring" value="TRANSITION_PAIR"/>
+        <config key="ILP Parameter_Internals">
+            <entry key="SettingsModelID" type="xstring" value="SMID_ILP Parameter"/>
+            <entry key="EnabledStatus" type="xboolean" value="true"/>
+        </config>
     </config>
     <config key="nodeAnnotation">
         <entry key="text" type="xstring" value=""/>
