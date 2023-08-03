@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="../category-conversion.png" type="Manipulator"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>Hybrid Petri Net to Table</name>
+
+	<shortDescription>
+		Convert a hybrid Petri net into a KNIME Data Table
+	</shortDescription>
+
+	<fullDescription>
+		<intro>This node converts a hybrid Petri net into a KNIME data table.
+		</intro>
+		<!-- if we use the attributes, it means we need to have the log spec in 
+			advance and serialization for it. I think I have done this, right?? Let me 
+			check it -->
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Hybrid Petri Net">a hybrid Petri net</inPort>
+		<!-- possibly more input ports here -->
+		<outPort index="0" name="Table">an event table</outPort>
+		<!-- possibly more output ports here -->
+	</ports>
+
+</knimeNode>

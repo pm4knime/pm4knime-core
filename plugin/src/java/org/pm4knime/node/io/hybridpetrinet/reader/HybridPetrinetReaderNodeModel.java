@@ -82,7 +82,7 @@ public class HybridPetrinetReaderNodeModel extends AbstractSVGWizardNodeModel<JS
             
 //            HybridPetriNetUtil.importHybridPetrinetFromStream(new FileInputStream(m_spec.getFileName()), net);
             
-            ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("Hybrid Petrinet");
+            ExtendedHybridPetrinet net = new ExtendedHybridPetrinet("Hybrid Petri Net");
             UIContext context = new UIContext();
             UIPluginContext pContext = context.getMainPluginContext();
         	utils.importHybridPetrinetFromStream(pContext, new FileInputStream(m_spec.getFileName()), net);
