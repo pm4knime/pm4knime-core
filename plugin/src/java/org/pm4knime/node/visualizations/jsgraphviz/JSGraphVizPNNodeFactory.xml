@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
    
-    <name>Petri Net Visualizer</name>
+    <name>Petri Net To Image</name>
     
     <shortDescription>
         JavaScript Visualizer for Petri Nets

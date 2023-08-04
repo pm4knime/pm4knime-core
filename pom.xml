@@ -161,7 +161,6 @@
     <module>plugin</module>
     <module>feature</module>
     <module>p2</module>
-    <module>tests</module>
     <module>targetplatform</module>
   </modules>
 </project>
