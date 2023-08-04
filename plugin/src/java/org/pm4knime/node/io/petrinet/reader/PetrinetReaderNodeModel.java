@@ -40,7 +40,7 @@ public class PetrinetReaderNodeModel extends AbstractSVGWizardNodeModel<JSGraphV
     private static final String SOURCE_FILE = "sourcefile";
     private static final EnumConfig<FilterMode> mode = EnumConfig.create(FilterMode.FILE);
 	private static final EnumSet<FSCategory> DEFAULT_FS = //
-			EnumSet.of(FSCategory.LOCAL, FSCategory.MOUNTPOINT, FSCategory.RELATIVE);
+			EnumSet.of(FSCategory.LOCAL, FSCategory.MOUNTPOINT, FSCategory.RELATIVE, FSCategory.CUSTOM_URL, FSCategory.HUB_SPACE);
 	private final SettingsModelReaderFileChooser m_sourceModel;
 	private final NodeModelStatusConsumer m_statusConsumer = new NodeModelStatusConsumer(
 			EnumSet.of(MessageType.ERROR, MessageType.WARNING));

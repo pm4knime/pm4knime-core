@@ -56,7 +56,7 @@ public class XesImporterNodeModel extends DefaultNodeModel {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(XesImporterNodeModel.class);
 	private static final EnumConfig<FilterMode> mode = EnumConfig.create(FilterMode.FILE);
 	private static final EnumSet<FSCategory> DEFAULT_FS = //
-			EnumSet.of(FSCategory.LOCAL, FSCategory.MOUNTPOINT, FSCategory.RELATIVE);
+			EnumSet.of(FSCategory.LOCAL, FSCategory.MOUNTPOINT, FSCategory.RELATIVE, FSCategory.CUSTOM_URL, FSCategory.HUB_SPACE);
 
 	private final static String[] CFG_METHODS = { "OPEN NAIVE", "IEEE Lenient" };
 	private SettingsModelString m_method = createMethodModel();
