@@ -14,20 +14,13 @@ import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
 import org.pm4knime.portobject.PetriNetPortObject;
 
-/**
- * <code>NodeFactory</code> for the "PetrinetReader" Node. read Petri net from
- * pnml file
- *
- * @author KFDing
- */
+
 public class PetrinetReaderNodeFactory extends ConfigurableNodeFactory<PetrinetReaderNodeModel> implements WizardNodeFactoryExtension<PetrinetReaderNodeModel, JSGraphVizViewRepresentation, JSGraphVizViewValue> {
 
 	
 	private static final String VARIABLE_OUTPUT_PORT_GRP_NAME = "Variable Output Port";
     static final String CONNECTION_INPUT_PORT_GRP_NAME = "File System Connection";
-	/**
-	 * {@inheritDoc}
-	 */
+	
 	@Override
 	public boolean hasDialog() {
 		return true;

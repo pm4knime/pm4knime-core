@@ -1,21 +1,28 @@
 package org.pm4knime.node.io.processtree.reader;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.EnumSet;
 
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.context.ports.PortsConfiguration;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.web.ValidationError;
+import org.knime.filehandling.core.connections.FSCategory;
+import org.knime.filehandling.core.connections.FSFiles;
+import org.knime.filehandling.core.connections.FSPath;
+import org.knime.filehandling.core.defaultnodesettings.EnumConfig;
+import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.ReadPathAccessor;
+import org.knime.filehandling.core.defaultnodesettings.filechooser.reader.SettingsModelReaderFileChooser;
+import org.knime.filehandling.core.defaultnodesettings.filtermode.SettingsModelFilterMode.FilterMode;
+import org.knime.filehandling.core.defaultnodesettings.status.NodeModelStatusConsumer;
+import org.knime.filehandling.core.defaultnodesettings.status.StatusMessage.MessageType;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewRepresentation;
 import org.pm4knime.node.visualizations.jsgraphviz.JSGraphVizViewValue;
@@ -24,30 +31,34 @@ import org.pm4knime.portobject.ProcessTreePortObject;
 import org.pm4knime.portobject.ProcessTreePortObjectSpec;
 import org.processmining.plugins.graphviz.dot.Dot;
 
-/**
- * This is the model implementation of ProcessTreeReader.
- * this node is used to read process tree from file ptml * n
- *
- * @author DKF
- */
 public class ProcessTreeReaderNodeModel extends AbstractSVGWizardNodeModel<JSGraphVizViewRepresentation, JSGraphVizViewValue> implements PortObjectHolder {
 	
-	private static final NodeLogger logger = NodeLogger
-            .getLogger(ProcessTreeReaderNodeModel.class);
-	
-	private final SettingsModelString m_fileName = ProcessTreeReaderNodeDialog.createFileNameModel();
+	public static final String[] defaultTypes = new String[] {".ptml"};
+    private static final String SOURCE_FILE = "sourcefile";
+    private static final EnumConfig<FilterMode> mode = EnumConfig.create(FilterMode.FILE);
+	private static final EnumSet<FSCategory> DEFAULT_FS = //
+			EnumSet.of(FSCategory.LOCAL, FSCategory.MOUNTPOINT, FSCategory.RELATIVE);
+	private final SettingsModelReaderFileChooser m_sourceModel;
+	private final NodeModelStatusConsumer m_statusConsumer = new NodeModelStatusConsumer(
+			EnumSet.of(MessageType.ERROR, MessageType.WARNING));
 	
 	ProcessTreePortObjectSpec m_spec = new ProcessTreePortObjectSpec();
 
 	protected ProcessTreePortObject m_ptPort;
     /**
      * Constructor for the node model.
+     * @param portsConfiguration 
      */
-    protected ProcessTreeReaderNodeModel() {
+    protected ProcessTreeReaderNodeModel(PortsConfiguration portsConfiguration) {
     
         // TODO: Specify the amount of input and output ports needed.
         super(new PortType[] {}, new PortType[] {ProcessTreePortObject.TYPE}, "Process Tree JS View");
+        m_sourceModel = createSourceModel(portsConfiguration);
     }
+    
+    static final SettingsModelReaderFileChooser createSourceModel(final PortsConfiguration portsConfig) {
+		return new SettingsModelReaderFileChooser(SOURCE_FILE, portsConfig, ProcessTreeReaderNodeFactory.CONNECTION_INPUT_PORT_GRP_NAME, mode, DEFAULT_FS,  defaultTypes);
+	}
 
     @Override
     protected PortObject[] performExecuteCreatePortObjects(final PortObject svgImageFromView,
@@ -57,13 +68,27 @@ public class ProcessTreeReaderNodeModel extends AbstractSVGWizardNodeModel<JSGra
 	
 	@Override
 	protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-		
-		logger.info("begin of reading of Process Tree");
+
     	exec.checkCanceled();
-    	m_ptPort = new ProcessTreePortObject();
-    	m_ptPort.loadFrom(m_spec.getFileName());
-    	exec.checkCanceled();
-    	logger.info("end of reading of Process Tree");
+        try {
+			final ReadPathAccessor readAccessor = m_sourceModel.createReadPathAccessor();
+			final FSPath inputPath = readAccessor.getFSPaths(m_statusConsumer).get(0);
+			m_statusConsumer.setWarningsIfRequired(this::setWarningMessage);
+			InputStream inputStream = FSFiles.newInputStream(inputPath);
+			
+			m_ptPort = new ProcessTreePortObject();
+	    	m_ptPort.loadFromDefault(m_spec, inputStream);
+        	exec.checkCanceled();
+
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InvalidSettingsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        exec.checkCanceled();
 		
 		final String dotstr;
 		JSGraphVizViewRepresentation representation = getViewRepresentation();
@@ -78,75 +103,19 @@ public class ProcessTreeReaderNodeModel extends AbstractSVGWizardNodeModel<JSGra
 	}
     
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	@Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-
-        // TODO: configure the nodes
-    	
-    	String fileS = m_fileName.getStringValue();
-    	String warning = CheckUtils.checkSourceFile(fileS);
-    	if(warning != null ) {
-    		setWarningMessage(warning);
-    	}
-    	
-    	URL url = getURLFromSettings(fileS);
-    	if(url == null) {
-    		throw new IllegalArgumentException("url can't be null");
-    	}
-    	String url2String ;
-    	if("file".equals(url.getProtocol())) {
-    		try {
-    			url2String =  new File(url.toURI()).getAbsolutePath();
-    		}catch(Exception e){
-    			url2String = url.toString();
-    			String msg = "File \"" + url + "\" is not a valid PMML file:\n" + e.getMessage();
-    			setWarningMessage(msg);
-    		}
-    	}else {
-    		url2String = url.toString();
-    	}
-
-    	
-    	// here we store the file name in url format
-    	m_spec.setFileName(url2String);
-    	
-        return new PortObjectSpec[]{m_spec};
+        
+    	return new PortObjectSpec[]{m_spec};
     }
 
-    private static URL getURLFromSettings(final String fileS)
-    	       throws InvalidSettingsException {
-       if (fileS == null || fileS.length() == 0) {
-           throw new InvalidSettingsException("No file/url specified");
-       }
-
-       try {
-           return new URL(fileS);
-       } catch (MalformedURLException e) {
-           File tmp = new File(fileS);
-           if (tmp.isFile() && tmp.canRead()) {
-               try  {
-                   return tmp.getAbsoluteFile().toURI().toURL();
-               } catch (MalformedURLException e1) {
-                   throw new InvalidSettingsException(e1);
-               }
-           }
-           throw new InvalidSettingsException("File/URL \"" + fileS
-                      + "\" cannot be parsed as a URL or represents a non exising file location");
-       }
-
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
+   
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-         // TODO: save only the file name
-    	m_fileName.saveSettingsTo(settings);
+
+    	m_sourceModel.saveSettingsTo(settings);
+
     }
 
     /**
@@ -155,8 +124,8 @@ public class ProcessTreeReaderNodeModel extends AbstractSVGWizardNodeModel<JSGra
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
-    	m_fileName.loadSettingsFrom(settings);
+    	m_sourceModel.loadSettingsFrom(settings);
+      
     }
 
     /**
@@ -165,8 +134,7 @@ public class ProcessTreeReaderNodeModel extends AbstractSVGWizardNodeModel<JSGra
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
-    	m_fileName.validateSettings(settings);
+    	m_sourceModel.validateSettings(settings);
     }
     
     @Override

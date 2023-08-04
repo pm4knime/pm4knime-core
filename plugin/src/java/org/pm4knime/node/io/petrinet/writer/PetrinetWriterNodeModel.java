@@ -1,16 +1,11 @@
 package org.pm4knime.node.io.petrinet.writer;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.util.EnumSet;
-
-import javax.swing.JCheckBox;
 
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -19,12 +14,10 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.context.NodeCreationConfiguration;
 import org.knime.core.node.context.ports.PortsConfiguration;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
-import org.knime.core.util.FileUtil;
 import org.knime.filehandling.core.connections.FSFiles;
 import org.knime.filehandling.core.defaultnodesettings.EnumConfig;
 import org.knime.filehandling.core.defaultnodesettings.filechooser.writer.FileOverwritePolicy;
@@ -34,22 +27,13 @@ import org.knime.filehandling.core.defaultnodesettings.filtermode.SettingsModelF
 import org.knime.filehandling.core.defaultnodesettings.status.NodeModelStatusConsumer;
 import org.knime.filehandling.core.defaultnodesettings.status.StatusMessage.MessageType;
 import org.knime.filehandling.core.util.SettingsUtils;
-import org.pm4knime.node.io.log.writer.xes.XESWriterNodeModel;
 import org.pm4knime.portobject.PetriNetPortObject;
 import org.pm4knime.portobject.PetriNetPortObjectSpec;
-import org.pm4knime.portobject.XLogPortObjectSpec;
 import org.pm4knime.util.PetriNetUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 
-/**
- * This is the model implementation of PetrinetWriter.
- * Write Petri net into file to implement the serialization.
- * The input is Petri net, output is the nothing I guess
- * we need to configure the file name for output. That's all. 
- *
- * @author DKF
- */
+
 public class PetrinetWriterNodeModel extends DefaultNodeModel {
     
     // the logger instance

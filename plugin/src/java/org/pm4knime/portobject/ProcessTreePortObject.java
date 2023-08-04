@@ -3,6 +3,7 @@ package org.pm4knime.portobject;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -141,7 +142,7 @@ public class ProcessTreePortObject extends AbstractDotPanelPortObject {
 	
 	
 	
-	public void loadFromDefault(ProcessTreePortObjectSpec spec, PortObjectZipInputStream in) throws Exception {
+	public void loadFromDefault(ProcessTreePortObjectSpec spec, InputStream in) throws Exception {
 		// TODO here we need to load object from input strem, or we can just give one filename is is ok
 		// the problem is here that we need to use the in part and load from it.. so, let check 
 		// if we can do it

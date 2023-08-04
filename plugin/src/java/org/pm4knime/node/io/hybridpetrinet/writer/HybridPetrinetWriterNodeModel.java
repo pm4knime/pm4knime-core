@@ -5,7 +5,6 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.util.EnumSet;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import org.knime.core.node.ExecutionContext;
@@ -34,14 +33,6 @@ import org.pm4knime.util.HybridPetriNetUtil;
 import org.pm4knime.util.defaultnode.DefaultNodeModel;
 
 
-/**
- * This is the model implementation of PetrinetWriter.
- * Write Petri net into file to implement the serialization.
- * The input is Petri net, output is the nothing I guess
- * we need to configure the file name for output. That's all. 
- *
- * @author DKF
- */
 public class HybridPetrinetWriterNodeModel extends DefaultNodeModel {
     
 	private static final NodeLogger logger = NodeLogger
@@ -90,11 +81,9 @@ public class HybridPetrinetWriterNodeModel extends DefaultNodeModel {
                     "Output file '" + e.getFile() + "' exists and must not be overwritten due to user settings.", e);
             }
 
-        	ObjectOutputStream oout = new ObjectOutputStream(outStream);
-        	HybridPetriNetUtil.exportHybridPetrinetToFile(oout, hpnObj.getPN());
+        	HybridPetriNetUtil.exportHybridPetrinetToFile(outStream, hpnObj.getPN());
         	
         	outStream.close();
-    		oout.close();
         }
         
         logger.info("End to write Hybrid Petri net into pnml file");

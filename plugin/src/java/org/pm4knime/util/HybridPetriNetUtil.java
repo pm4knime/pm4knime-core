@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,7 +140,7 @@ public class HybridPetriNetUtil {
 		}
 	}
 	
-	public static void exportHybridPetrinetToFile(ObjectOutputStream objOut, ExtendedHybridPetrinet net) throws IOException {
+	public static void exportHybridPetrinetToFile(OutputStream objOut, ExtendedHybridPetrinet net) throws IOException {
 		GraphLayoutConnection layout = new GraphLayoutConnection(net);
 		
 		PnmlElementFactory factory = new FullPnmlElementFactory();
