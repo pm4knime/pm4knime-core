@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 
@@ -126,12 +127,18 @@ public class ProcessTreePortObject extends AbstractDotPanelPortObject {
 	}
 
 	public void save(String fileName) throws IOException {
-	    // String fileName = spec.getFileName();
-		// directly export to specific file
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
+	    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
 		bw.write(toText());
 		bw.close();
 	}
+	
+	
+	public void save_from_stream(OutputStream out) throws IOException {
+	    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+		bw.write(toText());
+		bw.close();
+	}
+	
 	
 	
 	public void loadFromDefault(ProcessTreePortObjectSpec spec, PortObjectZipInputStream in) throws Exception {

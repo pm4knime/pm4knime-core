@@ -1,8 +1,13 @@
 package org.pm4knime.node.io.processtree.writer;
 
+import java.util.Optional;
+
+import org.knime.core.node.ConfigurableNodeFactory;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.context.NodeCreationConfiguration;
+import org.knime.filehandling.core.port.FileSystemPortObject;
+import org.pm4knime.portobject.ProcessTreePortObject;
 
 /**
  * <code>NodeFactory</code> for the "ProcessTreeWriter" Node.
@@ -11,15 +16,12 @@ import org.knime.core.node.NodeView;
  * @author DKF
  */
 public class ProcessTreeWriterNodeFactory 
-        extends NodeFactory<ProcessTreeWriterNodeModel> {
+        extends ConfigurableNodeFactory<ProcessTreeWriterNodeModel> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ProcessTreeWriterNodeModel createNodeModel() {
-        return new ProcessTreeWriterNodeModel();
-    }
+
+	    private ProcessTreeWriterNodeModel model;
+	    public static final String CONNECTION_INPUT_PORT_GRP_NAME = "File System Connection";
+	    static final String INPUT_PORT_GRP_NAME = "Process Tree";
 
     /**
      * {@inheritDoc}
@@ -46,13 +48,25 @@ public class ProcessTreeWriterNodeFactory
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public NodeDialogPane createNodeDialogPane() {
-        return new ProcessTreeWriterNodeDialog();
-    }
+	protected Optional<PortsConfigurationBuilder> createPortsConfigBuilder() {
+		final PortsConfigurationBuilder builder = new PortsConfigurationBuilder();
+        builder.addOptionalInputPortGroup(CONNECTION_INPUT_PORT_GRP_NAME, FileSystemPortObject.TYPE);
+        builder.addFixedInputPortGroup(INPUT_PORT_GRP_NAME, ProcessTreePortObject.TYPE);
+        return Optional.of(builder);
+	}
+
+	@Override
+	protected ProcessTreeWriterNodeModel createNodeModel(NodeCreationConfiguration creationConfig) {
+		this.model = new ProcessTreeWriterNodeModel(creationConfig);
+		return this.model;
+	}
+	
+
+	@Override
+	protected NodeDialogPane createNodeDialogPane(NodeCreationConfiguration creationConfig) {
+		return new ProcessTreeWriterNodeDialog(creationConfig, this.model);
+	}
 
 }
 

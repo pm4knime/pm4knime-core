@@ -93,15 +93,6 @@ public class PetrinetWriterNodeModel extends DefaultNodeModel {
         PetriNetPortObject pnObj = (PetriNetPortObject) inData[0];
         
         if(pnObj.getANet() != null) {
-//        	CheckUtils.checkDestinationFile(m_outFileName.getStringValue(),true);
-//            
-//            URL url = FileUtil.toURL(, logData.getLog());
-//            Path localPath = FileUtil.resolveToPath(url);
-//            
-//        	File f =  createFile(localPath, url);
-//        	checkCanceled(exec);
-//			// we should also write the marking into disk
-////        	FileOutputStream out = new FileOutputStream(f);
         	OutputStream outStream;
             try {
                 outStream = FSFiles.newOutputStream(outputPath,
@@ -118,13 +109,6 @@ public class PetrinetWriterNodeModel extends DefaultNodeModel {
         return new PortObject[] {};
     }
 
-    private static File createFile(final Path localPath, final URL url) throws IOException {
-        if (localPath != null) {
-            return localPath.toFile();
-        } else {
-            return new File(url.getPath());
-        }
-}
 
     /**
      * {@inheritDoc}

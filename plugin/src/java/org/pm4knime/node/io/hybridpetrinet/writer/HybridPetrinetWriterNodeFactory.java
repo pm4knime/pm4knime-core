@@ -1,8 +1,13 @@
 package org.pm4knime.node.io.hybridpetrinet.writer;
 
+import java.util.Optional;
+
+import org.knime.core.node.ConfigurableNodeFactory;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.node.context.NodeCreationConfiguration;
+import org.knime.filehandling.core.port.FileSystemPortObject;
+import org.pm4knime.portobject.HybridPetriNetPortObject;
 
 /**
  * <code>NodeFactory</code> for the "PetrinetWriter" Node.
@@ -11,15 +16,13 @@ import org.knime.core.node.NodeView;
  * @author 
  */
 public class HybridPetrinetWriterNodeFactory 
-        extends NodeFactory<HybridPetrinetWriterNodeModel> {
+        extends ConfigurableNodeFactory<HybridPetrinetWriterNodeModel> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public HybridPetrinetWriterNodeModel createNodeModel() {
-        return new HybridPetrinetWriterNodeModel();
-    }
+
+	    private HybridPetrinetWriterNodeModel model;
+	    public static final String CONNECTION_INPUT_PORT_GRP_NAME = "File System Connection";
+	    static final String INPUT_PORT_GRP_NAME = "Hybrid Petri Net";
+
 
     /**
      * {@inheritDoc}
@@ -46,13 +49,25 @@ public class HybridPetrinetWriterNodeFactory
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public NodeDialogPane createNodeDialogPane() {
-        return new HybridPetrinetWriterNodeDialog();
-    }
+	protected Optional<PortsConfigurationBuilder> createPortsConfigBuilder() {
+		final PortsConfigurationBuilder builder = new PortsConfigurationBuilder();
+        builder.addOptionalInputPortGroup(CONNECTION_INPUT_PORT_GRP_NAME, FileSystemPortObject.TYPE);
+        builder.addFixedInputPortGroup(INPUT_PORT_GRP_NAME, HybridPetriNetPortObject.TYPE);
+        return Optional.of(builder);
+	}
+
+	@Override
+	protected HybridPetrinetWriterNodeModel createNodeModel(NodeCreationConfiguration creationConfig) {
+		this.model = new HybridPetrinetWriterNodeModel(creationConfig);
+		return this.model;
+	}
+	
+
+	@Override
+	protected NodeDialogPane createNodeDialogPane(NodeCreationConfiguration creationConfig) {
+		return new HybridPetrinetWriterNodeDialog(creationConfig, this.model);
+	}
 
 }
 
