@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="viewRepresentation">
+    <entry key="data" type="xstring" value="23#;#16#;#Case ID#;#Activity#;#Resource#;#Complete Timestamp#;#Variant#;#Variant index#;#Variant (#1)#;#seriousness#;#customer#;#product#;#responsible_section#;#seriousness_2#;#service_level#;#service_type#;#support_section#;#workgroup"/>
+    <entry key="numberOfTraces" type="xint" value="5"/>
+    <entry key="SetOfActivities" type="xstring" value="Resolve ticket#;#Assign seriousness#;#Closed#;#Take in charge ticket"/>
+    <entry key="numberOfVariants" type="xint" value="3"/>
+    <entry key="Trace0" type="xstring" value="Assign seriousness#;#Take in charge ticket#;#Resolve ticket#;#Closed"/>
+    <entry key="Freq0" type="xint" value="3"/>
+    <entry key="Trace1" type="xstring" value="Assign seriousness#;#Take in charge ticket#;#Take in charge ticket#;#Resolve ticket#;#Closed"/>
+    <entry key="Freq1" type="xint" value="1"/>
+    <entry key="Trace2" type="xstring" value="Assign seriousness#;#Take in charge ticket#;#Resolve ticket#;#Take in charge ticket#;#Resolve ticket#;#Closed"/>
+    <entry key="Freq2" type="xint" value="1"/>
+</config>

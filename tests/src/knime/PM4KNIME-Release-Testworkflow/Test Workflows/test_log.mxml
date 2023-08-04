@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file has been generated with the OpenXES library. It conforms -->
+<!-- to the legacy MXML standard for log storage and management. -->
+<!-- OpenXES library version: 1.0RC7 -->
+<!-- OpenXES is available from http://www.xes-standard.org/ -->
+<WorkflowLog>
+	<Source program="XES MXML serialization" openxes.version="1.0RC7"/>
+	<Process id="default event log" description="process with id default event log">
+		<Data>
+			<attribute name="concept:name">default event log</attribute>
+		</Data>
+		<ProcessInstance id="Case 1" description="instance with id Case 1">
+			<Data>
+				<attribute name="concept:name">Case 1</attribute>
+			</Data>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Assign seriousness</attribute>
+					<attribute name="time:timestamp">2012-10-09T14:50:17+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Assign seriousness</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-10-09T14:50:17+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2012-10-09T14:51:01+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-10-09T14:51:01+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2012-10-12T15:02:56+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-10-12T15:02:56+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Resolve ticket</attribute>
+					<attribute name="time:timestamp">2012-10-25T11:54:26+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Resolve ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-10-25T11:54:26+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Closed</attribute>
+					<attribute name="time:timestamp">2012-11-09T12:54:39+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Closed</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-11-09T12:54:39+01:00</timestamp>
+			</AuditTrailEntry>
+		</ProcessInstance>
+		<ProcessInstance id="Case 2" description="instance with id Case 2">
+			<Data>
+				<attribute name="concept:name">Case 2</attribute>
+			</Data>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Assign seriousness</attribute>
+					<attribute name="time:timestamp">2012-04-03T08:55:38+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Assign seriousness</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T08:55:38+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2012-04-03T08:55:53+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T08:55:53+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Resolve ticket</attribute>
+					<attribute name="time:timestamp">2012-04-05T09:15:52+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Resolve ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-05T09:15:52+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Closed</attribute>
+					<attribute name="time:timestamp">2012-05-19T09:00:28+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Closed</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-05-19T09:00:28+02:00</timestamp>
+			</AuditTrailEntry>
+		</ProcessInstance>
+		<ProcessInstance id="Case 3" description="instance with id Case 3">
+			<Data>
+				<attribute name="concept:name">Case 3</attribute>
+			</Data>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Assign seriousness</attribute>
+					<attribute name="time:timestamp">2010-10-29T10:14:06+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Assign seriousness</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-10-29T10:14:06+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2010-11-03T16:16:11+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-11-03T16:16:11+01:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Resolve ticket</attribute>
+					<attribute name="time:timestamp">2010-11-03T16:21:17+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Resolve ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-11-03T16:21:17+01:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Closed</attribute>
+					<attribute name="time:timestamp">2010-11-30T11:20:18+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Closed</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-11-30T11:20:18+01:00</timestamp>
+			</AuditTrailEntry>
+		</ProcessInstance>
+		<ProcessInstance id="Case 4" description="instance with id Case 4">
+			<Data>
+				<attribute name="concept:name">Case 4</attribute>
+			</Data>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Assign seriousness</attribute>
+					<attribute name="time:timestamp">2010-12-15T14:31:53+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Assign seriousness</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-12-15T14:31:53+01:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2010-12-16T08:01:07+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-12-16T08:01:07+01:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Resolve ticket</attribute>
+					<attribute name="time:timestamp">2010-12-16T08:08:19+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Resolve ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2010-12-16T08:08:19+01:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Closed</attribute>
+					<attribute name="time:timestamp">2011-02-12T14:40:42+01:00</attribute>
+				</Data>
+				<WorkflowModelElement>Closed</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2011-02-12T14:40:42+01:00</timestamp>
+			</AuditTrailEntry>
+		</ProcessInstance>
+		<ProcessInstance id="Case 5" description="instance with id Case 5">
+			<Data>
+				<attribute name="concept:name">Case 5</attribute>
+			</Data>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Assign seriousness</attribute>
+					<attribute name="time:timestamp">2012-04-03T13:08:32+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Assign seriousness</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T13:08:32+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2012-04-03T13:45:33+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T13:45:33+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Resolve ticket</attribute>
+					<attribute name="time:timestamp">2012-04-03T13:47:22+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Resolve ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T13:47:22+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Take in charge ticket</attribute>
+					<attribute name="time:timestamp">2012-04-03T14:15:02+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Take in charge ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T14:15:02+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Resolve ticket</attribute>
+					<attribute name="time:timestamp">2012-04-03T16:07:28+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Resolve ticket</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-04-03T16:07:28+02:00</timestamp>
+			</AuditTrailEntry>
+			<AuditTrailEntry>
+				<Data>
+					<attribute name="concept:name">Closed</attribute>
+					<attribute name="time:timestamp">2012-05-25T13:10:28+02:00</attribute>
+				</Data>
+				<WorkflowModelElement>Closed</WorkflowModelElement>
+				<EventType>complete</EventType>
+				<timestamp>2012-05-25T13:10:28+02:00</timestamp>
+			</AuditTrailEntry>
+		</ProcessInstance>
+	</Process>
+</WorkflowLog>
