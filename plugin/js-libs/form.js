@@ -47,9 +47,6 @@
           .then(function(element) { 
                
            _svg = element;
-           console.log("print svg");
-           console.log((new XMLSerializer()).serializeToString(_svg).slice(0,500));
-           console.log((new XMLSerializer()).serializeToString(_svg).slice(-500));
            
            var exportA = document.createElement('a');
            exportA.innerHTML = `<button type="button">Export</button>`;

@@ -1,5 +1,7 @@
 package org.pm4knime.node.discovery.cgminer.table;
 
+import java.io.File;
+
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -73,6 +75,7 @@ public class TableCGMinerNodeModel extends DefaultTableMinerModel {
     	CausalGraphPortObject pnPO = new CausalGraphPortObject(cg);
     	
     	logger.info("End: Causal Graph miner");
+    	
     	return pnPO;
     }
 

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-
+import org.knime.base.node.mine.decisiontree2.image.DecTreeToImageNodeFactory;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class JSGraphVizViewRepresentation extends JSONViewContent {
 
 	public final int pseudoIdentifier = (new Random()).nextInt();
+	DecTreeToImageNodeFactory f;
 	
 	private static final String DOT_DATA = "dotstr";
 	private String m_dotstr;
