@@ -14,6 +14,8 @@ Require-Bundle: org.eclipse.core.runtime,
  net.sf.trove4j;bundle-version="[3.0.3,4.0.0)",
  org.knime.js.core;bundle-version="[4.0.1,6.0.0)",
  org.apache.commons.lang3;bundle-version="[3.9.0,4.0.0)",
+ org.knime.python3;bundle-version="[5.0.0,6.0.0)",
+ org.knime.conda;bundle-version="[5.0.0,6.0.0)",
  org.knime.ext.svg,
  org.knime.core.table
 Bundle-ActivationPolicy: lazy
