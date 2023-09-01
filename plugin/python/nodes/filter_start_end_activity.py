@@ -3,13 +3,18 @@ import knime.extension as knext
 import pandas as pd
 import pytz
 import logging
+from pathlib import Path
+import os
+
 
 LOGGER = logging.getLogger(__name__)
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+path_to_icon = os.path.abspath(os.path.join(script_dir, "..", "..", "icon", "category-manipulation.png"))
 
 @knext.node(name="Second Node",
             node_type=knext.NodeType.MANIPULATOR,
-            icon_path="plugin/icon/category-manipulation.png",
+            icon_path= path_to_icon,
             category="/community/processmining/manipulation")
 @knext.input_table(name="Input Data", description="We read data from here")
 @knext.output_table(name="Output Data", description="Whatever the node has produced")

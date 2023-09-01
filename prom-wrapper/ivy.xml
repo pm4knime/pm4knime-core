@@ -15,7 +15,8 @@
     	<dependency org="prom" name="InductiveMiner" rev="latest" changing="true" transitive="true" />    
     	<dependency org="prom" name="DirectlyFollowsModelMiner" rev="latest" changing="true" transitive="true" />   
     	<dependency org="prom" name="HybridILPMiner" rev="latest" changing="true" transitive="true" />  
-    	<dependency org="prom" name="ExtendedHybridMiner" rev="latest" changing="true" transitive="true" />         
+    	<dependency org="prom" name="ExtendedHybridMiner" rev="latest" changing="true" transitive="true" /> 
+    	<dependency org="prom" name="BPMN" rev="latest" changing="true" transitive="true" />        
     	 
     	
     	<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->

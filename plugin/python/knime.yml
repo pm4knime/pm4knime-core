@@ -1,0 +1,10 @@
+group_id: org.pm4knime
+name: extension
+author: Fraunhofer Institute for Applied Information Technology FIT
+vendor: Fraunhofer Institute for Applied Information Technology FIT
+description: Process Mining Extension
+long_description: Process Mining Extension
+version: 2.1.0
+license_file: LICENSE.TXT
+extension_module: extension
+feature_name: org.pm4knime.feature

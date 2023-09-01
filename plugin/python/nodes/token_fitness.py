@@ -4,14 +4,18 @@ from utils import knime_util
 import pandas as pd
 import pytz
 import logging
+import os
 
 
 LOGGER = logging.getLogger(__name__)
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+path_to_icon = os.path.abspath(os.path.join(script_dir, "..", "..", "icon", "category-conformance.png"))
+
 
 @knext.node(name="Token-Based Fitness Evaluator",
             node_type=knext.NodeType.OTHER,
-            icon_path="plugin/icon/category-conformance.png",
+            icon_path=path_to_icon,
             category="/community/processmining/conformance")
 @knime_util.create_node_description(
     short_description="Evaluate the fitness of a Petri net with respect to an event log.",

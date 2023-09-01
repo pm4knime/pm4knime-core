@@ -4,8 +4,13 @@ from utils import knime_util
 import pandas as pd
 import pytz
 import logging
+import os
+
 
 LOGGER = logging.getLogger(__name__)
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+path_to_icon = os.path.abspath(os.path.join(script_dir, "..", "..", "icon", "category-manipulation.png"))
 
 
 class FilteringModes(knext.EnumParameterOptions):
@@ -18,7 +23,7 @@ class FilteringModes(knext.EnumParameterOptions):
 
 @knext.node(name="Filter Event Table by Time",
             node_type=knext.NodeType.MANIPULATOR,
-            icon_path="plugin/icon/category-manipulation.png",
+            icon_path=path_to_icon,
             category="/community/processmining/manipulation")
 @knime_util.create_node_description(
     short_description="Filter an event table on a time interval.",
