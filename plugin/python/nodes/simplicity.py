@@ -10,7 +10,7 @@ LOGGER = logging.getLogger(__name__)
 
 @knext.node(name="Simplicity Evaluator",
             node_type=knext.NodeType.OTHER,
-            icon_path="icons/category-conformance.png",
+            icon_path="plugin/icon/category-conformance.png",
             category="/community/processmining/conformance")
 @knime_util.create_node_description(
     short_description="Evaluate the simplicity of a Petri net.",

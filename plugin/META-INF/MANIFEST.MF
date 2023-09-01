@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Development Build
 Bundle-SymbolicName: org.pm4knime.plugin;singleton:=true
-Bundle-Version: 2.0.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: Fraunhofer Institute for Applied Information Technology
 Require-Bundle: org.eclipse.core.runtime,
@@ -17,8 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.knime.python3;bundle-version="[5.0.0,6.0.0)",
  org.knime.conda;bundle-version="[5.0.0,6.0.0)",
  org.knime.ext.svg,
- org.knime.core.table,
- org.knime.js.views
+ org.knime.core.table
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/AcceptingPetriNet-latest.jar,
  lib/AcceptingPetriNetClassicalReductor-latest.jar,

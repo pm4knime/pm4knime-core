@@ -289,7 +289,7 @@
     <extension
          point="org.knime.python3.types.PythonValueFactory">
       <Module 
-         modulePath="python/main" moduleName="utils.petri_net_type">
+         modulePath="python" moduleName="utils.petri_net_type">
          <PythonValueFactory
                PythonClassName="PetriNetPythonFactory"
                ValueFactory="org.pm4knime.node.conversion.pn2table.PetriNetCellFactory"

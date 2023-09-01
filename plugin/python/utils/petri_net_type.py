@@ -67,6 +67,7 @@ class FromPetriNetPandasColumnConverter(kt.FromPandasColumnConverter):
 class ToPetriNetPandasColumnConverter(kt.ToPandasColumnConverter):
     def can_convert(self, dtype):
         import knime._arrow._types as kat
+        exec_context.set_warning("TEST TE$St")
 
         return (
             isinstance(dtype, kat.LogicalTypeExtensionType)

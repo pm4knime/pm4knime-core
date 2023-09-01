@@ -1,4 +1,4 @@
-org.tutorial.first_extension: # {group_id}.{name} from the knime.yml
-  src: ..\plugin\python\main
-  conda_env_path: ..\plugin\python\my_python_env
+org.pm4knime.extension: # {group_id}.{name} from the knime.yml
+  src: ..\extension
+  conda_env_path: C:\Users\kourani\miniconda3\envs\my_python_env
   debug_mode: true

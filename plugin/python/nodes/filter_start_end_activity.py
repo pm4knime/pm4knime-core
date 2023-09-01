@@ -9,7 +9,7 @@ LOGGER = logging.getLogger(__name__)
 
 @knext.node(name="Second Node",
             node_type=knext.NodeType.MANIPULATOR,
-            icon_path="icons/category-manipulation.png",
+            icon_path="plugin/icon/category-manipulation.png",
             category="/community/processmining/manipulation")
 @knext.input_table(name="Input Data", description="We read data from here")
 @knext.output_table(name="Output Data", description="Whatever the node has produced")

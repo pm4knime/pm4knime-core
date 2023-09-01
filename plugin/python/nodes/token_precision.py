@@ -11,7 +11,7 @@ LOGGER = logging.getLogger(__name__)
 
 @knext.node(name="Token-Based Precision Checker",
             node_type=knext.NodeType.OTHER,
-            icon_path="icons/category-conformance.png",
+            icon_path="plugin/icon/category-conformance.png",
             category="/community/processmining/conformance")
 @knime_util.create_node_description(
     short_description="Evaluate the precision of a Petri net with respect to an event log.",
@@ -48,7 +48,9 @@ class PrecisionChecker:
         net_table = input_2.to_pandas()
         # exec_context.set_warning("This is a warning")
         # exec_context.set_warning(net_table['Petri Net'].iloc[0].stringPN)
-        pnCell = net_table.iloc[0,0]
+        pnCell = net_table.iloc[0, 0]
+        exec_context.set_warning(type(pnCell))
+        exec_context.set_warning(pnCell)
 
         event_log[self.column_param_time + "UTC"] = pd.to_datetime(event_log[self.column_param_time],
                                                                    format='%Y-%m-%d %H:%M:%S').dt.tz_localize(pytz.utc)

@@ -19,3 +19,4 @@ lib/*
 ivy-2.5.0.jar
 
 .vs/
+/extension/
