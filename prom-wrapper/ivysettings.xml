@@ -2,12 +2,13 @@
     <settings defaultResolver="default" />   
     <resolvers>
         <url name="prom" checkmodified="true">
-            <ivy pattern="https://github.com/promworkbench/Releases/tree/main/Packages/[module]/[revision]/ivy.xml" />
-            <artifact pattern="https://github.com/promworkbench/Releases/tree/main/Packages/[module]/[revision]/[artifact]-[revision].[ext]" />
+            <ivy pattern="https://raw.githubusercontent.com/promworkbench/Releases/main/Packages/[module]/[revision]/ivy.xml" />
+            <artifact pattern="https://raw.githubusercontent.com/promworkbench/Releases/main/Packages/[module]/[revision]/[artifact]-[revision].[ext]" />
         </url>
         <url name="prom-libs">
-            <ivy pattern="https://github.com/promworkbench/Releases/tree/main/Libraries/[module]/[revision]/ivy.xml" />
-            <artifact pattern="https://github.com/promworkbench/Releases/tree/main/Libraries/[module]/[revision]/[artifact]-[revision].[ext]" />
+            <ivy pattern="https://github.com/promworkbench/Releases/raw/main/Libraries/[module]/[revision]/ivy.xml" />
+            <artifact pattern="https://github.com/promworkbench/Releases/raw/main/Libraries/[module]/[revision]/[artifact]-[revision].[ext]" />
+            <artifact pattern="https://github.com/promworkbench/Releases/raw/main/Libraries/[module]/[revision]/[artifact]_[revision].[ext]" />
         </url>
         <ibiblio name="maven2" m2compatible="true"/>
         <chain name="default" returnFirst="true">  
